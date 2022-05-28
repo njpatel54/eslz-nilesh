@@ -11,8 +11,8 @@ on:
       - main 
       - dev
     paths:
-      - entlz-management-groups.yml
-      - entlz/management-groups/*
+      - eslz-management-groups.yml
+      - eslz/management-groups/*
     
   pull_request:
     branches: [ main ]
