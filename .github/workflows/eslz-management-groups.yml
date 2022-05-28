@@ -52,10 +52,10 @@ jobs:
     - name: 'Set Azure Subscription'
       with:
         inlineScript: |
-              az account set \
-                --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+            az account set \
+              --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
-    - uses: azure/arm-deploy@v1
+    - uses: Azure/cli@v1
     - name: 'Run preflight validation'
       with:
         inlineScript: |
