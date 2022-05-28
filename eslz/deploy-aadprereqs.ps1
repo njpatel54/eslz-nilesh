@@ -86,8 +86,8 @@ $app_guid = $az_ad_application.AppId
 if ( ! ( $az_ad_service_principal = Get-AzADServicePrincipal -ApplicationId $app_guid ) ) {
     write-host -ForegroundColor Green "Creating AzureAD Service Principal for App $azure_ad_app_name"
     $az_ad_service_principal = New-AzADServicePrincipal -ApplicationId $app_guid
-    } 
     write-host -ForegroundColor Green "Created AzureAD App Service Principal with objectid $($az_ad_service_principal.Id) and applicationid $($az_ad_service_principal.ApplicationId)"
+}    
 else {
     write-host -ForegroundColor Yellow "AzureAD App Service Principal $($az_ad_service_principal.DisplayName) with objectid $($az_ad_service_principal.Id) and applicationid $($az_ad_service_principal.ApplicationId) already exists."
 }
@@ -103,7 +103,7 @@ else {
 }
 
 # Add Logged In User to Platform Readers Group
-$loggedinuser=get-azaduser -UserPrincipalName (get-azcontext).account
+$loggedinuser=Get-AzADUser -SignedIn
 if ( ! ( $az_ad_group_member = get-AzADGroupMember -GroupObjectId $platform_readers_group.Id | where { $_.Id -eq $loggedinuser.Id } )) {
     write-host -ForegroundColor Green "Adding Currently Logged in User $($loggedinuser.UserPrincipalName) with objectid $($loggedinuser.Id) to group $($platform_readers_group.DisplayName) with objectid $($platform_readers_group.Id)"
     $az_ad_group_member = Add-AzADGroupMember -MemberObjectId $loggedinuser.Id -TargetGroupObjectId $platform_readers_group.Id
