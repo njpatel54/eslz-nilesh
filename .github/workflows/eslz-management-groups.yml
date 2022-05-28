@@ -58,14 +58,11 @@ jobs:
     - uses: azure/arm-deploy@v1
     - name: 'Run preflight validation'
       with:
-        deploymentName: ${{ github.run_number }}
-        scope: tenant
-        subscriptionId: ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
-        template: ./eslz/management-groups/bicep/main.bicep
-        parameters: ./eslz/management-groups/main.parameters.json
-        region: ${{ secrets.AZURE_LOCATION }}
-        failOnStdErr: false
-        deploymentMode: Validate
+        inlineScript: |
+            az deployment validate \
+              --template-file ./eslz/management-groups/bicep/main.bicep \
+              --parameters ./eslz/management-groups/main.parameters.json \
+              --location ${{ secrets.AZURE_LOCATION }}
         
   preview:
       runs-on: ubuntu-latest
@@ -94,5 +91,8 @@ jobs:
         with:
           inlineScript: |
               az deployment sub what-if \
-                --template-file ./main.bicep \
-                --location usgovvirginia
+                --template-file ./eslz/management-groups/bicep/main.bicep \
+                --parameters ./eslz/management-groups/main.parameters.json \
+                --location ${{ secrets.AZURE_LOCATION }}
+
+
