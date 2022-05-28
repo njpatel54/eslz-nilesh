@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {            
+    "onboardmg": {
+      "value": "a2g-onboard"
+    },
+    "requireAuthorizationForGroupCreation": {
+      "value": true
+    },
+    "managementGroups": {
+      "value": [
+        {
+          "name": "mg-A2g",
+          "displayName": "mg-a2g",
+          "parentMGName": "624e5a3d-aa66-4393-9eba-9fb802780e70"
+        },
+        {
+          "name": "mg-A2g-Platform",
+          "displayName": "mg-A2g-Platform",
+          "parentMGName": "mg-A2g"
+        },
+        {
+          "name": "mg-A2g-Connectivity",
+          "displayName": "mg-A2g-Connectivity",
+          "parentMGName": "mg-A2g-Platform"
+        },
+        {
+          "name": "mg-A2g-Identity",
+          "displayName": "mg-A2g-Identity",
+          "parentMGName": "mg-A2g-Platform"
+        },
+        {
+          "name": "mg-A2g-Management",
+          "displayName": "mg-A2g-Management",
+          "parentMGName": "mg-A2g-Platform"
+        },
+        {
+          "name": "mg-A2g-Shared-Services",
+          "displayName": "mg-A2g-Shared-Services",
+          "parentMGName": "mg-A2g-Platform"
+        },
+        {
+          "name": "mg-A2g-Landing-Zones",
+          "displayName": "mg-A2g-Landing-Zones",
+          "parentMGName": "mg-A2g"
+        },
+        {
+          "name": "mg-A2g-Decommissioned",
+          "displayName": "mg-A2g-Decommissioned",
+          "parentMGName": "mg-A2g"
+        },
+        {
+          "name": "mg-A2g-Sandbox",
+          "displayName": "mg-A2g-Sandbox",
+          "parentMGName": "mg-A2g"
+        }
+      ]
+    },
+    "subscriptions":{
+      "value": [
+        {
+          "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+          "managementGroupName": "mg-A2g-Management"
+        },
+        {
+          "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
+          "managementGroupName": "mg-A2g-Connectivity"
+        },
+        {
+          "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
+          "managementGroupName": "mg-A2g-Sandbox"
+        },
+        {
+          "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+          "managementGroupName": "mg-A2g-Identity"
+        }    
+      ]
+    },
+    "tenantid":{
+      "value": "624e5a3d-aa66-4393-9eba-9fb802780e70"
+    }
+  }
+}
