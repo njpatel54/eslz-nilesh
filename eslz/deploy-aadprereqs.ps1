@@ -81,29 +81,13 @@ else {
 }
 
 # Create Service Principal for Azure Application
-if ( $environment -eq 'ussec') {
-    $app_guid = $az_ad_application.ApplicationId.guid
-}
-elseif ($environment -eq 'AzureUSGovernment') {
-    $app_guid = $az_ad_application.AppId
-} 
-else {
-    $app_guid = $az_ad_application.AppId
-}
+$app_guid = $az_ad_application.AppId
     
 if ( ! ( $az_ad_service_principal = Get-AzADServicePrincipal -ApplicationId $app_guid ) ) {
     write-host -ForegroundColor Green "Creating AzureAD Service Principal for App $azure_ad_app_name"
-    if ( $environment -eq 'ussec') {
-        $az_ad_service_principal = New-AzADServicePrincipal -ApplicationId $app_guid -SkipAssignment
-    }
-    elseif ($environment -eq 'AzureUSGovernment') {
-        $az_ad_service_principal = New-AzADServicePrincipal -ApplicationId $app_guid
+    $az_ad_service_principal = New-AzADServicePrincipal -ApplicationId $app_guid
     } 
-    else {
-        $az_ad_service_principal = New-AzADServicePrincipal -ApplicationId $app_guid
-    }
     write-host -ForegroundColor Green "Created AzureAD App Service Principal with objectid $($az_ad_service_principal.Id) and applicationid $($az_ad_service_principal.ApplicationId)"
-}
 else {
     write-host -ForegroundColor Yellow "AzureAD App Service Principal $($az_ad_service_principal.DisplayName) with objectid $($az_ad_service_principal.Id) and applicationid $($az_ad_service_principal.ApplicationId) already exists."
 }
