@@ -18,21 +18,28 @@ Generate a client Secret for the **azure-entlz-deployer** account in the App Reg
 
 ![](Client-Secret.jpg)
 
-**Make a note of the secret value, Application ID and Tenant ID.**
+**Make a note of the Client Secret value, Application ID and Tenant ID.**
 
 ![](images\aad_info.png)
 
-### 2. Setup Azure Devops Pipelines Variable Group
-Create new Variable Groups in ADO for the target Azure Dev and Prod Tenants Pipelines with the following variables:
+### 2. Create GitHub Repository Secrets
+Create new GitHub Repository Secrets for the target Azure Tenant workflow with the following variables:
+* tenantid - Tenant ID from Step 1
 * appid - Application ID from Step 1
 * appsecret - Secret value from Step 1 (Set as Secured Variable!!)
-* cloudmetadataurl - URL for environment (ex. Secret- https://management.azure.microsoft.scloud/metadata/endpoints?api-version=2020-06-01)
+* environment - Cloud Environment (ex. azureusgovernment)
+* location - Azure Region (ex. usgovvirginia)
 * connsubid - Connectivity Subscription ID
 * entlzmg - Enterprise Landing Zone Root MG Name
-* environment - Cloud Environment (ex. ussec, usnat)
-* location - Azure Region (ex. usseceast, ussecwest)
 * mgmtsubid - Management Subscription ID
-* tenantid - Tenant ID from Step 1
+
+* AZURE_CREDENTIALS
+{
+    "clientId": "xxxxx-xxxx-xxxx-xxx-xxxxxx",
+    "clientSecret": "xxxxx-xxxx-xxxx-xxx-xxxxxx",
+    "subscriptionId": "xxxxx-xxxx-xxxx-xxx-xxxxxx",
+    "tenantId": "xxxxx-xxxx-xxxx-xxx-xxxxxx"
+}
 
 Accept all other default values.
 
