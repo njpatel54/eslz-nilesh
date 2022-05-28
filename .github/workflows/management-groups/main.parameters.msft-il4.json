@@ -1,0 +1,96 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {            
+    "onboardmg": {
+      "value": "c3elz7-onboard"
+    },
+    "requireAuthorizationForGroupCreation": {
+      "value": true
+    },
+    "managementGroups": {
+      "value": [
+        {
+          "name": "c3elz7",
+          "displayName": "c3elz7",
+          "parentMGName": "6775f0cc-3aaf-4563-8857-e54a12ebb874"
+        },
+        {
+          "name": "c3elz7-decom",
+          "displayName": "c3elz7-decom",
+          "parentMGName": "c3elz7"
+        },
+        {
+          "name": "c3elz7-lzs",
+          "displayName": "c3elz7-lzs",
+          "parentMGName": "c3elz7"
+        },
+        {
+          "name": "c3elz7-lzs-ext",
+          "displayName": "c3elz7-lzs-ext",
+          "parentMGName": "c3elz7-lzs"
+        },
+        {
+          "name": "c3elz7-lzs-ext-dev",
+          "displayName": "c3elz7-lzs-ext-dev",
+          "parentMGName": "c3elz7-lzs-ext"
+        },
+        {
+          "name": "c3elz7-lzs-ext-prod",
+          "displayName": "c3elz7-lzs-ext-prod",
+          "parentMGName": "c3elz7-lzs-ext"
+        },
+        {
+          "name": "c3elz7-lzs-int",
+          "displayName": "c3elz7-lzs-int",
+          "parentMGName": "c3elz7-lzs"
+        },
+        {
+          "name": "c3elz7-lzs-int-dev",
+          "displayName": "c3elz7-lzs-int-dev",
+          "parentMGName": "c3elz7-lzs-int"
+        },
+        {
+          "name": "c3elz7-lzs-int-prod",
+          "displayName": "c3elz7-lzs-int-prod",
+          "parentMGName": "c3elz7-lzs-int"
+        },
+        {
+          "name": "c3elz7-onboard",
+          "displayName": "c3elz7-onboard",
+          "parentMGName": "c3elz7"
+        },
+        {
+          "name": "c3elz7-platform",
+          "displayName": "c3elz7-platform",
+          "parentMGName": "c3elz7"
+        },
+        {
+          "name": "c3elz7-platform-connectivity",
+          "displayName": "c3elz7-platform-connectivity",
+          "parentMGName": "c3elz7-platform"
+        },
+        {
+          "name": "c3elz7-platform-management",
+          "displayName": "c3elz7-platform-management",
+          "parentMGName": "c3elz7-platform"
+        }
+      ]
+    },
+    "subscriptions":{
+      "value": [
+        {
+          "subscriptionId": "07526f72-6689-42be-945f-bb6ad0214b71",
+          "managementGroupName": "c3elz7-platform-management"
+        },
+        {
+          "subscriptionId": "b30166b8-dd1b-4fa2-9ad7-057614257b06",
+          "managementGroupName": "c3elz7-platform-connectivity"
+        }
+      ]
+    },
+    "tenantid":{
+      "value": "6775f0cc-3aaf-4563-8857-e54a12ebb874"
+    }
+  }
+}
