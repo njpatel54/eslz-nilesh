@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {            
     "onboardmg": {
-      "value": "a2g-onboard"
+      "value": "mg-a2g-onboard"
     },
     "requireAuthorizationForGroupCreation": {
       "value": true
@@ -53,6 +53,11 @@
         {
           "name": "mg-A2g-Sandbox",
           "displayName": "mg-A2g-Sandbox",
+          "parentMGName": "mg-A2g"
+        },
+        {
+          "name": "mg-a2g-onboard",
+          "displayName": "mg-a2g-onboard",
           "parentMGName": "mg-A2g"
         }
       ]
