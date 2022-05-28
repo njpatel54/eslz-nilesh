@@ -24,9 +24,8 @@ on:
 jobs:
 
   lint:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      shell: powershell
-      run: '& $env:GITHUB_ACTION_PATH/management-groups/build-bicep.ps1'
+      run: az bicep build ./eslz/management-groups/bicep/main.bicep
