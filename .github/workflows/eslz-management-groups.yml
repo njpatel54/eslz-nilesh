@@ -86,3 +86,34 @@ jobs:
                 --template-file ./eslz/management-groups/bicep/main.bicep \
                 --parameters ./eslz/management-groups/main.parameters.json \
                 --location ${{ secrets.AZURE_LOCATION }}
+                
+   
+ preview:
+     runs-on: ubuntu-latest
+      needs: [lint, validate]
+      environment: Production
+      steps:
+      - uses: actions/checkout@v2
+      
+      - uses: azure/login@v1
+        name: 'Login to Azure'
+        with:
+         creds: ${{ secrets.AZURE_CREDENTIALS }}
+         environment: ${{ secrets.AZURE_ENVIRONMENT }}
+         enable-AzPSSession: false
+        
+      - uses: Azure/cli@v1
+        name: 'Set Azure Subscription'
+        with:
+         inlineScript: |
+              az account set \
+                --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                
+      - uses: Azure/cli@v1
+        name: 'Run what-if'
+        with:
+          inlineScript: |
+              az deployment tenant what-if \
+                --template-file ./eslz/management-groups/bicep/main.bicep \
+                --parameters ./eslz/management-groups/main.parameters.json \
+                --location ${{ secrets.AZURE_LOCATION }}
