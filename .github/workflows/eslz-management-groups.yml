@@ -28,4 +28,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build ./eslz/management-groups/bicep/main.bicep
+      run: az bicep build --file ./eslz/management-groups/bicep/main.bicep
