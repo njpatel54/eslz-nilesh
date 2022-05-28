@@ -1,0 +1,50 @@
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - master
+    - main    
+    - dev
+  paths:
+    include:
+      - entlz-management-groups.yml
+      - entlz/management-groups/*
+
+pool:
+  name: a2g-build
+
+variables:
+- group: C3E-DEV-TENANT
+
+steps:
+- task: PowerShell@2 
+  displayName: 'Lint and Build Bicep'
+  inputs:
+    targetType: filePath
+    filePath: $(System.DefaultWorkingDirectory)\entlz\management-groups\build-bicep.ps1
+
+- task: PowerShell@2 
+  displayName: 'Test Deployment to Dev Tenant'
+  inputs:
+    targetType: filePath
+    filePath: $(System.DefaultWorkingDirectory)\entlz\management-groups\test-arm.ps1
+    arguments: >
+      -tenantid $(tenantid) 
+      -mgmtsubid $(mgmtsubid) 
+      -location $(location) 
+      -appid $(appid) 
+      -cloudmetadataurl $(cloudmetadataurl) 
+      -environment $(environment) 
+      -appsecret $(appsecret) 
+      -templateparameterfile "build/main.parameters.$(releasetarget).json"
+      -templatepath "build/main.json"
+      -outfile "build/test-summary-dev.txt"
+      
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Deploymentfiles'
+  inputs:
+    pathToPublish: build
+    ArtifactName: drop
+    publishLocation: Container
