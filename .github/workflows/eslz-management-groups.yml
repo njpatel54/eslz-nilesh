@@ -24,37 +24,9 @@ on:
 jobs:
 
   lint:
-  runs-on: windows-latest
-  steps:
-   - uses: actions/checkout@v2
-   - name: 'Lint and Build Bicep'
-  inputs:
-    targetType: filePath
-    filePath: $(System.DefaultWorkingDirectory)\entlz\management-groups\build-bicep.ps1
-
-test-deploy:
-  runs-on: windows-latest
-  steps:
-   - uses: actions/checkout@v2
-   - name: 'Test Deployment to Dev Tenant'
-  inputs:
-    targetType: filePath
-    filePath: $(System.DefaultWorkingDirectory)\entlz\management-groups\test-arm.ps1
-    arguments: >
-      -tenantid $(tenantid) 
-      -mgmtsubid $(mgmtsubid) 
-      -location $(location) 
-      -appid $(appid) 
-      -cloudmetadataurl $(cloudmetadataurl) 
-      -environment $(environment) 
-      -appsecret $(appsecret) 
-      -templateparameterfile "build/main.parameters.$(releasetarget).json"
-      -templatepath "build/main.json"
-      -outfile "build/test-summary-dev.txt"
-      
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: Deploymentfiles'
-  inputs:
-    pathToPublish: build
-    ArtifactName: drop
-    publishLocation: Container
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'Lint and Build Bicep'
+      shell: powershell
+      run: ..\entlz\management-groups\build-bicep.ps1
