@@ -28,8 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: 'Checkout'
-    
     - name: 'Lint and Build Bicep'
       run: az bicep build --file ./eslz/management-groups/bicep/main.bicep
 
@@ -39,18 +37,17 @@ jobs:
     environment: Production
     steps:
     - uses: actions/checkout@v2
-    - name: 'Checkout'
     
     - uses: azure/login@v1
-    - name: 'Login to Azure'
+      name: 'Login to Azure'
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         environment: ${{ secrets.AZURE_ENVIRONMENT }}
         enable-AzPSSession: false
         
     - uses: Azure/cli@v1
-    - name: 'Set Azure Subscription'
+      name: 'Set Azure Subscription'
       with:
         inlineScript: |
-            az account set \
-              --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              az account set \
+                --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
