@@ -29,4 +29,4 @@ jobs:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
       shell: powershell
-      run: ./eslz/management-groups/build-bicep.ps1
+      run: ../eslz/management-groups/build-bicep.ps1
