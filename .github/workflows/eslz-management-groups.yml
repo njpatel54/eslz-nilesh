@@ -38,8 +38,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: 'Login to Azure'
-      run: az login --service-principal -u ${{ secrets.AZURE_CLIENTID }} -p ${{ secrets.AZURE_CLIENTSECRET }} --tenant ${{ secrets.AZURE_TENANTID }}
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with: 
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          environment: ${{ secrets.AZURE_ENVIRONMENT }}
+          enable-AzPSSession: false
         
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
