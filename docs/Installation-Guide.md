@@ -43,10 +43,10 @@ Create new GitHub Repository Secrets for the target Azure Tenant workflow with t
 
 
 
-|  Secret Name |  Value Format |
-|---|---|---|---|---|
+|  Secret Name        |  Value Format      |
+|:-------------------:|:------------------:|
 | AZURE_ENVIRONMENT   | AzureUSGovernment  |
-| AZURE_LOCATION | USGovVirginia  |
+| AZURE_LOCATION      | USGovVirginia      |
 
 
 
