@@ -16,7 +16,7 @@ The user running the script must be elevated to **User Rights Administrator** te
 
 Generate a client Secret for the **azure-entlz-deployer** account in the App Registrations blade.  
 
-![](images\aad_clientsecret.png)
+![](Client-Secret.jpg)
 
 Make a note of the secret value, Application ID and Tenant ID.
 
