@@ -56,7 +56,7 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-            az deployment validate \
+            az deployment tenant validate \
               --template-file ./eslz/management-groups/bicep/main.bicep \
               --parameters ./eslz/management-groups/main.parameters.json \
               --location ${{ secrets.AZURE_LOCATION }}
