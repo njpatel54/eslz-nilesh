@@ -12,7 +12,7 @@ Prerequisite Azure Active Directory items including Groups, Service Principal an
 
 The user running the script must be elevated to **User Rights Administrator** temporarily in Azure Active Directory (Properties tab, see below).  After the script runs successfully the account should be removed from this role.
 
-![](images\aad_useraccesscontributor.png)
+![](User-Rights-Administrator.jpg)
 
 Generate a client Secret for the **azure-entlz-deployer** account in the App Registrations blade.  
 
