@@ -62,7 +62,7 @@ jobs:
         scope: tenant
         subscriptionId: ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
         template: ./eslz/management-groups/bicep/main.bicep
-        parameters: environmentType=${{ secrets.AZURE_ENVIRONMENT }}
+        parameters: ./eslz/management-groups/main.parameters.json
         region: ${{ secrets.AZURE_LOCATION }}
         failOnStdErr: false
         deploymentMode: Validate
