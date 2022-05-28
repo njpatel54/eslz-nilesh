@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {            
     "onboardmg": {
-      "value": "mg-a2g-onboard"
+      "value": "mg-A2g-Onboard"
     },
     "requireAuthorizationForGroupCreation": {
       "value": true
@@ -12,7 +12,7 @@
       "value": [
         {
           "name": "mg-A2g",
-          "displayName": "mg-a2g",
+          "displayName": "mg-A2g",
           "parentMGName": "624e5a3d-aa66-4393-9eba-9fb802780e70"
         },
         {
@@ -56,8 +56,8 @@
           "parentMGName": "mg-A2g"
         },
         {
-          "name": "mg-a2g-onboard",
-          "displayName": "mg-a2g-onboard",
+          "name": "mg-A2g-Onboard",
+          "displayName": "mg-A2g-Onboard",
           "parentMGName": "mg-A2g"
         }
       ]
