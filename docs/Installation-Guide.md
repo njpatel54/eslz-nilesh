@@ -1,14 +1,6 @@
 ## Deployment Steps
 ### 1. Install Azure Active Directory (AAD) Prerequisites
 Prerequisite Azure Active Directory items including Groups, Service Principal and Role Assignments are required to perform subsequent deployment steps.  This step is intended to be executed one time on first deployment.  It is packaged as a single PowerShell script and intended to be executed interactively from a PowerShell instance with access to the management plane of target Azure environment.  The script, **deploy-aadprereqs.ps1**, does the following:
-* Creates Azure AD Group **azure-platform-owners**
-* Creates Azure AD Group **azure-platform-readers**
-* Assigns **azure-platform-owners** the Owner role at scope **/providers/Microsoft.Management/managementGroups/root_management_group_id**
-* Assigns **azure-platform-readers** the Reader role at scope **/providers/Microsoft.Management/managementGroups/root_management_group_id**
-* Creates AzureAD App **azure-entlz-deployer**
-* Creates AzureAD Service Principal for App **azure-entlz-deployer**
-* Adds AzureAD App Service Principal **azure-entlz-deployer** to group **azure-platform-owners**
-* Adds Currently Logged in Deployment User to group **azure-platform-readers**
 
 |  Type                                    |  Role  | Role Assignment Scope                                                     | Group Members|
 |:-----------------------------------------|:-------|:--------------------------------------------------------------------------|:-------------|
