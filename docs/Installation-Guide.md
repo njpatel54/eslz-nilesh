@@ -24,24 +24,6 @@ Generate a client Secret for the **azure-entlz-deployer** account in the App Reg
 
 ### 2. Create GitHub Repository Secrets
 Create new GitHub Repository Secrets for the target Azure Tenant workflow with the following variables:
-* tenantid - Tenant ID from Step 1
-* appid - Application ID from Step 1
-* appsecret - Secret value from Step 1 (Set as Secured Variable!!)
-* environment - Cloud Environment (ex. azureusgovernment)
-* location - Azure Region (ex. usgovvirginia)
-* connsubid - Connectivity Subscription ID
-* entlzmg - Enterprise Landing Zone Root MG Name
-* mgmtsubid - Management Subscription ID
-
-* AZURE_CREDENTIALS
-{
-    "clientId": "xxxxx-xxxx-xxxx-xxx-xxxxxx",
-    "clientSecret": "xxxxx-xxxx-xxxx-xxx-xxxxxx",
-    "subscriptionId": "xxxxx-xxxx-xxxx-xxx-xxxxxx",
-    "tenantId": "xxxxx-xxxx-xxxx-xxx-xxxxxx"
-}
-
-
 
 |  Secret Name              |  Value Format                                          |
 |:--------------------------|:-------------------------------------------------------|
@@ -50,6 +32,9 @@ Create new GitHub Repository Secrets for the target Azure Tenant workflow with t
 | AZURE_LOCATION            | USGovVirginia                                          |
 | AZURE_MGMTSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                             |
 | AZURE_CONNSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                             |
+
+**Note** - Replace xxxxx-xxxx-xxxx-xxx-xxxxxx with actual values.
+         - subscriptionId for AZURE_CREDENTIALS should be Management Subscription ID.
 
 Accept all other default values.
 
