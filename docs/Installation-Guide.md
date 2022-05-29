@@ -19,7 +19,10 @@ Generate a client Secret for the **azure-entlz-deployer** account in the App Reg
 
 ![](Client-Secret.jpg)
 
-**Make a note of the Client Secret value, Application ID and Tenant ID.**
+**Make a note of the following ... 
+- **Client Secret value**
+- **Application ID**
+- **Tenant ID**
 
 ![](images\aad_info.png)
 
