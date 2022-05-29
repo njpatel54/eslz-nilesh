@@ -24,8 +24,6 @@ Generate a client Secret for the **azure-entlz-deployer** account in the App Reg
 - **Application ID**
 - **Tenant ID**
 
-![](images\aad_info.png)
-
 ### 2. Create GitHub Repository Secrets
 Create new GitHub Repository Secrets for the target Azure Tenant workflow with the following variables:
 
