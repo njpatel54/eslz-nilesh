@@ -4,6 +4,12 @@ param connsubid string
 param idensubid string
 param sandsubid string
 param suffix string = substring(uniqueString(utcNow()),0,4)
+param utcfullvalue string = utcNow('F')
+param tags object
+
+param dynamictags object = ({
+  CreatedOn: utcfullvalue
+})
 
 @description('Project Owner')
 @allowed([
@@ -40,7 +46,6 @@ param storageaccount_name string = toLower('st${projowner}${opscope}${region}${s
 // From Parameters Files
 param storageaccount_sku string
 
-
 targetScope = 'subscription'
 
 resource siem_rg 'Microsoft.Resources/resourceGroups@2021-04-01'={
@@ -59,6 +64,7 @@ module loga 'loga.bicep' = {
         aaname: azureautomation_name
         workspacename: loganalytics_workspace_name
         location: location
+        tags: union(dynamictags, tags)
     }
 }
 
@@ -73,5 +79,6 @@ module sa 'storageaccount.bicep' = {
         storageAccountName: storageaccount_name
         storageSKU: storageaccount_sku
         diagnosticWorkspaceId: loga.outputs.resourceId
+        tags: union(dynamictags, tags)
     }
 }

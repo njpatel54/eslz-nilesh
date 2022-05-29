@@ -36,7 +36,6 @@ module movesubs 'movesub.bicep' = [for subscription in subscriptions: {
 
 
 // Configure Default Management Group Settings
-
 resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
     name: tenantid
 }
