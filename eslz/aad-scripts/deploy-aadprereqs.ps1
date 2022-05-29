@@ -21,7 +21,7 @@ Select-AzSubscription $mgmtsubid
 
 $platform_owners_group_displayname = "azure-platform-owners"
 $platform_readers_group_displayname = "azure-platform-readers"
-$azure_ad_app_name = "azure-entlz-deployer"
+$azure_ad_app_name = "azure-eslz-deployer"
 
 # Create Platform Owners Group
 if ( ! ( $platform_owners_group = Get-AzADGroup -DisplayName $platform_owners_group_displayname ) ) {
