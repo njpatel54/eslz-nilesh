@@ -105,10 +105,14 @@ jobs:
         with:
           inlineScript: |
               az deployment sub what-if \
-                --location ${{ secrets.AZURE_LOCATION }} \
-                --template-file ./eslz/management-services/bicep/main.bicep \
-                --parameters ./eslz/management-services/main.parameters.json \
-                --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} location=${{ secrets.AZURE_LOCATION }}
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/management-services/bicep/main.bicep \
+              --parameters ./eslz/management-services/main.parameters.json \
+              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+              --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+              --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+              --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+              --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -139,4 +143,8 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/management-services/bicep/main.bicep \
               --parameters ./eslz/management-services/main.parameters.json \
-              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} location=${{ secrets.AZURE_LOCATION }}
+              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+              --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+              --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+              --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+              --parameters location=${{ secrets.AZURE_LOCATION }}
