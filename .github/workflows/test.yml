@@ -50,8 +50,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - uses: azure/login@v1
-      name: 'Login to Azure'
+    - name: 'Login to Azure'
       run: az login --service-principal -u 309cec1b-9c89-4ecf-98ef-845661b2aeca -p DlS~dP~Ip9T~4XIhU5GtBivf28-_I41Mz1 --tenant 624e5a3d-aa66-4393-9eba-9fb802780e70
         
     - name: 'Set Azure Subscription'
