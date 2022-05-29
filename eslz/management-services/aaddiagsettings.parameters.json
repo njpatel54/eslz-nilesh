@@ -46,6 +46,11 @@
           "category": "ServicePrincipalRiskEvents",
           "enabled": true,
           "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "NonInteractiveUserSignInLogs",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
         }
       ]
     },
