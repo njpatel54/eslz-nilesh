@@ -10,12 +10,12 @@ Prerequisite Azure Active Directory items including Groups, Service Principal an
 * Adds AzureAD App Service Principal **azure-entlz-deployer** to group **azure-platform-owners**
 * Adds Currently Logged in Deployment User to group **azure-platform-readers**
 
-|  Type                            |  Name                 | Role  | Role Assignment Scope                                                     | Group Members|
-|:---------------------------------|:----------------------|:------|:--------------------------------------------------------------------------|:-------------|
-| AzureAD App<br>Name = azure-eslz-deployer                      | azure-eslz-deployer   | N/A   | N/A                                                                       | N/A          |
-| AzureAD Service Principal for App| azure-eslz-deployer   | N/A   | N/A                                                                       | N/A          |
-| AzureAD Group                    | azure-platform-owners | Owner | /providers/Microsoft.Management<br>/managementGroups/root_management_group_id | AzureAD SPN - azure-entlz-deployer|
-| AzureAD Group                    | azure-platform-readers| Reader| /providers/Microsoft.Management<br>/managementGroups/root_management_group_id | Currently LoggedIn User |
+|  Type                                    |  Role  | Role Assignment Scope                                                     | Group Members|
+|:-----------------------------------------|:-------|:--------------------------------------------------------------------------|:-------------|
+| AzureAD App<br>Name = azure-eslz-deployer| N/A    | N/A                                                                       | N/A          |
+| AzureAD Service Principal for App<br>Name = azure-eslz-deployer| N/A   | N/A                                                  | N/A          |
+| AzureAD Group<br>Name =  azure-platform-owners | Owner | /providers/Microsoft.Management<br>/managementGroups/root_management_group_id | AzureAD SPN - azure-entlz-deployer|
+| AzureAD Group<br>Name = azure-platform-readers | Reader| /providers/Microsoft.Management<br>/managementGroups/root_management_group_id | Currently LoggedIn User |
 
 
 
