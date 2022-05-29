@@ -14,8 +14,8 @@ Prerequisite Azure Active Directory items including Groups, Service Principal an
 |:---------------------------------|:----------------------|:------|:--------------------------------------------------------------------------|:-------------|
 | AzureAD App                      | azure-eslz-deployer   | N/A   | N/A                                                                       | N/A          |
 | AzureAD Service Principal for App| azure-eslz-deployer   | N/A   | N/A                                                                       | N/A          |
-| AzureAD Group                    | azure-platform-owners | Owner | /providers/Microsoft.Management/managementGroups/root_management_group_id | AzureAD SPN - azure-entlz-deployer|
-| AzureAD Group                    | azure-platform-readers| Reader| /providers/Microsoft.Management/managementGroups/root_management_group_id | Currently LoggedIn User |
+| AzureAD Group                    | azure-platform-owners | Owner | /providers/Microsoft.Management<br>/managementGroups/root_management_group_id | AzureAD SPN - azure-entlz-deployer|
+| AzureAD Group                    | azure-platform-readers| Reader| /providers/Microsoft.Management<br>/managementGroups/root_management_group_id | Currently LoggedIn User |
 
 
 
