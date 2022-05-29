@@ -10,6 +10,15 @@ Prerequisite Azure Active Directory items including Groups, Service Principal an
 * Adds AzureAD App Service Principal **azure-entlz-deployer** to group **azure-platform-owners**
 * Adds Currently Logged in Deployment User to group **azure-platform-readers**
 
+|  Type                            |  Name                 | Role  | Role Assignment Scope                                                     | Group Members|
+|:---------------------------------|:----------------------|:------|:--------------------------------------------------------------------------|:-------------|
+| AzureAD App                      | azure-eslz-deployer   | N/A   | N/A                                                                       | N/A          |
+| AzureAD Service Principal for App| azure-eslz-deployer   | N/A   | N/A                                                                       | N/A          |
+| AzureAD Group                    | azure-platform-owners | Owner | /providers/Microsoft.Management/managementGroups/root_management_group_id | AzureAD SPN - azure-entlz-deployer|
+| AzureAD Group                    | azure-platform-readers| Reader| /providers/Microsoft.Management/managementGroups/root_management_group_id | Currently LoggedIn User |
+
+
+
 The user running the script must be elevated to **User Rights Administrator** temporarily in Azure Active Directory (Properties tab, see below).  After the script runs successfully the account should be removed from this role.
 
 ![](User-Rights-Administrator.jpg)
@@ -37,27 +46,15 @@ Create new GitHub Repository Secrets for the target Azure Tenant workflow with t
 - Replace xxxxx-xxxx-xxxx-xxx-xxxxxx with actual values.
 - subscriptionId for AZURE_CREDENTIALS should be Management Subscription ID.
 
-Accept all other default values.
 
-![](images\ado_variablegroup.png)
-
-The variable group can be referenced in build and release pipelines.  The YAML is shown below:
-```
-variables:
-- group: <Variable Group>
-```
-
-### 3. Run Build and Release Pipelines
-The pipelines should be executed in the following order:
+### 3. Run GitHub Workflows
+The GitHub workflows should be executed in the following order:
 1. Management Groups
 2. Management Services
-3. VDSS
-4. VDMS-Core
-5. VDMS-Collab
-6. Policies
-7. Roles
-8. Workbooks
-9. Mission Workloads
-    a. Generic Workload 
-    b. Workspaces (VDI)
-    c. Workshops (DevSecOps-DSOP Software Factory)
+3. Policies
+4. Roles
+5. Workbooks
+6. Workloads
+    a. Virtual Networks
+    b. Virtual Machines
+    c. Key Vault
