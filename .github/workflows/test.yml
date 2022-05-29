@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: eslz management group
+name: test workflow
 
 # Controls when the workflow will run
 on:
@@ -54,7 +54,7 @@ jobs:
       run: az login --service-principal -u 309cec1b-9c89-4ecf-98ef-845661b2aeca -p DlS~dP~Ip9T~4XIhU5GtBivf28-_I41Mz1 --tenant 624e5a3d-aa66-4393-9eba-9fb802780e70 --allow-no-subscriptions
         
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az cloud set --name AzureUSGovernment && az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
       name: 'Run preflight validation'
