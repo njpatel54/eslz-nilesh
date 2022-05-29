@@ -51,6 +51,7 @@ targetScope = 'subscription'
 resource siem_rg 'Microsoft.Resources/resourceGroups@2021-04-01'={
     name: siem_rg_name
     location: location
+    tags: union(dynamictags, tags)
 }
 
 module loga 'loga.bicep' = {
