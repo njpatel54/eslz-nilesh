@@ -161,6 +161,7 @@ resource logAnalyticsWorkspace_lock 'Microsoft.Authorization/locks@2017-04-01' =
 resource mgmtsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
   parent: logAnalyticsWorkspace
   name: mgmtsubid
+  tags: tags
   kind: 'AzureActivityLog'
   properties:{
     linkedResourceId: '/subscriptions/${mgmtsubid}/providers/microsoft.insights/eventTypes/management'
@@ -171,6 +172,7 @@ resource mgmtsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-
 resource connsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
   parent: logAnalyticsWorkspace
   name: connsubid
+  tags: tags
   kind: 'AzureActivityLog'
   properties:{
     linkedResourceId: '/subscriptions/${connsubid}/providers/microsoft.insights/eventTypes/management'
@@ -181,6 +183,7 @@ resource connsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-
 resource idensublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
   parent: logAnalyticsWorkspace
   name: idensubid
+  tags: tags
   kind: 'AzureActivityLog'
   properties:{
     linkedResourceId: '/subscriptions/${idensubid}/providers/microsoft.insights/eventTypes/management'
@@ -190,6 +193,7 @@ resource idensublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-
 resource sandsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
   parent: logAnalyticsWorkspace
   name: sandsubid
+  tags: tags
   kind: 'AzureActivityLog'
   properties:{
     linkedResourceId: '/subscriptions/${sandsubid}/providers/microsoft.insights/eventTypes/management'
@@ -199,6 +203,7 @@ resource sandsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-
 resource sentinelsolution 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' = {
   name: sentinelsolutionname
   location: location
+  tags: tags
   plan:{
     name: sentinelsolutionname
     product: 'OMSGallery/SecurityInsights'
@@ -213,6 +218,7 @@ resource sentinelsolution 'Microsoft.OperationsManagement/solutions@2015-11-01-p
 resource aa 'Microsoft.Automation/automationAccounts@2020-01-13-preview'={
   name: aaname
   location: location
+  tags: tags
   dependsOn: [
     logAnalyticsWorkspace
   ]
@@ -240,7 +246,6 @@ resource linkedService 'Microsoft.OperationalInsights/workspaces/linkedServices@
   }
 }
 */
-
 
 @description('The resource ID of the deployed log analytics workspace')
 output resourceId string = logAnalyticsWorkspace.id
