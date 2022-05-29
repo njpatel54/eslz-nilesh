@@ -67,10 +67,11 @@ jobs:
         # Runs a command with multiple lines
         inlineScript: |
             az deployment sub validate \
+              --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/management-services/bicep/main.bicep \
               --parameters ./eslz/management-services/main.parameters.json \
-              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
-              --location ${{ secrets.AZURE_LOCATION }}
+              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }}
+
 
   
   # "preview" job ---> will verify what exactly will be created, updated, and deleted. 
@@ -100,10 +101,10 @@ jobs:
         with:
           inlineScript: |
               az deployment sub what-if \
+                --location ${{ secrets.AZURE_LOCATION }} \
                 --template-file ./eslz/management-services/bicep/main.bicep \
                 --parameters ./eslz/management-services/main.parameters.json \
-                --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
-                --location ${{ secrets.AZURE_LOCATION }}
+                --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -131,7 +132,7 @@ jobs:
       with:
         inlineScript: |
             az deployment sub create \
-                --template-file ./eslz/management-services/bicep/main.bicep \
-                --parameters ./eslz/management-services/main.parameters.json \
-                --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
-                --location ${{ secrets.AZURE_LOCATION }}
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/management-services/bicep/main.bicep \
+              --parameters ./eslz/management-services/main.parameters.json \
+              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }}

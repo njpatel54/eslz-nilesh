@@ -1,4 +1,4 @@
-param location string = resourceGroup().location
+param location string
 param mgmtsubid string
 param connsubid string
 param idensubid string
