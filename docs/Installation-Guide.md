@@ -29,7 +29,7 @@ Create new GitHub Repository Secrets for the target Azure Tenant workflow with t
 
 |  Secret Name              |  Value Format                                                 | Notes                                         |
 |:--------------------------|:--------------------------------------------------------------| :---------------------------------------------|
-| AZURE_CREDENTIALS         | { <br>   "clientId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>  "clientSecret": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>       "subscriptionId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>     "tenantId": "xxxxx-xxxx-xxxx-xxx-xxxxxx" <br>         } | Provide appropriate values for <br> - **clientId**<br> - **clientSecret**<br> - **tenantId**<br><br> For **subscriptionId**, provide Subscription ID of Management Subscription.|
+| AZURE_CREDENTIALS         | { <br>   "clientId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>  "clientSecret": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>       "subscriptionId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>     "tenantId": "xxxxx-xxxx-xxxx-xxx-xxxxxx" <br>         } | Provide appropriate values for <br> - **clientId**<br> - **clientSecret**<br> - **tenantId**<br><br> For **subscriptionId**, provide Subscription ID <br>of Management Subscription.|
 | AZURE_ENVIRONMENT         | AzureUSGovernment                                             | Azure Cloud Environment      |
 | AZURE_LOCATION            | USGovVirginia                                                 | Azure Region                 |
 | AZURE_MGMTSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                                    | Management Subscription ID   |
