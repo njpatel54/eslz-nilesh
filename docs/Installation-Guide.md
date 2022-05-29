@@ -27,17 +27,15 @@ Generate a client Secret for the **azure-entlz-deployer** account in the App Reg
 ### 2. Create GitHub Repository Secrets
 Create new GitHub Repository Secrets for the target Azure Tenant workflow with the following variables:
 
-|  Secret Name              |  Value Format                                          |
-|:--------------------------|:-------------------------------------------------------|
-| AZURE_CREDENTIALS         | { <br>   "clientId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>  "clientSecret": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>       "subscriptionId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>     "tenantId": "xxxxx-xxxx-xxxx-xxx-xxxxxx" <br>         } |
-| AZURE_ENVIRONMENT         | AzureUSGovernment                                      |
-| AZURE_LOCATION            | USGovVirginia                                          |
-| AZURE_MGMTSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                             |
-| AZURE_CONNSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                             |
-
-**Note** 
-- Replace xxxxx-xxxx-xxxx-xxx-xxxxxx with actual values.
-- subscriptionId for AZURE_CREDENTIALS should be Management Subscription ID.
+|  Secret Name              |  Value Format                                                 | Notes                                         |
+|:--------------------------|:--------------------------------------------------------------| :---------------------------------------------|
+| AZURE_CREDENTIALS         | { <br>   "clientId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>  "clientSecret": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>       "subscriptionId": "xxxxx-xxxx-xxxx-xxx-xxxxxx", <br>     "tenantId": "xxxxx-xxxx-xxxx-xxx-xxxxxx" <br>         } | Provide appropriate values for <br> - **clientId**<br> - **clientSecret**<br> - **tenantId**<br><br> For **subscriptionId**, provide Subscription ID <br>of Management Subscription.|
+| AZURE_ENVIRONMENT         | AzureUSGovernment                                             | Azure Cloud Environment      |
+| AZURE_LOCATION            | USGovVirginia                                                 | Azure Region                 |
+| AZURE_MGMTSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                                    | Management Subscription ID   |
+| AZURE_CONNSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                                    | Connectivity Subscription ID |
+| AZURE_IDENSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                                    | Identity Subscription ID     |
+| AZURE_SANDSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                                    | Sandbox Subscription ID      |
 
 
 ### 3. Run GitHub Workflows
