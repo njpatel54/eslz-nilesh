@@ -45,6 +45,6 @@ The GitHub workflows should be executed in the following order:
 4. Roles
 5. Workbooks
 6. Workloads
-    - a. Virtual Networks
-    - b. Virtual Machines
-    - c. Key Vault
+    - Virtual Networks
+    - Virtual Machines
+    - Key Vault
