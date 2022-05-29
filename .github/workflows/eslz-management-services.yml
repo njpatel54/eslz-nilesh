@@ -69,6 +69,7 @@ jobs:
             az deployment sub validate \
               --template-file ./eslz/management-services/bicep/main.bicep \
               --parameters ./eslz/management-services/main.parameters.json \
+              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
               --location ${{ secrets.AZURE_LOCATION }}
 
   
@@ -101,6 +102,7 @@ jobs:
               az deployment sub what-if \
                 --template-file ./eslz/management-services/bicep/main.bicep \
                 --parameters ./eslz/management-services/main.parameters.json \
+                --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
                 --location ${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -131,4 +133,5 @@ jobs:
             az deployment sub create \
                 --template-file ./eslz/management-services/bicep/main.bicep \
                 --parameters ./eslz/management-services/main.parameters.json \
+                --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
                 --location ${{ secrets.AZURE_LOCATION }}
