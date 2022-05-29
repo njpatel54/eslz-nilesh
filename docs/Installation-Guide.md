@@ -37,11 +37,6 @@ Create new GitHub Repository Secrets for the target Azure Tenant workflow with t
 | AZURE_IDENSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                                    | Identity Subscription ID     |
 | AZURE_SANDSUBSCRIPTIONID  | xxxxx-xxxx-xxxx-xxx-xxxxxx                                    | Sandbox Subscription ID      |
 
-**Note** 
-- Replace xxxxx-xxxx-xxxx-xxx-xxxxxx with actual values.
-- subscriptionId for AZURE_CREDENTIALS should be Management Subscription ID.
-
-
 ### 3. Run GitHub Workflows
 The GitHub workflows should be executed in the following order:
 1. Management Groups
