@@ -85,12 +85,8 @@ jobs:
          environment: ${{ secrets.AZURE_ENVIRONMENT }}
          enable-AzPSSession: false
         
-      - uses: Azure/cli@v1
-        name: 'Set Azure Subscription'
-        with:
-         inlineScript: |
-              az account set \
-                --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      - name: 'Set Azure Subscription'
+        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
                 
       - uses: Azure/cli@v1
         name: 'Run what-if'
@@ -116,12 +112,8 @@ jobs:
          environment: ${{ secrets.AZURE_ENVIRONMENT }}
          enable-AzPSSession: false
         
-      - uses: Azure/cli@v1
-        name: 'Set Azure Subscription'
-        with:
-         inlineScript: |
-              az account set \
-                --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      - name: 'Set Azure Subscription'
+        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
                 
       - uses: Azure/cli@v1
         name: 'Deploying Management Groups'
