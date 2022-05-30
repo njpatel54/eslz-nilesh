@@ -56,21 +56,6 @@ param subscriptionId string = subscription().subscriptionId
 @sys.description('Optional. The Target Scope for the Policy. The name of the resource group for the policy assignment. If not provided, will use the current scope for deployment.')
 param resourceGroupName string = resourceGroup().name
 
-@sys.description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
-
 var identity_var = identity == 'SystemAssigned' ? {
   type: identity
 } : null
@@ -91,12 +76,13 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01'
   identity: identity_var
 }
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
-  name: guid(subscriptionId, resourceGroupName, roleDefinitionId, location, name)
-  properties: {
+module roleAssignment_rg '.bicep/roleAssignment.bicep' = [ for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
+  name: '${policyAssignment.name}-${last(split(roleDefinitionId,'/'))}'
+  params: {
     roleDefinitionId: roleDefinitionId
     principalId: policyAssignment.identity.principalId
-    principalType: 'ServicePrincipal'
+    subscriptionId: subscriptionId
+    resourceGroupName: resourceGroupName
   }
 }]
 

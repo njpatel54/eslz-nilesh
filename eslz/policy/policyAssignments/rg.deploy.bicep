@@ -2,9 +2,9 @@ targetScope = 'subscription'
 
 param policyAssignments array = []
 
-module policyAssignment_sub 'subscription/deploy.bicep' = [ for (policyAssignment, i) in policyAssignments :  {
-  name: '${policyAssignment.name}-PolicyAssignment-SUB-Module-${i}'
-  scope: subscription(policyAssignment.subscriptionId)
+module policyAssignment_rg 'resourceGroup/deploy.bicep' = [ for (policyAssignment, i) in policyAssignments :  {
+  name: '${policyAssignment.name}-PolicyAssignment-RG-Module-${i}'
+  scope: resourceGroup(policyAssignment.subscriptionId, policyAssignment.resourceGroupName)
   params: {
     name: policyAssignment.name
     policyDefinitionId: policyAssignment.policyDefinitionId
@@ -18,6 +18,7 @@ module policyAssignment_sub 'subscription/deploy.bicep' = [ for (policyAssignmen
     enforcementMode: policyAssignment.enforcementMode
     notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
     subscriptionId: policyAssignment.subscriptionId
+    resourceGroupName: policyAssignment.resourceGroupName
     location: policyAssignment.location
   }
 }]
@@ -33,8 +34,6 @@ output principalId string = empty(subscriptionId) && empty(resourceGroupName) ? 
 
 @sys.description('Policy Assignment resource ID')
 output resourceId string = empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_mg.outputs.resourceId : (!empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_sub.outputs.resourceId : policyAssignment_rg.outputs.resourceId)
-
-
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
 param managementGroupId string = 'mg-A2g'

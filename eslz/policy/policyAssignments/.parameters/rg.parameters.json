@@ -1,62 +1,78 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "value": "<<namePrefix>>-rg-polAss"
-        },
-        "displayName": {
-            "value": "[Display Name] Policy Assignment at the resource group scope"
-        },
-        "description": {
-            "value": "[Description] Policy Assignment at the resource group scope"
-        },
-        "policyDefinitionId": {
-            "value": "/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26"
-        },
-        "parameters": {
-            "value": {
-                "tagName": {
-                    "value": "env"
-                },
-                "tagValue": {
-                    "value": "prod"
-                }
-            }
-        },
-        "nonComplianceMessage": {
-            "value": "Violated Policy Assignment - This is a Non Compliance Message"
-        },
-        "enforcementMode": {
-            "value": "DoNotEnforce"
-        },
-        "metadata": {
-            "value": {
-                "category": "Security",
-                "version": "1.0"
-            }
-        },
-        "location": {
-            "value": "australiaeast"
-        },
-        "notScopes": {
-            "value": [
-                "/subscriptions/<<subscriptionId>>/resourceGroups/<<resourceGroupName>>/providers/Microsoft.KeyVault/vaults/adp-<<namePrefix>>-az-kv-x-001"
-            ]
-        },
-        "identity": {
-            "value": "SystemAssigned"
-        },
-        "roleDefinitionIds": {
-            "value": [
-                "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
-            ]
-        },
-        "subscriptionId": {
-            "value": "<<subscriptionId>>"
-        },
-        "resourceGroupName": {
-            "value": "<<resourceGroupName>>"
-        }
+    "parameters": {            
+      "policyAssignments": {
+        "value": [
+          {
+              "name": "Add-tag-to-resources",
+              "displayName": "Add a tag to resources",
+              "description": "Adds the specified tag and value when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed. Does not modify tags on resource groups.",
+              "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26",
+              "parameters": {
+                  "Test": {
+                      "value": "Test-RG"
+                  },
+                  "Result": {
+                      "value": "Worked"
+                  }
+              },
+              "nonComplianceMessage": "All resoruces must have these tags.",
+              "enforcementMode": "Default",
+              "metadata": {
+                  "value": {
+                      "category": "Tags",
+                      "version": "1.0"
+                  }
+              },
+              "location": "usgovvirginia",
+              "notScopes": [
+                      "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ghzj"
+              ],
+              "identity": "SystemAssigned",
+              "roleDefinitionIds": [
+                 "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+              ],
+              "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+              "resourceGroupName": "rg-ccs-prod-usva-ui2t"
+          },
+          {
+              "name": "activity-logs-to-loga",
+              "displayName": "Activity Logs to Log Analytics",
+              "description": "Configure Azure Activity logs to stream to specified Log Analytics workspace.",
+              "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f",
+              "parameters": {
+                  "logAnalytics": {
+                      "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-ghzj/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-ghzj"
+                  },
+                  "effect": {
+                      "value": "DeployIfNotExists"
+                  },
+                  "logsEnabled": {
+                      "value": "True"
+                  }
+              },
+              "nonComplianceMessage": "Azure Activity logs must stream to a specified Log Analytics workspace.",
+              "enforcementMode": "Default",
+              "metadata": {
+                  "value": {
+                      "category": "Monitoring",
+                      "version": "1.0"
+                  }
+              },
+              "location": "usgovvirginia",
+              "notScopes": [
+                      "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ghzj"
+                  ],
+              "identity": "SystemAssigned",
+              "roleDefinitionIds": [
+                  "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                  "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+              ],
+              "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+              "resourceGroupName": "rg-ccs-prod-usva-ui2t"   
+          }
+        ]      
+      }
     }
-}
+  }
