@@ -63,7 +63,7 @@ param resourceGroupName string = ''
 
 
 module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignment, i) in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
-  name: '${uniqueString(policyAssignment.name, policyAssignment.location)}-PolicyAssignment-MG-Module'
+  name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
   scope: managementGroup('mg-A2g')
   params: {
     name: policyAssignment.name
