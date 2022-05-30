@@ -43,7 +43,7 @@ jobs:
       with:
         inlineScript: |
             az deployment mg create \
-              --name 'Policy Assignment - Management Group Scope' \
+              --name 'PolicyAssignment-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyAssignments/deploy.bicep \
               --parameters ./eslz/policy/policyAssignments/.parameters/mg.parameters.nil.json \
