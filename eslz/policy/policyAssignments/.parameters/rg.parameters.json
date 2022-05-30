@@ -26,9 +26,7 @@
                   }
               },
               "location": "usgovvirginia",
-              "notScopes": [
-                      "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-ui2t/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-ui2t"
-              ],
+              "notScopes": [],
               "identity": "SystemAssigned",
               "roleDefinitionIds": [
                  "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
