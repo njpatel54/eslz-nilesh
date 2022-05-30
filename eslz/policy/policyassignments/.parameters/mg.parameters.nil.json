@@ -20,7 +20,7 @@
                 }
             },
             "nonComplianceMessage": "All resoruces must have these tags.",
-            "enforcementMode": "Indexed",
+            "enforcementMode": "Default",
             "metadata": {
                 "value": {
                     "category": "Tags",
