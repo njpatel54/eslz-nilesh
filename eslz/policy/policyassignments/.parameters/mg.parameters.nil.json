@@ -11,10 +11,10 @@
             "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26",
             "parameters": {
                     "tagName": {
-                        "displayName": "Test"
+                        "value": "Test"
                     },
                     "tagValue": {
-                        "displayName": "Worked"
+                        "value": "Worked"
                     }
             },
             "nonComplianceMessage": "All resoruces must have these tags.",
