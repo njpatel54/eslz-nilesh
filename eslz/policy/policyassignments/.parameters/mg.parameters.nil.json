@@ -10,14 +10,12 @@
             "description": "Adds the specified tag and value when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed. Does not modify tags on resource groups.",
             "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26",
             "parameters": {
-                "value": {
                     "tagName": {
-                        "value": "Test"
+                        "displayName": "Test"
                     },
                     "tagValue": {
-                        "value": "Worked"
+                        "displayName": "Worked"
                     }
-                }
             },
             "nonComplianceMessage": "All resoruces must have these tags.",
             "enforcementMode": "Default",
@@ -53,7 +51,7 @@
                     },
                     "logsEnabled": {
                         "value": "True"
-                }
+                    }
             },
             "nonComplianceMessage": "Azure Activity logs must stream to a specified Log Analytics workspace.",
             "enforcementMode": "Default",
