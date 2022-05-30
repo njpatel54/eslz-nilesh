@@ -49,9 +49,10 @@ param notScopes array = []
 @sys.description('Optional. Location for all resources.')
 param location string = deployment().location
 
+/*
 @sys.description('Optional. principalId of the managed identity of the assignment.')
-param principalId string = ''
-
+param principalId string
+*/
 var nonComplianceMessage_var = {
   message: !empty(nonComplianceMessage) ? nonComplianceMessage : null
 }
