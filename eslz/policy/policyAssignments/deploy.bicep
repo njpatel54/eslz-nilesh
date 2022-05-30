@@ -3,7 +3,7 @@ targetScope = 'managementGroup'
 param policyAssignments array = []
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
-param managementGroupId string = ''
+param managementGroupId string = 'mg-A2g'
 
 @sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment')
 param subscriptionId string = ''
@@ -13,7 +13,7 @@ param resourceGroupName string = ''
 
 module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
-  scope: managementGroup(policyAssignment.managementGroupId)
+  scope: managementGroup(managementGroupId)
   params: {
     name: policyAssignment.name
     policyDefinitionId: policyAssignment.policyDefinitionId
@@ -26,7 +26,7 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignmen
     nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
     enforcementMode: policyAssignment.enforcementMode
     notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
-    managementGroupId: policyAssignment.managementGroupId
+    managementGroupId: managementGroupId   //policyAssignment.managementGroupId
     location: policyAssignment.location
   }
 }]
