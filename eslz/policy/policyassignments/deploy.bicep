@@ -3,8 +3,12 @@ targetScope = 'managementGroup'
 @sys.description('Required. Array containing one or more policy assignments.')
 param policyAssignments array = []
 
+/*
 @sys.description('Required. Specifies the name of the policy assignment. Maximum length is 24 characters for management group scope, 64 characters for subscription and resource group scopes.')
 param name string
+
+@sys.description('Required. Specifies the ID of the policy definition or policy set definition being assigned.')
+param policyDefinitionId string
 
 @sys.description('Optional. This message will be part of response in case of policy violation.')
 param description string = ''
@@ -12,9 +16,6 @@ param description string = ''
 @sys.description('Optional. The display name of the policy assignment. Maximum length is 128 characters.')
 @maxLength(128)
 param displayName string = ''
-
-@sys.description('Required. Specifies the ID of the policy definition or policy set definition being assigned.')
-param policyDefinitionId string
 
 @sys.description('Optional. Parameters for the policy assignment if needed.')
 param parameters object = {}
@@ -42,6 +43,16 @@ param nonComplianceMessage string = ''
 ])
 param enforcementMode string = 'Default'
 
+@sys.description('Optional. The policy excluded scopes')
+param notScopes array = []
+
+@sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
+param managementGroupId string = managementGroup().name
+
+
+@sys.description('Optional. Location for all resources.')
+param location string = deployment().location
+*/
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
 param managementGroupId string = managementGroup().name
 
@@ -50,12 +61,6 @@ param subscriptionId string = ''
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the resource group for the policy assignment')
 param resourceGroupName string = ''
-
-@sys.description('Optional. The policy excluded scopes')
-param notScopes array = []
-
-@sys.description('Optional. Location for all resources.')
-param location string = deployment().location
 
 module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
@@ -77,7 +82,7 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignmen
     
   }
 }]
-
+/*
 module policyAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${uniqueString(deployment().name, location)}-PolicyAssignment-Sub-Module'
   scope: subscription(subscriptionId)
@@ -120,7 +125,7 @@ module policyAssignment_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGro
   }
 }
 
-/*/
+
 @sys.description('Policy Assignment Name')
 output name string = empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_mg.outputs.name : (!empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_sub.outputs.name : policyAssignment_rg.outputs.name)
 
