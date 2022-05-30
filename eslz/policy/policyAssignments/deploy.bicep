@@ -3,7 +3,7 @@ targetScope = 'managementGroup'
 param policyAssignments array = []
 
 module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignment, i) in policyAssignments : {
-  name: '${policyAssignment.name}-PolicyAssignment-MG-Module-${i}-${policyAssignment.location}'
+  name: '${policyAssignment.name}-PolicyAssignment-MG-Module-${i}'
   scope: managementGroup(policyAssignment.managementGroupId)
   params: {
     name: policyAssignment.name
