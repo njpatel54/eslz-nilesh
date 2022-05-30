@@ -51,7 +51,8 @@ jobs:
             az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
   preview:
       runs-on: ubuntu-latest
@@ -76,7 +77,8 @@ jobs:
             az deployment mg what-if \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -102,4 +104,5 @@ jobs:
             az deployment mg create \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}
