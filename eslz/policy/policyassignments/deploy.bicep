@@ -71,7 +71,7 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignme
     displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
     description: !empty(policyAssignment.description) ? policyAssignment.description : ''
     parameters: !empty(policyAssignment.parameters) ? policyAssignment.parameters : {}
-    identity: policyAssignment.identity
+    identity: policyAssignment.identity.type
     roleDefinitionIds: !empty(policyAssignment.roleDefinitionIds) ? policyAssignment.roleDefinitionIds : []
     metadata: !empty(policyAssignment.metadata) ? policyAssignment.metadata : {}
     nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
