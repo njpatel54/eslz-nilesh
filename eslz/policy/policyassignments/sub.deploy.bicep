@@ -62,7 +62,7 @@ param resourceGroupName string = ''
 
 module policyAssignment_sub 'subscription/deploy.bicep' = [for policyAssignment in policyAssignments: {
   name: '${policyAssignment.name}-PolicyAssignment-Sub-Module'
-  scope: subscription(policyAssignment.subscriptionId)
+  scope: subscription('aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889')
   params: {
     name: policyAssignment.name
     policyDefinitionId: policyAssignment.policyDefinitionId
@@ -75,7 +75,7 @@ module policyAssignment_sub 'subscription/deploy.bicep' = [for policyAssignment 
     nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
     enforcementMode: policyAssignment.enforcementMode
     notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
-    subscriptionId: policyAssignment.subscriptionId
+    subscriptionId: 'aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889'  //policyAssignment.subscriptionId
     location: policyAssignment.location
   }
 }]
