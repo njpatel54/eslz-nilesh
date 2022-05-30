@@ -2,51 +2,6 @@ targetScope = 'managementGroup'
 
 param policyAssignments array = []
 
-@sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
-param managementGroupId string = 'mg-A2g'
-
-@sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment')
-param subscriptionId string = ''
-
-@sys.description('Optional. The Target Scope for the Policy. The name of the resource group for the policy assignment')
-param resourceGroupName string = ''
-
-@sys.description('Optional. This message will be part of response in case of policy violation.')
-param description string = ''
-
-@sys.description('Optional. The display name of the policy assignment. Maximum length is 128 characters.')
-@maxLength(128)
-param displayName string = ''
-
-@sys.description('Optional. Parameters for the policy assignment if needed.')
-param parameters object = {}
-
-@sys.description('Optional. The managed identity associated with the policy assignment. Policy assignments must include a resource identity when assigning \'Modify\' policy definitions.')
-@allowed([
-  'SystemAssigned'
-  'None'
-])
-param identity string = 'SystemAssigned'
-
-@sys.description('Optional. The policy assignment metadata. Metadata is an open ended object and is typically a collection of key-value pairs.')
-param metadata object = {}
-
-@sys.description('Optional. The messages that describe why a resource is non-compliant with the policy.')
-param nonComplianceMessage string = ''
-
-@sys.description('Optional. The policy assignment enforcement mode. Possible values are Default and DoNotEnforce. - Default or DoNotEnforce')
-@allowed([
-  'Default'
-  'DoNotEnforce'
-])
-param enforcementMode string = 'Default'
-
-@sys.description('Optional. The policy excluded scopes')
-param notScopes array = []
-
-@sys.description('Optional. Location for all resources.')
-param location string = deployment().location
-
 module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments : {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
   scope: managementGroup(policyAssignment.managementGroupId)
@@ -155,6 +110,50 @@ output resourceId string = empty(subscriptionId) && empty(resourceGroupName) ? p
 
 
 
+@sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
+param managementGroupId string = 'mg-A2g'
+
+@sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment')
+param subscriptionId string = ''
+
+@sys.description('Optional. The Target Scope for the Policy. The name of the resource group for the policy assignment')
+param resourceGroupName string = ''
+
+@sys.description('Optional. This message will be part of response in case of policy violation.')
+param description string = ''
+
+@sys.description('Optional. The display name of the policy assignment. Maximum length is 128 characters.')
+@maxLength(128)
+param displayName string = ''
+
+@sys.description('Optional. Parameters for the policy assignment if needed.')
+param parameters object = {}
+
+@sys.description('Optional. The managed identity associated with the policy assignment. Policy assignments must include a resource identity when assigning \'Modify\' policy definitions.')
+@allowed([
+  'SystemAssigned'
+  'None'
+])
+param identity string = 'SystemAssigned'
+
+@sys.description('Optional. The policy assignment metadata. Metadata is an open ended object and is typically a collection of key-value pairs.')
+param metadata object = {}
+
+@sys.description('Optional. The messages that describe why a resource is non-compliant with the policy.')
+param nonComplianceMessage string = ''
+
+@sys.description('Optional. The policy assignment enforcement mode. Possible values are Default and DoNotEnforce. - Default or DoNotEnforce')
+@allowed([
+  'Default'
+  'DoNotEnforce'
+])
+param enforcementMode string = 'Default'
+
+@sys.description('Optional. The policy excluded scopes')
+param notScopes array = []
+
+@sys.description('Optional. Location for all resources.')
+param location string = deployment().location
 
 @sys.description('Required. Specifies the name of the policy assignment. Maximum length is 24 characters for management group scope, 64 characters for subscription and resource group scopes.')
 param name string
