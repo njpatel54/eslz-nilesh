@@ -1,4 +1,4 @@
-targetScope = 'managementGroup'
+// targetScope = 'managementGroup'
 
 @sys.description('Required. Array containing one or more policy assignments.')
 param policyAssignments array = []
@@ -61,30 +61,9 @@ param subscriptionId string = ''
 @sys.description('Optional. The Target Scope for the Policy. The name of the resource group for the policy assignment')
 param resourceGroupName string = ''
 
-
-module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
-  name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
-  scope: managementGroup(policyAssignment.managementGroupId)
-  params: {
-    name: policyAssignment.name
-    policyDefinitionId: policyAssignment.policyDefinitionId
-    displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
-    description: !empty(policyAssignment.description) ? policyAssignment.description : ''
-    parameters: !empty(policyAssignment.parameters) ? policyAssignment.parameters : {}
-    identity: policyAssignment.identity.type
-    roleDefinitionIds: !empty(policyAssignment.roleDefinitionIds) ? policyAssignment.roleDefinitionIds : []
-    metadata: !empty(policyAssignment.metadata) ? policyAssignment.metadata : {}
-    nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
-    enforcementMode: policyAssignment.enforcementMode
-    notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
-    managementGroupId: policyAssignment.managementGroupId
-    location: policyAssignment.location
-  }
-}]
-
-module policyAssignment_sub 'subscription/deploy.bicep' = [for policyAssignment in policyAssignments: if (!empty(subscriptionId) && empty(resourceGroupName)) {
-  name: '${policyAssignment.name}-PolicyAssignment-Sub-Module'
-  scope: subscription(policyAssignment.subscriptionId)
+module policyAssignment_rg 'resourceGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (!empty(resourceGroupName) && !empty(subscriptionId)) {
+  name: '${policyAssignment.name}-PolicyAssignment-RG-Module'
+  scope: resourceGroup(policyAssignment.subscriptionId, policyAssignment.resourceGroupName)
   params: {
     name: policyAssignment.name
     policyDefinitionId: policyAssignment.policyDefinitionId
@@ -101,27 +80,8 @@ module policyAssignment_sub 'subscription/deploy.bicep' = [for policyAssignment 
     location: policyAssignment.location
   }
 }]
-/*
-module policyAssignment_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGroupName) && !empty(subscriptionId)) {
-  name: '${uniqueString(deployment().name, location)}-PolicyAssignment-RG-Module'
-  scope: resourceGroup(subscriptionId, resourceGroupName)
-  params: {
-    name: name
-    policyDefinitionId: policyDefinitionId
-    displayName: !empty(displayName) ? displayName : ''
-    description: !empty(description) ? description : ''
-    parameters: !empty(parameters) ? parameters : {}
-    identity: identity
-    roleDefinitionIds: !empty(roleDefinitionIds) ? roleDefinitionIds : []
-    metadata: !empty(metadata) ? metadata : {}
-    nonComplianceMessage: !empty(nonComplianceMessage) ? nonComplianceMessage : ''
-    enforcementMode: enforcementMode
-    notScopes: !empty(notScopes) ? notScopes : []
-    subscriptionId: subscriptionId
-    location: location
-  }
-}
 
+/*
 @sys.description('Policy Assignment Name')
 output name string = empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_mg.outputs.name : (!empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_sub.outputs.name : policyAssignment_rg.outputs.name)
 

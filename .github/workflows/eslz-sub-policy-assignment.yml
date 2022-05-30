@@ -48,11 +48,10 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-            az deployment mg validate \
+            az deployment sub validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --template-file ./eslz/policy/policyassignments/sub.deploy.bicep \
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
 
   preview:
       runs-on: ubuntu-latest
@@ -74,11 +73,10 @@ jobs:
         name: 'Run what-if'
         with:
           inlineScript: |
-            az deployment mg what-if \
+            az deployment sub validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --template-file ./eslz/policy/policyassignments/sub.deploy.bicep \
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
 
   deploy:
     runs-on: ubuntu-latest
@@ -101,8 +99,7 @@ jobs:
       name: 'Deploying Policy Assignment at Subscription Level'
       with:
         inlineScript: |
-            az deployment mg create \
+            az deployment sub validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --template-file ./eslz/policy/policyassignments/sub.deploy.bicep \
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json

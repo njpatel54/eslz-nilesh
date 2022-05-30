@@ -50,7 +50,7 @@ jobs:
         inlineScript: |
             az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
+              --template-file ./eslz/policy/policyassignments/mg.deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
@@ -74,9 +74,9 @@ jobs:
         name: 'Run what-if'
         with:
           inlineScript: |
-            az deployment mg what-if \
+            az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
+              --template-file ./eslz/policy/policyassignments/mg.deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
@@ -102,8 +102,8 @@ jobs:
       name: 'Deploying Policy Assignment at Management Group Level'
       with:
         inlineScript: |
-            az deployment mg create \
+            az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
+              --template-file ./eslz/policy/policyassignments/mg.deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
