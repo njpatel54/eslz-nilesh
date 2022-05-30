@@ -45,6 +45,6 @@ jobs:
             az deployment mg create \
               --name 'PolicyAssignment-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyAssignments/deploy.bicep \
-              --parameters ./eslz/policy/policyAssignments/.parameters/mg.parameters.nil.json \
+              --template-file ./eslz/policy/policyAssignments/mg.deploy.bicep \
+              --parameters ./eslz/policy/policyAssignments/.parameters/mg.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}

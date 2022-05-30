@@ -2,7 +2,7 @@ targetScope = 'managementGroup'
 
 param policyAssignments array = []
 
-module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignment, i) in policyAssignments : {
+module policyAssignment_mg 'managementGroup/deploy.bicep' = [ for (policyAssignment, i) in policyAssignments :  {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module-${i}'
   scope: managementGroup(policyAssignment.managementGroupId)
   params: {
@@ -22,40 +22,8 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignme
   }
 }]
 
+
 /*
-
-module policyAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId) && empty(resourceGroupName)) {
-  name: 'add-resource-tags-PolicyAssignment-MG-Module'
-  scope: managementGroup('mg-A2g')
-  params: {
-    name: 'add-resource-tags'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26'
-    displayName: '[Display Name] Policy Assignment at the management group scope'
-    description: '[Description] Policy Assignment at the management group scope'
-    parameters: {
-      'tagName': 'env'
-      'tagValue': 'prod'
-    }    
-    identity: 'SystemAssigned'
-    roleDefinitionIds: [
-      '/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
-    ]
-    metadata: {
-      'category': 'Security'
-      'version': '1.0'
-    }
-    nonComplianceMessage: 'Violated Policy Assignment - This is a Non Compliance Message'
-    enforcementMode: 'DoNotEnforce'
-    notScopes: [
-      '/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ui2t'
-    ]
-    managementGroupId: 'mg-A2g'
-    location: location
-  }
-}
-
-
-
 
 module policyAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${uniqueString(deployment().name, location)}-PolicyAssignment-Sub-Module'
@@ -112,6 +80,7 @@ output resourceId string = empty(subscriptionId) && empty(resourceGroupName) ? p
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
 param managementGroupId string = 'mg-A2g'
+
 
 @sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment')
 param subscriptionId string = ''
