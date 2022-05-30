@@ -52,7 +52,7 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
-              --management-group-id mg-A2g
+              --management-group-id 'mg-A2g'
 
   preview:
       runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
-              --management-group-id mg-A2g
+              --management-group-id 'mg-A2g'
 
   deploy:
     runs-on: ubuntu-latest
@@ -105,4 +105,4 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
-              --management-group-id mg-A2g
+              --management-group-id 'mg-A2g'
