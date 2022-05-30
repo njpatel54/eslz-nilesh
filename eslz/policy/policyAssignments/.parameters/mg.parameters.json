@@ -41,7 +41,7 @@
         },
         "notScopes": {
             "value": [
-                "/subscriptions/<<subscriptionId>>/resourceGroups/validation-rg"
+                "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ui2t"
             ]
         },
         "identity": {
