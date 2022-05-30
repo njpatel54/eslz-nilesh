@@ -45,10 +45,11 @@ param enforcementMode string = 'Default'
 
 @sys.description('Optional. The policy excluded scopes')
 param notScopes array = []
-*/
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
 param managementGroupId string = managementGroup().name
+*/
+
 
 @sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment')
 param subscriptionId string = ''
@@ -74,7 +75,7 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignme
     nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
     enforcementMode: policyAssignment.enforcementMode
     notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
-    managementGroupId: policyAssignment.managementGroupId
+    managementGroupId: 'mg-A2g'  //policyAssignment.managementGroupId
     location: policyAssignment.location
   }
 }]
