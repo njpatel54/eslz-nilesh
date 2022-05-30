@@ -61,7 +61,6 @@ param subscriptionId string = ''
 @sys.description('Optional. The Target Scope for the Policy. The name of the resource group for the policy assignment')
 param resourceGroupName string = ''
 
-
 module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
   scope: managementGroup(policyAssignment.managementGroupId)

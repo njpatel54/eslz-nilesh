@@ -51,7 +51,7 @@ var nonComplianceMessage_var = {
 }
 
 @sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment. If not provided, will use the current scope for deployment.')
-param subscriptionId string = subscription().subscriptionId
+param subscriptionId string
 
 var identity_var = identity == 'SystemAssigned' ? {
   type: identity
