@@ -49,7 +49,7 @@ jobs:
         inlineScript: |
             az deployment group validate \
               --name 'PolicyAssignment-RG-Scope' \
-              --resource-group $ {{ secrets.AZURE_RG }} \
+              --resource-group ${{ secrets.AZURE_RG }} \
               --template-file ./eslz/policy/policyAssignments/rg.deploy.bicep \
               --parameters ./eslz/policy/policyAssignments/.parameters/rg.parameters.json
 
@@ -75,7 +75,7 @@ jobs:
           inlineScript: |
             az deployment group what-if \
               --name 'PolicyAssignment-RG-Scope' \
-              --resource-group $ {{ secrets.AZURE_RG }} \
+              --resource-group ${{ secrets.AZURE_RG }} \
               --template-file ./eslz/policy/policyAssignments/rg.deploy.bicep \
               --parameters ./eslz/policy/policyAssignments/.parameters/rg.parameters.json
 
@@ -102,6 +102,6 @@ jobs:
         inlineScript: |
             az deployment group create \
               --name 'PolicyAssignment-RG-Scope' \
-              --resource-group $ {{ secrets.AZURE_RG }} \
+              --resource-group ${{ secrets.AZURE_RG }} \
               --template-file ./eslz/policy/policyAssignments/rg.deploy.bicep \
               --parameters ./eslz/policy/policyAssignments/.parameters/rg.parameters.json
