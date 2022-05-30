@@ -77,8 +77,8 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01'
   identity: identity_var
 }
 
-module roleAssignment '.bicep/roleAssignment.bicep' = [ for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
-  name: '${policyAssignment.name}-${last(split(roleDefinitionId,'/'))}'   //guid(managementGroupId, roleDefinitionId, location, name)
+module roleAssignment_mg '.bicep/roleAssignment.bicep' = [ for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
+  name: '${policyAssignment.name}-RoleAssignment-MG-Module-${roleDefinitionId}'   //guid(managementGroupId, roleDefinitionId, location, name)
   params: {
     roleDefinitionId: roleDefinitionId
     principalId: policyAssignment.identity.principalId
