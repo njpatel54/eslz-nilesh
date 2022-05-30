@@ -40,7 +40,7 @@ param nonComplianceMessage string = ''
 param enforcementMode string = 'Default'
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
-param managementGroupId string = managementGroup().name
+param managementGroupId string = ''
 
 @sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment')
 param subscriptionId string = ''
@@ -53,22 +53,6 @@ param notScopes array = []
 
 @sys.description('Optional. Location for all resources.')
 param location string = deployment().location
-
-@sys.description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  location: location
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
 
 module policyAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${uniqueString(deployment().name, location)}-PolicyAssignment-MG-Module'
@@ -87,7 +71,6 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscripti
     notScopes: !empty(notScopes) ? notScopes : []
     managementGroupId: managementGroupId
     location: location
-    enableDefaultTelemetry: enableDefaultTelemetry
   }
 }
 
@@ -108,7 +91,6 @@ module policyAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptio
     notScopes: !empty(notScopes) ? notScopes : []
     subscriptionId: subscriptionId
     location: location
-    enableDefaultTelemetry: enableDefaultTelemetry
   }
 }
 
@@ -129,7 +111,6 @@ module policyAssignment_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGro
     notScopes: !empty(notScopes) ? notScopes : []
     subscriptionId: subscriptionId
     location: location
-    enableDefaultTelemetry: enableDefaultTelemetry
   }
 }
 
