@@ -6,7 +6,7 @@
       "value": [
         {
           "name": {
-              "value": "eslz-mg-polAss"
+              "value": "Add-tag-to-resources"
           },
           "displayName": {
               "value": "[Display Name] Policy Assignment at the management group scope"
@@ -20,10 +20,10 @@
           "parameters": {
               "value": {
                 "tagName": {
-                    "value": "ProjectName"
+                    "value": "Test"
                 },
                 "tagValue": {
-                    "value": "A2g-Platform"
+                    "value": "Worked"
                 }
               }
           },
@@ -62,7 +62,7 @@
         },
         {
           "name": {
-              "value": "eslz-mg-polAss"
+              "value": "activity-logs-to-loga"
           },
           "displayName": {
               "value": "[Display Name] Policy Assignment at the management group scope"
