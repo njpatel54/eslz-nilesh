@@ -61,19 +61,19 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignme
   name: '${i}-${uniqueString(deployment().name, location)}-PolicyAssignment-MG-Module'
   scope: managementGroup(managementGroupId)
   params: {
-    name: name
-    policyDefinitionId: policyDefinitionId
-    displayName: !empty(displayName) ? displayName : ''
-    description: !empty(description) ? description : ''
-    parameters: !empty(parameters) ? parameters : {}
-    identity: identity
-    roleDefinitionIds: !empty(roleDefinitionIds) ? roleDefinitionIds : []
-    metadata: !empty(metadata) ? metadata : {}
-    nonComplianceMessage: !empty(nonComplianceMessage) ? nonComplianceMessage : ''
-    enforcementMode: enforcementMode
-    notScopes: !empty(notScopes) ? notScopes : []
-    managementGroupId: managementGroupId
-    location: location
+    name: policyAssignment.name
+    policyDefinitionId: policyAssignment.policyDefinitionId
+    displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
+    description: !empty(policyAssignment.description) ? policyAssignment.description : ''
+    parameters: !empty(policyAssignment.parameters) ? policyAssignment.parameters : {}
+    identity: policyAssignment.identity
+    roleDefinitionIds: !empty(policyAssignment.roleDefinitionIds) ? policyAssignment.roleDefinitionIds : []
+    metadata: !empty(policyAssignment.metadata) ? policyAssignment.metadata : {}
+    nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
+    enforcementMode: policyAssignment.enforcementMode
+    notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
+    managementGroupId: policyAssignment.managementGroupId
+    location: policyAssignment.location
   }
 }]
 
