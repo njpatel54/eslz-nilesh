@@ -64,7 +64,7 @@ param resourceGroupName string = ''
 
 module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignment, i) in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
-  scope: managementGroup('mg-A2g')
+  scope: managementGroup(policyAssignment.managementGroupId)
   params: {
     name: policyAssignment.name
     policyDefinitionId: policyAssignment.policyDefinitionId
@@ -77,7 +77,7 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignme
     nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
     enforcementMode: policyAssignment.enforcementMode
     notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
-    managementGroupId: 'mg-A2g'  //policyAssignment.managementGroupId
+    managementGroupId: policyAssignment.managementGroupId
     location: policyAssignment.location
   }
 }]

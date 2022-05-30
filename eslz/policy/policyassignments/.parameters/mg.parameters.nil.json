@@ -10,12 +10,12 @@
             "description": "Adds the specified tag and value when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed. Does not modify tags on resource groups.",
             "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26",
             "parameters": {
-                    "tagName": {
-                        "value": "Test"
-                    },
-                    "tagValue": {
-                        "value": "Worked"
-                    }
+                "tagName": {
+                    "value": "Test"
+                },
+                "tagValue": {
+                    "value": "Worked"
+                }
             },
             "nonComplianceMessage": "All resoruces must have these tags.",
             "enforcementMode": "Default",
@@ -33,7 +33,7 @@
                 "type": "SystemAssigned"
             },
             "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+               "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
             ],
             "managementGroupId": "mg-A2g"
         },
@@ -45,13 +45,13 @@
             "parameters": {
                 "logAnalytics": {
                     "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-ghzj/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-ghzj"
-                    },
-                    "effect": {
-                        "value": "DeployIfNotExists"
-                    },
-                    "logsEnabled": {
-                        "value": "True"
-                    }
+                },
+                "effect": {
+                    "value": "DeployIfNotExists"
+                },
+                "logsEnabled": {
+                    "value": "True"
+                }
             },
             "nonComplianceMessage": "Azure Activity logs must stream to a specified Log Analytics workspace.",
             "enforcementMode": "Default",
@@ -69,9 +69,9 @@
                 "type": "SystemAssigned"
             },
             "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
-                ],
+                "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+            ],
             "managementGroupId": "mg-A2g"        
         }
       ]      
