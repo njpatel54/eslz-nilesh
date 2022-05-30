@@ -1,0 +1,126 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {            
+    "defaultManagementGroupIdForPolicyDefinitions": {
+      "value": "mg-A2g"
+    },
+    "policyAssignments": {
+      "value": [
+        {
+          "name": {
+              "value": "eslz-mg-polAss"
+          },
+          "displayName": {
+              "value": "[Display Name] Policy Assignment at the management group scope"
+          },
+          "description": {
+              "value": "[Description] Policy Assignment at the management group scope"
+          },
+          "policyDefinitionId": {
+              "value": "/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26"
+          },
+          "parameters": {
+              "value": {
+                "tagName": {
+                    "value": "ProjectName"
+                },
+                "tagValue": {
+                    "value": "A2g-Platform"
+                }
+              }
+          },
+          "nonComplianceMessage": {
+              "value": "Violated Policy Assignment - This is a Non Compliance Message"
+          },
+          "enforcementMode": {
+              "value": "DoNotEnforce"
+          },
+          "metadata": {
+              "value": {
+                  "category": "Security",
+                  "version": "1.0"
+              }
+          },
+          "location": {
+              "value": "usgovvirginia"
+          },
+          "notScopes": {
+              "value": [
+                  "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ui2t"
+              ]
+          },
+          "identity": {
+              "value": "SystemAssigned"
+          },
+          "roleDefinitionIds": {
+              "value": [
+                  "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+              ]
+          },
+          "managementGroupId": {
+              "value": "mg-A2g"
+          }
+        
+        },
+        {
+          "name": {
+              "value": "eslz-mg-polAss"
+          },
+          "displayName": {
+              "value": "[Display Name] Policy Assignment at the management group scope"
+          },
+          "description": {
+              "value": "[Description] Policy Assignment at the management group scope"
+          },
+          "policyDefinitionId": {
+              "value": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f"
+          },
+          "parameters": {
+              "value": {
+                  "tagName": {
+                      "value": "ProjectName"
+                  },
+                  "tagValue": {
+                      "value": "A2g-Platform"
+                  }
+              }
+          },
+          "nonComplianceMessage": {
+              "value": "Violated Policy Assignment - This is a Non Compliance Message"
+          },
+          "enforcementMode": {
+              "value": "DoNotEnforce"
+          },
+          "metadata": {
+              "value": {
+                  "category": "Monitoring",
+                  "version": "1.0"
+              }
+          },
+          "location": {
+              "value": "usgovvirginia"
+          },
+          "notScopes": {
+              "value": [
+                 "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ui2t"
+              ]
+          },
+          "identity": {
+              "value": "SystemAssigned"
+          },
+          "roleDefinitionIds": {
+              "value": [
+                "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+              ]
+          },
+          "managementGroupId": {
+              "value": "mg-A2g"
+          }
+        
+        }
+      ]      
+    }
+  }
+}

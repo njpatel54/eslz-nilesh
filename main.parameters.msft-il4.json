@@ -1,0 +1,792 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {            
+    "defaultManagementGroupIdForPolicyDefinitions": {
+      "value": "c3elz7"
+    },
+    "policyAssignments_managementGroup": {
+      "value": [
+        {
+          "name": "Az-Sec-Benchmark-MG",
+          "location": "",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Azure Security Benchmark",
+            "displayName": "Azure Security Benchmark",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Resources must comply with the Azure Security Benchmark",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {},
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "activity-logs-to-loga",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "SystemAssigned",
+            "management_group_role_assignments": [
+              { 
+                "roleDefinitionId":"/providers/Microsoft.Authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                "managementGroupId": "c3elz7"
+              },
+              {
+                "roleDefinitionId":"/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+                "managementGroupId": "c3elz7-platform-management"
+              }
+            ]
+          },
+          "properties": {
+            "description": "Configure Azure Activity logs to stream to specified Log Analytics workspace.",
+            "displayName": "Activity Logs to Log Analytics",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Azure Activity logs must stream to a specified Log Analytics workspace.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {
+              "logAnalytics": {
+                "value": "/subscriptions/07526f72-6689-42be-945f-bb6ad0214b71/resourcegroups/rg-siem-shared-001/providers/microsoft.operationalinsights/workspaces/log-c3elz7-usgovvirginia-001"
+              },
+              "effect": {
+                "value": "DeployIfNotExists"
+              },
+              "logsEnabled": {
+                "value": "True"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "allowed-resource-types",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Allowed resource types.",
+            "displayName": "Allowed Resource Types",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Only approved resource types are allowed.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-connectivity",
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-management"
+            ],
+            "parameters": {
+              "listOfResourceTypesAllowed": {
+                "value": [
+                  "microsoft.automation/automationaccounts",
+                  "microsoft.compute/availabilitysets",
+                  "microsoft.compute/virtualmachines",
+                  "microsoft.compute/virtualmachines/extensions",
+                  "microsoft.compute/restorepointcollections",
+                  "microsoft.compute/disks",
+                  "microsoft.compute/galleries",
+                  "microsoft.compute/snapshots",
+                  "microsoft.compute/images",
+                  "microsoft.devtestlab/schedules",
+                  "microsoft.keyvault/vaults",
+                  "microsoft.keyvault/secrets",
+                  "microsoft.keyvault/accesspolicies",
+                  "microsoft.keyvault/operations",
+                  "microsoft.keyvault/checknameavailability",
+                  "microsoft.keyvault/deletedvaults",
+                  "microsoft.keyvault/vaults",
+                  "microsoft.network/applicationsecuritygroups",
+                  "microsoft.network/dnsoperationresults",
+                  "microsoft.network/dnsoperationstatuses",
+                  "microsoft.network/dnszones",
+                  "microsoft.network/dnszones",
+                  "microsoft.network/loadbalancers",
+                  "microsoft.network/networkinterfaces",
+                  "microsoft.network/networksecuritygroups",
+                  "microsoft.network/networkwatchers",
+                  "microsoft.network/routetables",
+                  "microsoft.network/virtualnetworks",
+                  "microsoft.operationalinsights/workspaces",
+                  "microsoft.operationalinsights/workspaces/tables",
+                  "microsoft.operationalinsights/workspaces/query",
+                  "microsoft.operationsmanagement/solutions",
+                  "microsoft.recoveryservices/vaults",
+                  "microsoft.recoveryservices/vaults/backuppolicies",
+                  "microsoft.recoveryservices/vaults/backupfabrics/backupprotectionintent",
+                  "microsoft.storage/storageaccounts",
+                  "microsoft.storage/storageaccounts/blobservices",
+                  "microsoft.sqlvirtualmachine/sqlvirtualmachines"
+                ]
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a08ec900-254a-4555-9bf5-e42af04b5c5c"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "allowed-resource-types",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None", 
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Allowed resource types.",
+            "displayName": "Allowed Resource Types - Platform Management",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Only approved resource types are allowed.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {
+              "listOfResourceTypesAllowed": {
+                "value": [
+                  "microsoft.automation/automationaccounts",
+                  "microsoft.compute/availabilitysets",
+                  "microsoft.compute/virtualmachines",
+                  "microsoft.compute/virtualmachines/extensions",
+                  "microsoft.compute/restorepointcollections",
+                  "microsoft.compute/disks",
+                  "microsoft.compute/galleries",
+                  "microsoft.compute/snapshots",
+                  "microsoft.compute/images",
+                  "microsoft.desktopvirtualization/hostpools",
+                  "microsoft.desktopvirtualization/applicationgroups",
+                  "microsoft.desktopvirtualization/workspaces",
+                  "microsoft.devtestlab/schedules",
+                  "microsoft.keyvault/vaults",
+                  "microsoft.keyvault/secrets",
+                  "microsoft.keyvault/accesspolicies",
+                  "microsoft.keyvault/operations",
+                  "microsoft.keyvault/checknameavailability",
+                  "microsoft.keyvault/deletedvaults",
+                  "microsoft.keyvault/vaults",
+                  "microsoft.network/applicationsecuritygroups",
+                  "microsoft.network/dnsoperationresults",
+                  "microsoft.network/dnsoperationstatuses",
+                  "microsoft.network/dnszones",
+                  "microsoft.network/dnszones",
+                  "microsoft.network/loadbalancers",
+                  "microsoft.network/networkinterfaces",
+                  "microsoft.network/networksecuritygroups",
+                  "microsoft.network/networkwatchers",
+                  "microsoft.network/routetables",
+                  "microsoft.network/virtualnetworks",
+                  "microsoft.operationalinsights/workspaces",
+                  "microsoft.operationalinsights/workspaces/tables",
+                  "microsoft.operationalinsights/workspaces/query",
+                  "microsoft.operationsmanagement/solutions",
+                  "microsoft.recoveryservices/vaults",
+                  "microsoft.recoveryservices/vaults/backuppolicies",
+                  "microsoft.recoveryservices/vaults/backupfabrics/backupprotectionintent",
+                  "microsoft.storage/storageaccounts",
+                  "microsoft.storage/storageaccounts/blobservices",
+                  "Microsoft.SqlVirtualMachine/sqlVirtualMachines"
+                ]
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a08ec900-254a-4555-9bf5-e42af04b5c5c"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7-platform-management"
+        },
+        {
+          "name": "allowed-resource-types",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Allowed resource types.",
+            "displayName": "Allowed Resource Types - Platform Connectivity",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Only approved resource types are allowed.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {
+              "listOfResourceTypesAllowed": {
+                "value": [
+                  "microsoft.compute/availabilitysets",
+                  "microsoft.compute/virtualmachines",
+                  "microsoft.compute/virtualmachines/extensions" ,
+                  "microsoft.compute/disks",
+                  "microsoft.compute/snapshots",
+                  "microsoft.compute/images"          ,
+                  "microsoft.compute/restorepointcollections",
+                  "microsoft.keyvault/vaults",
+                  "microsoft.keyvault/vaults/secrets",
+                  "microsoft.keyvault/vaults/accesspolicies",
+                  "microsoft.keyvault/operations",
+                  "microsoft.keyvault/checknameavailability",
+                  "microsoft.keyvault/deletedvaults",
+                  "microsoft.keyvault/vaults/keys",
+                  "microsoft.keyvault/vaults/keys/versions",
+                  "microsoft.network/applicationsecuritygroups",
+                  "microsoft.network/bastionhosts",
+                  "microsoft.network/connections",
+                  "microsoft.network/expressroutecircuits",
+                  "microsoft.network/expressroutecircuits/peerings/connections",
+                  "microsoft.network/expressrouteports",
+                  "microsoft.network/loadbalancers",
+                  "microsoft.network/networkinterfaces",
+                  "microsoft.network/networksecuritygroups",
+                  "microsoft.network/networkwatchers",
+                  "microsoft.network/publicipaddresses",
+                  "microsoft.recoveryservices/vaults",
+                  "microsoft.network/routetables",
+                  "microsoft.network/routefilters" ,
+                  "microsoft.network/virtualnetworkgateways",
+                  "microsoft.network/virtualnetworks",
+                  "microsoft.storage/storageaccounts",
+                  "microsoft.storage/storageaccounts/blobservices" 
+                ]
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a08ec900-254a-4555-9bf5-e42af04b5c5c"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7-platform-connectivity"
+        },
+        {
+          "name": "allowed-routes",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Allowed routes on route tables.",
+            "displayName": "Allowed Routes",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Allowed routes are restricted.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-connectivity",
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-management"
+            ],
+            "parameters": {
+              "allowedRoutes": {
+                "value": [
+                  {
+                    "addressPrefix": "0.0.0.0/0",
+                    "nextHopType": "VirtualAppliance",
+                    "nextHopIPAddress": "172.16.0.142"
+                  }
+                ]                
+              },
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/allowed-routes"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "allowed-vnet-peers",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Specifies the allowed peers for Virtual Networks.",
+            "displayName": "Allowed VNET Peers",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Allowed peers for Virtual Networks are restricted.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-connectivity",
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-management"
+            ],
+            "parameters": {
+              "allowedVnetPeers": {
+                "value": [
+                  "/subscriptions/b30166b8-dd1b-4fa2-9ad7-057614257b06/resourceGroups/rg-connectivity-vdss-001/providers/Microsoft.Network/virtualNetworks/vnet-c3elz7-usgovvirginia-vdss-01"
+                ]            
+              },
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/allowed-vnet-peers"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "deny-disk-export",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "SystemAssigned",
+            "management_group_role_assignments": [
+              { 
+                "roleDefinitionId": "/providers/Microsoft.Authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+                "managementGroupId": "c3elz7"
+              }
+            ]
+          },
+          "properties": {
+            "description": "Managed Disks cannot be exported.",
+            "displayName": "Deny Disk Export",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Managed Disks Cannot be exported.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {              
+              "effect": {
+                "value": "Modify"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/deny-disk-export"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "disallowed-roles",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Disallowed Roles can't be assigned.",
+            "displayName": "Disallowed Roles",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Disallowed Roles including Owner, Contributor, Network Contributor, Blueprint Contributor and Managed Application Contributor can't be assigned.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {
+              "disallowedRoles": {
+                "value": [
+                    "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+                    "b24988ac-6180-42a0-ab88-20f7382dd24c",
+                    "4d97b98b-1d4f-4787-a291-c67834d212e7",
+                    "41077137-e803-4205-871c-5a86e6a753b4",
+                    "641177b8-a67a-45b9-a033-47bc880bb21e"
+                ]            
+              },
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/disallowed-roles-policy"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "kv-allowed-iprules",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "IP Rules in Key Vault Firewalls are restricted.",
+            "displayName": "Key Vault Allowed IP Rules",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "IP Rules in Key Vault Firewalls are restricted.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-management"
+            ],
+            "parameters": {
+              "allowedAddressRanges": {
+                "value": []   
+              },
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/kv-allowed-iprules"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "kv-allowed-iprules",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "IP Rules in Key Vault Firewalls are restricted.",
+            "displayName": "Key Vault Allowed IP Rules - Platform Management",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "IP Rules in Key Vault Firewalls are restricted.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {
+              "allowedAddressRanges": {
+                "value": [
+                  "20.141.65.213"
+                ]   
+              },
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/kv-allowed-iprules"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7-platform-management"
+        },
+        {
+          "name": "nic-require-nsg",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Require NSG on NICs.",
+            "displayName": "NIC Require NSG",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "NIC requires a Network Security Group.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-connectivity"
+            ],
+            "parameters": {              
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/nic-require-nsg"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "require-default-route",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "A Default Route is required on Route Tables.",
+            "displayName": "Require Default Route",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "A Default Route is required on Route Tables.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-connectivity"
+            ],
+            "parameters": {              
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/require-default-route"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "require-routetable",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "A Route Table is required on Subnets.",
+            "displayName": "Require Route Table",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "A Route Table is required on Subnets.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-connectivity"
+            ],
+            "parameters": {              
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/require-routetable"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "restrict-custom-roles",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Restrict Custom Role Definitions.",
+            "displayName": "Restrict Custom Roles",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Custom Role Definitions are restricted.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {              
+              "disallowedActionsStartsWith": {
+                "value": [
+                  "*",
+                  "Microsoft.Authorization",
+                  "Microsoft.Network/virtualNetworks",
+                  "Microsoft.Network/routeTables",
+                  "Microsoft.Blueprint",
+                  "Microsoft.Solutions"
+                ]
+              },
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/restrict-custom-roles"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "sa-allowed-iprules",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "IP Rules in Storage Account Firewalls are restricted.",
+            "displayName": "Storage Account Allowed IP Rules",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "IP Rules in Storage Account Firewalls are restricted.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {              
+              "allowedAddressRanges": {
+                "value": []   
+              },
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/c3elz7/providers/Microsoft.Authorization/policyDefinitions/sa-allowed-iprules"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "sa-restrict-netaccess",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "IP Rules in Storage Account Firewalls are restricted.",
+            "displayName": "Storage Account Restrict Network Access",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Storage accounts should restrict network access.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-connectivity",
+              "/providers/Microsoft.Management/managementGroups/c3elz7-platform-management"
+            ],
+            "parameters": {   
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/34c877ad-507e-4c82-993e-3452a6e0ad3c"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "sa-secure-transfer",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "None",
+            "management_group_role_assignments": []
+          },
+          "properties": {
+            "description": "Secure transfer to storage accounts should be enabled.",
+            "displayName": "Storage Account Secure Transfer",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Secure transfer to storage accounts should be enabled.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {   
+              "effect": {
+                "value": "Deny"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "enable-monitor-for-vm",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "SystemAssigned",
+            "management_group_role_assignments": [
+              { 
+                "roleDefinitionId":"/providers/Microsoft.Authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+                "managementGroupId": "c3elz7"
+              },
+              {
+                "roleDefinitionId":"/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+                "managementGroupId": "c3elz7-platform-management"
+              }
+            ]
+          },
+          "properties": {
+            "description": "Enable Azure Monitor for Virtual Machines.",
+            "displayName": "Enable Azure Monitor for VM",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Azure Monitor Should be enable for Virtual Machines.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {   
+              "logAnalytics_1": {
+                "value": "/subscriptions/07526f72-6689-42be-945f-bb6ad0214b71/resourcegroups/rg-siem-shared-001/providers/microsoft.operationalinsights/workspaces/log-c3elz7-usgovvirginia-001"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/55f3eceb-5573-4f18-9695-226972c6d74a"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        },
+        {
+          "name": "enable-monitor-for-vmss",
+          "location": "usgovvirginia",
+          "identity":{
+            "type": "SystemAssigned",
+            "management_group_role_assignments": [
+              { 
+                "roleDefinitionId":"/providers/Microsoft.Authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+                "managementGroupId": "c3elz7"
+              },
+              {
+                "roleDefinitionId":"/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+                "managementGroupId": "c3elz7-platform-management"
+              }
+            ]
+          },
+          "properties": {
+            "description": "Enable Azure Monitor for Virtual Machine Scale Sets.",
+            "displayName": "Enable Azure Monitor for VMSS",
+            "enforcementMode": "Default",
+            "nonComplianceMessages": [
+              {
+                "message": "Azure Monitor Should be enable for Virtual Machine Scale Sets.",
+                "policyDefinitionReferenceId" : ""
+              }
+            ],
+            "notScopes": [],
+            "parameters": {   
+              "logAnalytics_1": {
+                "value": "/subscriptions/07526f72-6689-42be-945f-bb6ad0214b71/resourcegroups/rg-siem-shared-001/providers/microsoft.operationalinsights/workspaces/log-c3elz7-usgovvirginia-001"
+              }
+            },
+            "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/75714362-cae7-409e-9b99-a8e5075b7fad"
+          },
+          "scopeType": "ManagementGroup",
+          "managementGroupId": "c3elz7"
+        }
+      ]      
+    },
+    "policyAssignments_subscription": {
+      "value": []
+    },
+    "policyAssignments_resourceGroup": {
+      "value": []
+    }
+  }
+}
