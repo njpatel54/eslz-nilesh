@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: eslz - mg policy assignment
+name: eslz - sub policy assignment
 
 # Controls when the workflow will run
 on:
@@ -48,11 +48,10 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-            az deployment mg validate \
+            az deployment sub validate \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
 
   preview:
       runs-on: ubuntu-latest
@@ -74,12 +73,10 @@ jobs:
         name: 'Run what-if'
         with:
           inlineScript: |
-            az deployment mg what-if \
+            az deployment sub what-if \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
-
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
 
   deploy:
     runs-on: ubuntu-latest
@@ -99,11 +96,10 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploying Policy Assignment at Management Group Level'
+      name: 'Deploying Policy Assignment at Subscription Level'
       with:
         inlineScript: |
-            az deployment mg create \
+            az deployment sub create \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
