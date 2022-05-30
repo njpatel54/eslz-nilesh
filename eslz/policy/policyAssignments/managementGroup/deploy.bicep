@@ -89,8 +89,8 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01'
   identity: identity_var
 }
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: {
-  name: guid(managementGroupId, roleDefinitionId, location, name)
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
+  name: '${policyAssignment.name}-${last(split(roleDefinitionId,'/'))}'   //guid(managementGroupId, roleDefinitionId, location, name)
   properties: {
     roleDefinitionId: roleDefinitionId
     principalId: policyAssignment.identity.principalId
