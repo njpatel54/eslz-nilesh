@@ -39,10 +39,11 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploying Policy Assignment at Management Group Level'
+      name: 'Policy Assignment - Management Group Scope'
       with:
         inlineScript: |
             az deployment mg create \
+              --name 'Policy Assignment - Management Group Scope'
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyAssignments/deploy.bicep \
               --parameters ./eslz/policy/policyAssignments/.parameters/mg.parameters.nil.json \
