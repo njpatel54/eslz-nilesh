@@ -62,7 +62,7 @@ param subscriptionId string = ''
 param resourceGroupName string = ''
 
 
-module policyAssignment_mg 'managementGroup/deploy.bicep' = [for (policyAssignment, i) in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
+module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
   scope: managementGroup(policyAssignment.managementGroupId)
   params: {
@@ -122,7 +122,6 @@ module policyAssignment_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGro
     location: location
   }
 }
-
 
 @sys.description('Policy Assignment Name')
 output name string = empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_mg.outputs.name : (!empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_sub.outputs.name : policyAssignment_rg.outputs.name)
