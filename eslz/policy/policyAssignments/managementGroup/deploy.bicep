@@ -41,13 +41,16 @@ param nonComplianceMessage string = ''
 param enforcementMode string = 'Default'
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
-param managementGroupId string = managementGroup().name
+param managementGroupId string
 
 @sys.description('Optional. The policy excluded scopes')
 param notScopes array = []
 
 @sys.description('Optional. Location for all resources.')
 param location string = deployment().location
+
+@sys.description('Optional. principalId of the managed identity of the assignment.')
+param principalId string = ''
 
 var nonComplianceMessage_var = {
   message: !empty(nonComplianceMessage) ? nonComplianceMessage : null
@@ -89,11 +92,21 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01'
   identity: identity_var
 }
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
+module roleAssignment '.bicep/roleAssignment.bicep' = [ for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
   name: '${policyAssignment.name}-${last(split(roleDefinitionId,'/'))}'   //guid(managementGroupId, roleDefinitionId, location, name)
-  properties: {
+  params: {
     roleDefinitionId: roleDefinitionId
     principalId: policyAssignment.identity.principalId
+    managementGroupId: managementGroupId
+  }
+}]
+
+/*
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
+  name: guid(managementGroupId, roleDefinitionId, principalId)   //guid(managementGroupId, roleDefinitionId, location, name)
+  properties: {
+    roleDefinitionId: roleDefinitionId
+    principalId: principalId
     principalType: 'ServicePrincipal'
   }
 }]
@@ -106,3 +119,4 @@ output principalId string = identity == 'SystemAssigned' ? policyAssignment.iden
 
 @sys.description('Policy Assignment resource ID')
 output resourceId string = extensionResourceId(tenantResourceId('Microsoft.Management/managementGroups', managementGroupId), 'Microsoft.Authorization/policyAssignments', policyAssignment.name)
+*/
