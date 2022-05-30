@@ -48,25 +48,36 @@ param notScopes array = []
 param location string = deployment().location
 
 
-module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
-  name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
-  scope: managementGroup(managementGroupId)
+module policyAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId) && empty(resourceGroupName)) {
+  name: 'add-resource-tags-PolicyAssignment-MG-Module'
+  scope: managementGroup('mg-A2g')
   params: {
-    name: policyAssignment.name
-    policyDefinitionId: policyAssignment.policyDefinitionId
-    displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
-    description: !empty(policyAssignment.description) ? policyAssignment.description : ''
-    parameters: !empty(policyAssignment.parameters) ? policyAssignment.parameters : {}
-    identity: policyAssignment.identity.type
-    roleDefinitionIds: !empty(policyAssignment.roleDefinitionIds) ? policyAssignment.roleDefinitionIds : []
-    metadata: !empty(policyAssignment.metadata) ? policyAssignment.metadata : {}
-    nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
-    enforcementMode: policyAssignment.enforcementMode
-    notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
-    managementGroupId: managementGroupId   //policyAssignment.managementGroupId
-    location: policyAssignment.location
+    name: 'add-resource-tags'
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/4f9dc7db-30c1-420c-b61a-e1d640128d26'
+    displayName: '[Display Name] Policy Assignment at the management group scope'
+    description: '[Description] Policy Assignment at the management group scope'
+    parameters: {
+      'tagName': 'env'
+      'tagValue': 'prod'
+    }    
+    identity: 'SystemAssigned'
+    roleDefinitionIds: [
+      '/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
+    ]
+    metadata: {
+      'category': 'Security'
+      'version': '1.0'
+    }
+    nonComplianceMessage: 'Violated Policy Assignment - This is a Non Compliance Message'
+    enforcementMode: 'DoNotEnforce'
+    notScopes: [
+      '/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ui2t'
+    ]
+    managementGroupId: 'mg-A2g'
+    location: location
   }
-}]
+}
+
 
 
 
@@ -95,6 +106,30 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignmen
 
 
 /*
+
+
+
+module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
+  name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
+  scope: managementGroup(managementGroupId)
+  params: {
+    name: policyAssignment.name
+    policyDefinitionId: policyAssignment.policyDefinitionId
+    displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
+    description: !empty(policyAssignment.description) ? policyAssignment.description : ''
+    parameters: !empty(policyAssignment.parameters) ? policyAssignment.parameters : {}
+    identity: policyAssignment.identity.type
+    roleDefinitionIds: !empty(policyAssignment.roleDefinitionIds) ? policyAssignment.roleDefinitionIds : []
+    metadata: !empty(policyAssignment.metadata) ? policyAssignment.metadata : {}
+    nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
+    enforcementMode: policyAssignment.enforcementMode
+    notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
+    managementGroupId: managementGroupId   //policyAssignment.managementGroupId
+    location: policyAssignment.location
+  }
+}]
+
+
 module policyAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${uniqueString(deployment().name, location)}-PolicyAssignment-Sub-Module'
   scope: subscription(subscriptionId)
