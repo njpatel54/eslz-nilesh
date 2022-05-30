@@ -76,7 +76,7 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01'
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
   name: guid(managementGroupId, roleDefinitionId, location, name)
   properties: {
-    roleDefinitionId: roleDefinitionId.Id
+    roleDefinitionId: roleDefinitionId
     principalId: policyAssignment.identity.principalId
     principalType: 'ServicePrincipal'
   }
