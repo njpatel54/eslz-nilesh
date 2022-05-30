@@ -46,5 +46,5 @@ jobs:
             az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
+              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
               --management-group-id "mg-A2g"
