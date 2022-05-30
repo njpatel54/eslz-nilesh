@@ -43,7 +43,8 @@ jobs:
       name: 'Deploying Policy Assignment at Management Group Level'
       with:
         inlineScript: |
-            az deployment mg validate \
+            az deployment mg create \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyAssignments/deploy.bicep \
+              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}

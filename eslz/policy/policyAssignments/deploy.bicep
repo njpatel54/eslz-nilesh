@@ -47,6 +47,27 @@ param notScopes array = []
 @sys.description('Optional. Location for all resources.')
 param location string = deployment().location
 
+module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
+  name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
+  scope: managementGroup(managementGroupId)
+  params: {
+    name: policyAssignment.name
+    policyDefinitionId: policyAssignment.policyDefinitionId
+    displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
+    description: !empty(policyAssignment.description) ? policyAssignment.description : ''
+    parameters: !empty(policyAssignment.parameters) ? policyAssignment.parameters : {}
+    identity: policyAssignment.identity.type
+    roleDefinitionIds: !empty(policyAssignment.roleDefinitionIds) ? policyAssignment.roleDefinitionIds : []
+    metadata: !empty(policyAssignment.metadata) ? policyAssignment.metadata : {}
+    nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
+    enforcementMode: policyAssignment.enforcementMode
+    notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
+    managementGroupId: managementGroupId   //policyAssignment.managementGroupId
+    location: policyAssignment.location
+  }
+}]
+
+/*
 
 module policyAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: 'add-resource-tags-PolicyAssignment-MG-Module'
@@ -79,55 +100,6 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscripti
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-
-module policyAssignment_mg 'managementGroup/deploy.bicep' = [for policyAssignment in policyAssignments: if (empty(subscriptionId) && empty(resourceGroupName)) {
-  name: '${policyAssignment.name}-PolicyAssignment-MG-Module'
-  scope: managementGroup(managementGroupId)
-  params: {
-    name: policyAssignment.name
-    policyDefinitionId: policyAssignment.policyDefinitionId
-    displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
-    description: !empty(policyAssignment.description) ? policyAssignment.description : ''
-    parameters: !empty(policyAssignment.parameters) ? policyAssignment.parameters : {}
-    identity: policyAssignment.identity.type
-    roleDefinitionIds: !empty(policyAssignment.roleDefinitionIds) ? policyAssignment.roleDefinitionIds : []
-    metadata: !empty(policyAssignment.metadata) ? policyAssignment.metadata : {}
-    nonComplianceMessage: !empty(policyAssignment.nonComplianceMessage) ? policyAssignment.nonComplianceMessage : ''
-    enforcementMode: policyAssignment.enforcementMode
-    notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
-    managementGroupId: managementGroupId   //policyAssignment.managementGroupId
-    location: policyAssignment.location
-  }
-}]
 
 
 module policyAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptionId) && empty(resourceGroupName)) {
