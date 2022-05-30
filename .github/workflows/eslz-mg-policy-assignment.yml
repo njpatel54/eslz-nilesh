@@ -26,7 +26,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/policy/policyassignments/mg.deploy.bicep
+      run: az bicep build --file ./eslz/policy/policyassignments/deploy.bicep
 
   validate: 
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
         inlineScript: |
             az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/mg.deploy.bicep \
+              --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
@@ -76,7 +76,7 @@ jobs:
           inlineScript: |
             az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/mg.deploy.bicep \
+              --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
@@ -104,6 +104,6 @@ jobs:
         inlineScript: |
             az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/mg.deploy.bicep \
+              --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
