@@ -35,42 +35,6 @@
               ],
               "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
               "resourceGroupName": "rg-ccs-prod-usva-ui2t"
-          },
-          {
-              "name": "activity-logs-to-loga",
-              "displayName": "Activity Logs to Log Analytics",
-              "description": "Configure Azure Activity logs to stream to specified Log Analytics workspace.",
-              "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f",
-              "parameters": {
-                  "logAnalytics": {
-                      "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-ghzj/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-ghzj"
-                  },
-                  "effect": {
-                      "value": "DeployIfNotExists"
-                  },
-                  "logsEnabled": {
-                      "value": "True"
-                  }
-              },
-              "nonComplianceMessage": "Azure Activity logs must stream to a specified Log Analytics workspace.",
-              "enforcementMode": "Default",
-              "metadata": {
-                  "value": {
-                      "category": "Monitoring",
-                      "version": "1.0"
-                  }
-              },
-              "location": "usgovvirginia",
-              "notScopes": [
-                      "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-ghzj"
-                  ],
-              "identity": "SystemAssigned",
-              "roleDefinitionIds": [
-                  "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-                  "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
-              ],
-              "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
-              "resourceGroupName": "rg-ccs-prod-usva-ui2t"   
           }
         ]      
       }
