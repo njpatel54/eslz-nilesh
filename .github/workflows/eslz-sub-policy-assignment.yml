@@ -48,7 +48,7 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-            az deployment sub validate \
+            az deployment mg validate \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
@@ -73,7 +73,7 @@ jobs:
         name: 'Run what-if'
         with:
           inlineScript: |
-            az deployment sub what-if \
+            az deployment mg what-if \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
@@ -99,7 +99,7 @@ jobs:
       name: 'Deploying Policy Assignment at Subscription Level'
       with:
         inlineScript: |
-            az deployment sub create \
+            az deployment mg create \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policyassignments/deploy.bicep \
               --parameters ./eslz/policy/policyassignments/.parameters/sub.parameters.json
