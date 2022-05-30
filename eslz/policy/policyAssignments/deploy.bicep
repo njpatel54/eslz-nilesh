@@ -2,6 +2,9 @@ targetScope = 'managementGroup'
 
 param policyAssignments array = []
 
+@sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')
+param managementGroupId string = ''
+
 @sys.description('Optional. The Target Scope for the Policy. The subscription ID of the subscription for the policy assignment')
 param subscriptionId string = ''
 
