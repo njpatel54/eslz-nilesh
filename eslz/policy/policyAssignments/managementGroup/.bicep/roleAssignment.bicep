@@ -11,7 +11,7 @@ param principalId string
 
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
-  name: guid(managementGroupId, roleDefinitionId, principalId)   //guid(managementGroupId, roleDefinitionId, location, name)
+  name: guid(managementGroupId, roleDefinitionId, principalId)
   properties: {
     roleDefinitionId: roleDefinitionId
     principalId: principalId

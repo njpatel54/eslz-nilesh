@@ -49,10 +49,6 @@ param notScopes array = []
 @sys.description('Optional. Location for all resources.')
 param location string = deployment().location
 
-/*
-@sys.description('Optional. principalId of the managed identity of the assignment.')
-param principalId string
-*/
 var nonComplianceMessage_var = {
   message: !empty(nonComplianceMessage) ? nonComplianceMessage : null
 }
@@ -78,21 +74,11 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01'
 }
 
 module roleAssignment_mg '.bicep/roleAssignment.bicep' = [ for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
-  name: '${policyAssignment.name}-RoleAssignment-MG-Module-${roleDefinitionId}'   //guid(managementGroupId, roleDefinitionId, location, name)
+  name: '${policyAssignment.name}-RoleAssignment-MG-Module-${roleDefinitionId}'
   params: {
     roleDefinitionId: roleDefinitionId
     principalId: policyAssignment.identity.principalId
     managementGroupId: managementGroupId
-  }
-}]
-
-/*
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity != 'None') {
-  name: guid(managementGroupId, roleDefinitionId, principalId)   //guid(managementGroupId, roleDefinitionId, location, name)
-  properties: {
-    roleDefinitionId: roleDefinitionId
-    principalId: principalId
-    principalType: 'ServicePrincipal'
   }
 }]
 
@@ -104,4 +90,4 @@ output principalId string = identity == 'SystemAssigned' ? policyAssignment.iden
 
 @sys.description('Policy Assignment resource ID')
 output resourceId string = extensionResourceId(tenantResourceId('Microsoft.Management/managementGroups', managementGroupId), 'Microsoft.Authorization/policyAssignments', policyAssignment.name)
-*/
+
