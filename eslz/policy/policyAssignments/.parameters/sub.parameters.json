@@ -33,7 +33,7 @@
               "roleDefinitionIds": [
                  "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
               ],
-              "managementGroupId": "mg-A2g"
+              "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889"
           },
           {
               "name": "activity-logs-to-loga",
@@ -68,7 +68,7 @@
                   "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
                   "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
               ],
-              "managementGroupId": "mg-A2g"        
+              "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889"       
           }
         ]      
       }
