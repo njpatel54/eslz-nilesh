@@ -1,0 +1,59 @@
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'Lint and Build Bicep'
+      run: az bicep build --file ./eslz/policy/policyassignments/deploy.bicep
+
+  validate: 
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with: 
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          environment: ${{ secrets.AZURE_ENVIRONMENT }}
+          enable-AzPSSession: false
+        
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+
+    - uses: Azure/cli@v1
+      name: 'Run preflight validation'
+      with:
+        inlineScript: |
+            az deployment mg validate \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/policy/policyassignments/deploy.bicep \
+              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+
+  preview:
+      runs-on: ubuntu-latest
+      needs: [validate]
+      steps:
+      - uses: actions/checkout@v2
+      
+      - uses: azure/login@v1
+        name: 'Login to Azure'
+        with:
+         creds: ${{ secrets.AZURE_CREDENTIALS }}
+         environment: ${{ secrets.AZURE_ENVIRONMENT }}
+         enable-AzPSSession: false
+        
+      - name: 'Set Azure Subscription'
+        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                
+      - uses: Azure/cli@v1
+        name: 'Run what-if'
+        with:
+          inlineScript: |
+            az deployment mg validate \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/policy/policyassignments/deploy.bicep \
+              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+
