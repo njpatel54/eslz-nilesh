@@ -5,13 +5,12 @@ name: eslz - mg policy assignment
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  # push:
-  #  branches: 
-  #    - main 
-  #  paths:
-  #    - .github/workflows/eslz-mg-policy-assignment.yml
-  #    - eslz/policy/policyassignments*
-    
+  push:
+   branches: 
+      - main 
+   paths:
+     - .github/workflows/eslz-mg-policy-assignment.yml
+      
   pull_request:
     branches: [ main ]
 
