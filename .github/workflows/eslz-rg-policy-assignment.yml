@@ -10,6 +10,7 @@ on:
       - main 
    paths:
      - .github/workflows/eslz-rg-policy-assignment.yml
+     - ./eslz/policy/policyAssignments/.parameters/rg.parameters.json
       
   pull_request:
     branches: [ main ]
