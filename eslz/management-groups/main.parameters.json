@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {            
     "onboardmg": {
-      "value": "mg-A2g-Onboard"
+      "value": "mg-A2g-Landing-Zones"
     },
     "requireAuthorizationForGroupCreation": {
       "value": true

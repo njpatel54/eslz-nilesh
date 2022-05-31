@@ -107,7 +107,7 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
-module hubVnet 'virtualNetworks//deploy.bicep' = [ for (virtualNetwork, index) in hubVirtualNetwork : {
+module hubVnet 'virtualNetworks/deploy.bicep' = [ for (virtualNetwork, index) in hubVirtualNetwork : {
   name: virtualNetwork.name
   scope: resourceGroup(virtualNetwork.subscriptionId, virtualNetwork.resourceGroupName)
   params: {
@@ -142,7 +142,7 @@ module hubVnet 'virtualNetworks//deploy.bicep' = [ for (virtualNetwork, index) i
   }
 }]
 
-module spokeVnets 'virtualNetworks//deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
+module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
   name: spokeVirtualNetwork.name
   scope: resourceGroup(spokeVirtualNetwork.subscriptionId, spokeVirtualNetwork.resourceGroupName)
   params: {
