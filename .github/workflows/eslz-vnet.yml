@@ -48,7 +48,7 @@ jobs:
       with:
         inlineScript: |
             az deployment group validate \
-              --name 'Deploy hub-spoke networking' \
+              --name 'test' \
               --resource-group 'rg-ccs-prod-usva-vnet' \
               --template-file ./eslz/network/virtualNetworks/deploy.bicep \
               --parameters ./eslz/network/virtualNetworks/.parameters/vnet.parameters.json
