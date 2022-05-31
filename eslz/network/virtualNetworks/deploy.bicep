@@ -1,6 +1,56 @@
 @description('Required. The Hub Virtual Network (vNet) Name.')
 param hubVirtualNetwork array = []
 
+@description('Required. The array of Virtual Network Subnets.')
+param subnets array = []
+
+@description('Required. The Virtual Network (vNet) Name.')
+param name string = ''
+
+@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
+param addressPrefixes array = []
+
+@description('Optional. Location for all resources.')
+param location string = resourceGroup().location
+
+module hubVnet 'virtualNetworks/deploy.bicep' = [ for (virtualNetwork, index) in hubVirtualNetwork : {
+  name: '${virtualNetwork.name}-VNet-Module-${index}'
+  scope: resourceGroup(virtualNetwork.subscriptionId, virtualNetwork.resourceGroupName)
+  params: {
+    name: virtualNetwork.name
+    location: location
+    addressPrefixes: virtualNetwork.addressPrefixes
+    ddosProtectionPlanId: virtualNetwork.ddosProtectionPlanId
+    dnsServers: virtualNetwork.dnsServers
+    subnets: [for subnet in subnets: {
+      name: subnet.name
+      properties: {
+        addressPrefix: subnet.addressPrefix
+        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
+        applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
+        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
+        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
+        natGateway: contains(subnet, 'natGatewayId') ? {
+          'id': subnet.natGatewayId
+        } : json('null')
+        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
+          'id': subnet.networkSecurityGroupId
+        } : json('null')
+        privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
+        privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
+        routeTable: contains(subnet, 'routeTableId') ? {
+          'id': subnet.routeTableId
+        } : json('null')
+        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
+        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+      }
+    }]
+  }
+}]
+
+/*
+
+
 @description('Required. The Spoke Virtual Networks (vNets) Name.')
 param spokeVirtualNetworks array = []
 
@@ -10,14 +60,36 @@ param subscriptionId string = ''
 @sys.description('Optional. The name of the resource group for the virtual network')
 param resourceGroupName string = ''
 
-@description('Required. The Virtual Network (vNet) Name.')
-param name string = ''
+var dnsServers_var = {
+  dnsServers: array(dnsServers)
+}
+var ddosProtectionPlan = {
+  id: ddosProtectionPlanId
+}
 
-@description('Optional. Location for all resources.')
-param location string = resourceGroup().location
+@description('Optional. The name of the diagnostic setting, if deployed.')
+param diagnosticSettingsName string = '${name}-diagnosticSettings'
 
-@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param addressPrefixes array = []
+var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
+  category: category
+  enabled: true
+  retentionPolicy: {
+    enabled: true
+    days: diagnosticLogsRetentionInDays
+  }
+}]
+
+var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
+  category: metric
+  timeGrain: null
+  enabled: true
+  retentionPolicy: {
+    enabled: true
+    days: diagnosticLogsRetentionInDays
+  }
+}]
+
+
 
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
 param subnets array = []
@@ -78,71 +150,10 @@ param diagnosticMetricsToEnable array = [
   'AllMetrics'
 ]
 
-@description('Optional. The name of the diagnostic setting, if deployed.')
-param diagnosticSettingsName string = '${name}-diagnosticSettings'
 
-var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
-  category: category
-  enabled: true
-  retentionPolicy: {
-    enabled: true
-    days: diagnosticLogsRetentionInDays
-  }
-}]
 
-var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
-  category: metric
-  timeGrain: null
-  enabled: true
-  retentionPolicy: {
-    enabled: true
-    days: diagnosticLogsRetentionInDays
-  }
-}]
 
-var dnsServers_var = {
-  dnsServers: array(dnsServers)
-}
-var ddosProtectionPlan = {
-  id: ddosProtectionPlanId
-}
 
-module hubVnet 'virtualNetworks/deploy.bicep' = [ for (virtualNetwork, index) in hubVirtualNetwork : {
-  name: virtualNetwork.name
-  scope: resourceGroup(virtualNetwork.subscriptionId, virtualNetwork.resourceGroupName)
-  params: {
-    name: virtualNetwork.name
-    location: location
-    addressPrefixes: virtualNetwork.addressPrefixes
-    ddosProtectionPlanId: virtualNetwork.ddosProtectionPlanId
-    dnsServers: virtualNetwork.dnsServers
-    subnets: [for subnet in subnets: {
-      name: subnet.name
-      properties: {
-        addressPrefix: subnet.addressPrefix
-        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-        applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-        natGateway: contains(subnet, 'natGatewayId') ? {
-          'id': subnet.natGatewayId
-        } : json('null')
-        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
-          'id': subnet.networkSecurityGroupId
-        } : json('null')
-        privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-        privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-        routeTable: contains(subnet, 'routeTableId') ? {
-          'id': subnet.routeTableId
-        } : json('null')
-        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
-      }
-    }]
-  }
-}]
-
-/*
 
 module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
   name: spokeVirtualNetwork.name
