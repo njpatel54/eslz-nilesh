@@ -11,13 +11,13 @@ param subscriptionId string = ''
 param resourceGroupName string = ''
 
 @description('Required. The Virtual Network (vNet) Name.')
-param name string
+param name string = ''
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param addressPrefixes array
+param addressPrefixes array = []
 
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
 param subnets array = []
