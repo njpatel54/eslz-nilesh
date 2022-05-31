@@ -41,7 +41,7 @@ jobs:
           enable-AzPSSession: false
         
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
       name: 'Run preflight validation'
@@ -67,7 +67,7 @@ jobs:
          enable-AzPSSession: false
         
       - name: 'Set Azure Subscription'
-        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+        run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
                 
       - uses: Azure/cli@v1
         name: 'Run what-if'
@@ -94,7 +94,7 @@ jobs:
         enable-AzPSSession: false
       
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
       name: 'Policy Assignment - Subscription Scope'
