@@ -49,7 +49,7 @@ module hubVnet 'virtualNetworks/deploy.bicep' = [ for (virtualNetwork, index) in
   }
 }]
 
-/*
+
 module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
   name: spokeVirtualNetwork.name
   scope: resourceGroup(spokeVirtualNetwork.subscriptionId, spokeVirtualNetwork.resourceGroupName)
@@ -82,7 +82,7 @@ module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, i
       }]
   }
 }]
-
+/*
 
 
 
