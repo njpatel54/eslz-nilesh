@@ -1,9 +1,10 @@
+
   lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/policy/policyassignments/deploy.bicep
+      run: az bicep build --file ./eslz/network/virtualNetworks/deploy.bicep
 
   validate: 
     runs-on: ubuntu-latest
@@ -19,17 +20,17 @@
           enable-AzPSSession: false
         
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
       name: 'Run preflight validation'
       with:
         inlineScript: |
-            az deployment mg validate \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+            az deployment group validate \
+              --name 'Deploy-Hub-Spoke-Networking' \
+              --resource-group 'rg-ccs-prod-usva-vnet' \
+              --template-file ./eslz/network/virtualNetworks/deploy.bicep \
+              --parameters ./eslz/network/virtualNetworks/.parameters/vnet.parameters.json
 
   preview:
       runs-on: ubuntu-latest
@@ -45,15 +46,14 @@
          enable-AzPSSession: false
         
       - name: 'Set Azure Subscription'
-        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+        run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
                 
       - uses: Azure/cli@v1
         name: 'Run what-if'
         with:
           inlineScript: |
-            az deployment mg validate \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyassignments/deploy.bicep \
-              --parameters ./eslz/policy/policyassignments/.parameters/mg.parameters.nil.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
-
+            az deployment group what-if \
+              --name 'Deploy-Hub-Spoke-Networking' \
+              --resource-group 'rg-ccs-prod-usva-vnet' \
+              --template-file ./eslz/network/virtualNetworks/deploy.bicep \
+              --parameters ./eslz/network/virtualNetworks/.parameters/vnet.parameters.json

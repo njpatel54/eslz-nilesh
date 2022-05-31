@@ -1,6 +1,9 @@
 @description('Required. The Hub Virtual Network (vNet) Name.')
 param hubVirtualNetwork array = []
 
+@description('Required. The Spoke Virtual Networks (vNets) Name.')
+param spokeVirtualNetworks array = []
+
 @description('Required. The array of Virtual Network Subnets.')
 param subnets array = []
 
@@ -20,39 +23,68 @@ module hubVnet 'virtualNetworks/deploy.bicep' = [ for (virtualNetwork, index) in
     name: virtualNetwork.name
     location: location
     addressPrefixes: virtualNetwork.addressPrefixes
-    ddosProtectionPlanId: virtualNetwork.ddosProtectionPlanId
-    dnsServers: virtualNetwork.dnsServers
-    subnets: [for subnet in subnets: {
+    //ddosProtectionPlanId: !empty(virtualNetwork.ddosProtectionPlanId) ? virtualNetwork.ddosProtectionPlanId : null
+    //dnsServers: !empty(virtualNetwork.dnsServers) ? virtualNetwork.dnsServers : null
+    subnets: [for subnet in virtualNetwork.subnets: {
       name: subnet.name
-      properties: {
-        addressPrefix: subnet.addressPrefix
-        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-        applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-        natGateway: contains(subnet, 'natGatewayId') ? {
-          'id': subnet.natGatewayId
-        } : json('null')
-        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
-          'id': subnet.networkSecurityGroupId
-        } : json('null')
-        privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-        privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-        routeTable: contains(subnet, 'routeTableId') ? {
-          'id': subnet.routeTableId
-        } : json('null')
-        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
-      }
-    }]
+      addressPrefix: subnet.addressPrefix
+      addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
+      applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
+      delegations: contains(subnet, 'delegations') ? subnet.delegations : []
+      ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
+      natGateway: contains(subnet, 'natGatewayId') ? {
+        'id': subnet.natGatewayId
+      } : json('null')
+      networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
+        'id': subnet.networkSecurityGroupId
+      } : json('null')
+      privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
+      privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
+      routeTable: contains(subnet, 'routeTableId') ? {
+        'id': subnet.routeTableId
+      } : json('null')
+      serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
+      serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+      }]
   }
 }]
 
 /*
+module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
+  name: spokeVirtualNetwork.name
+  scope: resourceGroup(spokeVirtualNetwork.subscriptionId, spokeVirtualNetwork.resourceGroupName)
+  params: {
+    name: spokeVirtualNetwork.name
+    location: location
+    addressPrefixes: spokeVirtualNetwork.addressPrefixes
+    //ddosProtectionPlanId: !empty(spokeVirtualNetwork.ddosProtectionPlanId) ? spokeVirtualNetwork.ddosProtectionPlanId : null
+    //dnsServers: !empty(spokeVirtualNetwork.dnsServers) ? spokeVirtualNetwork.dnsServers : null
+    subnets: [for subnet in spokeVirtualNetwork.subnets: {
+      name: subnet.name
+      addressPrefix: subnet.addressPrefix
+      addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
+      applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
+      delegations: contains(subnet, 'delegations') ? subnet.delegations : []
+      ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
+      natGateway: contains(subnet, 'natGatewayId') ? {
+        'id': subnet.natGatewayId
+      } : json('null')
+      networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
+        'id': subnet.networkSecurityGroupId
+      } : json('null')
+      privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
+      privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
+      routeTable: contains(subnet, 'routeTableId') ? {
+        'id': subnet.routeTableId
+      } : json('null')
+      serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
+      serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+      }]
+  }
+}]
 
 
-@description('Required. The Spoke Virtual Networks (vNets) Name.')
-param spokeVirtualNetworks array = []
+
 
 @sys.description('Optional. The subscription ID of the subscription for the virtual network')
 param subscriptionId string = ''
@@ -155,40 +187,7 @@ param diagnosticMetricsToEnable array = [
 
 
 
-module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
-  name: spokeVirtualNetwork.name
-  scope: resourceGroup(spokeVirtualNetwork.subscriptionId, spokeVirtualNetwork.resourceGroupName)
-  params: {
-    name: spokeVirtualNetwork.name
-    location: location
-    addressPrefixes: spokeVirtualNetwork.addressPrefixes
-    ddosProtectionPlanId: spokeVirtualNetwork.ddosProtectionPlanId
-    dnsServers: spokeVirtualNetwork.dnsServers
-    subnets: [for subnet in subnets: {
-      name: subnet.name
-      properties: {
-        addressPrefix: subnet.addressPrefix
-        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-        applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-        natGateway: contains(subnet, 'natGatewayId') ? {
-          'id': subnet.natGatewayId
-        } : json('null')
-        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
-          'id': subnet.networkSecurityGroupId
-        } : json('null')
-        privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-        privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-        routeTable: contains(subnet, 'routeTableId') ? {
-          'id': subnet.routeTableId
-        } : json('null')
-        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
-      }
-    }]
-  }
-}]
+
 
 
 

@@ -88,6 +88,296 @@
             
           }
         ]      
-      }
+      },
+      "spokeVirtualNetworks": {
+        "value": [
+          {
+            "name": "vnet-ccs-prod-usva-mgmt",
+            "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+            "resourceGroupName": "rg-ccs-prod-usva-vnet",
+            "addressPrefixes": [
+                "10.30.8.0/21"
+            ],
+            "subnets": [
+                {
+                    "name": "snet-ccs-prod-usva-app",
+                    "addressPrefix": "10.30.8.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-data",
+                    "addressPrefix": "10.30.9.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-mgmt",
+                    "addressPrefix": "10.30.10.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-web",
+                    "addressPrefix": "10.30.11.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                }
+            ]
+            
+          },
+          {
+            "name": "vnet-ccs-prod-usva-iden",
+            "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+            "resourceGroupName": "rg-ccs-prod-usva-vnet",
+            "addressPrefixes": [
+                "10.30.11.0/24"
+            ],
+            "subnets": [
+                {
+                    "name": "snet-ccs-prod-usva-iden",
+                    "addressPrefix": "10.30.11.0/26"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-mgmt",
+                    "addressPrefix": "10.30.11.64/26"
+                }
+            ]
+          },
+          {
+            "name": "vnet-ccs-prod-usva-ssvc",
+            "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
+            "resourceGroupName": "rg-ccs-prod-usva-vnet",
+            "addressPrefixes": [
+                "10.30.16.0/21"
+            ],
+            "subnets": [
+                {
+                    "name": "snet-ccs-prod-usva-app",
+                    "addressPrefix": "10.30.16.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-data",
+                    "addressPrefix": "10.30.17.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-mgmt",
+                    "addressPrefix": "10.30.18.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-web",
+                    "addressPrefix": "10.30.19.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                }
+            ]
+            
+          },
+          {
+            "name": "vnet-ccs-prod-usva-lz01",
+            "subscriptionId": "df3b1809-17d0-47a0-9241-d2724780bdac",
+            "resourceGroupName": "rg-ccs-prod-usva-vnet",
+            "addressPrefixes": [
+                "10.30.64.0/24"
+            ],
+            "subnets": [
+                {
+                    "name": "snet-ccs-prod-usva-app",
+                    "addressPrefix": "10.30.64.0/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-data",
+                    "addressPrefix": "10.30.64.64/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-mgmt",
+                    "addressPrefix": "10.30.64.128/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-web",
+                    "addressPrefix": "10.30.64.192/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                }
+            ]
+            
+          },
+          {
+            "name": "vnet-ccs-prod-usva-snbx",
+            "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
+            "resourceGroupName": "rg-ccs-prod-usva-vnet",
+            "addressPrefixes": [
+                "10.31.0.0/24"
+            ],
+            "subnets": [
+                {
+                    "name": "snet-ccs-prod-usva-app",
+                    "addressPrefix": "10.31.0.0/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-data",
+                    "addressPrefix": "10.31.0.64/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-mgmt",
+                    "addressPrefix": "10.31.0.128/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-web",
+                    "addressPrefix": "10.31.0.192/26",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                }
+            ]
+            
+          }
+        ]  
+    }
   }
 }
