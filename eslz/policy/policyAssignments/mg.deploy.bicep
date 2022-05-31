@@ -23,47 +23,35 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [ for (policyAssignm
 }]
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 
-module policyAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptionId) && empty(resourceGroupName)) {
-  name: '${uniqueString(deployment().name, location)}-PolicyAssignment-Sub-Module'
-  scope: subscription(subscriptionId)
-  params: {
-    name: name
-    policyDefinitionId: policyDefinitionId
-    displayName: !empty(displayName) ? displayName : ''
-    description: !empty(description) ? description : ''
-    parameters: !empty(parameters) ? parameters : {}
-    identity: identity
-    roleDefinitionIds: !empty(roleDefinitionIds) ? roleDefinitionIds : []
-    metadata: !empty(metadata) ? metadata : {}
-    nonComplianceMessage: !empty(nonComplianceMessage) ? nonComplianceMessage : ''
-    enforcementMode: enforcementMode
-    notScopes: !empty(notScopes) ? notScopes : []
-    subscriptionId: subscriptionId
-    location: location
-  }
-}
-
-module policyAssignment_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGroupName) && !empty(subscriptionId)) {
-  name: '${uniqueString(deployment().name, location)}-PolicyAssignment-RG-Module'
-  scope: resourceGroup(subscriptionId, resourceGroupName)
-  params: {
-    name: name
-    policyDefinitionId: policyDefinitionId
-    displayName: !empty(displayName) ? displayName : ''
-    description: !empty(description) ? description : ''
-    parameters: !empty(parameters) ? parameters : {}
-    identity: identity
-    roleDefinitionIds: !empty(roleDefinitionIds) ? roleDefinitionIds : []
-    metadata: !empty(metadata) ? metadata : {}
-    nonComplianceMessage: !empty(nonComplianceMessage) ? nonComplianceMessage : ''
-    enforcementMode: enforcementMode
-    notScopes: !empty(notScopes) ? notScopes : []
-    subscriptionId: subscriptionId
-    location: location
-  }
-}
 
 @sys.description('Policy Assignment Name')
 output name string = empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_mg.outputs.name : (!empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_sub.outputs.name : policyAssignment_rg.outputs.name)
@@ -73,9 +61,6 @@ output principalId string = empty(subscriptionId) && empty(resourceGroupName) ? 
 
 @sys.description('Policy Assignment resource ID')
 output resourceId string = empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_mg.outputs.resourceId : (!empty(subscriptionId) && empty(resourceGroupName) ? policyAssignment_sub.outputs.resourceId : policyAssignment_rg.outputs.resourceId)
-
-
-
 
 
 @sys.description('Optional. The Target Scope for the Policy. The name of the management group for the policy assignment. If not provided, will use the current scope for deployment.')

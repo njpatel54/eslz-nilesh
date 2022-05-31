@@ -54,11 +54,6 @@
           "name": "mg-A2g-Sandbox",
           "displayName": "mg-A2g-Sandbox",
           "parentMGName": "mg-A2g"
-        },
-        {
-          "name": "mg-A2g-Onboard",
-          "displayName": "mg-A2g-Onboard",
-          "parentMGName": "mg-A2g"
         }
       ]
     },
@@ -73,13 +68,21 @@
           "managementGroupName": "mg-A2g-Connectivity"
         },
         {
+          "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+          "managementGroupName": "mg-A2g-Identity"
+        },
+        {
+          "subscriptionId": "df3b1809-17d0-47a0-9241-d2724780bdac",
+          "managementGroupName": "mg-A2g-Landing-Zones"
+        },
+        {
           "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
           "managementGroupName": "mg-A2g-Sandbox"
         },
         {
-          "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
-          "managementGroupName": "mg-A2g-Identity"
-        }    
+          "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
+          "managementGroupName": "mg-A2g-Shared-Services"
+        }  
       ]
     },
     "tenantid":{

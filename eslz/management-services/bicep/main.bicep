@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 param location string
 param mgmtsubid string
 param connsubid string
@@ -10,6 +12,8 @@ param tags object
 param dynamictags object = ({
   CreatedOn: utcfullvalue
 })
+
+var combinedTags = union(dynamictags, tags)
 
 @description('Project Owner')
 @allowed([
@@ -46,12 +50,10 @@ param storageaccount_name string = toLower('st${projowner}${opscope}${region}${s
 // From Parameters Files
 param storageaccount_sku string
 
-targetScope = 'subscription'
-
 resource siem_rg 'Microsoft.Resources/resourceGroups@2021-04-01'={
     name: siem_rg_name
     location: location
-    tags: union(dynamictags, tags)
+    tags: combinedTags
 }
 
 module loga 'loga.bicep' = {
@@ -65,7 +67,7 @@ module loga 'loga.bicep' = {
         aaname: azureautomation_name
         workspacename: loganalytics_workspace_name
         location: location
-        tags: union(dynamictags, tags)
+        tags: combinedTags
     }
 }
 
@@ -80,6 +82,6 @@ module sa 'storageaccount.bicep' = {
         storageAccountName: storageaccount_name
         storageSKU: storageaccount_sku
         diagnosticWorkspaceId: loga.outputs.resourceId
-        tags: union(dynamictags, tags)
+        tags: combinedTags
     }
 }

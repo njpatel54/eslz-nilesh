@@ -1,0 +1,113 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {            
+      "virtualNetworks": {
+        "value": [
+          {
+            "name": "vnet-ccs-prod-usva-mgmt",
+            "addressPrefixes": [
+                "10.30.8.0/21"
+            ],
+            "subnets": [
+                {
+                    "name": "snet-ccs-prod-usva-app",
+                    "addressPrefix": "10.30.8.0/24",
+                    "networkSecurityGroupId": "/subscriptions/<<subscriptionId>>/resourceGroups/validation-rg/providers/Microsoft.Network/networkSecurityGroups/adp-<<namePrefix>>-az-nsg-x-001",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "roleAssignments": [
+                        {
+                            "roleDefinitionIdOrName": "Reader",
+                            "principalIds": [
+                                "<<deploymentSpId>>"
+                            ]
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled",
+                    "routeTableId": "/subscriptions/<<subscriptionId>>/resourceGroups/validation-rg/providers/Microsoft.Network/routeTables/adp-<<namePrefix>>-az-udr-x-001"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-data",
+                    "addressPrefix": "10.30.9.0/24",
+                    "delegations": [
+                        {
+                            "name": "netappDel",
+                            "properties": {
+                                "serviceName": "Microsoft.Netapp/volumes"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "snet-ccs-prod-usva-mgmt",
+                    "addressPrefix": "10.30.10.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                {
+                    "name": "snet-ccs-prod-usva-web",
+                    "addressPrefix": "10.30.11.0/24",
+                    "serviceEndpoints": [
+                        {
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                }
+            ],
+            "dnsServers": {
+                "value": [
+                    "10.0.1.4",
+                    "10.0.1.5"
+                ]
+            },
+            "roleAssignments": {
+                "value": [
+                    {
+                        "roleDefinitionIdOrName": "Reader",
+                        "principalIds": [
+                            "<<deploymentSpId>>"
+                        ]
+                    }
+                ]
+            },
+            "diagnosticLogsRetentionInDays": {
+            "value": 7
+        },
+        "diagnosticStorageAccountId": {
+            "value": "/subscriptions/<<subscriptionId>>/resourceGroups/validation-rg/providers/Microsoft.Storage/storageAccounts/adp<<namePrefix>>azsax001"
+        },
+        "diagnosticWorkspaceId": {
+            "value": "/subscriptions/<<subscriptionId>>/resourcegroups/validation-rg/providers/microsoft.operationalinsights/workspaces/adp-<<namePrefix>>-az-law-x-001"
+        },
+        "diagnosticEventHubAuthorizationRuleId": {
+            "value": "/subscriptions/<<subscriptionId>>/resourceGroups/validation-rg/providers/Microsoft.EventHub/namespaces/adp-<<namePrefix>>-az-evhns-x-001/AuthorizationRules/RootManageSharedAccessKey"
+        },
+        "diagnosticEventHubName": {
+            "value": "adp-<<namePrefix>>-az-evh-x-001"
+        }
+          }
+        ]      
+    }
+  }
+}
