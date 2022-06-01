@@ -87,7 +87,20 @@
                         "name": "snet-ccs-prod-usva-mgmt",
                         "addressPrefix": "10.30.11.64/26"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "remoteVirtualNetworkName": "vnet-ccs-prod-usva-conn",
+                        "allowForwardedTraffic": true,
+                        "allowGatewayTransit": false,
+                        "allowVirtualNetworkAccess": true,
+                        "useRemoteGateways": false,
+                        "remotePeeringEnabled": true,
+                        "remotePeeringName": "customName",
+                        "remotePeeringAllowVirtualNetworkAccess": true,
+                        "remotePeeringAllowForwardedTraffic": true
+                   }
+               ]
               },
               {
                 "name": "vnet-ccs-prod-usva-ssvc",
