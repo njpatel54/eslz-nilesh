@@ -3,7 +3,7 @@
 param hubVirtualNetwork array = []
 
 @description('Optional. Hub Virtual Network configurations.')
-param spokeVirtualNetworks array = []
+param spokeVnets array = []
 
 @description('Required. The Virtual Network (vNet) Name.')
 param name string
@@ -42,7 +42,7 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
+resource hubVnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: name
   location: location
   tags: tags
@@ -79,17 +79,19 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   }
 }
 
-module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
-  name: '${spokeVirtualNetwork.name}-VNet-Module-${index}'
-  scope: resourceGroup(spokeVirtualNetwork.subscriptionId, spokeVirtualNetwork.resourceGroupName)
+module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNets, index) in spokeVnets : {
+  name: '${vNets.name}-VNet-Module-${index}'
+  scope: resourceGroup(vNets.subscriptionId, vNets.resourceGroupName)
   params: {
-    name: spokeVirtualNetwork.name
+    hubVnetName: hubVnet.name
+    hubVnetId: hubVnet.id
+    name: vNets.name
     location: location
-    addressPrefixes: spokeVirtualNetwork.addressPrefixes
+    addressPrefixes: vNets.addressPrefixes
     //ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
     //dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
     //enableDdosProtection: !empty(ddosProtectionPlanId)
-    subnets: [for subnet in spokeVirtualNetwork.subnets: {
+    subnets: [for subnet in vNets.subnets: {
       name: subnet.name
       addressPrefix: subnet.addressPrefix
       addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []

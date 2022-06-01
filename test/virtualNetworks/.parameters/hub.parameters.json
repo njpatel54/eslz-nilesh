@@ -95,7 +95,7 @@
         
         },
         "virtualNetworkPeerings":{
-            "value":  [ ]
+            "value":  []
     }
   }
 }

@@ -45,5 +45,5 @@ jobs:
               --name 'Deploy-Hub-Spoke-Networking' \
               --resource-group 'rg-ccs-prod-usva-vnet' \
               --template-file ./test/deploy.bicep \
-              --parameters ./test/virtualNetworks/.parameters/vnet.parameters.json \
+              --parameters ./test/virtualNetworks/.parameters/hub.parameters.json \
               --parameters ./test/virtualNetworks/.parameters/spoke.parameters.json

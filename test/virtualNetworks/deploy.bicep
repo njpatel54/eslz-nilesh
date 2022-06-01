@@ -1,3 +1,6 @@
+param hubVnetName string
+param hubVnetId string
+
 @description('Optional. Virtual Network Peerings configurations.')
 param virtualNetworkPeerings array = []
 
@@ -104,7 +107,7 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
+resource spokeVnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: name
   location: location
   tags: tags
@@ -141,11 +144,12 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   }
 }
 
+// Spoke vNets to HubvNet Peering
 module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
   params: {
-    localVnetName: virtualNetwork.name
-    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
+    localVnetName: spokeVnet.name
+    remoteVirtualNetworkId: hubVnetId
     name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
     allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
     allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
@@ -156,13 +160,13 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for
   }
 }]
 
-// Remote to local peering (reverse)
+// // HubvNet to Spoke vNets Peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
   scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
   params: {
-    localVnetName: last(split(peering.remoteVirtualNetworkId, '/'))
-    remoteVirtualNetworkId: virtualNetwork.id
+    localVnetName: hubVnetName                                       // last(split(peering.remoteVirtualNetworkId, '/'))
+    remoteVirtualNetworkId: spokeVnet.id
     name: contains(peering, 'remotePeeringName') ? peering.remotePeeringName : '${last(split(peering.remoteVirtualNetworkId, '/'))}-${name}'
     allowForwardedTraffic: contains(peering, 'remotePeeringAllowForwardedTraffic') ? peering.remotePeeringAllowForwardedTraffic : true
     allowGatewayTransit: contains(peering, 'remotePeeringAllowGatewayTransit') ? peering.remotePeeringAllowGatewayTransit : false
@@ -251,7 +255,7 @@ module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, in
     resourceId: virtualNetwork.id
   }
 }]
-*/
+
 @description('The resource group the virtual network was deployed into')
 output resourceGroupName string = resourceGroup().name
 
@@ -266,3 +270,4 @@ output subnetNames array = [for subnet in subnets: subnet.name]
 
 @description('The resource IDs of the deployed subnets')
 output subnetResourceIds array = [for subnet in subnets: az.resourceId('Microsoft.Network/virtualNetworks/subnets', name, subnet.name)]
+*/
