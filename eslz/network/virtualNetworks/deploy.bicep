@@ -1,23 +1,33 @@
-@description('Required. The Hub Virtual Network (vNet) Name.')
+
+@description('Optional. Hub Virtual Network configurations.')
 param hubVirtualNetwork array = []
 
-@description('Required. The Spoke Virtual Networks (vNets) Name.')
+@description('Optional. Hub Virtual Network configurations.')
 param spokeVirtualNetworks array = []
 
-@description('Required. The array of Virtual Network Subnets.')
-param subnets array = []
-
 @description('Required. The Virtual Network (vNet) Name.')
-param name string = ''
-
-@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param addressPrefixes array = []
+param name string
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
-module hubVnet 'virtualNetworks/deploy.bicep' = [ for (virtualNetwork, index) in hubVirtualNetwork : {
-  name: '${virtualNetwork.name}-VNet-Module-${index}'
+@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
+param addressPrefixes array
+
+@description('Optional. An Array of subnets to deploy to the Virtual Network.')
+param subnets array = []
+
+@description('Optional. Virtual Network Peerings configurations.')
+param virtualNetworkPeerings array = []
+
+@sys.description('Optional. The subscription ID of the subscription for the virtual network')
+param subscriptionId string = ''
+
+@sys.description('Optional. The name of the resource group for the virtual network')
+param resourceGroupName string = ''
+
+module hubVnet './virtualNetworks/deploy.bicep' = [ for virtualNetwork in hubVirtualNetwork : {
+  name: '${virtualNetwork.name}-VNet-Module'
   scope: resourceGroup(virtualNetwork.subscriptionId, virtualNetwork.resourceGroupName)
   params: {
     name: virtualNetwork.name
@@ -49,9 +59,8 @@ module hubVnet 'virtualNetworks/deploy.bicep' = [ for (virtualNetwork, index) in
   }
 }]
 
-
 module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
-  name: spokeVirtualNetwork.name
+  name: '${spokeVirtualNetwork.name}-VNet-Module-${index}'
   scope: resourceGroup(spokeVirtualNetwork.subscriptionId, spokeVirtualNetwork.resourceGroupName)
   params: {
     name: spokeVirtualNetwork.name
@@ -82,15 +91,26 @@ module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, i
       }]
   }
 }]
+
 /*
 
+// Local to Remote peering
+module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
+  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
+  params: {
+    localVnetName: 
+    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
+    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
+    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
+    
+  }
+}]
 
 
-@sys.description('Optional. The subscription ID of the subscription for the virtual network')
-param subscriptionId string = ''
-
-@sys.description('Optional. The name of the resource group for the virtual network')
-param resourceGroupName string = ''
 
 var dnsServers_var = {
   dnsServers: array(dnsServers)
@@ -132,8 +152,6 @@ param dnsServers array = []
 @description('Optional. Resource ID of the DDoS protection plan to assign the VNET to. If it\'s left blank, DDoS protection will not be configured. If it\'s provided, the VNET created by this template will be attached to the referenced DDoS protection plan. The DDoS protection plan can exist in the same or in a different subscription.')
 param ddosProtectionPlanId string = ''
 
-@description('Optional. Virtual Network Peerings configurations')
-param virtualNetworkPeerings array = []
 
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)
@@ -181,31 +199,6 @@ param diagnosticLogCategoriesToEnable array = [
 param diagnosticMetricsToEnable array = [
   'AllMetrics'
 ]
-
-
-
-
-
-
-
-
-
-
-// Local to Remote peering
-module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
-  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
-  params: {
-    localVnetName: hubVnet
-    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
-    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
-    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
-    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
-    
-  }
-}]
 
 // Remote to local peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
