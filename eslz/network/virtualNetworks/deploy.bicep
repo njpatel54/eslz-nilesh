@@ -26,38 +26,58 @@ param subscriptionId string = ''
 @sys.description('Optional. The name of the resource group for the virtual network')
 param resourceGroupName string = ''
 
-module hubVnet './virtualNetworks/deploy.bicep' = [ for virtualNetwork in hubVirtualNetwork : {
-  name: '${virtualNetwork.name}-VNet-Module'
-  scope: resourceGroup(virtualNetwork.subscriptionId, virtualNetwork.resourceGroupName)
-  params: {
-    name: virtualNetwork.name
-    location: location
-    addressPrefixes: virtualNetwork.addressPrefixes
-    //ddosProtectionPlanId: !empty(virtualNetwork.ddosProtectionPlanId) ? virtualNetwork.ddosProtectionPlanId : null
-    //dnsServers: !empty(virtualNetwork.dnsServers) ? virtualNetwork.dnsServers : null
-    subnets: [for subnet in virtualNetwork.subnets: {
+@description('Optional. Tags of the resource.')
+param tags object = {}
+
+@description('Optional. DNS Servers associated to the Virtual Network.')
+param dnsServers array = []
+
+@description('Optional. Resource ID of the DDoS protection plan to assign the VNET to. If it\'s left blank, DDoS protection will not be configured. If it\'s provided, the VNET created by this template will be attached to the referenced DDoS protection plan. The DDoS protection plan can exist in the same or in a different subscription.')
+param ddosProtectionPlanId string = ''
+
+var dnsServers_var = {
+  dnsServers: array(dnsServers)
+}
+var ddosProtectionPlan = {
+  id: ddosProtectionPlanId
+}
+
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
+  name: name
+  location: location
+  tags: tags
+  properties: {
+    addressSpace: {
+      addressPrefixes: addressPrefixes
+    }
+    ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
+    dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
+    enableDdosProtection: !empty(ddosProtectionPlanId)
+    subnets: [for subnet in subnets: {
       name: subnet.name
-      addressPrefix: subnet.addressPrefix
-      addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-      applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-      delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-      ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-      natGateway: contains(subnet, 'natGatewayId') ? {
-        'id': subnet.natGatewayId
-      } : json('null')
-      networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
-        'id': subnet.networkSecurityGroupId
-      } : json('null')
-      privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-      privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-      routeTable: contains(subnet, 'routeTableId') ? {
-        'id': subnet.routeTableId
-      } : json('null')
-      serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-      serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
-      }]
+      properties: {
+        addressPrefix: subnet.addressPrefix
+        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
+        applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
+        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
+        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
+        natGateway: contains(subnet, 'natGatewayId') ? {
+          'id': subnet.natGatewayId
+        } : json('null')
+        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
+          'id': subnet.networkSecurityGroupId
+        } : json('null')
+        privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
+        privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
+        routeTable: contains(subnet, 'routeTableId') ? {
+          'id': subnet.routeTableId
+        } : json('null')
+        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
+        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+      }
+    }]
   }
-}]
+}
 
 module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
   name: '${spokeVirtualNetwork.name}-VNet-Module-${index}'
@@ -66,8 +86,8 @@ module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, i
     name: spokeVirtualNetwork.name
     location: location
     addressPrefixes: spokeVirtualNetwork.addressPrefixes
-    //ddosProtectionPlanId: !empty(spokeVirtualNetwork.ddosProtectionPlanId) ? spokeVirtualNetwork.ddosProtectionPlanId : null
-    //dnsServers: !empty(spokeVirtualNetwork.dnsServers) ? spokeVirtualNetwork.dnsServers : null
+    ddosProtectionPlanId: !empty(spokeVirtualNetwork.ddosProtectionPlanId) ? spokeVirtualNetwork.ddosProtectionPlanId : null
+    dnsServers: !empty(spokeVirtualNetwork.dnsServers) ? spokeVirtualNetwork.dnsServers : null
     subnets: [for subnet in spokeVirtualNetwork.subnets: {
       name: subnet.name
       addressPrefix: subnet.addressPrefix
@@ -110,15 +130,6 @@ module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [f
   }
 }]
 
-
-
-var dnsServers_var = {
-  dnsServers: array(dnsServers)
-}
-var ddosProtectionPlan = {
-  id: ddosProtectionPlanId
-}
-
 @description('Optional. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = '${name}-diagnosticSettings'
 
@@ -143,14 +154,7 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
 
 
 
-@description('Optional. An Array of subnets to deploy to the Virtual Network.')
-param subnets array = []
 
-@description('Optional. DNS Servers associated to the Virtual Network.')
-param dnsServers array = []
-
-@description('Optional. Resource ID of the DDoS protection plan to assign the VNET to. If it\'s left blank, DDoS protection will not be configured. If it\'s provided, the VNET created by this template will be attached to the referenced DDoS protection plan. The DDoS protection plan can exist in the same or in a different subscription.')
-param ddosProtectionPlanId string = ''
 
 
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
@@ -181,8 +185,7 @@ param lock string = 'NotSpecified'
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param roleAssignments array = []
 
-@description('Optional. Tags of the resource.')
-param tags object = {}
+
 
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
