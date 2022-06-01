@@ -115,19 +115,19 @@ module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, i
 
 // Local to Remote peering
 // Spoke to Hub Peering
-module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in spokeVirtualNetworks: {
-  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
+module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [for vnets in spokeVirtualNetworks: {
+  name: '${uniqueString(vnets.name, location)}-virtualNetworkPeering-local'
   params: {
-    localVnetName: virtualNetwork.name
-    remoteVirtualNetworkId: az.resourceId(peering.subscriptionId, peering.resourceGroupName, 'Microsoft.Network/virtualNetworks', peering.name)                                  //peering.virtualNetworkPeerings.remoteVirtualNetworkName
-    name: contains(peering.virtualNetworkPeerings, 'name') ? peering.virtualNetworkPeerings.name : '${peering.name}-${last(split(peering.virtualNetworkPeerings.remoteVirtualNetworkId, '/'))}'
-    allowForwardedTraffic: contains(peering.virtualNetworkPeerings, 'allowForwardedTraffic') ? peering.virtualNetworkPeerings.allowForwardedTraffic : true
-    allowGatewayTransit: contains(peering.virtualNetworkPeerings, 'allowGatewayTransit') ? peering.virtualNetworkPeerings.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering.virtualNetworkPeerings, 'allowVirtualNetworkAccess') ? peering.virtualNetworkPeerings.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering.virtualNetworkPeerings, 'doNotVerifyRemoteGateways') ? peering.virtualNetworkPeerings.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering.virtualNetworkPeerings, 'useRemoteGateways') ? peering.virtualNetworkPeerings.useRemoteGateways : false
-    
-  }
+    localVnetName: virtualNetwork.name    
+    remoteVirtualNetworkId: az.resourceId(vnets.subscriptionId, vnets.resourceGroupName, 'Microsoft.Network/virtualNetworks', vnets.name)                                  //peering.virtualNetworkPeerings.remoteVirtualNetworkName
+    name: contains(vnets.virtualNetworkPeerings, 'name') ? vnets.virtualNetworkPeerings.name : '${vnets.name}-${last(split(vnets.virtualNetworkPeerings.remoteVirtualNetworkId, '/'))}'
+    allowForwardedTraffic: contains(vnets.virtualNetworkPeerings, 'allowForwardedTraffic') ? vnets.virtualNetworkPeerings.allowForwardedTraffic : true
+    allowGatewayTransit: contains(vnets.virtualNetworkPeerings, 'allowGatewayTransit') ? vnets.virtualNetworkPeerings.allowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(vnets.virtualNetworkPeerings, 'allowVirtualNetworkAccess') ? vnets.virtualNetworkPeerings.allowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(vnets.virtualNetworkPeerings, 'doNotVerifyRemoteGateways') ? vnets.virtualNetworkPeerings.doNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(vnets.virtualNetworkPeerings, 'useRemoteGateways') ? vnets.virtualNetworkPeerings.useRemoteGateways : false
+   }
+  
 }]
 
 
@@ -135,6 +135,21 @@ module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [f
 /*
 
 
+// Local to Remote peering
+module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
+  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
+  params: {
+    localVnetName: virtualNetwork.name
+    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
+    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
+    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
+    enableDefaultTelemetry: enableChildTelemetry
+  }
+}]
 
 // Remote to local peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {

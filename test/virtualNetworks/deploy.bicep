@@ -1,3 +1,12 @@
+@description('Optional. Virtual Network Peerings configurations.')
+param virtualNetworkPeerings array = []
+
+@sys.description('Optional. The subscription ID of the subscription for the virtual network')
+param subscriptionId string = ''
+
+@sys.description('Optional. The name of the resource group for the virtual network')
+param resourceGroupName string = ''
+
 @description('Required. The Virtual Network (vNet) Name.')
 param name string
 
@@ -132,6 +141,84 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   }
 }
 
+module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
+  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
+  params: {
+    localVnetName: virtualNetwork.name
+    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
+    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
+    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
+    
+  }
+}]
+
+// Remote to local peering (reverse)
+module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
+  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
+  scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
+  params: {
+    localVnetName: last(split(peering.remoteVirtualNetworkId, '/'))
+    remoteVirtualNetworkId: virtualNetwork.id
+    name: contains(peering, 'remotePeeringName') ? peering.remotePeeringName : '${last(split(peering.remoteVirtualNetworkId, '/'))}-${name}'
+    allowForwardedTraffic: contains(peering, 'remotePeeringAllowForwardedTraffic') ? peering.remotePeeringAllowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'remotePeeringAllowGatewayTransit') ? peering.remotePeeringAllowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'remotePeeringAllowVirtualNetworkAccess') ? peering.remotePeeringAllowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'remotePeeringDoNotVerifyRemoteGateways') ? peering.remotePeeringDoNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'remotePeeringUseRemoteGateways') ? peering.remotePeeringUseRemoteGateways : false
+    
+  }
+}]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 resource virtualNetwork_lock 'Microsoft.Authorization/locks@2017-04-01' = if (lock != 'NotSpecified') {
   name: '${virtualNetwork.name}-${lock}-lock'
   properties: {
@@ -153,7 +240,7 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
   }
   scope: virtualNetwork
 }
-/*
+
 module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, index) in roleAssignments: {
   name: '${uniqueString(deployment().name, location)}-VNet-Rbac-${index}'
   params: {
