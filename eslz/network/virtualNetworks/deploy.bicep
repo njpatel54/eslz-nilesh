@@ -86,8 +86,8 @@ module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, i
     name: spokeVirtualNetwork.name
     location: location
     addressPrefixes: spokeVirtualNetwork.addressPrefixes
-    ddosProtectionPlanId: !empty(spokeVirtualNetwork.ddosProtectionPlanId) ? spokeVirtualNetwork.ddosProtectionPlanId : null
-    dnsServers: !empty(spokeVirtualNetwork.dnsServers) ? spokeVirtualNetwork.dnsServers : null
+    ddosProtectionPlanId: contains(spokeVirtualNetwork, 'ddosProtectionPlanId') ? spokeVirtualNetwork.ddosProtectionPlanId : null    
+    dnsServers: contains(spokeVirtualNetwork, 'dnsServers') ? spokeVirtualNetwork.dnsServers : null
     subnets: [for subnet in spokeVirtualNetwork.subnets: {
       name: subnet.name
       addressPrefix: subnet.addressPrefix
@@ -118,7 +118,7 @@ module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, i
 module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
   params: {
-    localVnetName: 
+    localVnetName: virtualNetwork
     remoteVirtualNetworkId: peering.remoteVirtualNetworkId
     name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
     allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
@@ -152,11 +152,6 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
   }
 }]
 
-
-
-
-
-
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)
 @maxValue(365)
@@ -184,8 +179,6 @@ param lock string = 'NotSpecified'
 
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param roleAssignments array = []
-
-
 
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
@@ -252,7 +245,6 @@ module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, in
     resourceId: virtualNetwork.id
   }
 }]
-
 
 @description('The resource group the virtual network was deployed into')
 output resourceGroupName string = resourceGroup().name
