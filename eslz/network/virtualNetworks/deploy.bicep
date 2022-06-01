@@ -86,8 +86,9 @@ module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, i
     name: spokeVirtualNetwork.name
     location: location
     addressPrefixes: spokeVirtualNetwork.addressPrefixes
-    ddosProtectionPlanId: contains(spokeVirtualNetwork, 'ddosProtectionPlanId') ? spokeVirtualNetwork.ddosProtectionPlanId : null    
-    dnsServers: contains(spokeVirtualNetwork, 'dnsServers') ? spokeVirtualNetwork.dnsServers : null
+    //ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
+    //dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
+    //enableDdosProtection: !empty(ddosProtectionPlanId)
     subnets: [for subnet in spokeVirtualNetwork.subnets: {
       name: subnet.name
       addressPrefix: subnet.addressPrefix
