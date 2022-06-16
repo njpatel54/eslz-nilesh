@@ -2,9 +2,6 @@
 @description('Optional. Hub Virtual Network configurations.')
 param spokeVnets array = []
 
-@description('Optional. Hub Virtual Network configurations.')
-param hubVirtualNetwork array = []
-
 @description('Required. The Virtual Network (vNet) Name.')
 param name string
 
@@ -16,15 +13,6 @@ param addressPrefixes array
 
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
 param subnets array = []
-
-@description('Optional. Virtual Network Peerings configurations.')
-param virtualNetworkPeerings array = []
-
-@sys.description('Optional. The subscription ID of the subscription for the virtual network')
-param subscriptionId string = ''
-
-@sys.description('Optional. The name of the resource group for the virtual network')
-param resourceGroupName string = ''
 
 @description('Optional. Tags of the resource.')
 param tags object = {}
@@ -89,9 +77,6 @@ param diagnosticEventHubName string = ''
 ])
 @description('Optional. Specify the type of lock.')
 param lock string = 'NotSpecified'
-
-@description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
-param roleAssignments array = []
 
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
@@ -207,8 +192,11 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
 
 
 
-/*
 
+
+
+
+/*
 
 module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, index) in roleAssignments: {
   name: '${uniqueString(deployment().name, location)}-VNet-Rbac-${index}'
@@ -222,18 +210,21 @@ module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, in
 }]
 
 
-// Spoke vNets to HubvNet Peering
-module virtualNetwork_peering_local 'virtualNetworks/virtualNetworkPeerings/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
-  name: '${vNet.name}-virtualNetworkPeering-local'                                                   //'${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
-  scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
-  dependsOn: [
-    spokeVnet
-  ]
-  params: {
-    localVnetName: vNet.name
-    remoteVirtualNetworkId: '/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn' //hubVnet.id  
-  }
-}]
+
+@description('Optional. Virtual Network Peerings configurations.')
+param virtualNetworkPeerings array = []
+
+@sys.description('Optional. The subscription ID of the subscription for the virtual network')
+param subscriptionId string = ''
+
+@sys.description('Optional. The name of the resource group for the virtual network')
+param resourceGroupName string = ''
+
+@description('Optional. Hub Virtual Network configurations.')
+param hubVirtualNetwork array = []
+
+@description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
+param roleAssignments array = []
 
 */
 

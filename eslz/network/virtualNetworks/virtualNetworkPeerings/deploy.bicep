@@ -1,5 +1,5 @@
 @description('Optional. The Name of Vnet Peering resource. If not provided, default value will be localVnetName-remoteVnetName')
-param name string = '${localVnetName}-${last(split(remoteVirtualNetworkId, '/'))}'
+param name string = '${localVnetName}-To-${last(split(remoteVirtualNetworkId, '/'))}'
 
 @description('Required. The Name of the Virtual Network to add the peering to.')
 param localVnetName string
@@ -22,11 +22,12 @@ param doNotVerifyRemoteGateways bool = true
 @description('Optional. If remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also true, virtual network will use gateways of remote virtual network for transit. Only one peering can have this flag set to true. This flag cannot be set if virtual network already has a gateway. Default is false')
 param useRemoteGateways bool = false
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' existing = {
+
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-11-01' existing = {
   name: localVnetName
 }
 
-resource virtualNetworkPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-05-01' = {
+resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
   name: name
   parent: virtualNetwork
   properties: {
@@ -41,6 +42,7 @@ resource virtualNetworkPeering 'Microsoft.Network/virtualNetworks/virtualNetwork
   }
 }
 
+/*
 @description('The resource group the virtual network peering was deployed into')
 output resourceGroupName string = resourceGroup().name
 
@@ -49,3 +51,4 @@ output name string = virtualNetworkPeering.name
 
 @description('The resource ID of the virtual network peering')
 output resourceId string = virtualNetworkPeering.id
+*/

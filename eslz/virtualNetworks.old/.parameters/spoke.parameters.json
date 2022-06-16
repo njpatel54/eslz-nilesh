@@ -68,7 +68,21 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]                
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
+                
               },
               {
                 "name": "vnet-ccs-prod-usva-iden",
@@ -86,7 +100,20 @@
                         "name": "snet-ccs-prod-usva-mgmt",
                         "addressPrefix": "10.30.11.64/26"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
               },
               {
                 "name": "vnet-ccs-prod-usva-ssvc",
@@ -152,7 +179,21 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
+                
               },
               {
                 "name": "vnet-ccs-prod-usva-lz01",
@@ -218,7 +259,21 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]                
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
+                
               },
               {
                 "name": "vnet-ccs-prod-usva-snbx",
@@ -284,7 +339,21 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
+                
               },
               {
                 "name": "vnet-ccs-prod-usva-ir01",
@@ -350,7 +419,21 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
+                
               }
             ]  
         }

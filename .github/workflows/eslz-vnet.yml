@@ -44,6 +44,7 @@ jobs:
             az deployment group create \
               --name 'Deploy-Hub-Spoke-Networking' \
               --resource-group 'rg-ccs-prod-usva-vnet' \
-              --template-file ./eslz/network/virtualNetworks/deploy.bicep \
+              --template-file ./eslz/network/deploy.bicep \
               --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
-              --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json
+              --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
+              --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }}

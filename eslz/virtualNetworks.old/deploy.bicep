@@ -1,9 +1,9 @@
 
 @description('Optional. Hub Virtual Network configurations.')
-param spokeVnets array = []
+param hubVirtualNetwork array = []
 
 @description('Optional. Hub Virtual Network configurations.')
-param hubVirtualNetwork array = []
+param spokeVirtualNetworks array = []
 
 @description('Required. The Virtual Network (vNet) Name.')
 param name string
@@ -42,6 +42,130 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
+  name: name
+  location: location
+  tags: tags
+  properties: {
+    addressSpace: {
+      addressPrefixes: addressPrefixes
+    }
+    ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
+    dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
+    enableDdosProtection: !empty(ddosProtectionPlanId)
+    subnets: [for subnet in subnets: {
+      name: subnet.name
+      properties: {
+        addressPrefix: subnet.addressPrefix
+        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
+        applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
+        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
+        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
+        natGateway: contains(subnet, 'natGatewayId') ? {
+          'id': subnet.natGatewayId
+        } : json('null')
+        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
+          'id': subnet.networkSecurityGroupId
+        } : json('null')
+        privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
+        privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
+        routeTable: contains(subnet, 'routeTableId') ? {
+          'id': subnet.routeTableId
+        } : json('null')
+        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
+        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+      }
+    }]
+  }
+}
+
+module spokeVnets 'virtualNetworks/deploy.bicep' = [ for (spokeVirtualNetwork, index) in spokeVirtualNetworks : {
+  name: '${spokeVirtualNetwork.name}-VNet-Module-${index}'
+  scope: resourceGroup(spokeVirtualNetwork.subscriptionId, spokeVirtualNetwork.resourceGroupName)
+  params: {
+    name: spokeVirtualNetwork.name
+    location: location
+    addressPrefixes: spokeVirtualNetwork.addressPrefixes
+    //ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
+    //dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
+    //enableDdosProtection: !empty(ddosProtectionPlanId)
+    subnets: [for subnet in spokeVirtualNetwork.subnets: {
+      name: subnet.name
+      addressPrefix: subnet.addressPrefix
+      addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
+      applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
+      delegations: contains(subnet, 'delegations') ? subnet.delegations : []
+      ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
+      natGateway: contains(subnet, 'natGatewayId') ? {
+        'id': subnet.natGatewayId
+      } : json('null')
+      networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
+        'id': subnet.networkSecurityGroupId
+      } : json('null')
+      privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
+      privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
+      routeTable: contains(subnet, 'routeTableId') ? {
+        'id': subnet.routeTableId
+      } : json('null')
+      serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
+      serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+      }]
+  }
+}]
+
+// Spoke vNets to HubvNet Peering
+module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
+  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
+  params: {
+    localVnetName: virtualNetwork.name
+    remoteVirtualNetworkId: hubVnetId
+    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
+    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
+    
+  }
+}]
+
+
+
+/*
+
+
+// Local to Remote peering
+module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
+  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
+  params: {
+    localVnetName: virtualNetwork.name
+    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
+    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
+    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
+    enableDefaultTelemetry: enableChildTelemetry
+  }
+}]
+
+// Remote to local peering (reverse)
+module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
+  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
+  scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
+  params: {
+    localVnetName: last(split(peering.remoteVirtualNetworkId, '/'))
+    remoteVirtualNetworkId: virtualNetwork.id
+    name: contains(peering, 'remotePeeringName') ? peering.remotePeeringName : '${last(split(peering.remoteVirtualNetworkId, '/'))}-${name}'
+    allowForwardedTraffic: contains(peering, 'remotePeeringAllowForwardedTraffic') ? peering.remotePeeringAllowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'remotePeeringAllowGatewayTransit') ? peering.remotePeeringAllowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'remotePeeringAllowVirtualNetworkAccess') ? peering.remotePeeringAllowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'remotePeeringDoNotVerifyRemoteGateways') ? peering.remotePeeringDoNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'remotePeeringUseRemoteGateways') ? peering.remotePeeringUseRemoteGateways : false
+    
+  }
+}]
 
 @description('Optional. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = '${name}-diagnosticSettings'
@@ -109,87 +233,15 @@ param diagnosticMetricsToEnable array = [
   'AllMetrics'
 ]
 
-resource hubVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  name: name
-  location: location
-  tags: tags
-  properties: {
-    addressSpace: {
-      addressPrefixes: addressPrefixes
-    }
-    ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
-    dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
-    enableDdosProtection: !empty(ddosProtectionPlanId)
-    subnets: [for subnet in subnets: {
-      name: subnet.name
-      properties: {
-        addressPrefix: subnet.addressPrefix
-        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-        applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-        natGateway: contains(subnet, 'natGatewayId') ? {
-          'id': subnet.natGatewayId
-        } : json('null')
-        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
-          'id': subnet.networkSecurityGroupId
-        } : json('null')
-        privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-        privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-        routeTable: contains(subnet, 'routeTableId') ? {
-          'id': subnet.routeTableId
-        } : json('null')
-        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
-      }
-    }]
-  }
-}
-
-module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
-  name: 'VNet-Module-${vNet.name}'
-  scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
-  params: {
-    hubVnetName: hubVnet.name
-    hubVnetId: hubVnet.id
-    name: vNet.name
-    location: location
-    addressPrefixes: vNet.addressPrefixes
-    //ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
-    //dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
-    //enableDdosProtection: !empty(ddosProtectionPlanId)
-    subnets: [for subnet in vNet.subnets: {
-      name: subnet.name
-      addressPrefix: subnet.addressPrefix
-      addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-      applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-      delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-      ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-      natGateway: contains(subnet, 'natGatewayId') ? {
-        'id': subnet.natGatewayId
-      } : json('null')
-      networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
-        'id': subnet.networkSecurityGroupId
-      } : json('null')
-      privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-      privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-      routeTable: contains(subnet, 'routeTableId') ? {
-        'id': subnet.routeTableId
-      } : json('null')
-      serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-      serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
-      }]
-  }
-}]
 
 
 resource virtualNetwork_lock 'Microsoft.Authorization/locks@2017-04-01' = if (lock != 'NotSpecified') {
-  name: '${hubVnet.name}-${lock}-lock'
+  name: '${virtualNetwork.name}-${lock}-lock'
   properties: {
     level: lock
     notes: lock == 'CanNotDelete' ? 'Cannot delete resource or child resources.' : 'Cannot modify the resource or child resources.'
   }
-  scope: hubVnet
+  scope: virtualNetwork
 }
 
 resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (!empty(diagnosticStorageAccountId) || !empty(diagnosticWorkspaceId) || !empty(diagnosticEventHubAuthorizationRuleId) || !empty(diagnosticEventHubName)) {
@@ -202,13 +254,8 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
     metrics: diagnosticsMetrics
     logs: diagnosticsLogs
   }
-  scope: hubVnet
+  scope: virtualNetwork
 }
-
-
-
-/*
-
 
 module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, index) in roleAssignments: {
   name: '${uniqueString(deployment().name, location)}-VNet-Rbac-${index}'
@@ -220,103 +267,6 @@ module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, in
     resourceId: virtualNetwork.id
   }
 }]
-
-
-// Spoke vNets to HubvNet Peering
-module virtualNetwork_peering_local 'virtualNetworks/virtualNetworkPeerings/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
-  name: '${vNet.name}-virtualNetworkPeering-local'                                                   //'${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
-  scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
-  dependsOn: [
-    spokeVnet
-  ]
-  params: {
-    localVnetName: vNet.name
-    remoteVirtualNetworkId: '/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn' //hubVnet.id  
-  }
-}]
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-// Local to Remote peering
-// Spoke to Hub Peering
-module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [for vnets in spokeVirtualNetworks: {
-  name: '${uniqueString(vnets.name, location)}-virtualNetworkPeering-local'
-  params: {
-    localVnetName: virtualNetwork.name    
-    remoteVirtualNetworkId: az.resourceId(vnets.subscriptionId, vnets.resourceGroupName, 'Microsoft.Network/virtualNetworks', vnets.name)                                  //peering.virtualNetworkPeerings.remoteVirtualNetworkName
-    name: contains(vnets.virtualNetworkPeerings, 'name') ? vnets.virtualNetworkPeerings.name : '${vnets.name}-${last(split(vnets.virtualNetworkPeerings.remoteVirtualNetworkId, '/'))}'
-    allowForwardedTraffic: contains(vnets.virtualNetworkPeerings, 'allowForwardedTraffic') ? vnets.virtualNetworkPeerings.allowForwardedTraffic : true
-    allowGatewayTransit: contains(vnets.virtualNetworkPeerings, 'allowGatewayTransit') ? vnets.virtualNetworkPeerings.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(vnets.virtualNetworkPeerings, 'allowVirtualNetworkAccess') ? vnets.virtualNetworkPeerings.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(vnets.virtualNetworkPeerings, 'doNotVerifyRemoteGateways') ? vnets.virtualNetworkPeerings.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(vnets.virtualNetworkPeerings, 'useRemoteGateways') ? vnets.virtualNetworkPeerings.useRemoteGateways : false
-   }
-  
-}]
-
-// Local to Remote peering
-module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
-  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
-  params: {
-    localVnetName: virtualNetwork.name
-    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
-    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
-    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
-    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
-    enableDefaultTelemetry: enableChildTelemetry
-  }
-}]
-
-// Remote to local peering (reverse)
-module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
-  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
-  scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
-  params: {
-    localVnetName: last(split(peering.remoteVirtualNetworkId, '/'))
-    remoteVirtualNetworkId: virtualNetwork.id
-    name: contains(peering, 'remotePeeringName') ? peering.remotePeeringName : '${last(split(peering.remoteVirtualNetworkId, '/'))}-${name}'
-    allowForwardedTraffic: contains(peering, 'remotePeeringAllowForwardedTraffic') ? peering.remotePeeringAllowForwardedTraffic : true
-    allowGatewayTransit: contains(peering, 'remotePeeringAllowGatewayTransit') ? peering.remotePeeringAllowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering, 'remotePeeringAllowVirtualNetworkAccess') ? peering.remotePeeringAllowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering, 'remotePeeringDoNotVerifyRemoteGateways') ? peering.remotePeeringDoNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering, 'remotePeeringUseRemoteGateways') ? peering.remotePeeringUseRemoteGateways : false
-    
-  }
-}]
-
-
 
 @description('The resource group the virtual network was deployed into')
 output resourceGroupName string = resourceGroup().name
