@@ -144,7 +144,15 @@ resource spokeVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
   }
 }
 
-
+// Spoke vNets to HubvNet Peering
+module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [ for (peering, index) in virtualNetworkPeerings : if (!empty(virtualNetworkPeerings)) {
+  name: 'virtualNetworkPeering-local-${index}'                                                   //'${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
+  //scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
+  params: {
+    localVnetName: spokeVnet.name
+    remoteVirtualNetworkId: '/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn' //hubVnet.id  
+  }
+}]
 
 /*
 // // HubvNet to Spoke vNets Peering (reverse)
