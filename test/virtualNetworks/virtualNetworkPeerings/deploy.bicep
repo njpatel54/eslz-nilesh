@@ -1,13 +1,11 @@
 @description('Optional. The Name of Vnet Peering resource. If not provided, default value will be localVnetName-remoteVnetName')
-param name string = '${localVnetName}-${last(split(remoteVirtualNetworkId, '/'))}'
+param name string = '${localVnetName}-To-${last(split(remoteVirtualNetworkId, '/'))}'
 
 @description('Required. The Name of the Virtual Network to add the peering to.')
 param localVnetName string
 
 @description('Required. The Resource ID of the VNet that is this Local VNet is being peered to. Should be in the format of a Resource ID')
 param remoteVirtualNetworkId string
-
-param peering object 
 
 @description('Optional. Whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network. Default is true')
 param allowForwardedTraffic bool = true
@@ -33,18 +31,17 @@ param virtualNetworkPeerings array = []
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-11-01' existing = {
   name: localVnetName
-  //scope: resourceGroup(subscriptionId, resourceGroupName)
 }
 
 resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
-  name: contains(peering, 'name') ? peering.name : '${virtualNetwork.name}/${name}'
+  name: name
   parent: virtualNetwork
   properties: {
-    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
-    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
+    allowForwardedTraffic: true
+    allowGatewayTransit: false
+    allowVirtualNetworkAccess: true
+    doNotVerifyRemoteGateways: true
+    useRemoteGateways: false
     remoteVirtualNetwork: {
       id: remoteVirtualNetworkId
     }

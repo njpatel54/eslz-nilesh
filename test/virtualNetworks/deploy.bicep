@@ -145,8 +145,34 @@ resource spokeVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
 }
 
 
+// Spoke vNets to HubvNet Peering
+module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = {
+  name: 'virtualNetworkPeering-local-${spokeVnet.name}'
+  scope: resourceGroup(split(spokeVnet.id, '/')[2], split(spokeVnet.id, '/')[4])
+  params: {
+    localVnetName: spokeVnet.name
+    remoteVirtualNetworkId: hubVnetId
+  }
+}
+
+
+// HubvNet to Spoke vNets Peering (reverse)
+module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = {
+  name: 'virtualNetworkPeering-remote-${spokeVnet.name}'
+  scope: resourceGroup(split(hubVnetId, '/')[2], split(hubVnetId, '/')[4])
+  params: {
+    localVnetName: hubVnetName
+    remoteVirtualNetworkId: spokeVnet.id
+  }
+}
+
+
+/*
+
+
+// Spoke vNets to HubvNet Peering
 resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
-  name: '${spokeVnet.name}-${last(split(hubVnetId, '/'))}'
+  name: '${spokeVnet.name}-To-${last(split(hubVnetId, '/'))}'
   parent: spokeVnet
   properties: {
     allowForwardedTraffic: true
@@ -160,7 +186,6 @@ resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2
   }
 }
 
-/*
 
 // Spoke vNets to HubvNet Peering
 module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [ for (peering, index) in virtualNetworkPeerings : if (!empty(virtualNetworkPeerings)) {
@@ -174,7 +199,7 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [ fo
 }]
 
 
-// // HubvNet to Spoke vNets Peering (reverse)
+// HubvNet to Spoke vNets Peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
   scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
