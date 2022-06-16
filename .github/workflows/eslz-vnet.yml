@@ -47,4 +47,7 @@ jobs:
               --template-file ./eslz/network/deploy.bicep \
               --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
               --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
-              --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }}
+              --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+              --parameters diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+              --parameters diagnosticEventHubName=${{ secrets.AZURE_DAIGEHNAME }} \
+              --parameters diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DAIGEHAUTHRULEID }}
