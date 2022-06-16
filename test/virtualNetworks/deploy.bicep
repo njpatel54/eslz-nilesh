@@ -144,6 +144,24 @@ resource spokeVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
   }
 }
 
+
+resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
+  name: '${spokeVnet.name}-${last(split(hubVnetId, '/'))}'
+  parent: spokeVnet
+  properties: {
+    allowForwardedTraffic: true
+    allowGatewayTransit: false
+    allowVirtualNetworkAccess: true
+    doNotVerifyRemoteGateways: true
+    useRemoteGateways: false
+    remoteVirtualNetwork: {
+      id: hubVnetId
+    }
+  }
+}
+
+/*
+
 // Spoke vNets to HubvNet Peering
 module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [ for (peering, index) in virtualNetworkPeerings : if (!empty(virtualNetworkPeerings)) {
   name: 'virtualNetworkPeering-local-${index}'                                                   //'${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
@@ -155,7 +173,7 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [ fo
   }
 }]
 
-/*
+
 // // HubvNet to Spoke vNets Peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
