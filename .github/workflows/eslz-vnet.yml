@@ -49,5 +49,5 @@ jobs:
               --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
               --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
               --parameters diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-              --parameters diagnosticEventHubName=${{ secrets.AZURE_DAIGEHNAME }} \
-              --parameters diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DAIGEHAUTHRULEID }}
+              --parameters diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+              --parameters diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
