@@ -151,6 +151,10 @@ module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVn
     name: vNet.name
     location: location
     addressPrefixes: vNet.addressPrefixes
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: diagnosticEventHubName
     //ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
     //dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
     //enableDdosProtection: !empty(ddosProtectionPlanId)
