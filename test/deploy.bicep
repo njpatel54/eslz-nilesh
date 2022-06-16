@@ -119,6 +119,9 @@ module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVn
 module virtualNetwork_peering_local 'virtualNetworks/virtualNetworkPeerings/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
   name: '${vNet.name}-virtualNetworkPeering-local'                                                   //'${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
   scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
+  dependsOn: [
+    spokeVnet
+  ]
   params: {
     localVnetName: vNet.name
     remoteVirtualNetworkId: '/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn' //hubVnet.id  
