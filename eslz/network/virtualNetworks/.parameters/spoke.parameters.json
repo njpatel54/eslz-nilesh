@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {            
-        "spokeVirtualNetworks": {
+        "spokeVnets": {
             "value": [
               {
                 "name": "vnet-ccs-prod-usva-mgmt",
@@ -68,7 +68,20 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
                 
               },
               {
@@ -88,19 +101,19 @@
                         "addressPrefix": "10.30.11.64/26"
                     }
                 ],
-                "virtualNetworkPeerings": [
-                    {
-                        "remoteVirtualNetworkName": "vnet-ccs-prod-usva-conn",
-                        "allowForwardedTraffic": true,
-                        "allowGatewayTransit": false,
-                        "allowVirtualNetworkAccess": true,
-                        "useRemoteGateways": false,
-                        "remotePeeringEnabled": true,
-                        "remotePeeringName": "customName",
-                        "remotePeeringAllowVirtualNetworkAccess": true,
-                        "remotePeeringAllowForwardedTraffic": true
-                   }
-               ]
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
               },
               {
                 "name": "vnet-ccs-prod-usva-ssvc",
@@ -166,7 +179,20 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
                 
               },
               {
@@ -233,7 +259,20 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
                 
               },
               {
@@ -300,7 +339,20 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
                 
               },
               {
@@ -367,7 +419,20 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
-                ]
+                ],
+                "virtualNetworkPeerings": {
+                    "value": [
+                        {
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                }
                 
               }
             ]  

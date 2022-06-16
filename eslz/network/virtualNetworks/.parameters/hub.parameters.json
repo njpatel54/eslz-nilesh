@@ -92,7 +92,11 @@
             }
             
           ]
+          
         
+        },
+        "virtualNetworkPeerings": {
+            "value": []
         }
   }
 }

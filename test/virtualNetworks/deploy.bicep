@@ -107,7 +107,7 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
-resource spokeVnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
+resource spokeVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
   name: name
   location: location
   tags: tags
@@ -144,22 +144,9 @@ resource spokeVnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   }
 }
 
-// Spoke vNets to HubvNet Peering
-module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
-  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
-  params: {
-    localVnetName: spokeVnet.name
-    remoteVirtualNetworkId: hubVnetId
-    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
-    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
-    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
-    
-  }
-}]
 
+
+/*
 // // HubvNet to Spoke vNets Peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
@@ -179,50 +166,6 @@ module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [fo
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
 resource virtualNetwork_lock 'Microsoft.Authorization/locks@2017-04-01' = if (lock != 'NotSpecified') {
   name: '${virtualNetwork.name}-${lock}-lock'
   properties: {

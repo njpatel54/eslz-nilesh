@@ -22,25 +22,34 @@ param doNotVerifyRemoteGateways bool = true
 @description('Optional. If remote gateways can be used on this virtual network. If the flag is set to true, and allowGatewayTransit on remote peering is also true, virtual network will use gateways of remote virtual network for transit. Only one peering can have this flag set to true. This flag cannot be set if virtual network already has a gateway. Default is false')
 param useRemoteGateways bool = false
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' existing = {
+
+@description('Optional. Virtual Network Peerings configurations.')
+param virtualNetworkPeerings array = []
+
+//param subscriptionId string
+//param resourceGroupName string
+
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-11-01' existing = {
   name: localVnetName
+  //scope: resourceGroup(subscriptionId, resourceGroupName)
 }
 
-resource virtualNetworkPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-05-01' = {
-  name: name
+resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = [ for (peering, index) in virtualNetworkPeerings : if (!empty(virtualNetworkPeerings)) {
+  name: contains(peering, 'name') ? peering.name : '${virtualNetwork.name}/${name}'
   parent: virtualNetwork
   properties: {
-    allowForwardedTraffic: allowForwardedTraffic
-    allowGatewayTransit: allowGatewayTransit
-    allowVirtualNetworkAccess: allowVirtualNetworkAccess
-    doNotVerifyRemoteGateways: doNotVerifyRemoteGateways
-    useRemoteGateways: useRemoteGateways
+    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
+    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
+    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
+    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
+    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
     remoteVirtualNetwork: {
       id: remoteVirtualNetworkId
     }
   }
-}
+}]
 
+/*
 @description('The resource group the virtual network peering was deployed into')
 output resourceGroupName string = resourceGroup().name
 
@@ -49,3 +58,4 @@ output name string = virtualNetworkPeering.name
 
 @description('The resource ID of the virtual network peering')
 output resourceId string = virtualNetworkPeering.id
+*/

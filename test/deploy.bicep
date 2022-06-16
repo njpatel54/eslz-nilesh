@@ -1,9 +1,9 @@
 
 @description('Optional. Hub Virtual Network configurations.')
-param hubVirtualNetwork array = []
+param spokeVnets array = []
 
 @description('Optional. Hub Virtual Network configurations.')
-param spokeVnets array = []
+param hubVirtualNetwork array = []
 
 @description('Required. The Virtual Network (vNet) Name.')
 param name string
@@ -42,7 +42,7 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
-resource hubVnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
+resource hubVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
   name: name
   location: location
   tags: tags
@@ -79,19 +79,19 @@ resource hubVnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   }
 }
 
-module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNets, index) in spokeVnets : {
-  name: '${vNets.name}-VNet-Module-${index}'
-  scope: resourceGroup(vNets.subscriptionId, vNets.resourceGroupName)
+module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
+  name: 'VNet-Module-${vNet.name}'
+  scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
   params: {
     hubVnetName: hubVnet.name
     hubVnetId: hubVnet.id
-    name: vNets.name
+    name: vNet.name
     location: location
-    addressPrefixes: vNets.addressPrefixes
+    addressPrefixes: vNet.addressPrefixes
     //ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
     //dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
     //enableDdosProtection: !empty(ddosProtectionPlanId)
-    subnets: [for subnet in vNets.subnets: {
+    subnets: [for subnet in vNet.subnets: {
       name: subnet.name
       addressPrefix: subnet.addressPrefix
       addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
@@ -115,16 +115,15 @@ module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNets, index) in spokeV
   }
 }]
 
-
-
-
-
-
-
-
-
-
-
+// Spoke vNets to HubvNet Peering
+module virtualNetwork_peering_local 'virtualNetworks/virtualNetworkPeerings/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
+  name: '${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
+  scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
+  params: {
+    localVnetName: vNet.name
+    remoteVirtualNetworkId: '/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn' //hubVnet.id  
+  }
+}]
 
 
 
