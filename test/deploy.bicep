@@ -117,7 +117,7 @@ module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVn
 
 // Spoke vNets to HubvNet Peering
 module virtualNetwork_peering_local 'virtualNetworks/virtualNetworkPeerings/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
-  name: '${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
+  name: '${vNet.name}-virtualNetworkPeering-local'                                                   //'${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
   scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
   params: {
     localVnetName: vNet.name
