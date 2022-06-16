@@ -149,6 +149,7 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [ fo
   name: 'virtualNetworkPeering-local-${index}'                                                   //'${uniqueString(deployment().name, vNet.name)}-virtualNetworkPeering-local-${index}'
   //scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
   params: {
+    peering: peering
     localVnetName: spokeVnet.name
     remoteVirtualNetworkId: '/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn' //hubVnet.id  
   }

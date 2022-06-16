@@ -7,6 +7,8 @@ param localVnetName string
 @description('Required. The Resource ID of the VNet that is this Local VNet is being peered to. Should be in the format of a Resource ID')
 param remoteVirtualNetworkId string
 
+param peering object 
+
 @description('Optional. Whether the forwarded traffic from the VMs in the local virtual network will be allowed/disallowed in remote virtual network. Default is true')
 param allowForwardedTraffic bool = true
 
@@ -34,7 +36,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-11-01' existing 
   //scope: resourceGroup(subscriptionId, resourceGroupName)
 }
 
-resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = [ for (peering, index) in virtualNetworkPeerings : if (!empty(virtualNetworkPeerings)) {
+resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
   name: contains(peering, 'name') ? peering.name : '${virtualNetwork.name}/${name}'
   parent: virtualNetwork
   properties: {
@@ -47,7 +49,7 @@ resource vNetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2
       id: remoteVirtualNetworkId
     }
   }
-}]
+}
 
 /*
 @description('The resource group the virtual network peering was deployed into')
