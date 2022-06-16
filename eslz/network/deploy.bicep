@@ -42,6 +42,11 @@ var ddosProtectionPlan = {
 @description('Optional. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = '${name}-diagnosticSettings'
 
+@description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
+@minValue(0)
+@maxValue(365)
+param diagnosticLogsRetentionInDays int = 365
+
 /*
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
@@ -77,11 +82,6 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
     days: diagnosticLogsRetentionInDays
   }
 }]
-
-@description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
-@minValue(0)
-@maxValue(365)
-param diagnosticLogsRetentionInDays int = 365
 
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
