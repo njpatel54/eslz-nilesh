@@ -8,6 +8,15 @@ param name string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Optional. Virtual Network Peerings configurations.')
+param virtualNetworkPeerings array = []
+
+@description('Optional. The subscription ID of the subscription for the virtual network')
+param subscriptionId string = ''
+
+@description('Optional. The name of the resource group for the virtual network')
+param resourceGroupName string = ''
+
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param addressPrefixes array
 
@@ -213,14 +222,7 @@ module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, in
 
 
 
-@description('Optional. Virtual Network Peerings configurations.')
-param virtualNetworkPeerings array = []
 
-@sys.description('Optional. The subscription ID of the subscription for the virtual network')
-param subscriptionId string = ''
-
-@sys.description('Optional. The name of the resource group for the virtual network')
-param resourceGroupName string = ''
 
 @description('Optional. Hub Virtual Network configurations.')
 param hubVirtualNetwork array = []

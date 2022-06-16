@@ -10,6 +10,15 @@ param name string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Optional. Virtual Network Peerings configurations.')
+param virtualNetworkPeerings array = []
+
+@description('Optional. The subscription ID of the subscription for the virtual network')
+param subscriptionId string = ''
+
+@description('Optional. The name of the resource group for the virtual network')
+param resourceGroupName string = ''
+
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param addressPrefixes array
 
@@ -183,15 +192,6 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
 
 /*
 
-
-@description('Optional. Virtual Network Peerings configurations.')
-param virtualNetworkPeerings array = []
-
-@description('Optional. The subscription ID of the subscription for the virtual network')
-param subscriptionId string = ''
-
-@description('Optional. The name of the resource group for the virtual network')
-param resourceGroupName string = ''
 
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param roleAssignments array = []
