@@ -30,9 +30,17 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
-
 @description('Optional. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = '${name}-diagnosticSettings'
+
+/*
+@description('Optional. The name of logs that will be streamed.')
+@allowed([
+  'VMProtectionAlerts'
+])
+param diagnosticLogCategoriesToEnable array = [
+  'VMProtectionAlerts'
+]
 
 var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
   category: category
@@ -42,6 +50,14 @@ var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
     days: diagnosticLogsRetentionInDays
   }
 }]
+*/
+@description('Optional. The name of metrics that will be streamed.')
+@allowed([
+  'AllMetrics'
+])
+param diagnosticMetricsToEnable array = [
+  'AllMetrics'
+]
 
 var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
   category: metric
@@ -78,21 +94,7 @@ param diagnosticEventHubName string = ''
 @description('Optional. Specify the type of lock.')
 param lock string = 'NotSpecified'
 
-@description('Optional. The name of logs that will be streamed.')
-@allowed([
-  'VMProtectionAlerts'
-])
-param diagnosticLogCategoriesToEnable array = [
-  'VMProtectionAlerts'
-]
 
-@description('Optional. The name of metrics that will be streamed.')
-@allowed([
-  'AllMetrics'
-])
-param diagnosticMetricsToEnable array = [
-  'AllMetrics'
-]
 
 resource hubVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
   name: name
@@ -185,7 +187,7 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
     eventHubAuthorizationRuleId: !empty(diagnosticEventHubAuthorizationRuleId) ? diagnosticEventHubAuthorizationRuleId : null
     eventHubName: !empty(diagnosticEventHubName) ? diagnosticEventHubName : null
     metrics: diagnosticsMetrics
-    logs: diagnosticsLogs
+    //logs: diagnosticsLogs
   }
   scope: hubVnet
 }
