@@ -1,6 +1,8 @@
 @description('Optional. The name of the event hub namespace. If no name is provided, then unique name will be created.')
 @maxLength(50)
-param name string = ''
+param eventhubNamespaceName string = ''
+
+param eventhubName string = ''
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -43,9 +45,6 @@ param authorizationRules array = [
 @description('Optional. Configuration Details for private endpoints.For security reasons, it is recommended to use private endpoints whenever possible.')
 param privateEndpoints array = []
 
-@description('Optional. Networks ACLs, this value contains IPs to whitelist and/or Subnet information. For security reasons, it is recommended to set the DefaultAction Deny')
-param networkAcls object = {}
-
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)
 @maxValue(365)
@@ -83,9 +82,6 @@ param roleAssignments array = []
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 @description('Optional. The event hubs to deploy into this namespace')
 param eventHubs array = []
 
@@ -121,11 +117,11 @@ param diagnosticMetricsToEnable array = [
 ]
 
 var uniqueEventHubNamespace = 'evhns-${uniqueString(resourceGroup().id)}'
-var name_var = empty(name) ? uniqueEventHubNamespace : name
+var name_var = empty(eventhubNamespaceName) ? uniqueEventHubNamespace : eventhubNamespaceName
 var maximumThroughputUnits_var = !isAutoInflateEnabled ? 0 : maximumThroughputUnits
 
 @description('Optional. The name of the diagnostic setting, if deployed.')
-param diagnosticSettingsName string = '${name}-diagnosticSettings'
+param diagnosticSettingsName string = '${eventhubNamespaceName}-diagnosticSettings'
 
 var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
   category: category
@@ -153,18 +149,6 @@ var identity = identityType != 'None' ? {
   userAssignedIdentities: !empty(userAssignedIdentities) ? userAssignedIdentities : null
 } : null
 
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
-
 resource eventHubNamespace 'Microsoft.EventHub/namespaces@2021-06-01-preview' = {
   name: name_var
   location: location
@@ -179,12 +163,6 @@ resource eventHubNamespace 'Microsoft.EventHub/namespaces@2021-06-01-preview' = 
     zoneRedundant: zoneRedundant
     isAutoInflateEnabled: isAutoInflateEnabled
     maximumThroughputUnits: maximumThroughputUnits_var
-    networkAcls: !empty(networkAcls) ? {
-      bypass: !empty(networkAcls) ? networkAcls.bypass : null
-      defaultAction: !empty(networkAcls) ? networkAcls.defaultAction : null
-      virtualNetworkRules: (!empty(networkAcls) && contains(networkAcls, 'virtualNetworkRules')) ? networkAcls.virtualNetworkRules : []
-      ipRules: (!empty(networkAcls) && contains(networkAcls, 'ipRules')) ? networkAcls.ipRules : []
-    } : null
   }
 }
 
@@ -214,7 +192,7 @@ module eventHubNamespace_eventHubs 'eventhubs/deploy.bicep' = [for (eventHub, in
   name: '${uniqueString(deployment().name, location)}-EvhbNamespace-EventHub-${index}'
   params: {
     namespaceName: eventHubNamespace.name
-    name: eventHub.name
+    name: eventhubName
     authorizationRules: contains(eventHub, 'authorizationRules') ? eventHub.authorizationRules : [
       {
         name: 'RootManageSharedAccessKey'
@@ -240,7 +218,7 @@ module eventHubNamespace_eventHubs 'eventhubs/deploy.bicep' = [for (eventHub, in
     partitionCount: contains(eventHub, 'partitionCount') ? eventHub.partitionCount : 2
     roleAssignments: contains(eventHub, 'roleAssignments') ? eventHub.roleAssignments : []
     status: contains(eventHub, 'status') ? eventHub.status : 'Active'
-    enableDefaultTelemetry: enableDefaultTelemetry
+    
   }
 }]
 
@@ -250,7 +228,7 @@ module eventHubNamespace_diasterRecoveryConfig 'disasterRecoveryConfigs/deploy.b
     namespaceName: eventHubNamespace.name
     name: disasterRecoveryConfig.name
     partnerNamespaceId: contains(disasterRecoveryConfig, 'partnerNamespaceId') ? disasterRecoveryConfig.partnerNamespaceId : ''
-    enableDefaultTelemetry: enableDefaultTelemetry
+    
   }
 }
 
@@ -260,7 +238,7 @@ module eventHubNamespace_authorizationRules 'authorizationRules/deploy.bicep' = 
     namespaceName: eventHubNamespace.name
     name: authorizationRule.name
     rights: contains(authorizationRule, 'rights') ? authorizationRule.rights : []
-    enableDefaultTelemetry: enableDefaultTelemetry
+    
   }
 }]
 

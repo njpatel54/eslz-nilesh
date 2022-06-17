@@ -63,15 +63,17 @@ param siem_rg_name string = 'rg-${projowner}-${opscope}-${region}-${suffix}'
 param loganalytics_workspace_name string = 'log-${projowner}-${opscope}-${region}-${suffix}'
 param azureautomation_name string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
 param storageaccount_name string = toLower('st${projowner}${opscope}${region}${suffix}')
+param eventhub_namespace_name string = 'evhns-${projowner}-${opscope}-${region}-${suffix}'
+param eventhub_name string = 'evh-${projowner}-${opscope}-${region}-${suffix}'
 
 // From Parameters Files
 param storageaccount_sku string
 
 // Create Resoruce Group
 resource siem_rg 'Microsoft.Resources/resourceGroups@2021-04-01'={
-    name: siem_rg_name
-    location: location
-    tags: combinedTags
+  name: siem_rg_name
+  location: location
+  tags: combinedTags
 }
 
 // Create Log Analytics Workspace
@@ -79,29 +81,45 @@ module loga './workspaces/deploy.bicep' = {
   name: 'loga_${suffix}'
   scope: siem_rg
   params:{
-      mgmtsubid: mgmtsubid
-      connsubid: connsubid
-      idensubid: idensubid
-      sandsubid: sandsubid
-      aaname: azureautomation_name
-      workspacename: loganalytics_workspace_name
-      location: location
-      tags: combinedTags
+    mgmtsubid: mgmtsubid
+    connsubid: connsubid
+    idensubid: idensubid
+    sandsubid: sandsubid
+    aaname: azureautomation_name
+    workspacename: loganalytics_workspace_name
+    location: location
+    tags: combinedTags
   }
 }
 
 // Create Storage Account
 module sa './storageAccounts/deploy.bicep' = {
-    name: 'sa_${suffix}'
-    scope: siem_rg
-    dependsOn: [
-      loga
-    ]
-    params: {
-        location: location
-        storageAccountName: storageaccount_name
-        storageSKU: storageaccount_sku
-        diagnosticWorkspaceId: loga.outputs.resourceId
-        tags: combinedTags
-    }
+  name: 'sa_${suffix}'
+  scope: siem_rg
+  dependsOn: [
+    loga
+  ]
+  params: {
+    location: location
+    storageAccountName: storageaccount_name
+    storageSKU: storageaccount_sku
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    tags: combinedTags
+  }
+}
+
+// Create Event Hub Namespace and Event Hub
+module eh './namespaces/deploy.bicep' = {
+  name: 'eh_${suffix}'
+  scope: siem_rg
+  dependsOn: [
+    loga
+  ]
+  params: {
+    location: location
+    eventhubNamespaceName: eventhub_namespace_name
+    eventhubName: eventhub_name
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    tags: combinedTags
+  }
 }

@@ -93,9 +93,6 @@ param captureDescriptionSizeLimitInBytes int = 314572800
 @description('Optional. A value that indicates whether to Skip Empty Archives')
 param captureDescriptionSkipEmptyArchives bool = false
 
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 var eventHubPropertiesSimple = {
   messageRetentionInDays: messageRetentionInDays
   partitionCount: partitionCount
@@ -119,18 +116,6 @@ var eventHubPropertiesWithCapture = {
     intervalInSeconds: captureDescriptionIntervalInSeconds
     sizeLimitInBytes: captureDescriptionSizeLimitInBytes
     skipEmptyArchives: captureDescriptionSkipEmptyArchives
-  }
-}
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
   }
 }
 
@@ -160,7 +145,7 @@ module eventHub_consumergroups 'consumergroups/deploy.bicep' = [for (consumerGro
     eventHubName: eventHub.name
     name: consumerGroup.name
     userMetadata: contains(consumerGroup, 'userMetadata') ? consumerGroup.userMetadata : ''
-    enableDefaultTelemetry: enableDefaultTelemetry
+    
   }
 }]
 
@@ -171,7 +156,7 @@ module eventHub_authorizationRules 'authorizationRules/deploy.bicep' = [for (aut
     eventHubName: eventHub.name
     name: authorizationRule.name
     rights: contains(authorizationRule, 'rights') ? authorizationRule.rights : []
-    enableDefaultTelemetry: enableDefaultTelemetry
+    
   }
 }]
 

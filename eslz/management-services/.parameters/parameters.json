@@ -22,6 +22,54 @@
     },
     "storageaccount_sku": {
       "value":"Standard_LRS"
+    },
+    "authorizationRules": {
+      "value": [
+          {
+              "name": "RootManageSharedAccessKey",
+              "rights": [
+                  "Listen",
+                  "Manage",
+                  "Send"
+              ]
+          },
+          {
+              "name": "SendListenAccess",
+              "rights": [
+                  "Listen",
+                  "Send"
+              ]
+          }
+        ]
+    },
+    "eventHubs": {
+        "value": [
+            {
+                "authorizationRules": [
+                    {
+                        "name": "RootManageSharedAccessKey",
+                        "rights": [
+                            "Listen",
+                            "Manage",
+                            "Send"
+                        ]
+                    },
+                    {
+                        "name": "SendListenAccess",
+                        "rights": [
+                            "Listen",
+                            "Send"
+                        ]
+                    }
+                ],
+                "consumerGroups": [
+                    {
+                        "name": "custom",
+                        "userMetadata": "customMetadata"
+                    }
+                ]
+            }
+        ]
     }
   }
 }
