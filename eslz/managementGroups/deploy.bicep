@@ -1,5 +1,17 @@
 targetScope = 'tenant'
 
+@description('Required. The group ID of the Management group.')
+param name string
+
+@description('Optional. The friendly name of the management group. If no value is passed then this field will be set to the group ID.')
+param displayName string = ''
+
+@description('Optional. The management group parent ID. Defaults to current scope.')
+param parentId string = ''
+
+@description('Optional. Array of role assignment objects to define RBAC on this resource.')
+param roleAssignments array = []
+
 param deploymentId string = substring(uniqueString(utcNow()),0,6)
 
 // From Parameters File
