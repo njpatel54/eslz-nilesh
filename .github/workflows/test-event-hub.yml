@@ -49,12 +49,10 @@ jobs:
               --parameters ./test/workspaces/.parameters/parameters.json)
             resoruceId=$(echo $deploymentOutput | jq -r '.properties.outputs.resourceId.value')
             resoruceId1=$(az deployment group show -g 'rg-ccs-prod-usva-vnet' -n 'Deploy-Log-Analytics-Workspace' --query properties.outputs | jq -r '.resourceId.value')
+            output=$(az deployment group show -g 'rg-ccs-prod-usva-vnet' -n 'Deploy-Log-Analytics-Workspace' --query properties.outputs.resourceId.value -o tsv)
             echo "##vso[task.setvariable variable=resoruceId;isOutput=true]$resoruceId"
             echo "##vso[task.setvariable variable=resoruceId1;isOutput=true]$resoruceId1"
-            echo $resoruceId
-            echo $resoruceId1
-            echo "::set-output name=resoruceId::$resoruceId"
-            echo "::set-output name=resoruceId1::$resoruceId1"
+            echo $output
 
   ns:
     runs-on: ubuntu-latest
