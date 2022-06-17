@@ -7,7 +7,7 @@ param name string
 param displayName string = ''
 
 @description('Optional. The management group parent ID. Defaults to current scope.')
-param parentId string = ''
+param parentMGName string = ''
 
 @description('Optional. Array of role assignment objects to define RBAC on this resource.')
 param roleAssignments array = []
