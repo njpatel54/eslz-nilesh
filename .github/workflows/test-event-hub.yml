@@ -23,6 +23,8 @@ jobs:
   la:
     runs-on: ubuntu-latest
     environment: Production
+    outputs:
+      resoruceId: ${{ steps.deployla.outputs.resoruceId }}
     steps:
     - uses: actions/checkout@v2
     
@@ -48,34 +50,16 @@ jobs:
               --template-file ./test/workspaces/deploy.bicep \
               --parameters ./test/workspaces/.parameters/parameters.json)
             resoruceId=$(echo $deploymentOutput | jq -r '.properties.outputs.resourceId.value')
-            resoruceId1=$(az deployment group show -g 'rg-ccs-prod-usva-vnet' -n 'Deploy-Log-Analytics-Workspace' --query properties.outputs | jq -r '.resourceId.value')
-            output=$(az deployment group show -g 'rg-ccs-prod-usva-vnet' -n 'Deploy-Log-Analytics-Workspace' --query properties.outputs.resourceId.value -o tsv)
-            echo "##vso[task.setvariable variable=resoruceId;isOutput=true]$resoruceId"
-            echo "##vso[task.setvariable variable=resoruceId1;isOutput=true]$resoruceId1"
-            echo $output
+            echo "::set-output name=resoruceId::$resoruceId"
 
   ns:
     runs-on: ubuntu-latest
     environment: Production
+    needs: la
     steps:
-    - uses: actions/checkout@v2
-    
-    - uses: azure/login@v1
-      name: 'Login to Azure'
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        environment: ${{ secrets.AZURE_ENVIRONMENT }}
-        enable-AzPSSession: false
-      
-    - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
-              
+            
     - uses: Azure/cli@v1
       name: 'Deploy - Event Hub'
       with:
         inlineScript: |
-            az deployment group create \
-              --name 'Deploy-Event-Hub' \
-              --resource-group 'rg-ccs-prod-usva-vnet' \
-              --template-file ./test/namespaces/deploy.bicep \
-              --parameters ./test/namespaces/.parameters/parameters.json
+            echo ${{ needs.la.outputs.output1 }}
