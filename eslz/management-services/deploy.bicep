@@ -121,7 +121,6 @@ module eh './namespaces/deploy.bicep' = {
   params: {
     location: location
     eventhubNamespaceName: eventhub_namespace_name
-    eventhubName: eventhub_name
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: combinedTags
   }

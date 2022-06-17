@@ -2,7 +2,7 @@
 @maxLength(50)
 param eventhubNamespaceName string = ''
 
-param eventhubName string = ''
+//param eventhubName string = ''
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -196,7 +196,7 @@ module eventHubNamespace_eventHubs 'eventhubs/deploy.bicep' = [for (eventHub, in
   name: '${uniqueString(deployment().name, location)}-EvhbNamespace-EventHub-${index}'
   params: {
     namespaceName: eventHubNamespace.name
-    name: '${eventhubName}-${index}'
+    name: eventHub.name
     authorizationRules: contains(eventHub, 'authorizationRules') ? eventHub.authorizationRules : [
       {
         name: 'RootManageSharedAccessKey'
