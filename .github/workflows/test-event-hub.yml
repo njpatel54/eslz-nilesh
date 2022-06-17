@@ -20,9 +20,39 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  deploy:
+  la:
     runs-on: ubuntu-latest
-    #needs: [preview]
+    environment: Production
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+    - id: deployla
+      name: 'Deploy - Log Analytics Workspace'
+      with:
+        inlineScript: |
+            set -e
+            deploymentOutput=$(az deployment group create \
+              --name 'Deploy-Log-Analytics-Workspace' \
+              --resource-group 'rg-ccs-prod-usva-vnet' \
+              --template-file ./test/workspaces/deploy.bicep \
+              --parameters ./test/workspaces/.parameters/parameters.json)
+            resoruceId=$(echo $deploymentOutput | jq -r '.properties.outputs.resourceId')
+            echo "##vso[task.setvariable variable=resoruceId;isOutput=true]$resoruceId"
+            echo "::set-output name=resoruceId::$resoruceId"
+
+  ns:
+    runs-on: ubuntu-latest
     environment: Production
     steps:
     - uses: actions/checkout@v2
