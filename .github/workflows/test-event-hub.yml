@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     outputs:
-      resoruceId: ${{ steps.deployla.outputs.resoruceId }}
+      output: ${{ steps.deployla.outputs.resoruceId }}
     steps:
     - uses: actions/checkout@v2
     
@@ -55,4 +55,4 @@ jobs:
     runs-on: ubuntu-latest
     needs: la
     steps:
-      - run: echo ${{needs.la.outputs.resoruceId}}
+      - run: echo ${{needs.la.outputs.output}}
