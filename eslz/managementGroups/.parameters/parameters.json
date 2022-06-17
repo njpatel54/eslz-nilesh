@@ -14,7 +14,8 @@
             "name": "mg-A2g",
             "displayName": "mg-A2g",
             "parentMGName": "624e5a3d-aa66-4393-9eba-9fb802780e70",
-            "roleAssignments": [
+            "roleAssignments": {
+              "value": [
                 {
                     "roleDefinitionIdOrName": "Management Group Reader",
                     "principalIds": [
@@ -27,7 +28,8 @@
                         "2e10cea8-b422-4643-bb44-28d625d83ce9"
                     ]
                 }
-            ]
+              ]
+            }
           },
           {
             "name": "mg-A2g-Platform",
