@@ -1,5 +1,8 @@
 targetScope = 'subscription'
 
+param authorizationRules array = []
+param eventHubs array = []
+
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
