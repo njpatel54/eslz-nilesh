@@ -51,11 +51,8 @@ jobs:
               --parameters ./test/workspaces/.parameters/parameters.json)
             resoruceId=$(echo $deploymentOutput | jq -r '.properties.outputs.resourceId.value')
             echo "::set-output name=resoruceId::$resoruceId"
-
-  ns:
+  job2:
     runs-on: ubuntu-latest
-    environment: Production
     needs: la
     steps:
-            
-      - run: echo ${{ needs.la.outputs.resoruceId }}
+      - run: echo ${{needs.la.outputs.resoruceId}}
