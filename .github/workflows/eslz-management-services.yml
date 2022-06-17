@@ -133,6 +133,7 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/management-services/deploy.bicep \
             --parameters ./eslz/management-services/.parameters/parameters.json \
+            --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
             --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
             --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \

@@ -22,49 +22,6 @@
     },
     "storageaccount_sku": {
       "value":"Standard_LRS"
-    },
-    "authorizationRules": {
-      "value": [
-          {
-              "name": "RootManageSharedAccessKey",
-              "rights": [
-                  "Listen",
-                  "Manage",
-                  "Send"
-              ]
-          },
-          {
-              "name": "SendListenAccess",
-              "rights": [
-                  "Listen",
-                  "Send"
-              ]
-          }
-        ]
-    },
-    "eventHubs": {
-        "value": [
-            {
-              "name": "evh-ccs-prod-usva-0001",
-              "authorizationRules": [
-                  {
-                      "name": "RootManageSharedAccessKey",
-                      "rights": [
-                          "Listen",
-                          "Manage",
-                          "Send"
-                      ]
-                  },
-                  {
-                      "name": "SendListenAccess",
-                      "rights": [
-                          "Listen",
-                          "Send"
-                      ]
-                  }
-              ]
-          }
-        ]
     }
   }
 }
