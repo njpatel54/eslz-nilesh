@@ -61,12 +61,6 @@
                             "Send"
                         ]
                     }
-                ],
-                "consumerGroups": [
-                    {
-                        "name": "custom",
-                        "userMetadata": "customMetadata"
-                    }
                 ]
             }
         ]

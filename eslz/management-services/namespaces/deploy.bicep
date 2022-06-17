@@ -97,6 +97,8 @@ param disasterRecoveryConfig object = {}
   'EventHubVNetConnectionEvent'
   'CustomerManagedKeyUserLogs'
   'AutoScaleLogs'
+  'RuntimeAuditLogs'
+  'ApplicationMetricsLogs'
 ])
 param diagnosticLogCategoriesToEnable array = [
   'ArchiveLogs'
@@ -106,6 +108,8 @@ param diagnosticLogCategoriesToEnable array = [
   'EventHubVNetConnectionEvent'
   'CustomerManagedKeyUserLogs'
   'AutoScaleLogs'
+  'RuntimeAuditLogs'
+  'ApplicationMetricsLogs'
 ]
 
 @description('Optional. The name of metrics that will be streamed.')
