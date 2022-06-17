@@ -17,14 +17,12 @@
             "roleAssignments": [
                 {
                     "roleDefinitionIdOrName": "Management Group Reader",
-                    "principalType": "Group",
                     "principalIds": [
                         "22892111-6354-43e4-95d8-ce4e8741b018"
                     ]
                 },
                 {
                     "roleDefinitionIdOrName": "Management Group Contributor",
-                    "principalType": "Group",
                     "principalIds": [
                         "2e10cea8-b422-4643-bb44-28d625d83ce9"
                     ]
