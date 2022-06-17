@@ -2,6 +2,7 @@ targetScope = 'subscription'
 
 param authorizationRules array = []
 param eventHubs array = []
+param name string
 
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
@@ -120,7 +121,7 @@ module eh './namespaces/deploy.bicep' = {
   ]
   params: {
     location: location
-    eventhubNamespaceName: eventhub_namespace_name
+    eventhubNamespaceName: name
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: combinedTags
   }
