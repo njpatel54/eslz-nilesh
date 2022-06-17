@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     outputs:
-      output: ${{ steps.deployla.outputs.resoruceId }}
+      output1: ${{ steps.deployla.outputs.output }}
     steps:
     - uses: actions/checkout@v2
     
@@ -50,9 +50,9 @@ jobs:
               --template-file ./test/workspaces/deploy.bicep \
               --parameters ./test/workspaces/.parameters/parameters.json)
             resoruceId=$(echo $deploymentOutput | jq -r '.properties.outputs.resourceId.value')
-            echo "::set-output name=resoruceId::$resoruceId"
+            echo "::set-output name=output::$resoruceId"
   job2:
     runs-on: ubuntu-latest
     needs: la
     steps:
-      - run: echo ${{needs.la.outputs.output}}
+      - run: echo ${{needs.la.outputs.output1}}
