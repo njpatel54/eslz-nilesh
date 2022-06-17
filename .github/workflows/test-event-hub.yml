@@ -36,7 +36,7 @@ jobs:
         enable-AzPSSession: false
       
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+      run: az account set --subscription e6c61ac5-feea-4459-93fc-7131f8352553
               
     - id: deployla
       uses: Azure/cli@v1
