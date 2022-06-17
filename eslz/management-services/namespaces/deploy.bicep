@@ -193,7 +193,7 @@ resource eventHubNamespace_diagnosticSettings 'Microsoft.Insights/diagnosticsett
 }
 
 module eventHubNamespace_eventHubs 'eventhubs/deploy.bicep' = [for (eventHub, index) in eventHubs: {
-  name: '${uniqueString(deployment().name, location)}-EvhbNamespace-EventHub-${index}'
+  name: 'EvhbNamespace-EventHub-${index}'
   params: {
     namespaceName: eventHubNamespace.name
     name: eventHub.name
