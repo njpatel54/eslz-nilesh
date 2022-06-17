@@ -10,9 +10,6 @@ param name string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
-@description('Optional. Virtual Network Peerings configurations.')
-param virtualNetworkPeerings array = []
-
 @description('Optional. The subscription ID of the subscription for the virtual network')
 param subscriptionId string = ''
 

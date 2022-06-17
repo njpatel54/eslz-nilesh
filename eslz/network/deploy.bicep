@@ -8,9 +8,6 @@ param name string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
-@description('Optional. Virtual Network Peerings configurations.')
-param virtualNetworkPeerings array = []
-
 @description('Optional. The subscription ID of the subscription for the virtual network')
 param subscriptionId string = ''
 
@@ -102,8 +99,6 @@ param diagnosticEventHubName string = ''
 ])
 @description('Optional. Specify the type of lock.')
 param lock string = 'NotSpecified'
-
-
 
 resource hubVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
   name: name

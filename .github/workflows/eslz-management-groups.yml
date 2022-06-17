@@ -35,7 +35,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
       # Runs a single command using the runners shell.
-      run: az bicep build --file ./eslz/management-groups/bicep/main.bicep
+      run: az bicep build --file ./eslz/managementGroups/deploy.bicep
 
   # "validate" Job ---> will check for ... 
   #     (1) Are the names that you've specified for your Bicep resources valid? 
@@ -63,10 +63,10 @@ jobs:
       with:
         # Runs a command with multiple lines
         inlineScript: |
-            az deployment tenant validate \
-              --template-file ./eslz/management-groups/bicep/main.bicep \
-              --parameters ./eslz/management-groups/main.parameters.json \
-              --location ${{ secrets.AZURE_LOCATION }}
+          az deployment tenant validate \
+            --template-file ./eslz/managementGroups/deploy.bicep \
+            --parameters ./eslz/managementGroups/.parameters/parameters.json \
+            --location ${{ secrets.AZURE_LOCATION }}
 
   # "preview" job ---> will verify what exactly will be created, updated, and deleted. 
   # Verify the output of what-if operation and determine whether to continue on to the deployment or not - This step is typically involves human reviewing the output from what-if command and making decision.
@@ -90,10 +90,10 @@ jobs:
         name: 'Run what-if'
         with:
           inlineScript: |
-              az deployment tenant what-if \
-                --template-file ./eslz/management-groups/bicep/main.bicep \
-                --parameters ./eslz/management-groups/main.parameters.json \
-                --location ${{ secrets.AZURE_LOCATION }}
+            az deployment tenant what-if \
+              --template-file ./eslz/managementGroups/deploy.bicep \
+              --parameters ./eslz/managementGroups/.parameters/parameters.json \
+              --location ${{ secrets.AZURE_LOCATION }}
                 
 
   deploy:
@@ -117,7 +117,7 @@ jobs:
         name: 'Deploying Management Groups'
         with:
           inlineScript: |
-              az deployment tenant create \
-                --template-file ./eslz/management-groups/bicep/main.bicep \
-                --parameters ./eslz/management-groups/main.parameters.json \
-                --location ${{ secrets.AZURE_LOCATION }}
+            az deployment tenant create \
+              --template-file ./eslz/managementGroups/deploy.bicep \
+              --parameters ./eslz/managementGroups/.parameters/parameters.json \
+              --location ${{ secrets.AZURE_LOCATION }}

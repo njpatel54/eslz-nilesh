@@ -1,0 +1,108 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {            
+      "onboardmg": {
+        "value": "mg-A2g-Landing-Zones"
+      },
+      "requireAuthorizationForGroupCreation": {
+        "value": true
+      },
+      "managementGroups": {
+        "value": [
+          {
+            "name": "mg-A2g",
+            "displayName": "mg-A2g",
+            "parentMGName": "624e5a3d-aa66-4393-9eba-9fb802780e70",
+            "roleAssignments": [
+                {
+                    "roleDefinitionIdOrName": "Management Group Reader",
+                    "principalType": "Group",
+                    "principalIds": [
+                        "22892111-6354-43e4-95d8-ce4e8741b018"
+                    ]
+                },
+                {
+                    "roleDefinitionIdOrName": "Management Group Contributor",
+                    "principalType": "Group",
+                    "principalIds": [
+                        "2e10cea8-b422-4643-bb44-28d625d83ce9"
+                    ]
+                }
+            ]
+          },
+          {
+            "name": "mg-A2g-Platform",
+            "displayName": "mg-A2g-Platform",
+            "parentMGName": "mg-A2g"
+          },
+          {
+            "name": "mg-A2g-Connectivity",
+            "displayName": "mg-A2g-Connectivity",
+            "parentMGName": "mg-A2g-Platform"
+          },
+          {
+            "name": "mg-A2g-Identity",
+            "displayName": "mg-A2g-Identity",
+            "parentMGName": "mg-A2g-Platform"
+          },
+          {
+            "name": "mg-A2g-Management",
+            "displayName": "mg-A2g-Management",
+            "parentMGName": "mg-A2g-Platform"
+          },
+          {
+            "name": "mg-A2g-Shared-Services",
+            "displayName": "mg-A2g-Shared-Services",
+            "parentMGName": "mg-A2g-Platform"
+          },
+          {
+            "name": "mg-A2g-Landing-Zones",
+            "displayName": "mg-A2g-Landing-Zones",
+            "parentMGName": "mg-A2g"
+          },
+          {
+            "name": "mg-A2g-Decommissioned",
+            "displayName": "mg-A2g-Decommissioned",
+            "parentMGName": "mg-A2g"
+          },
+          {
+            "name": "mg-A2g-Sandbox",
+            "displayName": "mg-A2g-Sandbox",
+            "parentMGName": "mg-A2g"
+          }
+        ]
+      },
+      "subscriptions":{
+        "value": [
+          {
+            "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+            "managementGroupName": "mg-A2g-Management"
+          },
+          {
+            "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
+            "managementGroupName": "mg-A2g-Connectivity"
+          },
+          {
+            "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+            "managementGroupName": "mg-A2g-Identity"
+          },
+          {
+            "subscriptionId": "df3b1809-17d0-47a0-9241-d2724780bdac",
+            "managementGroupName": "mg-A2g-Landing-Zones"
+          },
+          {
+            "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
+            "managementGroupName": "mg-A2g-Sandbox"
+          },
+          {
+            "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
+            "managementGroupName": "mg-A2g-Shared-Services"
+          }  
+        ]
+      },
+      "tenantid":{
+        "value": "624e5a3d-aa66-4393-9eba-9fb802780e70"
+      }
+    }
+  }
