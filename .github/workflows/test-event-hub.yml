@@ -36,8 +36,8 @@ jobs:
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
-    - uses: Azure/cli@v1
     - id: deployla
+      uses: Azure/cli@v1
       name: 'Deploy - Log Analytics Workspace'
       with:
         inlineScript: |
