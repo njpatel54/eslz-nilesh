@@ -58,4 +58,4 @@ jobs:
     needs: la
     steps:
             
-      - run: echo ${{ needs.la.outputs.output1 }}
+      - run: echo ${{ needs.la.outputs.resoruceId }}
