@@ -58,8 +58,4 @@ jobs:
     needs: la
     steps:
             
-    - uses: Azure/cli@v1
-      name: 'Deploy - Event Hub'
-      with:
-        inlineScript: |
-            echo ${{ needs.la.outputs.output1 }}
+      - run: echo ${{ needs.la.outputs.output1 }}
