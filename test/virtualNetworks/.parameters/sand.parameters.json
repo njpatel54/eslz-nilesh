@@ -26,11 +26,6 @@
         "subscriptionId": {
             "value": "fa8dcb2f-02cf-4138-b887-e19132b7857b"
         },
-        "addressPrefixes": {
-            "value": [
-                "10.31.0.0/24"
-            ]
-        },
         "subnets": {
             "value": [
                 {
