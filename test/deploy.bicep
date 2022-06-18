@@ -5,6 +5,9 @@ param subscriptionId string
 @description('Required. Name for the Event Hub Namespace.')
 param name string
 
+@description('Required. Name for the Resoruce Group.')
+param rgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param addressPrefixes array
 
@@ -71,7 +74,7 @@ module rg './resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}'
   scope: subscription(subscriptionId)
   params: {
-    name: 'rg-${projowner}-${opscope}-${region}-${suffix}'
+    name: rgName
     location: location
     tags: combinedTags
   }
@@ -80,15 +83,18 @@ module rg './resourceGroups/deploy.bicep'= {
 // Create Virtual Network
 module vnet './virtualNetworks/deploy.bicep' = {
   name: 'vnet-${uniqueString(deployment().name, location)}-${name}'
-  scope: resourceGroup(subscriptionId, rg.name)
+  scope: resourceGroup(subscriptionId, rgName)
+  dependsOn: [
+    rg
+  ]
   params:{
     location: location
     addressPrefixes: addressPrefixes
     name: name
-    subscriptionId:subscriptionId
     subnets: subnets
     dnsServers: dnsServers
     ddosProtectionPlanId: ddosProtectionPlanId
+    //subscriptionId:subscriptionId
     //virtualNetworkPeerings: virtualNetworkPeerings
 
   }
