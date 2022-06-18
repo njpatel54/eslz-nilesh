@@ -48,7 +48,6 @@ jobs:
           az deployment sub validate \
             --name 'Deploy-Hub-Spoke-Networking' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
@@ -84,7 +83,6 @@ jobs:
           az deployment sub what-if \
             --name 'Deploy-Hub-Spoke-Networking' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
@@ -120,7 +118,6 @@ jobs:
           az deployment group create \
             --name 'Deploy-Hub-Spoke-Networking' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
