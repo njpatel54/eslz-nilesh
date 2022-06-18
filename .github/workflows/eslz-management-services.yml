@@ -74,7 +74,9 @@ jobs:
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
             --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
             --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+            --parameters lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
             --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+            --parameters ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   # "preview" job ---> will verify what exactly will be created, updated, and deleted. 
@@ -107,7 +109,9 @@ jobs:
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
             --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
             --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+            --parameters lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
             --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+            --parameters ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -139,5 +143,7 @@ jobs:
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
             --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
             --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+            --parameters lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
             --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+            --parameters ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
             --parameters location=${{ secrets.AZURE_LOCATION }}
