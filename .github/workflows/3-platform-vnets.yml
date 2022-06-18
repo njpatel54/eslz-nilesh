@@ -51,7 +51,8 @@ jobs:
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
-            --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
@@ -86,7 +87,8 @@ jobs:
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
-            --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
@@ -121,7 +123,8 @@ jobs:
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
-            --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}

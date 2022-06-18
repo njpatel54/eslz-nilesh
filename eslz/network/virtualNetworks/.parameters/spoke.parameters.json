@@ -7,7 +7,6 @@
               {
                 "name": "vnet-ccs-prod-usva-mgmt",
                 "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
-                "resourceGroupName": "rg-ccs-prod-usva-vnet",
                 "addressPrefixes": [
                     "10.30.8.0/21"
                 ],
@@ -73,7 +72,6 @@
               {
                 "name": "vnet-ccs-prod-usva-iden",
                 "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
-                "resourceGroupName": "rg-ccs-prod-usva-vnet",
                 "addressPrefixes": [
                     "10.20.11.0/24"
                 ],
@@ -91,7 +89,6 @@
               {
                 "name": "vnet-ccs-prod-usva-ssvc",
                 "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
-                "resourceGroupName": "rg-ccs-prod-usva-vnet",
                 "addressPrefixes": [
                     "10.30.16.0/21"
                 ],

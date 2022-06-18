@@ -8,9 +8,6 @@
         "subscriptionId": {
             "value": "e6c61ac5-feea-4459-93fc-7131f8352553"
         },
-        "resourceGroupName": {
-            "value": "rg-ccs-prod-usva-vnet"
-        },
         "addressPrefixes": {
             "value": [
             "10.30.0.0/21"
