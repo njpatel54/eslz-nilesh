@@ -41,12 +41,10 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SANDSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
           az deployment sub validate \
             --name 'Deploy-Hub-Spoke-Networking' \
             --resource-group ${{ secrets.AZURE_VNETRG }} \
@@ -78,12 +76,10 @@ jobs:
       name: 'Run what-if'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SANDSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
           az deployment sub what-if \
             --name 'Deploy-Hub-Spoke-Networking' \
             --resource-group ${{ secrets.AZURE_VNETRG }} \
@@ -115,19 +111,17 @@ jobs:
       name: 'Deploy - Hub-Spoke Networking'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SANDSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} --location --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
-            az deployment group create \
-              --name 'Deploy-Hub-Spoke-Networking' \
-              --resource-group ${{ secrets.AZURE_VNETRG }} \
-              --template-file ./eslz/network/deploy.bicep \
-              --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
-              --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
-              --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                           diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                           diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                           diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} -name ${{ secrets.AZURE_VNETRG }}
+          az deployment group create \
+            --name 'Deploy-Hub-Spoke-Networking' \
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
+            --template-file ./eslz/network/deploy.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
+            --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
+            --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
