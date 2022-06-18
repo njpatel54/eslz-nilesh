@@ -10,7 +10,13 @@ param connsubid string
 param idensubid string
 
 @description('Required. Subscription ID of Sandbox Subscription.')
+param lz01subid string
+
+@description('Required. Subscription ID of Sandbox Subscription.')
 param sandsubid string
+
+@description('Required. Subscription ID of Sandbox Subscription.')
+param ssvcsubid string
 
 @description('Required. Name of the Log Analytics workspace')
 param workspacename string
@@ -210,6 +216,18 @@ resource idensublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-
     linkedResourceId: '/subscriptions/${idensubid}/providers/microsoft.insights/eventTypes/management'
   }  
 }
+
+// Add Identity Sub Activity Logs as Data Source
+resource lz01sublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
+  parent: logAnalyticsWorkspace
+  name: lz01subid
+  tags: tags
+  kind: 'AzureActivityLog'
+  properties:{
+    linkedResourceId: '/subscriptions/${lz01subid}/providers/microsoft.insights/eventTypes/management'
+  }  
+}
+
 // Add Sandbox Sub Activity Logs as Data Source
 resource sandsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
   parent: logAnalyticsWorkspace
@@ -220,6 +238,18 @@ resource sandsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-
     linkedResourceId: '/subscriptions/${sandsubid}/providers/microsoft.insights/eventTypes/management'
   }  
 }
+
+// Add Identity Sub Activity Logs as Data Source
+resource ssvcsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
+  parent: logAnalyticsWorkspace
+  name: ssvcsubid
+  tags: tags
+  kind: 'AzureActivityLog'
+  properties:{
+    linkedResourceId: '/subscriptions/${ssvcsubid}/providers/microsoft.insights/eventTypes/management'
+  }  
+}
+
 // Enable Sentinel Solution (SecurityInsights)
 resource sentinelsolution 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' = {
   name: sentinelsolutionname
