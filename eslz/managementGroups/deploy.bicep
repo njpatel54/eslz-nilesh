@@ -9,10 +9,8 @@ param requireAuthorizationForGroupCreation bool
 @description('Required. Array of Management Groups objects.')
 param managementGroups array
 
-/*
 @description('Required. Array of role assignment objects to define RBAC on this resource.')
 param roleAssignments array = []
-*/
 
 @description('Required. Array of Subscription objects.')
 param subscriptions array
@@ -30,7 +28,7 @@ module resource_managementGroups 'managementGroup/deploy.bicep' = [ for manageme
     name: managementGroup.name
     displayName: managementGroup.displayName
     parentMGName: managementGroup.parentMGName
-    roleAssignments: managementGroup.roleAssignments
+    roleAssignments: roleAssignments
   }
 }]
 
