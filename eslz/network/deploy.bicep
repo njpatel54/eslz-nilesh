@@ -8,11 +8,13 @@ param name string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
+/*
 @description('Optional. The subscription ID of the subscription for the virtual network')
 param subscriptionId string = ''
 
 @description('Optional. The name of the resource group for the virtual network')
 param resourceGroupName string = ''
+*/
 
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param addressPrefixes array
@@ -206,6 +208,37 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 
 module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, index) in roleAssignments: {
@@ -219,98 +252,11 @@ module virtualNetwork_rbac '.bicep/nested_rbac.bicep' = [for (roleAssignment, in
   }
 }]
 
-
-
-
-
 @description('Optional. Hub Virtual Network configurations.')
 param hubVirtualNetwork array = []
 
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param roleAssignments array = []
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-// Local to Remote peering
-// Spoke to Hub Peering
-module virtualNetwork_peering_local './virtualNetworkPeerings/deploy.bicep' = [for vnets in spokeVirtualNetworks: {
-  name: '${uniqueString(vnets.name, location)}-virtualNetworkPeering-local'
-  params: {
-    localVnetName: virtualNetwork.name    
-    remoteVirtualNetworkId: az.resourceId(vnets.subscriptionId, vnets.resourceGroupName, 'Microsoft.Network/virtualNetworks', vnets.name)                                  //peering.virtualNetworkPeerings.remoteVirtualNetworkName
-    name: contains(vnets.virtualNetworkPeerings, 'name') ? vnets.virtualNetworkPeerings.name : '${vnets.name}-${last(split(vnets.virtualNetworkPeerings.remoteVirtualNetworkId, '/'))}'
-    allowForwardedTraffic: contains(vnets.virtualNetworkPeerings, 'allowForwardedTraffic') ? vnets.virtualNetworkPeerings.allowForwardedTraffic : true
-    allowGatewayTransit: contains(vnets.virtualNetworkPeerings, 'allowGatewayTransit') ? vnets.virtualNetworkPeerings.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(vnets.virtualNetworkPeerings, 'allowVirtualNetworkAccess') ? vnets.virtualNetworkPeerings.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(vnets.virtualNetworkPeerings, 'doNotVerifyRemoteGateways') ? vnets.virtualNetworkPeerings.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(vnets.virtualNetworkPeerings, 'useRemoteGateways') ? vnets.virtualNetworkPeerings.useRemoteGateways : false
-   }
-  
-}]
-
-// Local to Remote peering
-module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: {
-  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
-  params: {
-    localVnetName: virtualNetwork.name
-    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
-    name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
-    allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
-    allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering, 'allowVirtualNetworkAccess') ? peering.allowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering, 'doNotVerifyRemoteGateways') ? peering.doNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering, 'useRemoteGateways') ? peering.useRemoteGateways : false
-    enableDefaultTelemetry: enableChildTelemetry
-  }
-}]
-
-// Remote to local peering (reverse)
-module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
-  name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
-  scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
-  params: {
-    localVnetName: last(split(peering.remoteVirtualNetworkId, '/'))
-    remoteVirtualNetworkId: virtualNetwork.id
-    name: contains(peering, 'remotePeeringName') ? peering.remotePeeringName : '${last(split(peering.remoteVirtualNetworkId, '/'))}-${name}'
-    allowForwardedTraffic: contains(peering, 'remotePeeringAllowForwardedTraffic') ? peering.remotePeeringAllowForwardedTraffic : true
-    allowGatewayTransit: contains(peering, 'remotePeeringAllowGatewayTransit') ? peering.remotePeeringAllowGatewayTransit : false
-    allowVirtualNetworkAccess: contains(peering, 'remotePeeringAllowVirtualNetworkAccess') ? peering.remotePeeringAllowVirtualNetworkAccess : true
-    doNotVerifyRemoteGateways: contains(peering, 'remotePeeringDoNotVerifyRemoteGateways') ? peering.remotePeeringDoNotVerifyRemoteGateways : true
-    useRemoteGateways: contains(peering, 'remotePeeringUseRemoteGateways') ? peering.remotePeeringUseRemoteGateways : false
-    
-  }
-}]
-
-
 
 @description('The resource group the virtual network was deployed into')
 output resourceGroupName string = resourceGroup().name

@@ -74,7 +74,7 @@ param opscope string
 param region string
 
 // Build param values using string interpolation
-param siem_rg_name string = 'rg-${projowner}-${opscope}-${region}-${suffix}'
+param siem_rg_name string = 'rg-${projowner}-${opscope}-${region}-siem'
 param loganalytics_workspace_name string = 'log-${projowner}-${opscope}-${region}-${suffix}'
 param azureautomation_name string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
 param storageaccount_name string = toLower('st${projowner}${opscope}${region}${suffix}')
