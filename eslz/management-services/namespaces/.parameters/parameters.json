@@ -27,10 +27,10 @@
         "eventHubs": {
             "value": [
                 {
-                    "name": "nileshpa-az-evh-ugv-001"
+                    "name": "evh-ccs-prod-usva-001"
                 },
                 {
-                    "name": "nileshpa-az-evh-ugv-002",
+                    "name": "evh-ccs-prod-usva-002",
                     "authorizationRules": [
                         {
                             "name": "RootManageSharedAccessKey",

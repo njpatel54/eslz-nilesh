@@ -1,15 +1,6 @@
 name: test - virtual networking
 
 on:
-  # push:
-  #  branches: 
-  #    - main 
-  # paths:
-  #   - .github/workflows/eslz-vnet.yml
-      
-  # pull_request:
-  #  branches: [ main ]
-
   workflow_dispatch:
 
 jobs:
