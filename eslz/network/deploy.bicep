@@ -139,7 +139,7 @@ resource hubVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
 
 module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
   name: 'VNet-Module-${vNet.name}'
-  scope: resourceGroup(vNet.subscriptionId, vNet.resourceGroupName)
+  scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
   params: {
     hubVnetName: hubVnet.name
     hubVnetId: hubVnet.id

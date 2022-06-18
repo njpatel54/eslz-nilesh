@@ -151,7 +151,6 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = {
   }
 }
 
-
 // HubvNet to Spoke vNets Peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = {
   name: 'virtualNetworkPeering-remote-${spokeVnet.name}'
