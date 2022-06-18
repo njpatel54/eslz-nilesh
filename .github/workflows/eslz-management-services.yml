@@ -72,12 +72,12 @@ jobs:
             --parameters ./eslz/management-services/.parameters/parameters.json \
             --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-            --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-            --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-            --parameters lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
-            --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
-            --parameters ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+                         idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+                         lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
+                         sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                         location=${{ secrets.AZURE_LOCATION }}
 
   # "preview" job ---> will verify what exactly will be created, updated, and deleted. 
   # Verify the output of what-if operation and determine whether to continue on to the deployment or not - This step is typically involves human reviewing the output from what-if command and making decision.
@@ -102,17 +102,17 @@ jobs:
         with:
           inlineScript: |
             az deployment sub what-if \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/management-services/deploy.bicep \
-            --parameters ./eslz/management-services/.parameters/parameters.json \
-            --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
-            --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-            --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-            --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-            --parameters lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
-            --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
-            --parameters ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/management-services/deploy.bicep \
+              --parameters ./eslz/management-services/.parameters/parameters.json \
+              --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
+              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                           connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+                           idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+                           lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
+                           sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+                           ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                           location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -141,9 +141,9 @@ jobs:
             --parameters ./eslz/management-services/.parameters/parameters.json \
             --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-            --parameters connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-            --parameters idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-            --parameters lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
-            --parameters sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
-            --parameters ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+                         idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+                         lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
+                         sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                         location=${{ secrets.AZURE_LOCATION }}
