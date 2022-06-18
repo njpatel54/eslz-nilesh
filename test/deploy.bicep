@@ -77,7 +77,7 @@ module rg './resourceGroups/deploy.bicep'= {
   }
 }
 
-// Create Log Analytics Workspace
+// Create Virtual Network
 module vnet './virtualNetworks/deploy.bicep' = {
   name: 'vnet-${uniqueString(deployment().name, location)}-${name}'
   scope: resourceGroup(subscriptionId, rg.name)
@@ -90,7 +90,7 @@ module vnet './virtualNetworks/deploy.bicep' = {
     dnsServers: dnsServers
     ddosProtectionPlanId: ddosProtectionPlanId
     //virtualNetworkPeerings: virtualNetworkPeerings
-    
+
   }
 }
 
