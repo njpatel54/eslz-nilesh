@@ -23,9 +23,9 @@
         "roleAssignments": {
             "value": [
                 {
-                    "roleDefinitionIdOrName": "Reader",
+                    "roleDefinitionIdOrName": "Contributor",
                     "principalIds": [
-                        "<<deploymentSpId>>"
+                        "22892111-6354-43e4-95d8-ce4e8741b018"
                     ]
                 }
             ]

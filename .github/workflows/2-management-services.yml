@@ -1,50 +1,29 @@
-# This is a basic workflow to help you get started with Actions
+name: 2 - management services
 
-name: eslz - management services
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   # push:
   #   branches: 
   #     - master
   #     - main 
   #     - dev
   #   paths:
-  #     - .github/workflows/eslz-management-services.yml
+  #     - .github/workflows/2-management-services.yml
   #     - eslz/management-services/*
     
   # pull_request:
   #   branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  # "lint" Job ---> will check for ...
-  #     (1) syntax errors 
-  #     (2) valid Azure resource definitions, and 
-  #     (3) code quality.
   lint:
-    # The type of runner a single job will run on.
     runs-on: ubuntu-latest
-    # Steps represents a sequence of tasks that will be executed as part of the job.
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it.
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      # Runs a single command using the runners shell.
       run: az bicep build --file ./eslz/management-services/deploy.bicep
 
-  
-  # "validate" Job ---> will check for ... 
-  #     (1) Are the names that you've specified for your Bicep resources valid? 
-  #     (2) Are the names that you've specified for your Bicep resources already taken? 
-  #     (3) Are the regions that you're deploying your resources to valid?
-  # This requires communication with Azure but it does not actually deploy any resources.
   validate: 
     runs-on: ubuntu-latest
     needs: [lint]
@@ -64,7 +43,6 @@ jobs:
     - uses: Azure/cli@v1
       name: 'Run preflight validation'
       with:
-        # Runs a command with multiple lines
         inlineScript: |
           az deployment sub validate \
             --location ${{ secrets.AZURE_LOCATION }} \
@@ -79,40 +57,38 @@ jobs:
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
                          location=${{ secrets.AZURE_LOCATION }}
 
-  # "preview" job ---> will verify what exactly will be created, updated, and deleted. 
-  # Verify the output of what-if operation and determine whether to continue on to the deployment or not - This step is typically involves human reviewing the output from what-if command and making decision.
   preview:
-      runs-on: ubuntu-latest
-      needs: [validate]
-      steps:
-      - uses: actions/checkout@v2
+    runs-on: ubuntu-latest
+    needs: [validate]
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
       
-      - uses: azure/login@v1
-        name: 'Login to Azure'
-        with:
-         creds: ${{ secrets.AZURE_CREDENTIALS }}
-         environment: ${{ secrets.AZURE_ENVIRONMENT }}
-         enable-AzPSSession: false
-        
-      - name: 'Set Azure Subscription'
-        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
-                
-      - uses: Azure/cli@v1
-        name: 'Run what-if'
-        with:
-          inlineScript: |
-            az deployment sub what-if \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/management-services/deploy.bicep \
-              --parameters ./eslz/management-services/.parameters/parameters.json \
-              --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
-              --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                           connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-                           idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-                           lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
-                           sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
-                           ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-                           location=${{ secrets.AZURE_LOCATION }}
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Run what-if'
+      with:
+        inlineScript: |
+          az deployment sub what-if \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/management-services/deploy.bicep \
+            --parameters ./eslz/management-services/.parameters/parameters.json \
+            --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
+            --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+                          lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
+                          sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
+                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                          location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
     runs-on: ubuntu-latest
