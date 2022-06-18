@@ -122,6 +122,6 @@ jobs:
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
             --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}

@@ -75,16 +75,16 @@
                 "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
                 "resourceGroupName": "rg-ccs-prod-usva-vnet",
                 "addressPrefixes": [
-                    "10.30.11.0/24"
+                    "10.20.11.0/24"
                 ],
                 "subnets": [
                     {
                         "name": "snet-ccs-prod-usva-iden",
-                        "addressPrefix": "10.30.11.0/26"
+                        "addressPrefix": "10.20.11.0/26"
                     },
                     {
                         "name": "snet-ccs-prod-usva-mgmt",
-                        "addressPrefix": "10.30.11.64/26"
+                        "addressPrefix": "10.20.11.64/26"
                     }
                 ]
               },
