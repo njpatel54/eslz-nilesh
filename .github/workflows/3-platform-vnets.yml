@@ -47,7 +47,7 @@ jobs:
           az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
           az deployment group validate \
             --name 'Deploy-Hub-Spoke-Networking' \
-            --resource-group ${{ secrets.AZURE_VNETRG }}
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
@@ -82,7 +82,7 @@ jobs:
           az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
           az deployment group what-if \
             --name 'Deploy-Platform-VNets' \
-            --resource-group ${{ secrets.AZURE_VNETRG }}
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
@@ -117,7 +117,7 @@ jobs:
           az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
           az deployment group create \
             --name 'Deploy-Platform-VNets' \
-            --resource-group ${{ secrets.AZURE_VNETRG }}
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
