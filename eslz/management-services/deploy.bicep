@@ -1,8 +1,13 @@
 targetScope = 'subscription'
 
-param authorizationRules array = []
-param eventHubs array = []
+@description('Required. Name for the Event Hub Namespace.')
 param name string
+
+@description('Required. Authorization Rules for Event Hub Namespace.')
+param authorizationRules array = []
+
+@description('Required. Array of Event Hubs instances.')
+param eventHubs array = []
 
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
@@ -67,8 +72,6 @@ param siem_rg_name string = 'rg-${projowner}-${opscope}-${region}-${suffix}'
 param loganalytics_workspace_name string = 'log-${projowner}-${opscope}-${region}-${suffix}'
 param azureautomation_name string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
 param storageaccount_name string = toLower('st${projowner}${opscope}${region}${suffix}')
-param eventhub_namespace_name string = 'evhns-${projowner}-${opscope}-${region}-${suffix}'
-param eventhub_name string = 'evh-${projowner}-${opscope}-${region}-${suffix}'
 
 // From Parameters Files
 param storageaccount_sku string
@@ -126,6 +129,5 @@ module eh './namespaces/deploy.bicep' = {
     tags: combinedTags
     eventHubs: eventHubs
     authorizationRules: authorizationRules
-    
   }
 }

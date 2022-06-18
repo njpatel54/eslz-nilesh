@@ -113,8 +113,10 @@ param lock string = 'NotSpecified'
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
+/*
 @description('Generated. Do not provide a value! This date value is used to generate a SAS token to access the modules.')
 param basetime string = utcNow('u')
+*/
 
 @allowed([
   'Enabled'
