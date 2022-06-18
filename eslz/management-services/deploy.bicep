@@ -124,5 +124,8 @@ module eh './namespaces/deploy.bicep' = {
     eventhubNamespaceName: name
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: combinedTags
+    eventHubs: eventHubs
+    authorizationRules: authorizationRules
+    
   }
 }
