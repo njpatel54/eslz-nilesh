@@ -1,8 +1,13 @@
 targetScope = 'tenant'
 
-param name string 
-param displayName string 
-param parentMGName string 
+@description('Required. The group ID of the Management group.')
+param name string
+
+@description('Optional. The friendly name of the management group. If no value is passed then this field will be set to the group ID.')
+param displayName string = ''
+
+@description('Optional. The management group parent ID. Defaults to current scope.')
+param parentMGName string = ''
 
 @description('Optional. Array of role assignment objects to define RBAC on this resource.')
 param roleAssignments array = []

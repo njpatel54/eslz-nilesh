@@ -23,12 +23,12 @@ param skuCapacity int = 1
 param zoneRedundant bool = false
 
 @description('Optional. Switch to enable the Auto Inflate feature of Event Hub.')
-param isAutoInflateEnabled bool = false
+param isAutoInflateEnabled bool = true
 
 @description('Optional. Upper limit of throughput units when AutoInflate is enabled, value should be within 0 to 20 throughput units.')
 @minValue(0)
 @maxValue(20)
-param maximumThroughputUnits int = 1
+param maximumThroughputUnits int = 4
 
 @description('Optional. Authorization Rules for the Event Hub namespace')
 param authorizationRules array = [

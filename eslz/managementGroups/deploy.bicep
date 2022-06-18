@@ -1,25 +1,24 @@
 targetScope = 'tenant'
 
-@description('Required. The group ID of the Management group.')
-param name string
+@description('Required. Default Management Group where newly created Subscription will be added to.')
+param onboardmg string
 
-@description('Optional. The friendly name of the management group. If no value is passed then this field will be set to the group ID.')
-param displayName string = ''
+@description('Required. Indicates whether RBAC access is required upon group creation under the root Management Group. If set to true, user will require Microsoft.Management/managementGroups/write action on the root Management Group scope in order to create new Groups directly under the root. .')
+param requireAuthorizationForGroupCreation bool
 
-@description('Optional. The management group parent ID. Defaults to current scope.')
-param parentMGName string = ''
+@description('Required. Array of Management Groups objects.')
+param managementGroups array
 
-@description('Optional. Array of role assignment objects to define RBAC on this resource.')
+@description('Required. Array of role assignment objects to define RBAC on this resource.')
 param roleAssignments array = []
 
-param deploymentId string = substring(uniqueString(utcNow()),0,6)
-
-// From Parameters File
-param onboardmg string
-param requireAuthorizationForGroupCreation bool
-param managementGroups array
+@description('Required. Array of Subscription objects.')
 param subscriptions array
+
+@description('Required. Azure AD Tenant ID.')
 param tenantid string
+
+param deploymentId string = substring(uniqueString(utcNow()),0,6)
 
 // Create Management Groups
 @batchSize(1)
@@ -29,6 +28,7 @@ module resource_managementGroups 'managementGroup/deploy.bicep' = [ for manageme
     name: managementGroup.name
     displayName: managementGroup.displayName
     parentMGName: managementGroup.parentMGName
+    roleAssignments: roleAssignments
   }
 }]
 
@@ -63,7 +63,7 @@ resource mg_settings 'Microsoft.Management/managementGroups/settings@2021-04-01'
   }
 }
 
-
+/*
 // Create Management Groups
 resource managementGroup 'Microsoft.Management/managementGroups@2021-04-01' = {
   name: name
@@ -88,3 +88,4 @@ params: {
 }
 scope: managementGroup
 }]
+*/
