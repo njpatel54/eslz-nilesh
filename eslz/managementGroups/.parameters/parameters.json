@@ -91,12 +91,14 @@
       "roleAssignments": {
         "value": [
           {
+              "managementGroupName": "mg-A2g",
               "roleDefinitionIdOrName": "Management Group Reader",
               "principalIds": [
                   "22892111-6354-43e4-95d8-ce4e8741b018"
               ]
           },
           {
+              "managementGroupName": "mg-A2g",
               "roleDefinitionIdOrName": "Management Group Contributor",
               "principalIds": [
                   "2e10cea8-b422-4643-bb44-28d625d83ce9"
