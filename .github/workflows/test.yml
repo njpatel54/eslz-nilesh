@@ -16,5 +16,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file .eslz/managementServices/deploy.bicep
+      run: az bicep build --file ./eslz/managementServices/deploy.bicep
 
