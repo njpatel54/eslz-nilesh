@@ -46,8 +46,8 @@ jobs:
         inlineScript: |
           az deployment sub validate \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file .eslz/managementServices/deploy.bicep \
-            --parameters .eslz/managementServices/.parameters/parameters.json \
+            --template-file ./eslz/managementServices/deploy.bicep \
+            --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
@@ -78,8 +78,8 @@ jobs:
         inlineScript: |
           az deployment sub what-if \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file .eslz/managementServices/deploy.bicep \
-            --parameters .eslz/managementServices/.parameters/parameters.json \
+            --template-file ./eslz/managementServices/deploy.bicep \
+            --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                           connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                           idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
@@ -111,8 +111,8 @@ jobs:
         inlineScript: |
           az deployment sub create \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file .eslz/managementServices/deploy.bicep \
-            --parameters .eslz/managementServices/.parameters/parameters.json \
+            --template-file ./eslz/managementServices/deploy.bicep \
+            --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
