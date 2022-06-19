@@ -1,7 +1,7 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
+    "parameters": { 
         "name": {
             "value": "vnet-ccs-prod-usva-conn"
         },
@@ -88,6 +88,24 @@
                     "privateLinkServiceNetworkPolicies": "Enabled"
                 }
             ]
+        },
+        "tags": {
+            "value": {
+              "Customer": "CCS Azure",
+              "ProjectID": "A2g-0",
+              "ProjectName": "A2g Platform",
+              "SecurityContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+              "TechContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us"
+            }
+        },
+        "projowner":{
+            "value":"ccs"
+        },
+        "opscope":{
+            "value":"prod"
+        },
+        "region":{
+            "value":"usva"
         }
     }
 }

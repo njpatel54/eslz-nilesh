@@ -67,6 +67,18 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+                        "allowForwardedTraffic": true,
+                        "allowGatewayTransit": false,
+                        "allowVirtualNetworkAccess": true,
+                        "useRemoteGateways": false,
+                        "remotePeeringEnabled": true,
+                        "remotePeeringAllowVirtualNetworkAccess": true,
+                        "remotePeeringAllowForwardedTraffic": true
+                    }
                 ]                
               },
               {
@@ -83,6 +95,18 @@
                     {
                         "name": "snet-ccs-prod-usva-mgmt",
                         "addressPrefix": "10.20.11.64/26"
+                    }
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+                        "allowForwardedTraffic": true,
+                        "allowGatewayTransit": false,
+                        "allowVirtualNetworkAccess": true,
+                        "useRemoteGateways": false,
+                        "remotePeeringEnabled": true,
+                        "remotePeeringAllowVirtualNetworkAccess": true,
+                        "remotePeeringAllowForwardedTraffic": true
                     }
                 ]
               },
@@ -149,9 +173,39 @@
                         "privateEndpointNetworkPolicies": "Disabled",
                         "privateLinkServiceNetworkPolicies": "Enabled"
                     }
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+                        "allowForwardedTraffic": true,
+                        "allowGatewayTransit": false,
+                        "allowVirtualNetworkAccess": true,
+                        "useRemoteGateways": false,
+                        "remotePeeringEnabled": true,
+                        "remotePeeringAllowVirtualNetworkAccess": true,
+                        "remotePeeringAllowForwardedTraffic": true
+                    }
                 ]
               }
             ]  
+        },
+        "tags": {
+            "value": {
+              "Customer": "CCS Azure",
+              "ProjectID": "A2g-0",
+              "ProjectName": "A2g Platform",
+              "SecurityContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+              "TechContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us"
+            }
+        },
+        "projowner":{
+        "value":"ccs"
+        },
+        "opscope":{
+        "value":"prod"
+        },
+        "region":{
+        "value":"usva"
         }
     }
 }

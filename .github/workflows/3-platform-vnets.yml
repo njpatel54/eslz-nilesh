@@ -19,7 +19,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/network/deploy.bicep
+      with:
+        inlineScript: |
+          az bicep build --file ./eslz/network/plat.hub.vnet.bicep
+          az bicep build --file ./eslz/network/plat.spoke.vnets.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -41,17 +44,28 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az deployment group validate \
-            --name 'Deploy-Hub-Spoke-Networking' \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
-            --template-file ./eslz/network/deploy.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
-            --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
+          az deployment sub validate \
+            --name 'Deploy-Platform-Hub-VNet' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/network/plat.hub.vnet.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/plat.hub.parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+
+    - uses: Azure/cli@v1
+      name: 'Run preflight validation'
+      with:
+        inlineScript: |
+          az deployment sub validate \
+            --name 'Deploy-Platform-Spoke-VNets' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/network/plat.spoke.vnets.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -72,22 +86,33 @@ jobs:
       
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
-              
+    
     - uses: Azure/cli@v1
       name: 'Run what-if'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az deployment group what-if \
-            --name 'Deploy-Platform-VNets' \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
-            --template-file ./eslz/network/deploy.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
-            --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
+          az deployment sub what-if \
+            --name 'Deploy-Platform-Hub-VNet' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/network/plat.hub.vnet.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/plat.hub.parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+
+    - uses: Azure/cli@v1
+      name: 'Run what-if'
+      with:
+        inlineScript: |
+          az deployment sub what-if \
+            --name 'Deploy-Platform-Spoke-VNets' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/network/plat.spoke.vnets.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -111,20 +136,31 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Platform-VNets'
+      name: 'Deploy - Platform Hub VNet'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az deployment group create \
-            --name 'Deploy-Platform-VNets' \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
-            --template-file ./eslz/network/deploy.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
-            --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
+          az deployment sub create \
+            --name 'Deploy-Platform-Hub-VNet' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/network/plat.hub.vnet.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/plat.hub.parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+
+    - uses: Azure/cli@v1
+      name: 'Deploy - Platform Spoke VNets'
+      with:
+        inlineScript: |
+          az deployment sub create \
+            --name 'Deploy-Platform-Spoke-VNets' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/network/plat.spoke.vnets.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
