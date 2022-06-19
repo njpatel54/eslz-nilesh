@@ -1,0 +1,16 @@
+{
+  "parameters": {
+    "logs":{
+      "value":[
+        {
+          "category": "Administrative",
+          "enabled": true
+        },
+        {
+          "category": "Policy",
+          "enabled": true
+        }
+      ]
+    }
+  }
+}

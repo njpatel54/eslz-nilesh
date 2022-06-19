@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "evhns-ccs-prod-usva-0001"
+        },
+        "authorizationRules": {
+            "value": [
+                {
+                    "name": "RootManageSharedAccessKey",
+                    "rights": [
+                        "Listen",
+                        "Manage",
+                        "Send"
+                    ]
+                },
+                {
+                    "name": "SendListenAccess",
+                    "rights": [
+                        "Listen",
+                        "Send"
+                    ]
+                }
+            ]
+        },
+        "eventHubs": {
+            "value": [
+                {
+                    "name": "evh-ccs-prod-usva-001"
+                },
+                {
+                    "name": "evh-ccs-prod-usva-002",
+                    "authorizationRules": [
+                        {
+                            "name": "RootManageSharedAccessKey",
+                            "rights": [
+                                "Listen",
+                                "Manage",
+                                "Send"
+                            ]
+                        },
+                        {
+                            "name": "SendListenAccess",
+                            "rights": [
+                                "Listen",
+                                "Send"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
