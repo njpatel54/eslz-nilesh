@@ -10,10 +10,10 @@ param name string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
-/*
 @description('Optional. The subscription ID of the subscription for the virtual network')
 param subscriptionId string = ''
 
+/*
 @description('Optional. The name of the resource group for the virtual network')
 param resourceGroupName string = ''
 */
