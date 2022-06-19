@@ -1,5 +1,6 @@
 //targetScope = 'subscription'
 
+param subscriptionId string
 param resourceGroupName string
 
 @description('Optional. Hub Virtual Network configurations.')
@@ -18,6 +19,7 @@ module vnet './virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets
     name: vNet.name
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
+    subscriptionId: subscriptionId
     //dnsServers: vNet.dnsServers
     //ddosProtectionPlanId: vNet.ddosProtectionPlanId
     
@@ -27,7 +29,7 @@ module vnet './virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets
 
 
 /*
-param subscriptionId string
+
 
 @description('Required. Name for the Event Hub Namespace.')
 param name string
