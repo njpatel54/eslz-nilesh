@@ -5,7 +5,7 @@ on:
   branches: 
      - main 
   paths:
-    - .github/workflows/test.vnet.yml
+    - .github/workflows/test-net.yml
     - ./test/virtualNetworks/.parameters/plat.hub.parameters.json
     - ./test/virtualNetworks/.parameters/plat.spoke.parameters.json
     - ./test/plat.hub.vnet.bicep
