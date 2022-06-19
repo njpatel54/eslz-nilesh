@@ -13,6 +13,18 @@ param subnets array = []
 @description('Optional. Virtual Network Peerings configurations')
 param virtualNetworkPeerings array = []
 
+@description('Optional. Resource ID of the diagnostic storage account.')
+param diagnosticStorageAccountId string = ''
+
+@description('Optional. Resource ID of the diagnostic log analytics workspace.')
+param diagnosticWorkspaceId string = ''
+
+@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to.')
+param diagnosticEventHubAuthorizationRuleId string = ''
+
+@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
+param diagnosticEventHubName string = ''
+
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
 
@@ -83,8 +95,9 @@ module vnet './virtualNetworks/deploy.bicep' = {
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
     subscriptionId: subscriptionId
-    //dnsServers: vNet.dnsServers
-    //ddosProtectionPlanId: vNet.ddosProtectionPlanId
-    
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: diagnosticEventHubName
   }
 }
