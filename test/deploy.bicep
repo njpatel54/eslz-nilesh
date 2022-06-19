@@ -8,6 +8,8 @@ param spokeVnets array = []
 @description('Required. Location for all resources.')
 param location string = resourceGroup().location
 
+
+
 // Create Virtual Network
 module vnet './virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
   name: 'vnet-${uniqueString(deployment().name, location)}-${vNet.name}'

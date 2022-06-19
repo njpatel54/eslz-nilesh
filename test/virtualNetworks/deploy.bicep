@@ -97,11 +97,11 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
+
 resource hubVirtualNetwork 'Microsoft.Network/virtualnetworks@2015-05-01-preview' existing = {
   name: 'vnet-ccs-prod-usva-conn'
   scope: resourceGroup('e6c61ac5-feea-4459-93fc-7131f8352553', 'rg-ccs-prod-usva-vnet')
 }
-
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: name
@@ -158,7 +158,7 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for
 // Remote to local peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
-  scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
+  scope: resourceGroup(split(hubVirtualNetwork.id, '/')[2], split(hubVirtualNetwork.id, '/')[4])
   params: {
     localVnetName: last(split(hubVirtualNetwork.id, '/'))
     remoteVirtualNetworkId: virtualNetwork.id
