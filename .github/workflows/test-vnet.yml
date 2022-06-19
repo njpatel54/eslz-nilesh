@@ -36,23 +36,19 @@ jobs:
       name: 'Deploy - Platform Hub VNet'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az deployment group create \
+          az deployment sub create \
             --name 'Deploy-Platform-Hub-VNet' \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
-            --template-file ./test/virtualNetworks/deploy.bicep \
-            --parameters ./test/virtualNetworks/.parameters/hub.parameters.json
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./test/plat.hub.vnet.bicep \
+            --parameters ./test/virtualNetworks/.parameters/plat.hub.parameters.json
 
     - uses: Azure/cli@v1
       name: 'Deploy - Platform Spoke VNets'
       with:
         inlineScript: |
-          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
-          az deployment group create \
+          az deployment sub create \
             --name 'Deploy-Platform-Spoke-VNets' \
-            --resource-group ${{ secrets.AZURE_VNETRG }} \
-            --template-file ./test/deploy.bicep \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./test/plat.spoke.vnet.bicep \
             --parameters ./test/virtualNetworks/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }}
