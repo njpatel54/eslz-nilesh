@@ -1,5 +1,5 @@
 targetScope='resourceGroup'
-
+/*
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
@@ -11,6 +11,7 @@ param idensubid string
 
 @description('Required. Subscription ID of Sandbox Subscription.')
 param ssvcsubid string
+*/
 
 @description('Required. Name of the Log Analytics workspace')
 param workspacename string
@@ -178,6 +179,7 @@ resource logAnalyticsWorkspace_diagnosticSettings 'Microsoft.Insights/diagnostic
   scope: logAnalyticsWorkspace
 }
 
+/*
 // Add Management Sub Activity Logs as Data Source
 resource mgmtsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-08-01'= {
   parent: logAnalyticsWorkspace
@@ -221,6 +223,7 @@ resource ssvcsublogs 'Microsoft.OperationalInsights/workspaces/dataSources@2020-
     linkedResourceId: '/subscriptions/${ssvcsubid}/providers/microsoft.insights/eventTypes/management'
   }  
 }
+*/
 
 // Enable Sentinel Solution (SecurityInsights)
 resource sentinelsolution 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' = {

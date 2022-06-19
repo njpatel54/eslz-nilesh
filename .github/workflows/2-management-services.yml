@@ -48,11 +48,8 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
-            --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-                         idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-                         location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
   preview:
     runs-on: ubuntu-latest
@@ -78,11 +75,8 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
-            --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-                          location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -109,8 +103,6 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
-            --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-                         idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-                         location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+

@@ -12,6 +12,7 @@ param eventHubs array = []
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
+/*
 @description('Required. Subscription ID of Connectivity Subscription.')
 param connsubid string
 
@@ -20,9 +21,13 @@ param idensubid string
 
 @description('Required. Subscription ID of Sandbox Subscription.')
 param ssvcsubid string
+*/
 
 @description('Required. Location for all resources.')
 param location string
+
+@description('Required. Array of Subscription objects.')
+param subscriptions array
 
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string = substring(uniqueString(utcNow()),0,4)
@@ -76,6 +81,18 @@ param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suff
 // From Parameters Files
 param storageaccount_sku string
 
+@description('Optional. Resource ID of the diagnostic storage account.')
+param diagnosticStorageAccountId string = ''
+
+@description('Optional. Resource ID of the diagnostic log analytics workspace.')
+param diagnosticWorkspaceId string = ''
+
+@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to.')
+param diagnosticEventHubAuthorizationRuleId string = ''
+
+@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
+param diagnosticEventHubName string = ''
+
 // Create Resoruce Group
 module siem_rg '../resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}-${rgName}'
@@ -95,10 +112,10 @@ module loga '../workspaces/deploy.bicep' = {
     siem_rg
   ]
   params:{
-    mgmtsubid: mgmtsubid
-    connsubid: connsubid
-    idensubid: idensubid
-    ssvcsubid: ssvcsubid
+    //mgmtsubid: mgmtsubid
+    //connsubid: connsubid
+    //idensubid: idensubid
+    //ssvcsubid: ssvcsubid
     aaname: automationAcctName
     workspacename: lawName
     location: location
@@ -138,3 +155,22 @@ module eh '../namespaces/deploy.bicep' = {
     authorizationRules: authorizationRules
   }
 }
+
+// Configure Diagnostics Settings for Subscriptions
+module diagSettings '../insights/diagnosticSettings/deploy.bicep' = [ for subscription in subscriptions: {
+  name: 'diagSettings-${subscription.subscriptionId}'
+  scope: subscription(subscription.subscriptionId)
+  dependsOn: [
+    siem_rg
+    loga
+    sa
+    eh
+  ]
+  params:{
+    location: location
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubName: diagnosticEventHubName
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+  }
+}]
