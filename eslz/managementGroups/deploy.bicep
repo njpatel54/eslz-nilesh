@@ -39,25 +39,6 @@ module mg '../modules/management/managementGroups/deploy.bicep' = [ for manageme
   }
 }]
 
-/*
-// Configure Default Management Group Settings
-resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
-  name: tenantid
-  scope: tenant()
-}
-
-resource mgSettings 'Microsoft.Management/managementGroups/settings@2021-04-01' = {
-parent: rootmg
-name: 'default'
-dependsOn: [
-  mg
-]
-properties: {
-    defaultManagementGroup: '/providers/Microsoft.Management/managementGroups/${onboardmg}'
-    requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
-}
-}
-
 // Create Role Assignments for Management Groups
 module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
   name: 'ManagementGroup-Rbac-${roleAssignment.managementGroupName}-${index}'  
@@ -105,4 +86,21 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
   }
 }]
 
-*/
+// Retrieve Tenant Root Management Group
+resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
+  name: tenantid
+  scope: tenant()
+}
+
+// Configure Default Management Group Settings
+resource mgSettings 'Microsoft.Management/managementGroups/settings@2021-04-01' = {
+parent: rootmg
+name: 'default'
+dependsOn: [
+  mg
+]
+properties: {
+  defaultManagementGroup: '/providers/Microsoft.Management/managementGroups/${onboardmg}'
+  requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
+}
+}
