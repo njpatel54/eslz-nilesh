@@ -33,7 +33,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
-      name: 'Deploy - Platform-VNets'
+      name: 'Deploy - Platform Hub VNet'
       with:
         inlineScript: |
           az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
@@ -42,3 +42,17 @@ jobs:
             --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./test/virtualNetworks/deploy.bicep \
             --parameters ./test/virtualNetworks/.parameters/hub.parameters.json
+
+    - uses: Azure/cli@v1
+      name: 'Deploy - Platform Spoke VNets'
+      with:
+        inlineScript: |
+          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az deployment group create \
+            --name 'Deploy-Platform-Spoke-VNets' \
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
+            --template-file ./test/deploy.bicep \
+            --parameters ./test/virtualNetworks/.parameters/plat.spoke.parameters.json \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }}
