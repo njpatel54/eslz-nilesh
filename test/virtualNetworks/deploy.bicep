@@ -97,6 +97,7 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
+/*
 param hubSubID string = 'e6c61ac5-feea-4459-93fc-7131f8352553'
 param hubRg string = 'rg-ccs-prod-usva-vnet'
 
@@ -104,6 +105,9 @@ resource hubVirtualNetwork 'Microsoft.Network/virtualnetworks@2015-05-01-preview
   name: 'vnet-ccs-prod-usva-conn'
   scope: resourceGroup(hubSubID, hubRg)
 }
+*/
+
+param remoteVirtualNetworkId string = '/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn'
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: name
@@ -147,7 +151,7 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
   params: {
     localVnetName: virtualNetwork.name
-    remoteVirtualNetworkId: hubVirtualNetwork.id
+    remoteVirtualNetworkId: remoteVirtualNetworkId
     name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
     allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
     allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
@@ -160,9 +164,9 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for
 // Remote to local peering (reverse)
 module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [for (peering, index) in virtualNetworkPeerings: if (contains(peering, 'remotePeeringEnabled') ? peering.remotePeeringEnabled == true : false) {
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
-  scope: resourceGroup(split(hubVirtualNetwork.id, '/')[2], split(hubVirtualNetwork.id, '/')[4])
+  scope: resourceGroup(split(remoteVirtualNetworkId, '/')[2], split(remoteVirtualNetworkId, '/')[4])
   params: {
-    localVnetName: last(split(hubVirtualNetwork.id, '/'))
+    localVnetName: last(split(remoteVirtualNetworkId, '/'))
     remoteVirtualNetworkId: virtualNetwork.id
     name: contains(peering, 'remotePeeringName') ? peering.remotePeeringName : '${last(split(peering.remoteVirtualNetworkId, '/'))}-${name}'
     allowForwardedTraffic: contains(peering, 'remotePeeringAllowForwardedTraffic') ? peering.remotePeeringAllowForwardedTraffic : true
