@@ -19,12 +19,6 @@ param connsubid string
 param idensubid string
 
 @description('Required. Subscription ID of Sandbox Subscription.')
-param lz01subid string
-
-@description('Required. Subscription ID of Sandbox Subscription.')
-param sandsubid string
-
-@description('Required. Subscription ID of Sandbox Subscription.')
 param ssvcsubid string
 
 @description('Required. Location for all resources.')
@@ -97,8 +91,6 @@ module loga './workspaces/deploy.bicep' = {
     mgmtsubid: mgmtsubid
     connsubid: connsubid
     idensubid: idensubid
-    lz01subid: lz01subid
-    sandsubid: sandsubid
     ssvcsubid: ssvcsubid
     aaname: azureautomation_name
     workspacename: loganalytics_workspace_name
