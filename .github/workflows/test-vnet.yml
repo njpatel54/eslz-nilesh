@@ -31,8 +31,7 @@ jobs:
             --resource-group ${{ secrets.AZURE_VNETRG }} \
             --template-file ./test/deploy.bicep \
             --parameters ./test/virtualNetworks/.parameters/spoke.parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+            --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
