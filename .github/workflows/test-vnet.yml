@@ -6,8 +6,11 @@ on:
      - main 
   paths:
     - .github/workflows/test.vnet.yml
-    - test/virtualNetworks/*
-    - test/deploy.bicep
+    - ./test/virtualNetworks/.parameters/plat.hub.parameters.json
+    - ./test/virtualNetworks/.parameters/plat.spoke.parameters.json
+    - ./test/plat.hub.vnet.bicep
+    - ./test/plat.spoke.vnets.bicep
+    - ./test/virtualNetworks/*
       
   # pull_request:
   #  branches: [ main ]
@@ -41,7 +44,11 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./test/plat.hub.vnet.bicep \
             --parameters ./test/virtualNetworks/.parameters/plat.hub.parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
 
     - uses: Azure/cli@v1
       name: 'Deploy - Platform Spoke VNets'
@@ -53,4 +60,8 @@ jobs:
             --template-file ./test/plat.spoke.vnets.bicep \
             --parameters ./test/virtualNetworks/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }}
+                         location=${{ secrets.AZURE_LOCATION }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
