@@ -71,7 +71,7 @@ param region string
 param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 param lawName string = 'log-${projowner}-${opscope}-${region}-siem'
 param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
-param stgAcctName string = toLower('st${projowner}${opscope}${region}${suffix}')
+param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
 
 // From Parameters Files
 param storageaccount_sku string
