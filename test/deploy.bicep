@@ -1,12 +1,10 @@
 //targetScope = 'subscription'
 
 param subscriptionId string
+param resourceGroupName string
 
 @description('Required. Name for the Event Hub Namespace.')
 param name string
-
-@description('Required. Name for the Resoruce Group.')
-param rgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param addressPrefixes array
@@ -26,49 +24,6 @@ param virtualNetworkPeerings array = []
 @description('Required. Location for all resources.')
 param location string
 
-@description('Required. Suffix to be used in resource naming with 4 characters.')
-param suffix string = substring(uniqueString(utcNow()),0,4)
-
-@description('Required. utcfullvalue to be used in Tags.')
-param utcfullvalue string = utcNow('F')
-
-@description('Required. Resource Tags.')
-param tags object
-
-@description('Required. Assign utffullvaule to "CreatedOn" tag.')
-param dynamictags object = ({
-  CreatedOn: utcfullvalue
-})
-
-@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-var combinedTags = union(dynamictags, tags)
-
-@description('Required. Project Owner (projowner) parameter.')
-@allowed([
-  'ccs'
-  'proj'
-])
-param projowner string
-
-@description('Required. Operational Scope (opscope) parameter.')
-@allowed([
-  'prod'
-  'dev'
-  'qa'
-  'stage'
-  'test'
-  'sand'
-])
-param opscope string
-
-@description('Required. Region (region) parameter.')
-@allowed([
-  'usva'
-  'ustx'
-  'usaz'
-])
-param region string
-
 /*
 // Create Resoruce Group
 module rg './resourceGroups/deploy.bicep'= {
@@ -85,7 +40,7 @@ module rg './resourceGroups/deploy.bicep'= {
 // Create Virtual Network
 module vnet './virtualNetworks/deploy.bicep' = {
   name: 'vnet-${uniqueString(deployment().name, location)}-${name}'
-  scope: resourceGroup(subscriptionId, rgName)
+  scope: resourceGroup(subscriptionId, resourceGroupName)
   params:{
     location: location
     addressPrefixes: addressPrefixes
@@ -93,7 +48,6 @@ module vnet './virtualNetworks/deploy.bicep' = {
     subnets: subnets
     dnsServers: dnsServers
     ddosProtectionPlanId: ddosProtectionPlanId
-    //subscriptionId:subscriptionId
     virtualNetworkPeerings: virtualNetworkPeerings
   }
 }
