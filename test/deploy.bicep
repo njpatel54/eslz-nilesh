@@ -1,7 +1,32 @@
 //targetScope = 'subscription'
 
-param subscriptionId string
 param resourceGroupName string
+
+@description('Optional. Hub Virtual Network configurations.')
+param spokeVnets array = []
+
+@description('Required. Location for all resources.')
+param location string = resourceGroup().location
+
+// Create Virtual Network
+module vnet './virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
+  name: 'vnet-${uniqueString(deployment().name, location)}-${vNet.name}'
+  scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
+  params:{
+    location: location
+    addressPrefixes: vNet.addressPrefixes
+    name: vNet.name
+    subnets: vNet.subnets
+    virtualNetworkPeerings: vNet.virtualNetworkPeerings
+    //dnsServers: vNet.dnsServers
+    //ddosProtectionPlanId: vNet.ddosProtectionPlanId
+  }
+}]
+
+
+
+/*
+param subscriptionId string
 
 @description('Required. Name for the Event Hub Namespace.')
 param name string
@@ -21,10 +46,6 @@ param ddosProtectionPlanId string = ''
 @description('Optional. Virtual Network Peerings configurations')
 param virtualNetworkPeerings array = []
 
-@description('Required. Location for all resources.')
-param location string
-
-/*
 // Create Resoruce Group
 module rg './resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}'
@@ -36,19 +57,3 @@ module rg './resourceGroups/deploy.bicep'= {
   }
 }
 */
-
-// Create Virtual Network
-module vnet './virtualNetworks/deploy.bicep' = {
-  name: 'vnet-${uniqueString(deployment().name, location)}-${name}'
-  scope: resourceGroup(subscriptionId, resourceGroupName)
-  params:{
-    location: location
-    addressPrefixes: addressPrefixes
-    name: name
-    subnets: subnets
-    dnsServers: dnsServers
-    ddosProtectionPlanId: ddosProtectionPlanId
-    virtualNetworkPeerings: virtualNetworkPeerings
-  }
-}
-
