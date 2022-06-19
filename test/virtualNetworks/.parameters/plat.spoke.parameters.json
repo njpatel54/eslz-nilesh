@@ -69,16 +69,16 @@
                     }
                 ],
                 "virtualNetworkPeerings": [
-                        {
-                            "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
-                            "allowForwardedTraffic": true,
-                            "allowGatewayTransit": false,
-                            "allowVirtualNetworkAccess": true,
-                            "useRemoteGateways": false,
-                            "remotePeeringEnabled": true,
-                            "remotePeeringAllowVirtualNetworkAccess": true,
-                            "remotePeeringAllowForwardedTraffic": true
-                        }
+                    {
+                        "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+                        "allowForwardedTraffic": true,
+                        "allowGatewayTransit": false,
+                        "allowVirtualNetworkAccess": true,
+                        "useRemoteGateways": false,
+                        "remotePeeringEnabled": true,
+                        "remotePeeringAllowVirtualNetworkAccess": true,
+                        "remotePeeringAllowForwardedTraffic": true
+                    }
                 ]                
               },
               {
@@ -98,16 +98,16 @@
                     }
                 ],
                 "virtualNetworkPeerings": [
-                        {
-                            "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
-                            "allowForwardedTraffic": true,
-                            "allowGatewayTransit": false,
-                            "allowVirtualNetworkAccess": true,
-                            "useRemoteGateways": false,
-                            "remotePeeringEnabled": true,
-                            "remotePeeringAllowVirtualNetworkAccess": true,
-                            "remotePeeringAllowForwardedTraffic": true
-                        }
+                    {
+                        "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+                        "allowForwardedTraffic": true,
+                        "allowGatewayTransit": false,
+                        "allowVirtualNetworkAccess": true,
+                        "useRemoteGateways": false,
+                        "remotePeeringEnabled": true,
+                        "remotePeeringAllowVirtualNetworkAccess": true,
+                        "remotePeeringAllowForwardedTraffic": true
+                    }
                 ]
               },
               {
@@ -175,16 +175,16 @@
                     }
                 ],
                 "virtualNetworkPeerings": [
-                        {
-                            "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
-                            "allowForwardedTraffic": true,
-                            "allowGatewayTransit": false,
-                            "allowVirtualNetworkAccess": true,
-                            "useRemoteGateways": false,
-                            "remotePeeringEnabled": true,
-                            "remotePeeringAllowVirtualNetworkAccess": true,
-                            "remotePeeringAllowForwardedTraffic": true
-                        }
+                    {
+                        "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+                        "allowForwardedTraffic": true,
+                        "allowGatewayTransit": false,
+                        "allowVirtualNetworkAccess": true,
+                        "useRemoteGateways": false,
+                        "remotePeeringEnabled": true,
+                        "remotePeeringAllowVirtualNetworkAccess": true,
+                        "remotePeeringAllowForwardedTraffic": true
+                    }
                 ]
               }
             ]  

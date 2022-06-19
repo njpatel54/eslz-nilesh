@@ -36,9 +36,9 @@ jobs:
       name: 'Deploy - Platform-VNets'
       with:
         inlineScript: |
+          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
           az deployment group create \
-            --name 'Deploy-Platform-VNets' \
+            --name 'Deploy-Platform-Hub-VNet' \
             --resource-group ${{ secrets.AZURE_VNETRG }} \
-            --template-file ./test/deploy.bicep \
-            --parameters ./test/virtualNetworks/.parameters/spoke.parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }}
+            --template-file ./test/virtualNetworks/deploy.bicep \
+            --parameters ./test/virtualNetworks/.parameters/hub.parameters.json
