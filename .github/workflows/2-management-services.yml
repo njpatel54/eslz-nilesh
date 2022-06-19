@@ -51,8 +51,6 @@ jobs:
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-                         lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
-                         sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
                          location=${{ secrets.AZURE_LOCATION }}
 
@@ -83,8 +81,6 @@ jobs:
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                           connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                           idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-                          lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
-                          sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
                           ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
                           location=${{ secrets.AZURE_LOCATION }}
 
@@ -116,7 +112,5 @@ jobs:
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
-                         lz01subid=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }} \
-                         sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
                          location=${{ secrets.AZURE_LOCATION }}
