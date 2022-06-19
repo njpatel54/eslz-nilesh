@@ -19,7 +19,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/network/plat.hub.vnet.bicep && az bicep build --file ./eslz/network/plat.spoke.vnets.bicep
+      shell: pwsh
+      run: | 
+        az bicep build --file ./eslz/network/plat.hub.vnet.bicep
+        az bicep build --file ./eslz/network/plat.spoke.vnets.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -38,7 +41,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
-      name: 'Run preflight validation'
+      name: 'Run preflight validation - Platform Hub VNet'
       with:
         inlineScript: |
           az deployment sub validate \
@@ -53,7 +56,7 @@ jobs:
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
 
     - uses: Azure/cli@v1
-      name: 'Run preflight validation'
+      name: 'Run preflight validation - Platform Spoke VNets'
       with:
         inlineScript: |
           az deployment sub validate \
@@ -85,7 +88,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
     
     - uses: Azure/cli@v1
-      name: 'Run what-if'
+      name: 'Run what-if - Platform Hub VNet'
       with:
         inlineScript: |
           az deployment sub what-if \
@@ -100,7 +103,7 @@ jobs:
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
 
     - uses: Azure/cli@v1
-      name: 'Run what-if'
+      name: 'Run what-if - Platform Spoke VNets'
       with:
         inlineScript: |
           az deployment sub what-if \
