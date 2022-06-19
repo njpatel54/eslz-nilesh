@@ -13,47 +13,47 @@
           {
             "name": "mg-A2g",
             "displayName": "mg-A2g",
-            "parentMGName": "624e5a3d-aa66-4393-9eba-9fb802780e70"
+            "parentId": "624e5a3d-aa66-4393-9eba-9fb802780e70"
           },
           {
             "name": "mg-A2g-Platform",
             "displayName": "mg-A2g-Platform",
-            "parentMGName": "mg-A2g"
+            "parentId": "mg-A2g"
           },
           {
             "name": "mg-A2g-Connectivity",
             "displayName": "mg-A2g-Connectivity",
-            "parentMGName": "mg-A2g-Platform"
+            "parentId": "mg-A2g-Platform"
           },
           {
             "name": "mg-A2g-Identity",
             "displayName": "mg-A2g-Identity",
-            "parentMGName": "mg-A2g-Platform"
+            "parentId": "mg-A2g-Platform"
           },
           {
             "name": "mg-A2g-Management",
             "displayName": "mg-A2g-Management",
-            "parentMGName": "mg-A2g-Platform"
+            "parentId": "mg-A2g-Platform"
           },
           {
             "name": "mg-A2g-Shared-Services",
             "displayName": "mg-A2g-Shared-Services",
-            "parentMGName": "mg-A2g-Platform"
+            "parentId": "mg-A2g-Platform"
           },
           {
             "name": "mg-A2g-Landing-Zones",
             "displayName": "mg-A2g-Landing-Zones",
-            "parentMGName": "mg-A2g"
+            "parentId": "mg-A2g"
           },
           {
             "name": "mg-A2g-Decommissioned",
             "displayName": "mg-A2g-Decommissioned",
-            "parentMGName": "mg-A2g"
+            "parentId": "mg-A2g"
           },
           {
             "name": "mg-A2g-Sandbox",
             "displayName": "mg-A2g-Sandbox",
-            "parentMGName": "mg-A2g"
+            "parentId": "mg-A2g"
           }
         ]
       },

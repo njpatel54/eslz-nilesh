@@ -35,10 +35,11 @@ module mg '../modules/management/managementGroups/deploy.bicep' = [ for manageme
     location: location
     name: managementGroup.name
     displayName: managementGroup.displayName
-    parentId: managementGroup.parentMGName
+    parentId: managementGroup.parentId
   }
 }]
 
+/*
 // Configure Default Management Group Settings
 resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
   name: tenantid
@@ -104,3 +105,4 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
   }
 }]
 
+*/
