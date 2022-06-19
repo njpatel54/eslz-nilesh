@@ -1,67 +1,20 @@
-name: test - virtual networking
+name: test - managementServices
 
 on:
- push:
-  branches: 
-     - main 
-  paths:
-    - .github/workflows/test-net.yml
-    - ./test/virtualNetworks/.parameters/plat.hub.parameters.json
-    - ./test/virtualNetworks/.parameters/plat.spoke.parameters.json
-    - ./test/plat.hub.vnet.bicep
-    - ./test/plat.spoke.vnets.bicep
-    - ./test/virtualNetworks/*
-      
+ # push:
+ # branches: 
+ #    - main 
+     
   # pull_request:
   #  branches: [ main ]
  workflow_dispatch:
 
 jobs:
 
-  deploy:
+  lint: 
     runs-on: ubuntu-latest
-    #needs: [preview]
-    environment: Production
     steps:
     - uses: actions/checkout@v2
-    
-    - uses: azure/login@v1
-      name: 'Login to Azure'
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        environment: ${{ secrets.AZURE_ENVIRONMENT }}
-        enable-AzPSSession: false
-      
-    - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+    - name: 'Lint and Build Bicep'
+      run: az bicep build --file .eslz/managementServices/deploy.bicep
 
-    - uses: Azure/cli@v1
-      name: 'Deploy - Platform Hub VNet'
-      with:
-        inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Platform-Hub-VNet' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./test/plat.hub.vnet.bicep \
-            --parameters ./test/virtualNetworks/.parameters/plat.hub.parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-
-    - uses: Azure/cli@v1
-      name: 'Deploy - Platform Spoke VNets'
-      with:
-        inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Platform-Spoke-VNets' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./test/plat.spoke.vnets.bicep \
-            --parameters ./test/virtualNetworks/.parameters/plat.spoke.parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
