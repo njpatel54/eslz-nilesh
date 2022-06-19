@@ -20,8 +20,8 @@ param dnsServers array = []
 @description('Optional. Resource ID of the DDoS protection plan to assign the VNET to. If it\'s left blank, DDoS protection will not be configured. If it\'s provided, the VNET created by this template will be attached to the referenced DDoS protection plan. The DDoS protection plan can exist in the same or in a different subscription.')
 param ddosProtectionPlanId string = ''
 
-//@description('Optional. Virtual Network Peerings configurations')
-//param virtualNetworkPeerings array = []
+@description('Optional. Virtual Network Peerings configurations')
+param virtualNetworkPeerings array = []
 
 @description('Required. Location for all resources.')
 param location string
@@ -69,6 +69,7 @@ param opscope string
 ])
 param region string
 
+/*
 // Create Resoruce Group
 module rg './resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}'
@@ -79,14 +80,12 @@ module rg './resourceGroups/deploy.bicep'= {
     tags: combinedTags
   }
 }
+*/
 
 // Create Virtual Network
 module vnet './virtualNetworks/deploy.bicep' = {
   name: 'vnet-${uniqueString(deployment().name, location)}-${name}'
   scope: resourceGroup(subscriptionId, rgName)
-  dependsOn: [
-    rg
-  ]
   params:{
     location: location
     addressPrefixes: addressPrefixes
@@ -95,8 +94,7 @@ module vnet './virtualNetworks/deploy.bicep' = {
     dnsServers: dnsServers
     ddosProtectionPlanId: ddosProtectionPlanId
     //subscriptionId:subscriptionId
-    //virtualNetworkPeerings: virtualNetworkPeerings
-
+    virtualNetworkPeerings: virtualNetworkPeerings
   }
 }
 

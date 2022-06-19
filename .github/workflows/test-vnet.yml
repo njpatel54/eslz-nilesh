@@ -21,3 +21,18 @@ jobs:
       
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+
+    - uses: Azure/cli@v1
+      name: 'Deploy - Platform-VNets'
+      with:
+        inlineScript: |
+          az deployment group create \
+            --name 'Deploy-Platform-VNets' \
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
+            --template-file ./test/deploy.bicep \
+            --parameters ./test/virtualNetworks/.parameters/spoke.parameters.json \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}

@@ -97,6 +97,12 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
+resource hubVirtualNetwork 'Microsoft.Network/virtualnetworks@2015-05-01-preview' existing = {
+  name: 'vnet-ccs-prod-usva-conn'
+  scope: resourceGroup('e6c61ac5-feea-4459-93fc-7131f8352553', 'rg-ccs-prod-usva-vnet')
+}
+
+
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: name
   location: location
@@ -139,7 +145,7 @@ module virtualNetwork_peering_local 'virtualNetworkPeerings/deploy.bicep' = [for
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-local-${index}'
   params: {
     localVnetName: virtualNetwork.name
-    remoteVirtualNetworkId: peering.remoteVirtualNetworkId
+    remoteVirtualNetworkId: hubVirtualNetwork.id
     name: contains(peering, 'name') ? peering.name : '${name}-${last(split(peering.remoteVirtualNetworkId, '/'))}'
     allowForwardedTraffic: contains(peering, 'allowForwardedTraffic') ? peering.allowForwardedTraffic : true
     allowGatewayTransit: contains(peering, 'allowGatewayTransit') ? peering.allowGatewayTransit : false
@@ -154,7 +160,7 @@ module virtualNetwork_peering_remote 'virtualNetworkPeerings/deploy.bicep' = [fo
   name: '${uniqueString(deployment().name, location)}-virtualNetworkPeering-remote-${index}'
   scope: resourceGroup(split(peering.remoteVirtualNetworkId, '/')[2], split(peering.remoteVirtualNetworkId, '/')[4])
   params: {
-    localVnetName: last(split(peering.remoteVirtualNetworkId, '/'))
+    localVnetName: last(split(hubVirtualNetwork.id, '/'))
     remoteVirtualNetworkId: virtualNetwork.id
     name: contains(peering, 'remotePeeringName') ? peering.remotePeeringName : '${last(split(peering.remoteVirtualNetworkId, '/'))}-${name}'
     allowForwardedTraffic: contains(peering, 'remotePeeringAllowForwardedTraffic') ? peering.remotePeeringAllowForwardedTraffic : true

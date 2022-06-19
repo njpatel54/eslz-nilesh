@@ -21,7 +21,7 @@ jobs:
     - name: 'Lint and Build Bicep'
       run: az bicep build --file ./eslz/network/deploy.bicep
 
-  validate: 
+  validate:
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
