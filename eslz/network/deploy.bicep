@@ -8,13 +8,13 @@ param name string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
+/*
 @description('Optional. The subscription ID of the subscription for the virtual network')
 param subscriptionId string = ''
+*/
 
-/*
 @description('Optional. The name of the resource group for the virtual network')
 param resourceGroupName string = ''
-*/
 
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param addressPrefixes array
@@ -102,75 +102,10 @@ param lock string = 'NotSpecified'
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
-@description('Required. utcfullvalue to be used in Tags.')
-param utcfullvalue string = utcNow('F')
-
-@description('Required. Assign utffullvaule to "CreatedOn" tag.')
-param dynamictags object = ({
-  CreatedOn: utcfullvalue
-})
-
-@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-var combinedTags = union(dynamictags, tags)
-
-@description('Required. Project Owner (projowner) parameter.')
-@allowed([
-  'ccs'
-  'proj'
-])
-param projowner string
-
-@description('Required. Operational Scope (opscope) parameter.')
-@allowed([
-  'prod'
-  'dev'
-  'qa'
-  'stage'
-  'test'
-  'sand'
-])
-param opscope string
-
-@description('Required. Region (region) parameter.')
-@allowed([
-  'usva'
-  'ustx'
-  'usaz'
-])
-param region string
-
-// Build param values using string interpolation
-param rgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
-
-// Create Resoruce Group for Hub VNet
-module hubRg '../resourceGroups/deploy.bicep'= {
-  name: 'rg-Module-${subscriptionId}-${rgName}'
-  scope: subscription(subscriptionId)
-  params:{
-    name: rgName
-    location: location
-    tags: combinedTags
-  }
-}
-
-// Create Resoruce Group(s) for Spoke VNets
-module spokeRg '../resourceGroups/deploy.bicep'= [ for (vNet, index) in spokeVnets : {
-  name: 'rg-Module-${vNet.subscriptionId}-${rgName}'
-  scope: subscription(vNet.subscriptionId)
-  params:{
-    name: rgName
-    location: location
-    tags: combinedTags
-  }
-}]
-
 resource hubVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
   name: name
   location: location
   tags: tags
-  dependsOn: [
-    hubRg
-  ]
   properties: {
     addressSpace: {
       addressPrefixes: addressPrefixes
@@ -206,10 +141,7 @@ resource hubVnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
 
 module spokeVnet 'virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
   name: 'VNet-Module-${vNet.name}'
-  scope: resourceGroup(vNet.subscriptionId, rgName)
-  dependsOn: [
-    spokeRg
-  ]
+  scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
   params: {
     hubVnetName: hubVnet.name
     hubVnetId: hubVnet.id

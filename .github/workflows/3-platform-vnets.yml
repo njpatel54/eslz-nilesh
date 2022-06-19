@@ -14,9 +14,16 @@ on:
 
 jobs:
 
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'Lint and Build Bicep'
+      run: az bicep build --file ./eslz/network/deploy.bicep
+
   validate: 
     runs-on: ubuntu-latest
-    #needs: [lint]
+    needs: [lint]
     steps:
     - uses: actions/checkout@v2
     
@@ -44,7 +51,81 @@ jobs:
             --template-file ./eslz/network/deploy.bicep \
             --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
             --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
-            --parameters diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+
+  preview:
+    runs-on: ubuntu-latest
+    needs: [validate]
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Run what-if'
+      with:
+        inlineScript: |
+          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az deployment group what-if \
+            --name 'Deploy-Platform-VNets' \
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
+            --template-file ./eslz/network/deploy.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
+            --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [preview]
+    environment: Production
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploy - Platform-VNets'
+      with:
+        inlineScript: |
+          az group create --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_IDENSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az group create --subscription ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
+          az deployment group create \
+            --name 'Deploy-Platform-VNets' \
+            --resource-group ${{ secrets.AZURE_VNETRG }} \
+            --template-file ./eslz/network/deploy.bicep \
+            --parameters ./eslz/network/virtualNetworks/.parameters/hub.parameters.json \
+            --parameters ./eslz/network/virtualNetworks/.parameters/spoke.parameters.json \
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
