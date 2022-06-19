@@ -18,11 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      name: 'Lint and Build Bicep'
-      with:
-        inlineScript: |
-          az bicep build --file ./eslz/network/plat.hub.vnet.bicep
-          az bicep build --file ./eslz/network/plat.spoke.vnets.bicep
+    - name: 'Lint and Build Bicep'
+      run: az bicep build --file ./eslz/network/plat.hub.vnet.bicep && az bicep build --file ./eslz/network/plat.spoke.vnets.bicep
 
   validate:
     runs-on: ubuntu-latest
