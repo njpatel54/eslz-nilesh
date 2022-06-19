@@ -14,9 +14,21 @@ on:
 
 jobs:
 
+  build-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set-matrix
+        run: echo '::set-output name=subscriptionId::[${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}, ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}, ${{ secrets.AZURE_IDENSUBSCRIPTIONID }}, ${{ secrets.AZURE_SSVCSUBSCRIPTIONID }}]'
+    outputs:
+      subscriptionId: ${{ steps.set-matrix.outputs.subscriptionId }}
+
   validate: 
     runs-on: ubuntu-latest
     #needs: [lint]
+    needs: [build-matrix]
+    strategy:
+      matrix:
+        subscriptionId: ${{ fromJson(needs.build-matrix.outputs.subscriptionId) }}
     steps:
     - uses: actions/checkout@v2
     
@@ -34,6 +46,7 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
+          az group create --subscription ${{ matrix.subscriptionId }} --location ${{ secrets.AZURE_LOCATION }} --name ${{ secrets.AZURE_VNETRG }}
           az deployment group validate \
             --name 'Deploy-Hub-Spoke-Networking' \
             --resource-group ${{ secrets.AZURE_VNETRG }} \
