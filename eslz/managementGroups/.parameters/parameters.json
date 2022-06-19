@@ -88,7 +88,7 @@
       "tenantid":{
         "value": "624e5a3d-aa66-4393-9eba-9fb802780e70"
       },
-      "roleAssignments": {
+      "mgRoleAssignments": {
         "value": [
           {
               "managementGroupName": "mg-A2g",
@@ -103,6 +103,24 @@
               "principalIds": [
                   "2e10cea8-b422-4643-bb44-28d625d83ce9"
               ]
+          }
+        ]
+      },
+      "subRoleAssignments": {
+        "value": [
+          {
+              "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+              "roleDefinitionIdOrName": "Contributor",
+                "principalIds": [
+                    "40b2dd0e-b831-4f53-b691-540cacbdd281"
+                ]
+          },
+          {
+              "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
+              "roleDefinitionIdOrName": "Contributor",
+              "principalIds": [
+                    "77037bbd-6c47-446f-aeaf-52ee92ced21d"
+                ]
           }
         ]
       }

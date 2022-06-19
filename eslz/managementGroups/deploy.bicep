@@ -1,4 +1,7 @@
-targetScope = 'tenant'
+targetScope = 'managementGroup'
+
+@sys.description('Optional. Location deployment metadata.')
+param location string
 
 @description('Required. Default Management Group where newly created Subscription will be added to.')
 param onboardmg string
@@ -9,8 +12,11 @@ param requireAuthorizationForGroupCreation bool
 @description('Required. Array of Management Groups objects.')
 param managementGroups array
 
-@description('Required. Array of role assignment objects to define RBAC on this resource.')
-param roleAssignments array = []
+@description('Required. Array of role assignment objects to define RBAC on management groups.')
+param mgRoleAssignments array = []
+
+@description('Required. Array of role assignment objects to define RBAC on subscriptions.')
+param subRoleAssignments array = []
 
 @description('Required. Array of Subscription objects.')
 param subscriptions array
@@ -22,37 +28,57 @@ param deploymentId string = substring(uniqueString(utcNow()),0,6)
 
 // Create Management Groups
 @batchSize(1)
-module resource_managementGroups 'managementGroup/deploy.bicep' = [ for managementGroup in managementGroups: {
+module mg '../management/managementGroups/deploy.bicep' = [ for managementGroup in managementGroups: {
   name: 'deploy-mg-${managementGroup.name}'
   params:{
+    location: location
     name: managementGroup.name
     displayName: managementGroup.displayName
-    parentMGName: managementGroup.parentMGName
-    roleAssignments: roleAssignments
+    parentId: managementGroup.parentMGName
   }
 }]
 
-// Create Role Assignments
-module managementGroup_rbac './managementGroup/.bicep/nested_rbac.bicep' = [ for (roleAssignment, index) in roleAssignments :{
-  name: 'ManagementGroup-Rbac-${roleAssignment.managementGroupName}-${index}'
+// Configure Default Management Group Settings
+resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
+  name: tenantid
+  scope: tenant()
+}
+
+resource mgSettings 'Microsoft.Management/managementGroups/settings@2021-04-01' = {
+parent: rootmg
+name: 'default'
+dependsOn: [
+  mg
+]
+properties: {
+    defaultManagementGroup: '/providers/Microsoft.Management/managementGroups/${onboardmg}'
+    requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
+}
+}
+
+// Create Role Assignments for Management Groups
+module mgRbac '../authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
+  name: 'ManagementGroup-Rbac-${roleAssignment.managementGroupName}-${index}'  
+  scope: managementGroup(roleAssignment.managementGroupName)
   dependsOn: [
-    resource_managementGroups
+    mg
   ]
   params: {
+    location: location
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
-    principalIds: roleAssignment.principalIds
+    principalId: roleAssignment.principalIds
     principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    resourceId: resourceId('Microsoft.Management/managementGroups', roleAssignment.managementGroupName)
+    managementGroupId: resourceId('Microsoft.Management/managementGroups', roleAssignment.managementGroupName)
   }
-  scope: managementGroup(roleAssignment.managementGroupName)
 }]
 
 // Move Subscriptions to Management Groups
-module movesubs './moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
+module moveSubs '../management/moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'deploy-movesubs-${subscription.subscriptionId}-${deploymentId}'
+  scope: tenant()
   dependsOn: [
-    resource_managementGroups
+    mg
   ]
   params: {
       subscriptionId: subscription.subscriptionId
@@ -60,20 +86,20 @@ module movesubs './moveSubs/deploy.bicep' = [ for subscription in subscriptions:
   }
 }]
 
-
-// Configure Default Management Group Settings
-resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
-    name: tenantid
-}
-
-resource mg_settings 'Microsoft.Management/managementGroups/settings@2021-04-01' = {
-  parent: rootmg
-  name: 'default'
+// Create Role Assignments for Subscriptions
+module subRbac '../authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
+  name: 'subscription-Rbac-${roleAssignment.subscriptionId}-${index}'
+  scope: subscription(roleAssignment.subscriptionId)
   dependsOn: [
-    resource_managementGroups
+    mg
   ]
-  properties: {
-      defaultManagementGroup: '/providers/Microsoft.Management/managementGroups/${onboardmg}'
-      requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
+  params: {
+    location: location
+    description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
+    principalId: roleAssignment.principalIds
+    principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
+    roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
+    subscriptionId: roleAssignment.subscriptionId
   }
-}
+}]
+
