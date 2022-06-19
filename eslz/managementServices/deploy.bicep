@@ -91,6 +91,9 @@ module siem_rg '../resourceGroups/deploy.bicep'= {
 module loga '../workspaces/deploy.bicep' = {
   name: 'loga-${uniqueString(deployment().name, location)}-${lawName}'
   scope: resourceGroup(rgName)
+  dependsOn: [
+    siem_rg
+  ]
   params:{
     mgmtsubid: mgmtsubid
     connsubid: connsubid
