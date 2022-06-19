@@ -22,6 +22,7 @@ module vnet './virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     //dnsServers: vNet.dnsServers
     //ddosProtectionPlanId: vNet.ddosProtectionPlanId
+    
   }
 }]
 

@@ -97,10 +97,12 @@ var ddosProtectionPlan = {
   id: ddosProtectionPlanId
 }
 
+param hubSubID string = 'e6c61ac5-feea-4459-93fc-7131f8352553'
+param hubRg string = 'rg-ccs-prod-usva-vnet'
 
 resource hubVirtualNetwork 'Microsoft.Network/virtualnetworks@2015-05-01-preview' existing = {
   name: 'vnet-ccs-prod-usva-conn'
-  scope: resourceGroup('e6c61ac5-feea-4459-93fc-7131f8352553', 'rg-ccs-prod-usva-vnet')
+  scope: resourceGroup(hubSubID, hubRg)
 }
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
