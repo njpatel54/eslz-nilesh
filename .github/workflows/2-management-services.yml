@@ -48,6 +48,7 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
+            --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
@@ -75,6 +76,7 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
+            --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
@@ -103,6 +105,7 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
+            --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
