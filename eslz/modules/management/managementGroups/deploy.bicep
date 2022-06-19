@@ -1,4 +1,4 @@
-targetScope = 'managementGroup'
+targetScope = 'tenant'
 
 @description('Required. The group ID of the Management group.')
 param name string
