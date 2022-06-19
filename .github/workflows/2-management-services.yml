@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./
+      run: az bicep build --file .eslz/managementServices/deploy.bicep
   validate: 
     runs-on: ubuntu-latest
     needs: [lint]
@@ -45,9 +45,8 @@ jobs:
         inlineScript: |
           az deployment sub validate \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/management-services/deploy.bicep \
-            --parameters ./eslz/management-services/.parameters/parameters.json \
-            --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
+            --template-file .eslz/managementServices/deploy.bicep \
+            --parameters .eslz/managementServices/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
@@ -78,9 +77,8 @@ jobs:
         inlineScript: |
           az deployment sub what-if \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/management-services/deploy.bicep \
-            --parameters ./eslz/management-services/.parameters/parameters.json \
-            --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
+            --template-file .eslz/managementServices/deploy.bicep \
+            --parameters .eslz/managementServices/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                           connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                           idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
@@ -112,9 +110,8 @@ jobs:
         inlineScript: |
           az deployment sub create \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/management-services/deploy.bicep \
-            --parameters ./eslz/management-services/.parameters/parameters.json \
-            --parameters ./eslz/management-services/namespaces/.parameters/parameters.json \
+            --template-file .eslz/managementServices/deploy.bicep \
+            --parameters .eslz/managementServices/.parameters/parameters.json \
             --parameters mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
