@@ -65,9 +65,11 @@ jobs:
         # Runs a command with multiple lines
         inlineScript: |
           az deployment tenant validate \
+            --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementGroups/deploy.bicep \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
-            --location ${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }}
+
 
   # "preview" job ---> will verify what exactly will be created, updated, and deleted. 
   # Verify the output of what-if operation and determine whether to continue on to the deployment or not - This step is typically involves human reviewing the output from what-if command and making decision.
@@ -92,9 +94,10 @@ jobs:
         with:
           inlineScript: |
             az deployment tenant what-if \
+              --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/managementGroups/deploy.bicep \
               --parameters ./eslz/managementGroups/.parameters/parameters.json \
-              --location ${{ secrets.AZURE_LOCATION }}
+              --parameters location=${{ secrets.AZURE_LOCATION }}
                 
   deploy:
       runs-on: ubuntu-latest
@@ -118,6 +121,7 @@ jobs:
         with:
           inlineScript: |
             az deployment tenant create \
+              --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/managementGroups/deploy.bicep \
               --parameters ./eslz/managementGroups/.parameters/parameters.json \
-              --location ${{ secrets.AZURE_LOCATION }}
+              --parameters location=${{ secrets.AZURE_LOCATION }}
