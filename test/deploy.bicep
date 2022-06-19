@@ -1,5 +1,4 @@
 //targetScope = 'subscription'
-
 //param subscriptionId string
 param resourceGroupName string
 
