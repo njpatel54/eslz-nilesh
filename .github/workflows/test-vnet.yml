@@ -40,7 +40,8 @@ jobs:
             --name 'Deploy-Platform-Hub-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./test/plat.hub.vnet.bicep \
-            --parameters ./test/virtualNetworks/.parameters/plat.hub.parameters.json
+            --parameters ./test/virtualNetworks/.parameters/plat.hub.parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
 
     - uses: Azure/cli@v1
       name: 'Deploy - Platform Spoke VNets'
@@ -51,4 +52,5 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./test/plat.spoke.vnet.bicep \
             --parameters ./test/virtualNetworks/.parameters/plat.spoke.parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }}
+            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
+                         location=${{ secrets.AZURE_LOCATION }}
