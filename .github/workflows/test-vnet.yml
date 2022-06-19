@@ -50,7 +50,7 @@ jobs:
           az deployment sub create \
             --name 'Deploy-Platform-Spoke-VNets' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./test/plat.spoke.vnet.bicep \
+            --template-file ./test/plat.spoke.vnets.bicep \
             --parameters ./test/virtualNetworks/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }}
