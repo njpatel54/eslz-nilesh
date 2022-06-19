@@ -1,6 +1,6 @@
 //targetScope = 'subscription'
 
-param subscriptionId string
+//param subscriptionId string
 param resourceGroupName string
 
 @description('Optional. Hub Virtual Network configurations.')
@@ -19,7 +19,7 @@ module vnet './virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets
     name: vNet.name
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
-    subscriptionId: subscriptionId
+    subscriptionId: vNet.subscriptionId
     //dnsServers: vNet.dnsServers
     //ddosProtectionPlanId: vNet.ddosProtectionPlanId
     
