@@ -93,16 +93,12 @@
           {
               "managementGroupName": "mg-A2g",
               "roleDefinitionIdOrName": "Management Group Reader",
-              "principalIds": [
-                  "22892111-6354-43e4-95d8-ce4e8741b018"
-              ]
+              "principalId": "22892111-6354-43e4-95d8-ce4e8741b018"
           },
           {
               "managementGroupName": "mg-A2g",
               "roleDefinitionIdOrName": "Management Group Contributor",
-              "principalIds": [
-                  "2e10cea8-b422-4643-bb44-28d625d83ce9"
-              ]
+              "principalId": "2e10cea8-b422-4643-bb44-28d625d83ce9"
           }
         ]
       },
@@ -111,16 +107,12 @@
           {
               "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
               "roleDefinitionIdOrName": "Contributor",
-                "principalIds": [
-                    "40b2dd0e-b831-4f53-b691-540cacbdd281"
-                ]
+              "principalId": "40b2dd0e-b831-4f53-b691-540cacbdd281"
           },
           {
               "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
               "roleDefinitionIdOrName": "Contributor",
-              "principalIds": [
-                    "77037bbd-6c47-446f-aeaf-52ee92ced21d"
-                ]
+              "principalId": "77037bbd-6c47-446f-aeaf-52ee92ced21d"
           }
         ]
       }
