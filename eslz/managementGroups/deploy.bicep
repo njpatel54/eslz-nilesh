@@ -1,4 +1,4 @@
-targetScope = 'managementGroup'
+targetScope = 'tenant'
 
 @sys.description('Optional. Location deployment metadata.')
 param location string
@@ -30,6 +30,7 @@ param deploymentId string = substring(uniqueString(utcNow()),0,6)
 @batchSize(1)
 module mg '../modules/management/managementGroups/deploy.bicep' = [ for managementGroup in managementGroups: {
   name: 'deploy-mg-${managementGroup.name}'
+  scope: managementGroup(managementGroup.name)
   params:{
     location: location
     name: managementGroup.name
