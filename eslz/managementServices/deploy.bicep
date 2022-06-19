@@ -68,32 +68,36 @@ param opscope string
 param region string
 
 // Build param values using string interpolation
-param siem_rg_name string = 'rg-${projowner}-${opscope}-${region}-siem'
-param loganalytics_workspace_name string = 'log-${projowner}-${opscope}-${region}-${suffix}'
-param azureautomation_name string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
-param storageaccount_name string = toLower('st${projowner}${opscope}${region}${suffix}')
+param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+param lawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
+param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
+param stgAcctName string = toLower('st${projowner}${opscope}${region}${suffix}')
 
 // From Parameters Files
 param storageaccount_sku string
 
 // Create Resoruce Group
-resource siem_rg 'Microsoft.Resources/resourceGroups@2021-04-01'={
-  name: siem_rg_name
-  location: location
-  tags: combinedTags
+module siem_rg '../resourceGroups/deploy.bicep'= {
+  name: 'rg-${uniqueString(deployment().name, location)}-${rgName}'
+  scope: subscription(mgmtsubid)
+  params: {
+    name: rgName
+    location: location
+    tags: combinedTags
+  }
 }
 
 // Create Log Analytics Workspace
 module loga '../workspaces/deploy.bicep' = {
-  name: 'loga_${suffix}'
-  scope: siem_rg
+  name: 'loga-${uniqueString(deployment().name, location)}-${lawName}'
+  scope: resourceGroup(rgName)
   params:{
     mgmtsubid: mgmtsubid
     connsubid: connsubid
     idensubid: idensubid
     ssvcsubid: ssvcsubid
-    aaname: azureautomation_name
-    workspacename: loganalytics_workspace_name
+    aaname: automationAcctName
+    workspacename: lawName
     location: location
     tags: combinedTags
   }
@@ -101,14 +105,14 @@ module loga '../workspaces/deploy.bicep' = {
 
 // Create Storage Account
 module sa '../storageAccounts/deploy.bicep' = {
-  name: 'sa_${suffix}'
-  scope: siem_rg
+  name: 'sa-${uniqueString(deployment().name, location)}-${stgAcctName}'
+  scope: resourceGroup(rgName)
   dependsOn: [
     loga
   ]
   params: {
     location: location
-    storageAccountName: storageaccount_name
+    storageAccountName: stgAcctName
     storageSKU: storageaccount_sku
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: combinedTags
@@ -118,7 +122,7 @@ module sa '../storageAccounts/deploy.bicep' = {
 // Create Event Hub Namespace and Event Hub
 module eh '../namespaces/deploy.bicep' = {
   name: 'eh_${suffix}'
-  scope: siem_rg
+  scope: resourceGroup(rgName)
   dependsOn: [
     loga
   ]
