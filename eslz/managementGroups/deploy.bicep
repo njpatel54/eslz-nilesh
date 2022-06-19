@@ -28,7 +28,7 @@ param deploymentId string = substring(uniqueString(utcNow()),0,6)
 
 // Create Management Groups
 @batchSize(1)
-module mg '../management/managementGroups/deploy.bicep' = [ for managementGroup in managementGroups: {
+module mg '../modules/management/managementGroups/deploy.bicep' = [ for managementGroup in managementGroups: {
   name: 'deploy-mg-${managementGroup.name}'
   params:{
     location: location
@@ -57,7 +57,7 @@ properties: {
 }
 
 // Create Role Assignments for Management Groups
-module mgRbac '../authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
+module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
   name: 'ManagementGroup-Rbac-${roleAssignment.managementGroupName}-${index}'  
   scope: managementGroup(roleAssignment.managementGroupName)
   dependsOn: [
@@ -74,7 +74,7 @@ module mgRbac '../authorization/roleAssignments/managementGroup/deploy.bicep' = 
 }]
 
 // Move Subscriptions to Management Groups
-module moveSubs '../management/moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
+module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'deploy-movesubs-${subscription.subscriptionId}-${deploymentId}'
   scope: tenant()
   dependsOn: [
@@ -87,7 +87,7 @@ module moveSubs '../management/moveSubs/deploy.bicep' = [ for subscription in su
 }]
 
 // Create Role Assignments for Subscriptions
-module subRbac '../authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
+module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
   name: 'subscription-Rbac-${roleAssignment.subscriptionId}-${index}'
   scope: subscription(roleAssignment.subscriptionId)
   dependsOn: [

@@ -94,7 +94,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 param diagnosticEventHubName string = ''
 
 // Create Resoruce Group
-module siem_rg '../resourceGroups/deploy.bicep'= {
+module siem_rg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}-${rgName}'
   scope: subscription(mgmtsubid)
   params: {
@@ -105,7 +105,7 @@ module siem_rg '../resourceGroups/deploy.bicep'= {
 }
 
 // Create Log Analytics Workspace
-module loga '../workspaces/deploy.bicep' = {
+module loga '../modules/workspaces/deploy.bicep' = {
   name: 'loga-${uniqueString(deployment().name, location)}-${lawName}'
   scope: resourceGroup(rgName)
   dependsOn: [
@@ -124,7 +124,7 @@ module loga '../workspaces/deploy.bicep' = {
 }
 
 // Create Storage Account
-module sa '../storageAccounts/deploy.bicep' = {
+module sa '../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${uniqueString(deployment().name, location)}-${stgAcctName}'
   scope: resourceGroup(rgName)
   dependsOn: [
@@ -140,7 +140,7 @@ module sa '../storageAccounts/deploy.bicep' = {
 }
 
 // Create Event Hub Namespace and Event Hub
-module eh '../namespaces/deploy.bicep' = {
+module eh '../modules/namespaces/deploy.bicep' = {
   name: 'eh_${suffix}'
   scope: resourceGroup(rgName)
   dependsOn: [
@@ -157,7 +157,7 @@ module eh '../namespaces/deploy.bicep' = {
 }
 
 // Configure Diagnostics Settings for Subscriptions
-module diagSettings '../insights/diagnosticSettings/deploy.bicep' = [ for subscription in subscriptions: {
+module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'diagSettings-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
   dependsOn: [
