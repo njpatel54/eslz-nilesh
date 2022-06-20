@@ -52,7 +52,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
     principalId: roleAssignment.principalId
     principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    managementGroupId: resourceId('Microsoft.Management/managementGroups', roleAssignment.managementGroupName)
+    managementGroupId: roleAssignment.managementGroupName              //resourceId('Microsoft.Management/managementGroups', roleAssignment.managementGroupName)
   }
 }]
 
