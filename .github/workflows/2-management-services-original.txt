@@ -45,6 +45,7 @@ jobs:
       with:
         inlineScript: |
           az deployment sub validate \
+            --name 'Deploy-Platform-Management-Services' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
@@ -74,6 +75,7 @@ jobs:
         inlineScript: |
           az deployment sub what-if \
             --location ${{ secrets.AZURE_LOCATION }} \
+            --name 'Deploy-Platform-Management-Services' \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
@@ -102,6 +104,7 @@ jobs:
       with:
         inlineScript: |
           az deployment sub create \
+            --name 'Deploy-Platform-Management-Services' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \

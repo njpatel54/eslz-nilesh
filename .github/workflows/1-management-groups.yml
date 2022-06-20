@@ -65,6 +65,7 @@ jobs:
         # Runs a command with multiple lines
         inlineScript: |
           az deployment tenant validate \
+            --name 'Deploy-Platform-Management-Groups' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementGroups/deploy.bicep \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
@@ -94,6 +95,7 @@ jobs:
         with:
           inlineScript: |
             az deployment tenant what-if \
+              --name 'Deploy-Platform-Management-Groups' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/managementGroups/deploy.bicep \
               --parameters ./eslz/managementGroups/.parameters/parameters.json \
@@ -121,6 +123,7 @@ jobs:
         with:
           inlineScript: |
             az deployment tenant create \
+              --name 'Deploy-Platform-Management-Groups' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/managementGroups/deploy.bicep \
               --parameters ./eslz/managementGroups/.parameters/parameters.json \
