@@ -10,6 +10,9 @@ param name string = '${uniqueString(tenant().tenantId)}-ActivityLog'
 @minValue(0)
 @maxValue(365)
 param diagnosticLogsRetentionInDays int = 365
+
+@sys.description('Optional. Location deployment metadata.')
+param location string
 */
 
 @description('Optional. Resource ID of the diagnostic storage account.')
@@ -34,8 +37,7 @@ param diagnosticLogCategoriesToEnable array = [
   'Policy'
 ]
 
-@sys.description('Optional. Location deployment metadata.')
-param location string
+
 
 var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
   category: category

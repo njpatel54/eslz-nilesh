@@ -44,8 +44,10 @@ param diagnosticLogCategoriesToEnable array = [
   'ResourceHealth'
 ]
 
+/*
 @sys.description('Optional. Location deployment metadata.')
 param location string
+*/
 
 var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
   category: category
