@@ -189,7 +189,7 @@ module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ fo
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eh.name
-    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/${eh.name}/AuthorizationRules', 'RootManageSharedAccessKey')
+    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/${eventhubNamespaceName}/AuthorizationRules', 'RootManageSharedAccessKey')
   }
 }]
 
