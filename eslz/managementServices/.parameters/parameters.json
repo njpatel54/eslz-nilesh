@@ -24,7 +24,7 @@
       "value":"Standard_LRS"
     },
     "eventhubNamespaceName": {
-      "value": "evhns-ccs-prod-usva-0001"
+      "value": "evhns-ccs-prod-usva-siem"
     },
     "authorizationRules": {
         "value": [
@@ -48,10 +48,7 @@
     "eventHubs": {
         "value": [
             {
-                "name": "evh-ccs-prod-usva-001"
-            },
-            {
-                "name": "evh-ccs-prod-usva-002",
+                "name": "evh-ccs-prod-usva-siem",
                 "authorizationRules": [
                     {
                         "name": "RootManageSharedAccessKey",

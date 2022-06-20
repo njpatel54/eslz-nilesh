@@ -12,7 +12,6 @@ param eventHubs array = []
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
-
 @description('Required. Default Management Group where newly created Subscription will be added to.')
 param onboardmg string
 
@@ -98,7 +97,7 @@ param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suff
 
 // From Parameters Files
 param storageaccount_sku string
-/*
+
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
 
@@ -110,7 +109,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
-*/
+
 // Create Resoruce Group
 module siem_rg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}-${rgName}'
@@ -174,7 +173,6 @@ module eh '../modules/namespaces/deploy.bicep' = {
   }
 }
 
-/*
 // Configure Diagnostics Settings for Subscriptions
 module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'diagSettings-${subscription.subscriptionId}'
@@ -187,10 +185,9 @@ module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ fo
   ]
   params:{
     location: location
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubName: diagnosticEventHubName
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    //diagnosticEventHubName: eh.outputs.
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
   }
 }]
-*/
