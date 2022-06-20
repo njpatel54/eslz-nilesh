@@ -5,7 +5,7 @@
         "hubVnetName": {
             "value": "vnet-ccs-prod-usva-conn"
         },
-        "hubVnetsubscriptionId": {
+        "hubVnetSubscriptionId": {
             "value": "e6c61ac5-feea-4459-93fc-7131f8352553"
         },
         "hubVnetAddressPrefixes": {

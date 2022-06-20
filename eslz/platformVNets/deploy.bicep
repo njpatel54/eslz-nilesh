@@ -1,7 +1,7 @@
 targetScope = 'subscription'
 
 @description('Required. Subscription ID.')
-param subscriptionId string
+param hubVnetSubscriptionId string
 
 @description('Required. The Virtual Network (vNet) Name.')
 param hubVnetName string
@@ -78,7 +78,7 @@ param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}'
-  scope: subscription(subscriptionId)
+  scope: subscription(hubVnetSubscriptionId)
   params: {
     name: resourceGroupName
     location: location
@@ -89,7 +89,7 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
 // Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'vnet-${uniqueString(deployment().name, location)}-${hubVnetName}'
-  scope: resourceGroup(subscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
   ]
@@ -99,7 +99,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
     name: hubVnetName
     subnets: hubVnetSubnets
     virtualNetworkPeerings: hubVnetVirtualNetworkPeerings
-    subscriptionId: subscriptionId
+    subscriptionId: hubVnetSubscriptionId
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
