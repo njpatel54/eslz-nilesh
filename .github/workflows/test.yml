@@ -1,4 +1,4 @@
-name: 3 - platform vnets
+name: Test - Github Action - Create Secrects
 
 on:
   #push:
@@ -35,20 +35,10 @@ jobs:
       name: 'Deploy - Platform Hub-Spoke VNet'
       with:
         inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Platform-Hub-Spoke-VNet' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/deploy.bicep \
-            --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
           id=$(az eventhubs namespace authorization-rule list --subscription 'aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889' --resource-group rg-ccs-prod-usva-siem --namespace-name evhns-ccs-prod-usva-siem --query "[?contains(name,'RootManageSharedAccessKey')].{ID:id}" -o tsv)
           
     - uses: gliech/create-github-secret-action@v1
+      name: 'Create GitHub Secret'
       with:
        name: AZURE_TEST
        value: $id
