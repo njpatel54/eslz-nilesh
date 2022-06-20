@@ -12,7 +12,7 @@ param eventHubs array = []
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
-/*
+
 @description('Required. Default Management Group where newly created Subscription will be added to.')
 param onboardmg string
 
@@ -33,7 +33,7 @@ param subscriptions array
 
 @description('Required. Azure AD Tenant ID.')
 param tenantid string
-
+/*
 @description('Required. Subscription ID of Connectivity Subscription.')
 param connsubid string
 
