@@ -20,6 +20,22 @@
     "region":{
       "value":"usva"
     },
+    "gallerySolutions": {
+      "value": [
+        "AgentHealthAssessment",
+        "AntiMalware",
+        "AzureActivity",
+        "ChangeTracking",
+        "Security",
+        "SecurityInsights",
+        "ServiceMap",
+        "SQLAdvancedThreatProtection",
+        "SQLAssessment",
+        "SQLVulnerabilityAssessment",
+        "Updates",
+        "VMInsights"
+      ]
+    },
     "storageaccount_sku": {
       "value":"Standard_LRS"
     },

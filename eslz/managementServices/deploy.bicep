@@ -3,6 +3,9 @@ targetScope = 'tenant'
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string
 
+@description('Optional. List of gallerySolutions to be created in the log analytics workspace.')
+param gallerySolutions array = []
+
 @description('Required. Name for the Event Hub Namespace.')
 param eventhubNamespaceName string
 
@@ -35,16 +38,6 @@ param subscriptions array
 
 @description('Required. Azure AD Tenant ID.')
 param tenantid string
-/*
-@description('Required. Subscription ID of Connectivity Subscription.')
-param connsubid string
-
-@description('Required. Subscription ID of Identity Subscription.')
-param idensubid string
-
-@description('Required. Subscription ID of Sandbox Subscription.')
-param ssvcsubid string
-*/
 
 @description('Required. Location for all resources.')
 param location string
@@ -125,21 +118,17 @@ module siem_rg '../modules/resourceGroups/deploy.bicep'= {
 }
 
 // Create Log Analytics Workspace
-module loga '../modules/workspaces/deploy.bicep' = {
+module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'loga-${uniqueString(deployment().name, location)}-${lawName}'
   scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     siem_rg
   ]
   params:{
-    //mgmtsubid: mgmtsubid
-    //connsubid: connsubid
-    //idensubid: idensubid
-    //ssvcsubid: ssvcsubid
-    aaname: automationAcctName
-    workspacename: lawName
+    name: lawName
     location: location
     tags: combinedTags
+    gallerySolutions: gallerySolutions    
   }
 }
 
@@ -174,6 +163,28 @@ module eh '../modules/namespaces/deploy.bicep' = {
     authorizationRules: authorizationRules
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
+  }
+}
+
+// Create Automation Account and link it to Log Analytics Workspace
+module aa '../modules/automation/automationAccounts/deploy.bicep' = {
+  name: 'aa-${uniqueString(deployment().name, location)}-${automationAcctName}'
+  scope: resourceGroup(mgmtsubid, rgName)
+  dependsOn: [
+    siem_rg
+    loga
+    sa
+    eh
+  ]
+  params:{
+    name: automationAcctName
+    location: location
+    linkedWorkspaceResourceId: loga.outputs.resourceId
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
+    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+    
   }
 }
 

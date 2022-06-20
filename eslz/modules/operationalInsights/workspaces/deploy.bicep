@@ -85,9 +85,6 @@ param roleAssignments array = []
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
   'Audit'
@@ -129,18 +126,6 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
 var logAnalyticsSearchVersion = 1
 
 var enableReferencedModulesTelemetry = false
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
   location: location
@@ -235,7 +220,7 @@ module logAnalyticsWorkspace_dataSources 'dataSources/deploy.bicep' = [for (data
   }
 }]
 
-module logAnalyticsWorkspace_solutions '../../Microsoft.OperationsManagement/solutions/deploy.bicep' = [for (gallerySolution, index) in gallerySolutions: if (!empty(gallerySolutions)) {
+module logAnalyticsWorkspace_solutions '../../operationsManagement/solutions/deploy.bicep' = [for (gallerySolution, index) in gallerySolutions: if (!empty(gallerySolutions)) {
   name: '${uniqueString(deployment().name, location)}-LAW-Solution-${index}'
   params: {
     name: gallerySolution.name
@@ -243,7 +228,6 @@ module logAnalyticsWorkspace_solutions '../../Microsoft.OperationsManagement/sol
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
     product: contains(gallerySolution, 'product') ? gallerySolution.product : 'OMSGallery'
     publisher: contains(gallerySolution, 'publisher') ? gallerySolution.publisher : 'Microsoft'
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }]
 
