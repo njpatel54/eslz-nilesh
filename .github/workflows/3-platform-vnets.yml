@@ -16,7 +16,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [preview]
+    #needs: [preview]
     environment: Production
     steps:
     - uses: actions/checkout@v2
