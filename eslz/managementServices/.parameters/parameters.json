@@ -68,6 +68,9 @@
                 ]
             }
         ]
+    },
+    "diagSettingName": {
+      "value":"centralized-logging-diagSetting"
     }
   }
 }
