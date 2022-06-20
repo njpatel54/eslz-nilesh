@@ -93,25 +93,19 @@ param roleAssignments array = []
 
 @description('Optional. Tags of the Automation Account resource.')
 param tags object = {}
-/*
+
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
   'JobLogs'
   'JobStreams'
   'DscNodeStatus'
+  'AuditEvent'
 ])
 param diagnosticLogCategoriesToEnable array = [
   'JobLogs'
   'JobStreams'
   'DscNodeStatus'
-]
-*/
-@description('Optional. The name of logs that will be streamed.')
-@allowed([
-  'All'
-])
-param diagnosticLogCategoriesToEnable array = [
-  'All'
+  'AuditEvent'
 ]
 
 @description('Optional. The name of metrics that will be streamed.')
