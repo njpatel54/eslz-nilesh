@@ -38,7 +38,7 @@ jobs:
       name: 'Deploying Management Services'
       with:
         inlineScript: |
-          az deployment sub create \
+          az deployment tenant create \
             --name 'Deploy-Platform-Management-Services' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \

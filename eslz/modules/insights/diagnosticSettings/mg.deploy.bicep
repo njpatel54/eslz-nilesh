@@ -1,14 +1,16 @@
-targetScope = 'subscription'
+targetScope = 'managementGroup'
 
 @description('Optional. Name of the ActivityLog diagnostic settings.')
 @minLength(1)
 @maxLength(260)
-param name string = '${uniqueString(subscription().id)}-ActivityLog'
+param name string = '${uniqueString(managementGroup().id)}-ActivityLog'
 
+/*
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)
 @maxValue(365)
 param diagnosticLogsRetentionInDays int = 365
+*/
 
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
@@ -25,23 +27,11 @@ param diagnosticEventHubName string = ''
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
   'Administrative'
-  'Security'
-  'ServiceHealth'
-  'Alert'
-  'Recommendation'
   'Policy'
-  'Autoscale'
-  'ResourceHealth'
 ])
 param diagnosticLogCategoriesToEnable array = [
   'Administrative'
-  'Security'
-  'ServiceHealth'
-  'Alert'
-  'Recommendation'
   'Policy'
-  'Autoscale'
-  'ResourceHealth'
 ]
 
 @sys.description('Optional. Location deployment metadata.')
@@ -50,10 +40,10 @@ param location string
 var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
   category: category
   enabled: true
-  retentionPolicy: {
-    enabled: true
-    days: diagnosticLogsRetentionInDays
-  }
+//  retentionPolicy: {
+//    enabled: true
+//    days: diagnosticLogsRetentionInDays
+//  }
 }]
 
 resource diagnosticSetting 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
@@ -73,5 +63,5 @@ output name string = diagnosticSetting.name
 @description('The resource ID of the diagnostic settings.')
 output resourceId string = diagnosticSetting.id
 
-@description('The name of the subscription to deploy into.')
-output subscriptionName string = subscription().displayName
+@description('The name of the management group to deploy into.')
+output mgName string = managementGroup().name

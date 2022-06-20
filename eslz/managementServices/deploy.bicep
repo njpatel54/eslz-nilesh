@@ -1,4 +1,4 @@
-targetScope = 'subscription'
+targetScope = 'tenant'
 
 @description('Required. Name for the Event Hub Namespace.')
 param eventhubNamespaceName string
@@ -124,7 +124,7 @@ module siem_rg '../modules/resourceGroups/deploy.bicep'= {
 // Create Log Analytics Workspace
 module loga '../modules/workspaces/deploy.bicep' = {
   name: 'loga-${uniqueString(deployment().name, location)}-${lawName}'
-  scope: resourceGroup(rgName)
+  scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     siem_rg
   ]
@@ -143,7 +143,7 @@ module loga '../modules/workspaces/deploy.bicep' = {
 // Create Storage Account
 module sa '../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${uniqueString(deployment().name, location)}-${stgAcctName}'
-  scope: resourceGroup(rgName)
+  scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     loga
   ]
@@ -159,7 +159,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
 // Create Event Hub Namespace and Event Hub
 module eh '../modules/namespaces/deploy.bicep' = {
   name: 'eh_${suffix}'
-  scope: resourceGroup(rgName)
+  scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     loga
   ]
@@ -173,24 +173,29 @@ module eh '../modules/namespaces/deploy.bicep' = {
     diagnosticWorkspaceId: loga.outputs.resourceId
   }
 }
-/*
-// Retrieve Event Hub Name
-resource namespace 'Microsoft.EventHub/namespaces@2021-06-01-preview' existing = {
-  name: eventhubNamespaceName
-  scope: resourceGroup(rgName)
-}
 
-resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2021-06-01-preview' existing = {
-  name: eventHubs[0].name
-  parent: namespace
-}
-
-output namespaceResourceId string = namespace.id
-output eventHubName string = eventHub.name
-*/
+// Configure Diagnostics Settings for Management Groups
+module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' = [ for managementGroup in managementGroups: {
+  name: 'diagSettings-${managementGroup.name}'
+  scope: managementGroup(managementGroup.name)
+  dependsOn: [
+    siem_rg
+    loga
+    sa
+    eh
+  ]
+  params:{
+    name: 'Logs-to-platofrm-mgmt-diagSetting'
+    location: location
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    diagnosticEventHubName: eventHubs[0].name
+    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+  }
+}]
 
 // Configure Diagnostics Settings for Subscriptions
-module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ for subscription in subscriptions: {
+module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'diagSettings-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
   dependsOn: [
@@ -200,6 +205,7 @@ module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ fo
     eh
   ]
   params:{
+    name: 'Logs-to-platofrm-mgmt-diagSetting'
     location: location
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
