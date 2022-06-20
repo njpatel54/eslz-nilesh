@@ -165,11 +165,12 @@ module eh '../modules/namespaces/deploy.bicep' = {
   ]
   params: {
     location: location
-    eventhubNamespaceName: eventhubNamespaceName
-    diagnosticWorkspaceId: loga.outputs.resourceId
     tags: combinedTags
+    eventhubNamespaceName: eventhubNamespaceName
     eventHubs: eventHubs
     authorizationRules: authorizationRules
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
   }
 }
 
@@ -187,7 +188,7 @@ module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ fo
     location: location
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
-    //diagnosticEventHubName: eh.outputs.
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: eh.name
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
   }
 }]
