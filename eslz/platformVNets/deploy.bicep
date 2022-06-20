@@ -124,6 +124,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
   scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
   dependsOn: [
     spokeRg
+    hubVnet
   ]
   params:{
     location: location
