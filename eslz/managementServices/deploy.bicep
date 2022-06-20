@@ -12,6 +12,27 @@ param eventHubs array = []
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
+@description('Required. Default Management Group where newly created Subscription will be added to.')
+param onboardmg string
+
+@description('Required. Indicates whether RBAC access is required upon group creation under the root Management Group. If set to true, user will require Microsoft.Management/managementGroups/write action on the root Management Group scope in order to create new Groups directly under the root. .')
+param requireAuthorizationForGroupCreation bool
+
+@description('Required. Array of Management Groups objects.')
+param managementGroups array
+
+@description('Required. Array of role assignment objects to define RBAC on management groups.')
+param mgRoleAssignments array = []
+
+@description('Required. Array of role assignment objects to define RBAC on subscriptions.')
+param subRoleAssignments array = []
+
+@description('Required. Array of Subscription objects.')
+param subscriptions array
+
+@description('Required. Azure AD Tenant ID.')
+param tenantid string
+
 /*
 @description('Required. Subscription ID of Connectivity Subscription.')
 param connsubid string
@@ -25,9 +46,6 @@ param ssvcsubid string
 
 @description('Required. Location for all resources.')
 param location string
-
-@description('Required. Array of Subscription objects.')
-param subscriptions array
 
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string = substring(uniqueString(utcNow()),0,4)
