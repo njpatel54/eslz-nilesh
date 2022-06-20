@@ -4,6 +4,7 @@ param name string
 @description('Required. Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Required. Subscription ID.')
 param subscriptionId string
 
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
