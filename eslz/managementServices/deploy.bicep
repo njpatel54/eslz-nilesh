@@ -173,6 +173,21 @@ module eh '../modules/namespaces/deploy.bicep' = {
     diagnosticWorkspaceId: loga.outputs.resourceId
   }
 }
+/*
+// Retrieve Event Hub Name
+resource namespace 'Microsoft.EventHub/namespaces@2021-06-01-preview' existing = {
+  name: eventhubNamespaceName
+  scope: resourceGroup(rgName)
+}
+
+resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2021-06-01-preview' existing = {
+  name: eventHubs[0].name
+  parent: namespace
+}
+
+output namespaceResourceId string = namespace.id
+output eventHubName string = eventHub.name
+*/
 
 // Configure Diagnostics Settings for Subscriptions
 module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ for subscription in subscriptions: {
@@ -188,9 +203,7 @@ module diagSettings '../modules/insights/diagnosticSettings/deploy.bicep' = [ fo
     location: location
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
-    //diagnosticEventHubName: eh.name
+    diagnosticEventHubName: eventHubs[0].name
     diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }]
-
-//param key string = 'RootManageSharedAccessKey'
