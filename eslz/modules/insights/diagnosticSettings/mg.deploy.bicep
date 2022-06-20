@@ -1,9 +1,9 @@
-targetScope = 'managementGroup'
+targetScope = 'tenant'
 
 @description('Optional. Name of the ActivityLog diagnostic settings.')
 @minLength(1)
 @maxLength(260)
-param name string = '${uniqueString(managementGroup().id)}-ActivityLog'
+param name string = '${uniqueString(tenant().tenantId)}-ActivityLog'
 
 /*
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
@@ -63,5 +63,7 @@ output name string = diagnosticSetting.name
 @description('The resource ID of the diagnostic settings.')
 output resourceId string = diagnosticSetting.id
 
+/*
 @description('The name of the management group to deploy into.')
-output mgName string = managementGroup().name
+output mgName string = managementGroup.name
+*/

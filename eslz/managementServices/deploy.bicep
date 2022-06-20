@@ -179,7 +179,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
 // Configure Diagnostics Settings for Management Groups
 module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' = [ for managementGroup in managementGroups: {
   name: 'diagSettings-${managementGroup.name}'
-  scope: managementGroup(managementGroup.name)
+//  scope: managementGroup(managementGroup.name)
   dependsOn: [
     siem_rg
     loga
