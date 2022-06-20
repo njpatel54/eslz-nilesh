@@ -62,7 +62,7 @@ param location string
 param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
 // Create Resoruce Group
-module rg '../resourceGroups/deploy.bicep'= [ for (vNet, index) in spokeVnets : {
+module rg '../modules/resourceGroups/deploy.bicep'= [ for (vNet, index) in spokeVnets : {
   name: 'rg-${uniqueString(deployment().name, location)}'
   scope: subscription(vNet.subscriptionId)
   params: {
@@ -73,7 +73,7 @@ module rg '../resourceGroups/deploy.bicep'= [ for (vNet, index) in spokeVnets : 
 }]
 
 // Create Virtual Network
-module vnet './virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
+module vnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
   name: 'vnet-${uniqueString(deployment().name, location)}-${vNet.name}'
   scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
   dependsOn: [

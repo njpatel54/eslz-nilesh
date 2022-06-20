@@ -21,8 +21,8 @@ jobs:
     - name: 'Lint and Build Bicep'
       shell: pwsh
       run: | 
-        az bicep build --file ./eslz/network/plat.hub.vnet.bicep
-        az bicep build --file ./eslz/network/plat.spoke.vnets.bicep
+        az bicep build --file ./eslz/platformVNets/plat.hub.vnet.bicep
+        az bicep build --file ./eslz/platformVNets/plat.spoke.vnets.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -47,8 +47,8 @@ jobs:
           az deployment sub validate \
             --name 'Deploy-Platform-Hub-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/network/plat.hub.vnet.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/plat.hub.parameters.json \
+            --template-file ./eslz/platformVNets/plat.hub.vnet.bicep \
+            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
@@ -62,8 +62,8 @@ jobs:
           az deployment sub validate \
             --name 'Deploy-Platform-Spoke-VNets' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/network/plat.spoke.vnets.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/plat.spoke.parameters.json \
+            --template-file ./eslz/platformVNets/plat.spoke.vnets.bicep \
+            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
@@ -94,8 +94,8 @@ jobs:
           az deployment sub what-if \
             --name 'Deploy-Platform-Hub-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/network/plat.hub.vnet.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/plat.hub.parameters.json \
+            --template-file ./eslz/platformVNets/plat.hub.vnet.bicep \
+            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
@@ -109,8 +109,8 @@ jobs:
           az deployment sub what-if \
             --name 'Deploy-Platform-Spoke-VNets' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/network/plat.spoke.vnets.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/plat.spoke.parameters.json \
+            --template-file ./eslz/platformVNets/plat.spoke.vnets.bicep \
+            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
@@ -142,8 +142,8 @@ jobs:
           az deployment sub create \
             --name 'Deploy-Platform-Hub-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/network/plat.hub.vnet.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/plat.hub.parameters.json \
+            --template-file ./eslz/platformVNets/plat.hub.vnet.bicep \
+            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
@@ -157,8 +157,8 @@ jobs:
           az deployment sub create \
             --name 'Deploy-Platform-Spoke-VNets' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/network/plat.spoke.vnets.bicep \
-            --parameters ./eslz/network/virtualNetworks/.parameters/plat.spoke.parameters.json \
+            --template-file ./eslz/platformVNets/plat.spoke.vnets.bicep \
+            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
