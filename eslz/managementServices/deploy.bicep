@@ -1,5 +1,7 @@
 targetScope = 'tenant'
 
+param diagSettingName string = 'centralized-logging-diagSetting'
+
 @description('Required. Name for the Event Hub Namespace.')
 param eventhubNamespaceName string
 
@@ -185,7 +187,7 @@ module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' =
     eh
   ]
   params:{
-    name: 'Logs-to-platofrm-mgmt-diagSetting'
+    name: diagSettingName
     location: location
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
@@ -205,7 +207,7 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
     eh
   ]
   params:{
-    name: 'Logs-to-platofrm-mgmt-diagSetting'
+    name: diagSettingName
     location: location
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
