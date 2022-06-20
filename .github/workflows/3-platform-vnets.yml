@@ -47,8 +47,7 @@ jobs:
             --name 'Deploy-Platform-Hub-Spoke-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/deploy.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
-            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
+            --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
@@ -80,8 +79,7 @@ jobs:
             --name 'Deploy-Platform-Hub-Spoke-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/deploy.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
-            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
+            --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
@@ -114,8 +112,7 @@ jobs:
             --name 'Deploy-Platform-Hub-Spoke-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/deploy.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
-            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
+            --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \

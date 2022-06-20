@@ -4,19 +4,19 @@ targetScope = 'subscription'
 param subscriptionId string
 
 @description('Required. The Virtual Network (vNet) Name.')
-param name string
+param hubVnetName string
 
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param addressPrefixes array
+param hubVnetAddressPrefixes array
 
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
-param subnets array = []
+param hubVnetSubnets array = []
 
 @description('Optional. Hub Virtual Network configurations.')
 param spokeVnets array = []
 
 @description('Optional. Virtual Network Peerings configurations')
-param virtualNetworkPeerings array = []
+param hubVnetVirtualNetworkPeerings array = []
 
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
@@ -88,17 +88,17 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
 
 // Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
-  name: 'vnet-${uniqueString(deployment().name, location)}-${name}'
+  name: 'vnet-${uniqueString(deployment().name, location)}-${hubVnetName}'
   scope: resourceGroup(subscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
   ]
   params:{
     location: location
-    addressPrefixes: addressPrefixes
-    name: name
-    subnets: subnets
-    virtualNetworkPeerings: virtualNetworkPeerings
+    addressPrefixes: hubVnetAddressPrefixes
+    name: hubVnetName
+    subnets: hubVnetSubnets
+    virtualNetworkPeerings: hubVnetVirtualNetworkPeerings
     subscriptionId: subscriptionId
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
