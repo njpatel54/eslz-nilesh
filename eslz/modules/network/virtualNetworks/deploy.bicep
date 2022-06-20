@@ -52,7 +52,7 @@ param roleAssignments array = []
 
 @description('Optional. Tags of the resource.')
 param tags object = {}
-
+/*
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
   'VMProtectionAlerts'
@@ -61,6 +61,15 @@ param diagnosticLogCategoriesToEnable array = [
   'VMProtectionAlerts'
 ]
 
+var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
+  category: category
+  enabled: true
+  retentionPolicy: {
+    enabled: true
+    days: diagnosticLogsRetentionInDays
+  }
+}]
+*/
 @description('Optional. The name of metrics that will be streamed.')
 @allowed([
   'AllMetrics'
@@ -71,15 +80,6 @@ param diagnosticMetricsToEnable array = [
 
 @description('Optional. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = '${name}-diagnosticSettings'
-
-var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
-  category: category
-  enabled: true
-  retentionPolicy: {
-    enabled: true
-    days: diagnosticLogsRetentionInDays
-  }
-}]
 
 var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
   category: metric
@@ -184,7 +184,7 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
     eventHubAuthorizationRuleId: !empty(diagnosticEventHubAuthorizationRuleId) ? diagnosticEventHubAuthorizationRuleId : null
     eventHubName: !empty(diagnosticEventHubName) ? diagnosticEventHubName : null
     metrics: diagnosticsMetrics
-    logs: diagnosticsLogs
+    //logs: diagnosticsLogs
   }
   scope: virtualNetwork
 }
