@@ -176,26 +176,6 @@ module eh '../modules/namespaces/deploy.bicep' = {
   }
 }
 
-// Configure Diagnostics Settings for Management Groups
-module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' = [ for managementGroup in managementGroups: {
-  name: 'diagSettings-${managementGroup.name}'
-//  scope: managementGroup(managementGroup.name)
-  dependsOn: [
-    siem_rg
-    loga
-    sa
-    eh
-  ]
-  params:{
-    name: diagSettingName
-    location: location
-    diagnosticStorageAccountId: sa.outputs.resourceId
-    diagnosticWorkspaceId: loga.outputs.resourceId
-    diagnosticEventHubName: eventHubs[0].name
-    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
-  }
-}]
-
 // Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'diagSettings-${subscription.subscriptionId}'
@@ -215,3 +195,26 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
     diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }]
+
+/*
+// Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)
+// Configure Diagnostics Settings for Management Groups
+module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' = [ for managementGroup in managementGroups: {
+  name: 'diagSettings-${managementGroup.name}'
+//  scope: managementGroup(managementGroup.name)
+  dependsOn: [
+    siem_rg
+    loga
+    sa
+    eh
+  ]
+  params:{
+    name: diagSettingName
+    location: location
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    diagnosticEventHubName: eventHubs[0].name
+    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+  }
+}]
+*/
