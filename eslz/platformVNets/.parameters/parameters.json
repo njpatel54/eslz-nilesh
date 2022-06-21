@@ -344,6 +344,91 @@
                                 }
                             ],
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+                        },
+                        {
+                            "name": "afwrc-css-prod-usva-0002",
+                            "priority": 6666,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Allow-sql",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Mssql",
+                                            "port": 1433
+                                        }
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "ruleType": "ApplicationRule",
+                                    "destinationAddresses": [],
+                                    "targetFqdns": [
+                                        "*"
+                                    ],
+                                    "fqdnTags": [],
+                                    "webCategories": [],
+                                    "targetUrls": [],
+                                    "terminateTLS": false                                    
+                                },
+                                {
+                                    "name": "allow-ase-tags",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "HTTP",
+                                            "port": "80"
+                                        },
+                                        {
+                                            "protocolType": "HTTPS",
+                                            "port": "443"
+                                        }
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "ruleType": "ApplicationRule",
+                                    "destinationAddresses": [],
+                                    "targetFqdns": [],
+                                    "fqdnTags": [
+                                        "AppServiceEnvironment",
+                                        "WindowsUpdate"
+                                    ],
+                                    "webCategories": [],
+                                    "targetUrls": [],
+                                    "terminateTLS": false
+                                },
+                                {
+                                    "name": "allow-ase-management",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "HTTP",
+                                            "port": "80"
+                                        },
+                                        {
+                                            "protocolType": "HTTPS",
+                                            "port": "443"
+                                        }
+                                    ],                                    
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "ruleType": "ApplicationRule",
+                                    "destinationAddresses": [],
+                                    "targetFqdns": [
+                                        "management.azure.com"
+                                    ],
+                                    "fqdnTags": [],
+                                    "webCategories": [],
+                                    "targetUrls": [],
+                                    "terminateTLS": false
+                                }
+                            ],
+                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                         }
                     ]
                 }
