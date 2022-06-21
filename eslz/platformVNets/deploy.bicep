@@ -97,12 +97,6 @@ param firewallPolicyRuleCollectionGroups array = []
 @description('Required. Firewall name.')
 param firewallName string = 'afw-${projowner}-${opscope}-${region}-0001'
 
-@description('Optional. Collection of application rule collections used by Azure Firewall.')
-param firewallApplicationRuleCollections array = []
-
-@description('Optional. Collection of network rule collections used by Azure Firewall.')
-param firewallNetworkRuleCollections array = []
-
 @description('Optional. Zone numbers e.g. 1,2,3.')
 param firewallZones array
 
@@ -128,9 +122,10 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
     hubRg
   ]
   params:{
-    location: location
-    addressPrefixes: hubVnetAddressPrefixes
     name: hubVnetName
+    location: location
+    tags: combinedTags
+    addressPrefixes: hubVnetAddressPrefixes
     subnets: hubVnetSubnets
     virtualNetworkPeerings: hubVnetVirtualNetworkPeerings
     subscriptionId: hubVnetSubscriptionId
@@ -161,9 +156,10 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
     hubVnet
   ]
   params:{
-    location: location
-    addressPrefixes: vNet.addressPrefixes
     name: vNet.name
+    location: location
+    tags: combinedTags    
+    addressPrefixes: vNet.addressPrefixes
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     subscriptionId: vNet.subscriptionId
@@ -182,8 +178,9 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     hubRg
   ]
   params:{
-    location: location
     name: firewallPublicIPName
+    location: location
+    tags: combinedTags 
     publicIPAllocationMethod: firewallPublicIPAllocationMethod
     skuName: firewallPpublicIPSkuName
     zones: firewallPublicIPzones
@@ -195,15 +192,16 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
 }
 
 // Create Fireall Policy and Firewall Policy Rule Collection Groups
-module afwrcg '../modules/network/firewallPolicies/deploy.bicep' = {
-  name: 'afwrcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
+module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
+  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
   ]
   params:{
-    location: location
     name: firewallPolicyName
+    location: location
+    tags: combinedTags
     defaultWorkspaceId: diagnosticWorkspaceId
     insightsIsEnabled: true
     ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
@@ -218,8 +216,9 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     hubVnet
   ]
   params:{
-    location: location
     name: firewallName
+    location: location
+    tags: combinedTags
     zones: firewallZones
     ipConfigurations: [
       {
@@ -228,8 +227,11 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
         subnetResourceId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureFirewallSubnet')
       }
     ]
-    applicationRuleCollections: firewallApplicationRuleCollections
-    networkRuleCollections: firewallNetworkRuleCollections
+    firewallPolicyId: afwp.outputs.resourceId
     roleAssignments: firewallRoleAssignments
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: diagnosticEventHubName   
   }
 }
