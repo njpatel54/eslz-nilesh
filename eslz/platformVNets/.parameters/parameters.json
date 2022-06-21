@@ -420,7 +420,7 @@
                                     "ruleType": "ApplicationRule",
                                     "destinationAddresses": [],
                                     "targetFqdns": [
-                                        "management.azure.com"
+                                        "management.usgovcloudapi.net"
                                     ],
                                     "fqdnTags": [],
                                     "webCategories": [],
