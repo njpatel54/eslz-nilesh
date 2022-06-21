@@ -218,7 +218,8 @@ output ehNamespaceName string = eh.outputs.name
 
 
 output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {  
-  name: subDiagSettings[i].outputs.name
+  subscriptionId: subDiagSettings[i].outputs.resourceId
+  diagnosticSettingsName: subDiagSettings[i].outputs.name
 }]
 
 /*
