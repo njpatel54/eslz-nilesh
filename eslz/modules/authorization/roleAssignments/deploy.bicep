@@ -44,8 +44,6 @@ param conditionVersion string = '2.0'
 ])
 param principalType string = ''
 
-var enableReferencedModulesTelemetry = false
-
 module roleAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${uniqueString(deployment().name, location)}-RoleAssignment-MG-Module'
   scope: managementGroup(managementGroupId)

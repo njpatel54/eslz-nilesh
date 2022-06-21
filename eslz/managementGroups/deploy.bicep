@@ -36,6 +36,7 @@ module mg '../modules/management/managementGroups/deploy.bicep' = [ for manageme
     name: managementGroup.name
     displayName: managementGroup.displayName
     parentId: managementGroup.parentId
+
   }
 }]
 
@@ -52,7 +53,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
     principalIds: roleAssignment.principalIds
     principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    managementGroupId: roleAssignment.managementGroupName              //resourceId('Microsoft.Management/managementGroups', roleAssignment.managementGroupName)
+    managementGroupId: roleAssignment.managementGroupName
   }
 }]
 
