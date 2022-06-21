@@ -79,7 +79,7 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
   params: {
     location: location
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
-    principalId: roleAssignment.principalIds
+    principalIds: roleAssignment.principalIds
     principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
     subscriptionId: roleAssignment.subscriptionId
