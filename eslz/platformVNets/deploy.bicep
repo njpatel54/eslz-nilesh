@@ -188,7 +188,7 @@ module afwrcg '../modules/network/firewallPolicies/deploy.bicep' = {
   ]
   params:{
     location: location
-    name: firewallPublicIPName
+    name: firewallPolicyName
     defaultWorkspaceId: diagnosticWorkspaceId
     insightsIsEnabled: true
     ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
