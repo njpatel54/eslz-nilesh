@@ -94,6 +94,24 @@ param firewallPolicyName string = 'afwp-${projowner}-${opscope}-${region}-0001'
 @description('Optional. Rule collection groups.')
 param firewallPolicyRuleCollectionGroups array = []
 
+@description('Required. Firewall name.')
+param firewallName string = 'afw-${projowner}-${opscope}-${region}-0001'
+
+@description('Optional. Collection of application rule collections used by Azure Firewall.')
+param firewallApplicationRuleCollections array = []
+
+@description('Optional. Collection of network rule collections used by Azure Firewall.')
+param firewallNetworkRuleCollections array = []
+
+@description('Required. List of IP Configurations.')
+param firewallIpConfigurations array
+
+@description('Optional. Zone numbers e.g. 1,2,3.')
+param firewallZones array
+
+@description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
+param firewallRoleAssignments array = []
+
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}'
@@ -194,3 +212,22 @@ module afwrcg '../modules/network/firewallPolicies/deploy.bicep' = {
     ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
   }
 }
+
+// Create Fireall
+module afw '../modules/network/azureFirewalls/deploy.bicep' = {
+  name: 'afw-${firewallName}'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  dependsOn: [
+    hubRg
+  ]
+  params:{
+    location: location
+    name: firewallName
+    zones: firewallZones
+    ipConfigurations: firewallIpConfigurations
+    applicationRuleCollections: firewallApplicationRuleCollections
+    networkRuleCollections: firewallNetworkRuleCollections
+    roleAssignments: firewallRoleAssignments
+  }
+}
+

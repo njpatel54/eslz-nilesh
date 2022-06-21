@@ -329,6 +329,117 @@
                 }
             ]
         },
+        "firewallZones": {
+            "value": [
+                "1",
+                "2",
+                "3"
+            ]
+        },
+        "firewallIpConfigurations": {
+            "value": [
+                {
+                    "name": "ipConfig01",
+                    "publicIPAddressResourceId": "/subscriptions/<<subscriptionId>>/resourceGroups/validation-rg/providers/Microsoft.Network/publicIPAddresses/adp-<<namePrefix>>-az-pip-x-fw",
+                    "subnetResourceId": "/subscriptions/<<subscriptionId>>/resourceGroups/validation-rg/providers/Microsoft.Network/virtualNetworks/adp-<<namePrefix>>-az-vnet-x-azfw/subnets/AzureFirewallSubnet"
+                }
+            ]
+        },
+        "firewallApplicationRuleCollections": {
+            "value": [
+                {
+                    "name": "allow-app-rules",
+                    "properties": {
+                        "priority": 100,
+                        "action": {
+                            "type": "allow"
+                        },
+                        "rules": [
+                            {
+                                "name": "allow-ase-tags",
+                                "sourceAddresses": [
+                                    "*"
+                                ],
+                                "protocols": [
+                                    {
+                                        "protocolType": "HTTP",
+                                        "port": "80"
+                                    },
+                                    {
+                                        "protocolType": "HTTPS",
+                                        "port": "443"
+                                    }
+                                ],
+                                "fqdnTags": [
+                                    "AppServiceEnvironment",
+                                    "WindowsUpdate"
+                                ]
+                            },
+                            {
+                                "name": "allow-ase-management",
+                                "sourceAddresses": [
+                                    "*"
+                                ],
+                                "protocols": [
+                                    {
+                                        "protocolType": "HTTP",
+                                        "port": "80"
+                                    },
+                                    {
+                                        "protocolType": "HTTPS",
+                                        "port": "443"
+                                    }
+                                ],
+                                "targetFqdns": [
+                                    "management.azure.com"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "firewallNetworkRuleCollections": {
+            "value": [
+                {
+                    "name": "allow-network-rules",
+                    "properties": {
+                        "priority": 100,
+                        "action": {
+                            "type": "allow"
+                        },
+                        "rules": [
+                            {
+                                "name": "allow-ntp",
+                                "sourceAddresses": [
+                                    "*"
+                                ],
+                                "destinationAddresses": [
+                                    "*"
+                                ],
+                                "destinationPorts": [
+                                    "123",
+                                    "12000"
+                                ],
+                                "protocols": [
+                                    "Any"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "firewallRoleAssignments": {
+            "value": [
+                {
+                    "roleDefinitionIdOrName": "Reader",
+                    "principalIds": [
+                        "<<deploymentSpId>>"
+                    ]
+                }
+            ]
+        },
         "tags": {
             "value": {
               "Customer": "CCS Azure",
