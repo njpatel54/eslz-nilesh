@@ -159,7 +159,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
   }
 }]
 
-//create Public IP Address for Azure Firewall
+// Create Public IP Address for Azure Firewall
 module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${firewallPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
@@ -179,7 +179,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-//create Public IP Address for Azure Firewall
+// Create Fireall Policy
 module afwrcg '../modules/network/firewallPolicies/deploy.bicep' = {
   name: 'afwrcg-${firewallPolicyName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
