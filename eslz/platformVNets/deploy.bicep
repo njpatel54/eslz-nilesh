@@ -73,7 +73,20 @@ param region string
 @description('Required. Location for all resources.')
 param location string
 
+@description('Required. Resource Group name.')
 param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+
+@description('Required. Firewall Public IP name.')
+param firewallPublicIPName string = 'pip-${projowner}-${opscope}-${region}-fwip'
+
+@description('Required. Firewall Public IP SKU name.')
+param firewallPpublicIPSkuName string
+
+@description('Required. Firewall Public IP allocation method.')
+param firewallPublicIPAllocationMethod string
+
+@description('Required. Firewall Public IP zones.')
+param firewallPublicIPzones array
 
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
@@ -139,3 +152,23 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
     diagnosticEventHubName: diagnosticEventHubName    
   }
 }]
+
+//create Public IP Address for Azure Firewall
+module fwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
+  name: 'fwpip-${firewallPublicIPName}'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  dependsOn: [
+    hubRg
+  ]
+  params:{
+    location: location
+    name: firewallPublicIPName
+    publicIPAllocationMethod: firewallPublicIPAllocationMethod
+    skuName: firewallPpublicIPSkuName
+    zones: firewallPublicIPzones
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: diagnosticEventHubName    
+  }
+}

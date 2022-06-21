@@ -276,6 +276,19 @@
               }
             ]  
         },
+        "firewallPpublicIPSkuName": {
+            "value": "Standard"
+        },
+        "firewallPublicIPAllocationMethod": {
+            "value": "Static"
+        },
+        "firewallPublicIPzones": {
+            "value": [
+                "1",
+                "2",
+                "3"
+            ]
+        },
         "tags": {
             "value": {
               "Customer": "CCS Azure",
