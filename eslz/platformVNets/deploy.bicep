@@ -111,7 +111,7 @@ param firewallRoleAssignments array = []
 
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${uniqueString(deployment().name, location)}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroupName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {
     name: resourceGroupName
@@ -122,7 +122,7 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
 
 // Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
-  name: 'vnet-${uniqueString(deployment().name, location)}-${hubVnetName}'
+  name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${hubVnetName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
@@ -143,7 +143,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
 
 // Create Spoke Resoruce Group(s)
 module spokeRg '../modules/resourceGroups/deploy.bicep'= [ for (vNet, index) in spokeVnets : {
-  name: 'rg-${uniqueString(deployment().name, location)}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroupName}'
   scope: subscription(vNet.subscriptionId)
   params: {
     name: resourceGroupName
@@ -154,7 +154,7 @@ module spokeRg '../modules/resourceGroups/deploy.bicep'= [ for (vNet, index) in 
 
 // Create Spoke Virtual Network(s)
 module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
-  name: 'vnet-${uniqueString(deployment().name, location)}-${vNet.name}'
+  name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
   dependsOn: [
     spokeRg
@@ -176,7 +176,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
 
 // Create Public IP Address for Azure Firewall
 module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
-  name: 'fwpip-${firewallPublicIPName}'
+  name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${firewallPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
@@ -194,9 +194,9 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// Create Fireall Policy
+// Create Fireall Policy and Firewall Policy Rule Collection Groups
 module afwrcg '../modules/network/firewallPolicies/deploy.bicep' = {
-  name: 'afwrcg-${firewallPolicyName}'
+  name: 'afwrcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
@@ -210,9 +210,9 @@ module afwrcg '../modules/network/firewallPolicies/deploy.bicep' = {
   }
 }
 
-// Create Fireall
+// Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
-  name: 'afw-${firewallName}'
+  name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubVnet
@@ -225,7 +225,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
       {
         name: 'ipConfig01'
         publicIPAddressResourceId: afwPip.outputs.resourceId
-        subnetResourceId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', 'AzureFirewallSubnet')
+        subnetResourceId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureFirewallSubnet')
       }
     ]
     applicationRuleCollections: firewallApplicationRuleCollections
@@ -233,4 +233,3 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     roleAssignments: firewallRoleAssignments
   }
 }
-
