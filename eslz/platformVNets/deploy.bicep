@@ -224,7 +224,13 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     location: location
     name: firewallName
     zones: firewallZones
-    ipConfigurations: firewallIpConfigurations
+    ipConfigurations: [
+      {
+        name: 'ipConfig01'
+        publicIPAddressResourceId: afwPip.outputs.resourceId
+        subnetResourceId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', 'AzureFirewallSubnet')
+      }
+    ]
     applicationRuleCollections: firewallApplicationRuleCollections
     networkRuleCollections: firewallNetworkRuleCollections
     roleAssignments: firewallRoleAssignments
