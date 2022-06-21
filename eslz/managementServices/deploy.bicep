@@ -179,12 +179,12 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   params:{
     name: automationAcctName
     location: location
+    tags: combinedTags
     linkedWorkspaceResourceId: loga.outputs.resourceId
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
     diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
-    
   }
 }
 

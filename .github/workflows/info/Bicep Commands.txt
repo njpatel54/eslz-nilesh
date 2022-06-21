@@ -3,3 +3,7 @@
 az deployment tenant show --name 'Deploy-Platform-Management-Groups' --query properties.outputs
 az deployment tenant show --name 'Deploy-Platform-Management-Services' --query properties.outputs
 az deployment sub show --name 'Deploy-Platform-Hub-Spoke-VNet' --query properties.outputs
+
+
+azurerm_eventhub is created with wrong partition count #13096
+https://github.com/hashicorp/terraform-provider-azurerm/issues/13096

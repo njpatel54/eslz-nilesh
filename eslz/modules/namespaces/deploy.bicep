@@ -28,7 +28,7 @@ param isAutoInflateEnabled bool = true
 @description('Optional. Upper limit of throughput units when AutoInflate is enabled, value should be within 0 to 20 throughput units.')
 @minValue(0)
 @maxValue(20)
-param maximumThroughputUnits int = 4
+param maximumThroughputUnits int = 1
 
 @description('Optional. Authorization Rules for the Event Hub namespace')
 param authorizationRules array = [
