@@ -289,6 +289,46 @@
                 "3"
             ]
         },
+        "firewallPolicyRuleCollectionGroups": {
+            "value": [
+                {
+                    "name": "afwrcg-css-prod-usva-0001",
+                    "priority": 5000,
+                    "ruleCollections": [
+                        {
+                            "name": "afwrc-css-prod-usva-0001",
+                            "priority": 5555,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Allow-80",
+                                    "ipProtocols": [
+                                        "TCP",
+                                        "UDP"
+                                    ],
+                                    "destinationPorts": [
+                                        "80"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "ruleType": "NetworkRule",
+                                    "destinationIpGroups": [],
+                                    "destinationAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationFqdns": []
+                                }
+                            ],
+                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+                        }
+                    ]
+                }
+            ]
+        },
         "tags": {
             "value": {
               "Customer": "CCS Azure",

@@ -88,6 +88,12 @@ param firewallPublicIPAllocationMethod string
 @description('Required. Firewall Public IP zones.')
 param firewallPublicIPzones array
 
+@description('Required. Firewall Policy name.')
+param firewallPolicyName string = 'afwp-${projowner}-${opscope}-${region}-0001'
+
+@description('Optional. Rule collection groups.')
+param firewallPolicyRuleCollectionGroups array = []
+
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${uniqueString(deployment().name, location)}'
@@ -154,7 +160,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
 }]
 
 //create Public IP Address for Azure Firewall
-module fwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
+module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${firewallPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
@@ -170,5 +176,21 @@ module fwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     diagnosticEventHubName: diagnosticEventHubName    
+  }
+}
+
+//create Public IP Address for Azure Firewall
+module afwrcg '../modules/network/firewallPolicies/deploy.bicep' = {
+  name: 'afwrcg-${firewallPolicyName}'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  dependsOn: [
+    hubRg
+  ]
+  params:{
+    location: location
+    name: firewallPublicIPName
+    defaultWorkspaceId: diagnosticWorkspaceId
+    insightsIsEnabled: true
+    ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
   }
 }

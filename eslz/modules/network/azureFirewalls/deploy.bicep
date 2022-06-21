@@ -79,9 +79,6 @@ param roleAssignments array = []
 @description('Optional. Tags of the Azure Firewall resource.')
 param tags object = {}
 
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 @description('Optional. The name of firewall logs that will be streamed.')
 @allowed([
   'AzureFirewallApplicationRule'
@@ -135,18 +132,6 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
     days: diagnosticLogsRetentionInDays
   }
 }]
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
 
 resource azureFirewall 'Microsoft.Network/azureFirewalls@2021-05-01' = {
   name: name

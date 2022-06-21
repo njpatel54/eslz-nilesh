@@ -78,9 +78,6 @@ param keyVaultSecretId string = ''
 @description('Optional. Name of the CA certificate.')
 param certificateName string = ''
 
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 @description('Optional. Rule collection groups.')
 param ruleCollectionGroups array = []
 
@@ -90,18 +87,6 @@ var identity = identityType != 'None' ? {
   type: identityType
   userAssignedIdentities: !empty(userAssignedIdentities) ? userAssignedIdentities : null
 } : null
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
 
 resource firewallPolicy 'Microsoft.Network/firewallPolicies@2021-05-01' = {
   name: name
@@ -165,7 +150,7 @@ module firewallPolicy_ruleCollectionGroups 'ruleCollectionGroups/deploy.bicep' =
     name: ruleCollectionGroup.name
     priority: ruleCollectionGroup.priority
     ruleCollections: ruleCollectionGroup.ruleCollections
-    enableDefaultTelemetry: enableDefaultTelemetry
+    
   }
 }]
 
