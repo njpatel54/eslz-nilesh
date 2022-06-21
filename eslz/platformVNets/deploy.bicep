@@ -103,9 +103,6 @@ param firewallApplicationRuleCollections array = []
 @description('Optional. Collection of network rule collections used by Azure Firewall.')
 param firewallNetworkRuleCollections array = []
 
-@description('Required. List of IP Configurations.')
-param firewallIpConfigurations array
-
 @description('Optional. Zone numbers e.g. 1,2,3.')
 param firewallZones array
 
@@ -218,7 +215,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${firewallName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
-    hubRg
+    hubVnet
   ]
   params:{
     location: location
