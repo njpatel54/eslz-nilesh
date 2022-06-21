@@ -273,6 +273,11 @@ output name string = eventHubNamespace.name
 @description('The resource ID of the eventspace.')
 output resourceId string = eventHubNamespace.id
 
+output eventHubs array = [for (eventHub, i) in eventHubs: {
+  eventHubName: eventHubNamespace_eventHubs[i].outputs.name
+  eventHubId: eventHubNamespace_eventHubs[i].outputs.eventHubId
+}]
+
 @description('The resource group where the namespace is deployed.')
 output resourceGroupName string = resourceGroup().name
 

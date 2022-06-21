@@ -208,6 +208,14 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+output siemRgName string = siem_rg.outputs.name
+output siemRgresoruceId string = siem_rg.outputs.resourceId
+output logaName string = loga.outputs.name
+output logaResourceId string = loga.outputs.resourceId
+output saName string = sa.outputs.name
+output saResourceId string = sa.outputs.resourceId
+output ehNamespaceName string = eh.outputs.name
+
 
 output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {  
   name: subDiagSettings[i].outputs.name

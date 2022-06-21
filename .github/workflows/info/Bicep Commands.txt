@@ -1,1 +1,5 @@
-az deployment tenant show -n 'Deploy-Platform-Management-Groups' --query properties.outputs
+
+# To get output values from the deployment history
+az deployment tenant show --name 'Deploy-Platform-Management-Groups' --query properties.outputs
+az deployment tenant show --name 'Deploy-Platform-Management-Services' --query properties.outputs
+az deployment sub show --name 'Deploy-Platform-Hub-Spoke-VNet' --query properties.outputs
