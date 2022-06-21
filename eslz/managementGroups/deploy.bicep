@@ -49,7 +49,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
   params: {
     location: location
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
-    principalId: roleAssignment.principalId
+    principalId: roleAssignment.principalIds
     principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
     managementGroupId: roleAssignment.managementGroupName              //resourceId('Microsoft.Management/managementGroups', roleAssignment.managementGroupName)
@@ -79,7 +79,7 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
   params: {
     location: location
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
-    principalId: roleAssignment.principalId
+    principalId: roleAssignment.principalIds
     principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
     subscriptionId: roleAssignment.subscriptionId
