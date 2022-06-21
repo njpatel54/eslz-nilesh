@@ -123,7 +123,7 @@ output mgRoleAssignments array = [ for (roleAssignment, i) in mgRoleAssignments 
 }]
 
 @description('The subscription role assignments info.')
-output subRoleAssignments array = [ for (roleAssignment, i) in mgRoleAssignments :{
+output subRoleAssignments array = [ for (roleAssignment, i) in subRoleAssignments :{
   name: subRbac[i].outputs.name
   resoruceId: subRbac[i].outputs.resourceId
   scope: subRbac[i].outputs.scope
@@ -131,5 +131,5 @@ output subRoleAssignments array = [ for (roleAssignment, i) in mgRoleAssignments
 
 @description('The subscription move info.')
 output moveSubs array = [ for (subscription, i) in subscriptions :{
-  subMoved: 'Subcription (${moveSubs[i].outputs.mgName}) is moved to this management group (${moveSubs[i].outputs.subId})'  
+  subMoved: 'Subcription (${moveSubs[i].outputs.subId}) is moved to this management group (${moveSubs[i].outputs.mgName})'
 }]

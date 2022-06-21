@@ -1,0 +1,1 @@
+az deployment tenant show -n 'Deploy-Platform-Management-Groups' --query properties.outputs
