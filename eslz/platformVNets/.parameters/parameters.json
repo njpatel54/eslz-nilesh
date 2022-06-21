@@ -360,7 +360,9 @@
             "value": [
                 {
                     "roleDefinitionIdOrName": "Contributor",
-                    "principalId": "40b2dd0e-b831-4f53-b691-540cacbdd281"
+                    "principalIds": [
+                        "40b2dd0e-b831-4f53-b691-540cacbdd281"
+                    ]
                 }
             ]
         },
