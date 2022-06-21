@@ -11,3 +11,10 @@ resource movesub 'Microsoft.Management/managementGroups/subscriptions@2021-04-01
   parent: managementGroup
   name: subscriptionId
 }
+
+
+@sys.description('The management group name.')
+output mgName string = managementGroupName
+
+@sys.description('The Subscription ID.')
+output subId string = subscriptionId

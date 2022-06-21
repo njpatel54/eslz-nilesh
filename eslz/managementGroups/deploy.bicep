@@ -105,3 +105,31 @@ properties: {
   requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
 }
 }
+
+
+
+
+@description('The management group name and resoruceId.')
+output managementGroups array = [for (managementGroup, i) in managementGroups: {  
+  name: mg[i].outputs.name
+  resourceId: mg[i].outputs.resourceId
+}]
+
+@description('The management group role assignments info.')
+output mgRoleAssignments array = [ for (roleAssignment, i) in mgRoleAssignments :{
+  name: mgRbac[i].outputs.name
+  resoruceId: mgRbac[i].outputs.resourceId
+  scope: mgRbac[i].outputs.scope
+}]
+
+@description('The subscription role assignments info.')
+output subRoleAssignments array = [ for (roleAssignment, i) in mgRoleAssignments :{
+  name: subRbac[i].outputs.name
+  resoruceId: subRbac[i].outputs.resourceId
+  scope: subRbac[i].outputs.scope
+}]
+
+@description('The subscription move info.')
+output moveSubs array = [ for (subscription, i) in subscriptions :{
+  subMoved: 'Subcription (${moveSubs[i].outputs.mgName}) is moved to this management group (${moveSubs[i].outputs.subId})'  
+}]

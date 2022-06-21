@@ -208,6 +208,11 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+
+output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {  
+  name: subDiagSettings[i].outputs.name
+}]
+
 /*
 // Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)
 // Configure Diagnostics Settings for Management Groups
