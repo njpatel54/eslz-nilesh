@@ -4,7 +4,7 @@ targetScope = 'resourceGroup'
 param roleDefinitionIdOrName string
 
 @sys.description('Required. The Principal or Object ID of the Security Principal (User, Group, Service Principal, Managed Identity).')
-param principalId string
+param principalIds array
 
 @sys.description('Optional. Name of the Resource Group to assign the RBAC role to. If not provided, will use the current scope for deployment.')
 param resourceGroupName string = resourceGroup().name
@@ -324,7 +324,7 @@ var builtInRoleNames_var = {
 
 var roleDefinitionId_var = (contains(builtInRoleNames_var, roleDefinitionIdOrName) ? builtInRoleNames_var[roleDefinitionIdOrName] : roleDefinitionIdOrName)
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for principalId in principalIds: {
   name: guid(subscriptionId, resourceGroupName, roleDefinitionId_var, principalId)
   properties: {
     roleDefinitionId: roleDefinitionId_var
@@ -335,16 +335,20 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-prev
     conditionVersion: !empty(conditionVersion) && !empty(condition) ? conditionVersion : null
     condition: !empty(condition) ? condition : null
   }
-}
+}]
 
 @sys.description('The GUID of the Role Assignment.')
-output name string = roleAssignment.name
+output name array = [for (principalId, i) in principalIds: {
+  name: roleAssignment[i].name
+}]
 
 @sys.description('The resource ID of the Role Assignment.')
 output scope string = resourceGroup().id
 
 @sys.description('The scope this Role Assignment applies to.')
-output resourceId string = az.resourceId(resourceGroupName, 'Microsoft.Authorization/roleAssignments', roleAssignment.name)
+output resourceId array = [for (principalId, i) in principalIds: {
+  resourceId: az.resourceId(resourceGroupName, 'Microsoft.Authorization/roleAssignments', roleAssignment[i].name)
+}]
 
 @sys.description('The name of the resource group the role assignment was applied at.')
 output resourceGroupName string = resourceGroup().name

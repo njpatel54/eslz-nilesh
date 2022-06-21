@@ -3,8 +3,8 @@ targetScope = 'managementGroup'
 @sys.description('Required. You can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'.')
 param roleDefinitionIdOrName string
 
-@sys.description('Required. The Principal or Object ID of the Security Principal (User, Group, Service Principal, Managed Identity).')
-param principalId string
+@sys.description('Required. The IDs of the principals to assign the role to.')
+param principalIds array
 
 @sys.description('Optional. Group ID of the Management Group to assign the RBAC role to. If not provided, will use the current scope for deployment.')
 param managementGroupId string = managementGroup().name
@@ -324,10 +324,10 @@ var builtInRoleNames_var = {
 
 var roleDefinitionId_var = (contains(builtInRoleNames_var, roleDefinitionIdOrName) ? builtInRoleNames_var[roleDefinitionIdOrName] : roleDefinitionIdOrName)
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for principalId in principalIds: {
   name: guid(managementGroupId, roleDefinitionId_var, principalId)
   properties: {
-    roleDefinitionId: roleDefinitionId_var
+    roleDefinitionId: (contains(builtInRoleNames_var, roleDefinitionIdOrName) ? builtInRoleNames_var[roleDefinitionIdOrName] : roleDefinitionIdOrName)
     principalId: principalId
     description: !empty(description) ? description : null
     principalType: !empty(principalType) ? any(principalType) : null
@@ -335,13 +335,18 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-prev
     conditionVersion: !empty(conditionVersion) && !empty(condition) ? conditionVersion : null
     condition: !empty(condition) ? condition : null
   }
-}
+}]
+
 
 @sys.description('The GUID of the Role Assignment.')
-output name string = roleAssignment.name
+output name array = [for (principalId, i) in principalIds: {
+  name: roleAssignment[i].name
+}]
 
 @sys.description('The resource ID of the Role Assignment.')
 output scope string = tenantResourceId('Microsoft.Management/managementGroups', managementGroupId)
 
 @sys.description('The scope this Role Assignment applies to.')
-output resourceId string = extensionResourceId(tenantResourceId('Microsoft.Management/managementGroups', managementGroupId), 'Microsoft.Authorization/roleAssignments', roleAssignment.name)
+output resourceId array = [for (principalId, i) in principalIds: {
+  resourceId: extensionResourceId(tenantResourceId('Microsoft.Management/managementGroups', managementGroupId), 'Microsoft.Authorization/roleAssignments', roleAssignment[i].name)
+}]

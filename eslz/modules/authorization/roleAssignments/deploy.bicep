@@ -4,7 +4,7 @@ targetScope = 'managementGroup'
 param roleDefinitionIdOrName string
 
 @sys.description('Required. The Principal or Object ID of the Security Principal (User, Group, Service Principal, Managed Identity).')
-param principalId string
+param principalIds array
 
 @sys.description('Optional. Name of the Resource Group to assign the RBAC role to. If Resource Group name is provided, and Subscription ID is provided, the module deploys at resource group level, therefore assigns the provided RBAC role to the resource group.')
 param resourceGroupName string = ''
@@ -44,30 +44,14 @@ param conditionVersion string = '2.0'
 ])
 param principalType string = ''
 
-@sys.description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 var enableReferencedModulesTelemetry = false
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  location: location
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
 
 module roleAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${uniqueString(deployment().name, location)}-RoleAssignment-MG-Module'
   scope: managementGroup(managementGroupId)
   params: {
     roleDefinitionIdOrName: roleDefinitionIdOrName
-    principalId: principalId
+    principalIds: principalIds
     managementGroupId: managementGroupId
     description: !empty(description) ? description : ''
     principalType: !empty(principalType) ? principalType : ''
@@ -75,7 +59,6 @@ module roleAssignment_mg 'managementGroup/deploy.bicep' = if (empty(subscription
     conditionVersion: conditionVersion
     condition: !empty(condition) ? condition : ''
     location: location
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -84,7 +67,7 @@ module roleAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptionI
   scope: subscription(subscriptionId)
   params: {
     roleDefinitionIdOrName: roleDefinitionIdOrName
-    principalId: principalId
+    principalIds: principalIds
     subscriptionId: subscriptionId
     description: !empty(description) ? description : ''
     principalType: !empty(principalType) ? principalType : ''
@@ -92,7 +75,6 @@ module roleAssignment_sub 'subscription/deploy.bicep' = if (!empty(subscriptionI
     conditionVersion: conditionVersion
     condition: !empty(condition) ? condition : ''
     location: location
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -101,7 +83,7 @@ module roleAssignment_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGroup
   scope: resourceGroup(subscriptionId, resourceGroupName)
   params: {
     roleDefinitionIdOrName: roleDefinitionIdOrName
-    principalId: principalId
+    principalIds: principalIds
     subscriptionId: subscriptionId
     resourceGroupName: resourceGroupName
     description: !empty(description) ? description : ''
@@ -109,15 +91,14 @@ module roleAssignment_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGroup
     delegatedManagedIdentityResourceId: !empty(delegatedManagedIdentityResourceId) ? delegatedManagedIdentityResourceId : ''
     conditionVersion: conditionVersion
     condition: !empty(condition) ? condition : ''
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
 @sys.description('The GUID of the Role Assignment.')
-output name string = empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_mg.outputs.name : (!empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_sub.outputs.name : roleAssignment_rg.outputs.name)
+output name array = empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_mg.outputs.name : (!empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_sub.outputs.name : roleAssignment_rg.outputs.name)
 
 @sys.description('The resource ID of the Role Assignment.')
-output resourceId string = empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_mg.outputs.resourceId : (!empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_sub.outputs.resourceId : roleAssignment_rg.outputs.resourceId)
+output resourceId array = empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_mg.outputs.resourceId : (!empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_sub.outputs.resourceId : roleAssignment_rg.outputs.resourceId)
 
 @sys.description('The scope this Role Assignment applies to.')
 output scope string = empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_mg.outputs.scope : (!empty(subscriptionId) && empty(resourceGroupName) ? roleAssignment_sub.outputs.scope : roleAssignment_rg.outputs.scope)

@@ -3,8 +3,8 @@ targetScope = 'subscription'
 @sys.description('Required. You can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'.')
 param roleDefinitionIdOrName string
 
-@sys.description('Required. The Principal or Object ID of the Security Principal (User, Group, Service Principal, Managed Identity).')
-param principalId string
+@sys.description('Required. The IDs of the principals to assign the role to.')
+param principalIds array
 
 @sys.description('Optional. Subscription ID of the subscription to assign the RBAC role to. If not provided, will use the current scope for deployment.')
 param subscriptionId string = subscription().subscriptionId
@@ -37,9 +37,6 @@ param conditionVersion string = '2.0'
   ''
 ])
 param principalType string = ''
-
-@sys.description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
 
 var builtInRoleNames_var = {
   'AcrPush': '/providers/Microsoft.Authorization/roleDefinitions/8311e382-0749-4cb8-b61a-304f252e45ec'
@@ -325,22 +322,9 @@ var builtInRoleNames_var = {
   'Azure Maps Contributor': '/providers/Microsoft.Authorization/roleDefinitions/dba33070-676a-4fb0-87fa-064dc56ff7fb'
 }
 
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  location: location
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
-
 var roleDefinitionId_var = (contains(builtInRoleNames_var, roleDefinitionIdOrName) ? builtInRoleNames_var[roleDefinitionIdOrName] : roleDefinitionIdOrName)
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for principalId in principalIds: {
   name: guid(subscriptionId, roleDefinitionId_var, principalId)
   properties: {
     roleDefinitionId: roleDefinitionId_var
@@ -351,13 +335,18 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-prev
     conditionVersion: !empty(conditionVersion) && !empty(condition) ? conditionVersion : null
     condition: !empty(condition) ? condition : null
   }
-}
+}]
 
 @sys.description('The GUID of the Role Assignment.')
-output name string = roleAssignment.name
+output name array = [for (principalId, i) in principalIds: {
+  name: roleAssignment[i].name
+}]
 
 @sys.description('The resource ID of the Role Assignment.')
 output scope string = subscription().id
 
+
 @sys.description('The scope this Role Assignment applies to.')
-output resourceId string = subscriptionResourceId(subscriptionId, 'Microsoft.Authorization/roleAssignments', roleAssignment.name)
+output resourceId array = [for (principalId, i) in principalIds: {
+  resourceId: subscriptionResourceId(subscriptionId, 'Microsoft.Authorization/roleAssignments', roleAssignment[i].name)
+}]
