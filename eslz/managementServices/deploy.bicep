@@ -208,6 +208,38 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+/*
+// Create Policy Assignments
+module polAssignments '../modules/authorization/policyAssignments/deploy.bicep' = [ for policyAssignment in policyAssignments: {
+  scope: 
+  name: 'polAssignment-${policyAssignment.name}'
+  params: {
+    name: 
+    policyDefinitionId: 
+  }
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 output siemRgName string = siem_rg.outputs.name
 output siemRgresoruceId string = siem_rg.outputs.resourceId
 output logaName string = loga.outputs.name
@@ -221,6 +253,7 @@ output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {
   subscriptionId: subDiagSettings[i].outputs.resourceId
   diagnosticSettingsName: subDiagSettings[i].outputs.name
 }]
+
 
 /*
 // Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)
