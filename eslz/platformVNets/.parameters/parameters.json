@@ -477,7 +477,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Inbound",
-                                "priority": "120",
+                                "priority": 120,
                                 "sourceAddressPrefix": "Internet",
                                 "destinationAddressPrefix": "*",
                                 "protocol": "Tcp",
@@ -490,7 +490,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Inbound",
-                                "priority": "130",
+                                "priority": 130,
                                 "sourceAddressPrefix": "GatewayManager",
                                 "destinationAddressPrefix": "*",
                                 "protocol": "Tcp",
@@ -503,7 +503,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Inbound",
-                                "priority": "140",
+                                "priority": 140,
                                 "sourceAddressPrefix": "AzureLoadBalancer",
                                 "destinationAddressPrefix": "*",
                                 "protocol": "Tcp",
@@ -516,7 +516,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Inbound",
-                                "priority": "150",
+                                "priority": 150,
                                 "sourceAddressPrefix": "VirtualNetwork",
                                 "destinationAddressPrefix": "VirtualNetwork",
                                 "protocol": "Tcp",
@@ -532,7 +532,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Outbound",
-                                "priority": "100",
+                                "priority": 100,
                                 "sourceAddressPrefix": "*",
                                 "destinationAddressPrefix": "VirtualNetwork",
                                 "protocol": "*",
@@ -548,7 +548,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Outbound",
-                                "priority": "110",
+                                "priority": 110,
                                 "sourceAddressPrefix": "*",
                                 "destinationAddressPrefix": "AzureCloud",
                                 "protocol": "Tcp",
@@ -561,7 +561,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Outbound",
-                                "priority": "120",
+                                "priority": 120,
                                 "sourceAddressPrefix": "VirtualNetwork",
                                 "destinationAddressPrefix": "VirtualNetwork",
                                 "protocol": "*",
@@ -577,7 +577,7 @@
                             "properties": {
                                 "access": "Allow",
                                 "direction": "Outbound",
-                                "priority": "130",
+                                "priority": 130,
                                 "sourceAddressPrefix": "",
                                 "destinationAddressPrefix": "Internet",
                                 "protocol": "*",
