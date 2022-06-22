@@ -578,7 +578,7 @@
                                 "access": "Allow",
                                 "direction": "Outbound",
                                 "priority": 130,
-                                "sourceAddressPrefix": "",
+                                "sourceAddressPrefix": "*",
                                 "destinationAddressPrefix": "Internet",
                                 "protocol": "*",
                                 "sourcePortRange": "*",
