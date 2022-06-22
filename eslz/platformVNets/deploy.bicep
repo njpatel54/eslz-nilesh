@@ -286,7 +286,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     name: bastionHostName
     location: location
     tags: combinedTags 
-    vNetId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureBastionSubnet')
+    vNetId: hubVnet.outputs.resourceId
     azureBastionSubnetPublicIpId: afwPip.outputs.resourceId
     skuType: bastionHostSkuType
     scaleUnits: bastionHostScaleUnits
