@@ -1,5 +1,8 @@
 targetScope = 'subscription'
 
+@description('Required. Hub - Network Security Groups Array.')
+param hubNetworkSecurityGroups array
+
 @description('Required. Subscription ID.')
 param hubVnetSubscriptionId string
 
@@ -118,6 +121,7 @@ param bastionHostScaleUnits int
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param bastionHostRoleAssignments array = []
 
+
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${hubVnetSubscriptionId}-${resourceGroupName}'
@@ -128,6 +132,27 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
     tags: combinedTags
   }
 }
+
+// Create Hub Network Security Group(s)
+module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [ for (nsg, index) in hubNetworkSecurityGroups : {
+  name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  dependsOn: [
+    hubRg
+  ]
+  params:{
+    name: nsg.name
+    location: location
+    tags: combinedTags
+    securityRules: nsg.securityRules
+    roleAssignments: nsg.roleAssignments
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: diagnosticEventHubName
+  }
+}]
+
 
 // Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {

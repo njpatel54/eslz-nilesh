@@ -467,6 +467,142 @@
                 }
             ]
         },
+        "hubNetworkSecurityGroups": {
+            "value": [
+                {
+                    "name": {
+                        "value": "nsg-css-prod-usva-abh"
+                    },
+                    "securityRules": {
+                        "value": [
+                            {                                
+                                "name": "AllowHttpsInbound",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": "120",
+                                    "sourceAddressPrefix": "Internet",
+                                    "destinationAddressPrefix": "*",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443"
+                                }                                
+                            },
+                            {
+                                "name": "AllowGatewayManagerInbound",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": "130",
+                                    "sourceAddressPrefix": "GatewayManager",
+                                    "destinationAddressPrefix": "*",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443"
+                                }
+                            },
+                            {
+                                "name": "AllowAzureLoadBalancerInbound",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": "140",
+                                    "sourceAddressPrefix": "AzureLoadBalancer",
+                                    "destinationAddressPrefix": "*",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443"
+                                }
+                            },
+                            {
+                                "name": "AllowBastionHostCommunication",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": "150",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "VirtualNetwork",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRanges": [
+                                        "8080",
+                                        "5701"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "AllowSshRDPOutbound",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Outbound",
+                                    "priority": "100",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "VirtualNetwork",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRanges": [
+                                        "22",
+                                        "3389"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "AllowAzureCloudOutbound",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Outbound",
+                                    "priority": "110",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "AzureCloud",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443"
+                                }
+                            },
+                            {
+                                "name": "AllowBastionCommunication",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Outbound",
+                                    "priority": "120",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "VirtualNetwork",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRanges": [
+                                        "8080",
+                                        "5701"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "AllowGetSessionInformation",
+                                "properties": {
+                                    "access": "Allow",
+                                    "direction": "Outbound",
+                                    "priority": "130",
+                                    "sourceAddressPrefix": "",
+                                    "destinationAddressPrefix": "Internet",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "80"
+                                }
+                            }
+                        ]
+                    },
+                    "roleAssignments": {
+                        "value": [
+                            {
+                                "roleDefinitionIdOrName": "Contributor",
+                                "principalIds": [
+                                    "40b2dd0e-b831-4f53-b691-540cacbdd281"
+                                ]
+                            }
+                        ]
+                    }  
+                }
+            ]
+        },
         "tags": {
             "value": {
               "Customer": "CCS Azure",
