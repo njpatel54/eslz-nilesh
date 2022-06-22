@@ -107,8 +107,6 @@ properties: {
 }
 
 
-
-
 @description('The management group name and resoruceId.')
 output managementGroups array = [for (managementGroup, i) in managementGroups: {  
   name: mg[i].outputs.name

@@ -159,7 +159,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${hubVnetName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
-    hubRg
+    hubNsgs
   ]
   params:{
     name: hubVnetName
