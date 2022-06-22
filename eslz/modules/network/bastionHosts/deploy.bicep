@@ -80,6 +80,24 @@ var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
   }
 }]
 
+@description('Optional. The name of metrics that will be streamed.')
+@allowed([
+  'AllMetrics'
+])
+param diagnosticMetricsToEnable array = [
+  'AllMetrics'
+]
+
+var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
+  category: metric
+  timeGrain: null
+  enabled: true
+  retentionPolicy: {
+    enabled: true
+    days: diagnosticLogsRetentionInDays
+  }
+}]
+
 var scaleUnits_var = skuType == 'Basic' ? 2 : scaleUnits
 
 var additionalPublicIpConfigurations_var = [for ipConfiguration in additionalPublicIpConfigurations: {
@@ -181,6 +199,7 @@ resource azureBastion_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@
     workspaceId: !empty(diagnosticWorkspaceId) ? diagnosticWorkspaceId : null
     eventHubAuthorizationRuleId: !empty(diagnosticEventHubAuthorizationRuleId) ? diagnosticEventHubAuthorizationRuleId : null
     eventHubName: !empty(diagnosticEventHubName) ? diagnosticEventHubName : null
+    metrics: diagnosticsMetrics
     logs: diagnosticsLogs
   }
   scope: azureBastion
