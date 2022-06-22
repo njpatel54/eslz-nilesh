@@ -80,13 +80,13 @@ param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 param firewallPublicIPName string = 'pip-${projowner}-${opscope}-${region}-fwip'
 
 @description('Required. Firewall Public IP SKU name.')
-param firewallPpublicIPSkuName string
+param publicIPSkuName string
 
 @description('Required. Firewall Public IP allocation method.')
-param firewallPublicIPAllocationMethod string
+param publicIPAllocationMethod string
 
 @description('Required. Firewall Public IP zones.')
-param firewallPublicIPzones array
+param publicIPzones array
 
 @description('Required. Firewall Policy name.')
 param firewallPolicyName string = 'afwp-${projowner}-${opscope}-${region}-0001'
@@ -102,6 +102,21 @@ param firewallZones array
 
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param firewallRoleAssignments array = []
+
+@description('Required. Bastion Host Public IP name.')
+param bastionHostPublicIPName string = 'pip-${projowner}-${opscope}-${region}-bhip'
+
+@description('Required. Bastion Host name.')
+param bastionHostName string = 'bas-${projowner}-${opscope}-${region}-0001'
+
+@description('Required. Bastion Host sku type.')
+param bastionHostSkuType string
+
+@description('Required. Bastion Host scale units.')
+param bastionHostScaleUnits int
+
+@description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
+param bastionHostRoleAssignments array = []
 
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
@@ -181,9 +196,9 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     name: firewallPublicIPName
     location: location
     tags: combinedTags 
-    publicIPAllocationMethod: firewallPublicIPAllocationMethod
-    skuName: firewallPpublicIPSkuName
-    zones: firewallPublicIPzones
+    publicIPAllocationMethod: publicIPAllocationMethod
+    skuName: publicIPSkuName
+    zones: publicIPzones
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
@@ -214,6 +229,8 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubVnet
+    afwPip
+    afwp
   ]
   params:{
     name: firewallName
@@ -233,5 +250,50 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     diagnosticEventHubName: diagnosticEventHubName   
+  }
+}
+
+// Create Public IP Address for Azure Bastion Host
+module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
+  name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  dependsOn: [
+    hubRg
+  ]
+  params:{
+    name: bastionHostPublicIPName
+    location: location
+    tags: combinedTags 
+    publicIPAllocationMethod: publicIPAllocationMethod
+    skuName: publicIPSkuName
+    zones: publicIPzones
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: diagnosticEventHubName    
+  }
+}
+
+// Create Azure Bastion Host
+module bas '../modules/network/bastionHosts/deploy.bicep' = {
+  name: 'bas-${take(uniqueString(deployment().name, location), 4)}-${bastionHostName}'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  dependsOn: [
+    hubVnet
+    bhPip
+  ]
+  params:{
+    name: bastionHostName
+    location: location
+    tags: combinedTags 
+    vNetId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureBastionSubnet')
+    azureBastionSubnetPublicIpId: afwPip.outputs.resourceId
+    skuType: bastionHostSkuType
+    scaleUnits: bastionHostScaleUnits
+    roleAssignments: bastionHostRoleAssignments
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticEventHubName: diagnosticEventHubName
   }
 }

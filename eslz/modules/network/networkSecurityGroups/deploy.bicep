@@ -38,9 +38,6 @@ param roleAssignments array = []
 @description('Optional. Tags of the NSG resource.')
 param tags object = {}
 
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 @description('Optional. The name of logs that will be streamed.')
 @allowed([
   'NetworkSecurityGroupEvent'
@@ -62,18 +59,6 @@ var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
     days: diagnosticLogsRetentionInDays
   }
 }]
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
 
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2021-05-01' = {
   name: name
@@ -123,7 +108,6 @@ module networkSecurityGroup_securityRules 'securityRules/deploy.bicep' = [for (s
     destinationAddressPrefixes: contains(securityRule.properties, 'destinationAddressPrefixes') ? securityRule.properties.destinationAddressPrefixes : []
     sourceApplicationSecurityGroups: contains(securityRule.properties, 'sourceApplicationSecurityGroups') ? securityRule.properties.sourceApplicationSecurityGroups : []
     destinationApplicationSecurityGroups: contains(securityRule.properties, 'destinationApplicationSecurityGroups') ? securityRule.properties.destinationApplicationSecurityGroups : []
-    enableDefaultTelemetry: enableDefaultTelemetry
   }
 }]
 

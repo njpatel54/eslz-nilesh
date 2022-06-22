@@ -1,9 +1,26 @@
 
 # To get output values from the deployment history
-az deployment tenant show --name 'Deploy-Platform-Management-Groups' --query properties.outputs
-az deployment tenant show --name 'Deploy-Platform-Management-Services' --query properties.outputs
-az deployment sub show --name 'Deploy-Platform-Hub-Spoke-VNet' --query properties.outputs
+    az deployment tenant show --name 'Deploy-Platform-Management-Groups' --query properties.outputs
+    az deployment tenant show --name 'Deploy-Platform-Management-Services' --query properties.outputs
+    az deployment sub show --name 'Deploy-Platform-Hub-Spoke-VNet' --query properties.outputs
 
 
-azurerm_eventhub is created with wrong partition count #13096
+
+# Compare Azure Government and global Azure
+ https://docs.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure
+
+# Obtain Azure Government endpoints for Azure services
+    az cloud show --name AzureUSGovernment
+
+Event Hubnamespace & Event Hub
+==============================
+
+# azurerm_eventhub is created with wrong partition count #13096
 https://github.com/hashicorp/terraform-provider-azurerm/issues/13096
+
+
+Azure Policy
+============
+
+# Policies included in Azure Landing Zones reference implementations
+https://github.com/Azure/Enterprise-Scale/blob/main/docs/ESLZ-Policies.md
