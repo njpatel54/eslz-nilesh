@@ -287,7 +287,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     location: location
     tags: combinedTags 
     vNetId: hubVnet.outputs.resourceId
-    azureBastionSubnetPublicIpId: afwPip.outputs.resourceId
+    azureBastionSubnetPublicIpId: bhPip.outputs.resourceId
     skuType: bastionHostSkuType
     scaleUnits: bastionHostScaleUnits
     roleAssignments: bastionHostRoleAssignments
