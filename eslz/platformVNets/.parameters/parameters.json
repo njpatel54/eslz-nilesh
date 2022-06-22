@@ -470,9 +470,7 @@
         "hubNetworkSecurityGroups": {
             "value": [
                 {
-                    "name": {
-                        "value": "nsg-css-prod-usva-abh"
-                    },
+                    "name": "nsg-css-prod-usva-abh",
                     "securityRules": {
                         "value": [
                             {                                
