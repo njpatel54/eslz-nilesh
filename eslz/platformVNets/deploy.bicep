@@ -120,7 +120,7 @@ param bastionHostRoleAssignments array = []
 
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${hubVnetSubscriptionId}-${resourceGroupName}'
+  name: 'rg-${hubVnetSubscriptionId}-${resourceGroupName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {
     name: resourceGroupName
@@ -153,7 +153,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
 
 // Create Spoke Resoruce Group(s)
 module spokeRg '../modules/resourceGroups/deploy.bicep'= [ for (vNet, index) in spokeVnets : {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vNet.subscriptionId}-${resourceGroupName}'
+  name: 'rg-${vNet.subscriptionId}-${resourceGroupName}'
   scope: subscription(vNet.subscriptionId)
   params: {
     name: resourceGroupName
