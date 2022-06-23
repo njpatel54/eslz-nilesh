@@ -77,3 +77,5 @@ output resourceId string = diagnosticSetting.id
 
 @description('The name of the subscription to deploy into.')
 output subscriptionName string = subscription().displayName
+
+output location string = location

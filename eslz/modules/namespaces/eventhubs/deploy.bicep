@@ -24,7 +24,7 @@ param messageRetentionInDays int = 1
 @description('Optional. Number of partitions created for the Event Hub, allowed values are from 1 to 32 partitions.')
 @minValue(1)
 @maxValue(32)
-param partitionCount int = 2
+param partitionCount int = 1
 
 @description('Optional. Enumerates the possible values for the status of the Event Hub.')
 @allowed([

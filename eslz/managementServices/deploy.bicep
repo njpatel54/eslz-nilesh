@@ -254,6 +254,16 @@ output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {
   diagnosticSettingsName: subDiagSettings[i].outputs.name
 }]
 
+output onboardmg string = onboardmg
+output requireAuthorizationForGroupCreation bool = requireAuthorizationForGroupCreation
+output managementGroups array = managementGroups
+output mgRoleAssignments array = mgRoleAssignments
+output subRoleAssignments array = subRoleAssignments
+output tenantid string = tenantid
+output diagnosticStorageAccountId string = diagnosticStorageAccountId
+output diagnosticWorkspaceId string = diagnosticWorkspaceId
+output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
+output diagnosticEventHubName string = diagnosticEventHubName
 
 /*
 // Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)

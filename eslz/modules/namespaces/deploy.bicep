@@ -219,7 +219,7 @@ module eventHubNamespace_eventHubs 'eventhubs/deploy.bicep' = [for (eventHub, in
     consumerGroups: contains(eventHub, 'consumerGroups') ? eventHub.consumerGroups : []
     lock: contains(eventHub, 'lock') ? eventHub.lock : 'NotSpecified'
     messageRetentionInDays: contains(eventHub, 'messageRetentionInDays') ? eventHub.messageRetentionInDays : 1
-    partitionCount: contains(eventHub, 'partitionCount') ? eventHub.partitionCount : 2
+    partitionCount: contains(eventHub, 'partitionCount') ? eventHub.partitionCount : 1
     roleAssignments: contains(eventHub, 'roleAssignments') ? eventHub.roleAssignments : []
     status: contains(eventHub, 'status') ? eventHub.status : 'Active'
     
