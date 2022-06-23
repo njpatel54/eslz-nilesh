@@ -25,23 +25,10 @@ param functionParameters string = ''
 @description('Optional. The version number of the query language.')
 param version int = 2
 
+/*
 @description('Optional. The ETag of the saved search. To override an existing saved search, use "*" or specify the current Etag.')
 param etag string = '*'
-
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
+*/
 
 resource workspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
   name: logAnalyticsWorkspaceName
@@ -52,7 +39,7 @@ resource savedSearch 'Microsoft.OperationalInsights/workspaces/savedSearches@202
   parent: workspace
   //etag: etag // According to API, the variable should be here, but it doesn't work here.
   properties: {
-    etag: etag
+    //etag: etag
     tags: tags
     displayName: displayName
     category: category

@@ -179,7 +179,7 @@ module logAnalyticsWorkspace_linkedServices 'linkedServices/deploy.bicep' = [for
     name: linkedService.name
     resourceId: contains(linkedService, 'resourceId') ? linkedService.resourceId : ''
     writeAccessResourceId: contains(linkedService, 'writeAccessResourceId') ? linkedService.writeAccessResourceId : ''
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
+    
   }
 }]
 
@@ -188,14 +188,14 @@ module logAnalyticsWorkspace_savedSearches 'savedSearches/deploy.bicep' = [for (
   params: {
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
     name: '${savedSearch.name}${uniqueString(deployment().name)}'
-    etag: contains(savedSearch, 'eTag') ? savedSearch.etag : '*'
+    //etag: contains(savedSearch, 'eTag') ? savedSearch.etag : '*'
     displayName: savedSearch.displayName
     category: savedSearch.category
     query: savedSearch.query
     functionAlias: contains(savedSearch, 'functionAlias') ? savedSearch.functionAlias : ''
     functionParameters: contains(savedSearch, 'functionParameters') ? savedSearch.functionParameters : ''
     version: contains(savedSearch, 'version') ? savedSearch.version : 2
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
+    
   }
 }]
 
@@ -216,7 +216,7 @@ module logAnalyticsWorkspace_dataSources 'dataSources/deploy.bicep' = [for (data
     syslogName: contains(dataSource, 'syslogName') ? dataSource.syslogName : ''
     syslogSeverities: contains(dataSource, 'syslogSeverities') ? dataSource.syslogSeverities : []
     performanceCounters: contains(dataSource, 'performanceCounters') ? dataSource.performanceCounters : []
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
+    
   }
 }]
 
