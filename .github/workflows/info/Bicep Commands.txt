@@ -13,15 +13,19 @@
 # Obtain Azure Government endpoints for Azure services
     az cloud show --name AzureUSGovernment
 
-Event Hubnamespace & Event Hub
-==============================
+==================================
+# Event Hubnamespace & Event Hub #
+==================================
 
-# azurerm_eventhub is created with wrong partition count #13096
-https://github.com/hashicorp/terraform-provider-azurerm/issues/13096
+    # azurerm_eventhub is created with wrong partition count #13096
+    https://github.com/hashicorp/terraform-provider-azurerm/issues/13096
 
+    # Azure Event Hubs - Resource Manager exceptions
+    https://docs.microsoft.com/en-us/azure/event-hubs/resource-manager-exceptions#error-code-badrequest
 
-Azure Policy
-============
+================
+# Azure Policy #
+================
 
-# Policies included in Azure Landing Zones reference implementations
-https://github.com/Azure/Enterprise-Scale/blob/main/docs/ESLZ-Policies.md
+    # Policies included in Azure Landing Zones reference implementations
+    https://github.com/Azure/Enterprise-Scale/blob/main/docs/ESLZ-Policies.md
