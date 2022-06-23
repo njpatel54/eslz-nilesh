@@ -1,0 +1,110 @@
+# This is a basic workflow to help you get started with Actions
+
+name: eslz - platform policy definitions
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+   branches: 
+      - main 
+   paths:
+     - .github/workflows/eslz-platform-policy-definitions.yml
+      
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'Lint and Build Bicep'
+      run: az bicep build --file ./eslz/managementServices/policy/customPolicyDefinition.bicep
+
+  validate: 
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with: 
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          environment: ${{ secrets.AZURE_ENVIRONMENT }}
+          enable-AzPSSession: false
+        
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+
+    - uses: Azure/cli@v1
+      name: 'Run preflight validation'
+      with:
+        inlineScript: |
+            az deployment mg validate \
+              --name 'Custom-Policy-Definitions-MG-Scope' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
+              --parameters targetMgId=${{ secrets.AZURE_MG_TOP }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+
+  preview:
+      runs-on: ubuntu-latest
+      needs: [validate]
+      steps:
+      - uses: actions/checkout@v2
+      
+      - uses: azure/login@v1
+        name: 'Login to Azure'
+        with:
+         creds: ${{ secrets.AZURE_CREDENTIALS }}
+         environment: ${{ secrets.AZURE_ENVIRONMENT }}
+         enable-AzPSSession: false
+        
+      - name: 'Set Azure Subscription'
+        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                
+      - uses: Azure/cli@v1
+        name: 'Run what-if'
+        with:
+          inlineScript: |
+            az deployment mg what-if \
+              --name 'Custom-Policy-Definitions-MG-Scope' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
+              --parameters targetMgId=${{ secrets.AZURE_MG_TOP }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [preview]
+    environment: Production
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploying Custom Policy Definitions'
+      with:
+        inlineScript: |
+            az deployment mg create \
+              --name 'Custom-Policy-Definitions-MG-Scope' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
+              --parameters targetMgId=${{ secrets.AZURE_MG_TOP }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }}

@@ -20,14 +20,6 @@
           "description": "Private DNS Zone Identifier"
         }
       },
-      "azureWebPrivateDnsZoneId": {
-        "type": "string",
-        "metadata": {
-          "displayName": "azureWebPrivateDnsZoneId",
-          "strongType": "Microsoft.Network/privateDnsZones",
-          "description": "Private DNS Zone Identifier"
-        }
-      },
       "azureBatchPrivateDnsZoneId": {
         "type": "string",
         "metadata": {
@@ -204,19 +196,6 @@
         "parameters": {
           "privateDnsZoneId": {
             "value": "[[parameters('azureFileprivateDnsZoneId')]"
-          },
-          "effect": {
-            "value": "[[parameters('effect')]"
-          }
-        },
-        "groupNames": []
-      },
-      {
-        "policyDefinitionReferenceId": "DINE-Private-DNS-Azure-Web",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/0b026355-49cb-467b-8ac4-f777874e175a",
-        "parameters": {
-          "privateDnsZoneId": {
-            "value": "[[parameters('azureWebPrivateDnsZoneId')]"
           },
           "effect": {
             "value": "[[parameters('effect')]"
@@ -459,6 +438,6 @@
         "groupNames": []
       }
     ],
-    "policyDefinitionGroups": null
+    "policyDefinitionGroups": []
   }
 }

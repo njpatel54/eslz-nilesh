@@ -100,32 +100,6 @@
         ],
         "defaultValue": "Deny"
       },
-      "PostgreSQLFlexPublicIpDenyEffect": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Public network access should be disabled for PostgreSql Flexible Server",
-          "description": "This policy denies creation of Postgre SQL Flexible DB accounts with exposed public endpoints"
-        },
-        "allowedValues": [
-          "Audit",
-          "Deny",
-          "Disabled"
-        ],
-        "defaultValue": "Deny"
-      },
-      "MySQLFlexPublicIpDenyEffect": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Public network access should be disabled for MySQL Flexible Server",
-          "description": "This policy denies creation of MySql Flexible Server DB accounts with exposed public endpoints"
-        },
-        "allowedValues": [
-          "Audit",
-          "Deny",
-          "Disabled"
-        ],
-        "defaultValue": "Deny"
-      },
       "BatchPublicIpDenyEffect": {
         "type": "String",
         "metadata": {
@@ -212,26 +186,6 @@
         "groupNames": []
       },
       {
-        "policyDefinitionReferenceId": "PostgreSQLFlexDenyPublicIP",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/5e1de0e3-42cb-4ebc-a86d-61d0c619ca48",
-        "parameters": {
-          "effect": {
-            "value": "[[parameters('PostgreSQLFlexPublicIpDenyEffect')]"
-          }
-        },
-        "groupNames": []
-      },
-      {
-        "policyDefinitionReferenceId": "MySQLFlexDenyPublicIP",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/c9299215-ae47-4f50-9c54-8a392f68a052",
-        "parameters": {
-          "effect": {
-            "value": "[[parameters('MySQLFlexPublicIpDenyEffect')]"
-          }
-        },
-        "groupNames": []
-      },
-      {
         "policyDefinitionReferenceId": "BatchDenyPublicIP",
         "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/74c5a0ae-5e48-4738-b093-65e23a060488",
         "parameters": {
@@ -242,6 +196,6 @@
         "groupNames": []
       }
     ],
-    "policyDefinitionGroups": null
+    "policyDefinitionGroups": []
   }
 }

@@ -2,11 +2,12 @@ targetScope = 'managementGroup'
 
 param policyAssignments array = []
 
-module policyAssignment_mg 'managementGroup/deploy.bicep' = [ for (policyAssignment, i) in policyAssignments :  {
+module policyAssignment_mg '../../../modules/authorization/policyAssignments/managementGroup/deploy.bicep' = [ for (policyAssignment, i) in policyAssignments :  {
   name: '${policyAssignment.name}-PolicyAssignment-MG-Module-${i}'
   scope: managementGroup(policyAssignment.managementGroupId)
   params: {
     name: policyAssignment.name
+    location: policyAssignment.location
     policyDefinitionId: policyAssignment.policyDefinitionId
     displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
     description: !empty(policyAssignment.description) ? policyAssignment.description : ''
@@ -18,7 +19,6 @@ module policyAssignment_mg 'managementGroup/deploy.bicep' = [ for (policyAssignm
     enforcementMode: policyAssignment.enforcementMode
     notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
     managementGroupId: policyAssignment.managementGroupId
-    location: policyAssignment.location
   }
 }]
 

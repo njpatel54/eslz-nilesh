@@ -2,11 +2,11 @@ targetScope = 'subscription'
 
 param policyAssignments array = []
 
-module policyAssignment_sub 'subscription/deploy.bicep' = [ for (policyAssignment, i) in policyAssignments :  {
+module policyAssignment_sub '../../../modules/authorization/policyAssignments/subscription/deploy.bicep' = [ for (policyAssignment, i) in policyAssignments :  {
   name: '${policyAssignment.name}-PolicyAssignment-SUB-Module-${i}'
-  scope: subscription(policyAssignment.subscriptionId)
   params: {
     name: policyAssignment.name
+    location: policyAssignment.location
     policyDefinitionId: policyAssignment.policyDefinitionId
     displayName: !empty(policyAssignment.displayName) ? policyAssignment.displayName : ''
     description: !empty(policyAssignment.description) ? policyAssignment.description : ''
@@ -18,7 +18,6 @@ module policyAssignment_sub 'subscription/deploy.bicep' = [ for (policyAssignmen
     enforcementMode: policyAssignment.enforcementMode
     notScopes: !empty(policyAssignment.notScopes) ? policyAssignment.notScopes : []
     subscriptionId: policyAssignment.subscriptionId
-    location: policyAssignment.location
   }
 }]
 

@@ -48,13 +48,6 @@
           "description": "Enable or disable the execution of the policy"
         }
       },
-      "enableAscForSqlOnVm": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Effect",
-          "description": "Enable or disable the execution of the policy"
-        }
-      },
       "enableAscForDns": {
         "type": "String",
         "metadata": {
@@ -63,27 +56,6 @@
         }
       },
       "enableAscForArm": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Effect",
-          "description": "Enable or disable the execution of the policy"
-        }
-      },
-      "enableAscForOssDb": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Effect",
-          "description": "Enable or disable the execution of the policy"
-        }
-      },
-      "enableAscForAppServices": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Effect",
-          "description": "Enable or disable the execution of the policy"
-        }
-      },
-      "enableAscForKeyVault": {
         "type": "String",
         "metadata": {
           "displayName": "Effect",
@@ -114,41 +86,11 @@
     },
     "policyDefinitions": [
       {
-        "policyDefinitionReferenceId": "defenderForOssDb",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/44433aa3-7ec2-4002-93ea-65c65ff0310a",
-        "parameters": {
-          "effect": {
-            "value": "[[parameters('enableAscForOssDb')]"
-          }
-        },
-        "groupNames": []
-      },
-      {
         "policyDefinitionReferenceId": "defenderForVM",
         "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/8e86a5b6-b9bd-49d1-8e21-4bb8a0862222",
         "parameters": {
           "effect": {
             "value": "[[parameters('enableAscForServers')]"
-          }
-        },
-        "groupNames": []
-      },
-      {
-        "policyDefinitionReferenceId": "defenderForSqlServerVirtualMachines",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/50ea7265-7d8c-429e-9a7d-ca1f410191c3",
-        "parameters": {
-          "effect": {
-            "value": "[[parameters('enableAscForSqlOnVm')]"
-          }
-        },
-        "groupNames": []
-      },
-      {
-        "policyDefinitionReferenceId": "defenderForAppServices",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/b40e7bcd-a1e5-47fe-b9cf-2f534d0bfb7d",
-        "parameters": {
-          "effect": {
-            "value": "[[parameters('enableAscForAppServices')]"
           }
         },
         "groupNames": []
@@ -169,16 +111,6 @@
         "parameters": {
           "effect": {
             "value": "[[parameters('enableAscForContainers')]"
-          }
-        },
-        "groupNames": []
-      },
-      {
-        "policyDefinitionReferenceId": "defenderForKeyVaults",
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/1f725891-01c0-420a-9059-4fa46cb770b7",
-        "parameters": {
-          "Effect": {
-            "value": "[[parameters('enableAscForKeyVault')]"
           }
         },
         "groupNames": []
@@ -240,6 +172,6 @@
         "groupNames": []
       }
     ],
-    "policyDefinitionGroups": null
+    "policyDefinitionGroups": []
   }
 }

@@ -1,0 +1,21 @@
+az deployment mg create `
+	--name "PolicyAssignment-MG-Scope" `
+	--location "USGovVirginia" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\old\mg.deploy.bicep" `
+	--parameters "C:\Temp\test\new\mg.parameters.json" `
+	--management-group-id "mg-A2g"
+
+
+az deployment sub create `
+	--name "PolicyAssignment-SUB-Scope" `
+	--location "USGovVirginia" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\old\sub.deploy.bicep" `
+	--parameters "C:\Temp\test\new\sub.parameters.json"
+
+
+
+az deployment group create `
+	--name "PolicyAssignment-RG-Scope" `
+	--resource-group "rg-ccs-prod-usva-ui2t" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\old\rg.deploy.bicep" `
+	--parameters "C:\Temp\test\new\rg.parameters.json"

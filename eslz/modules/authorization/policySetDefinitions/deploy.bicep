@@ -32,24 +32,6 @@ param parameters object = {}
 @sys.description('Optional. Location deployment metadata.')
 param location string = deployment().location
 
-@sys.description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
-var enableReferencedModulesTelemetry = false
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  location: location
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
-
 module policySetDefinition_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId)) {
   name: '${uniqueString(deployment().name, location)}-PolicySetDefinition-MG-Module'
   scope: managementGroup(managementGroupId)
@@ -63,7 +45,7 @@ module policySetDefinition_mg 'managementGroup/deploy.bicep' = if (empty(subscri
     policyDefinitionGroups: !empty(policyDefinitionGroups) ? policyDefinitionGroups : []
     managementGroupId: managementGroupId
     location: location
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
+    
   }
 }
 
@@ -80,7 +62,7 @@ module policySetDefinition_sub 'subscription/deploy.bicep' = if (!empty(subscrip
     policyDefinitionGroups: !empty(policyDefinitionGroups) ? policyDefinitionGroups : []
     subscriptionId: subscriptionId
     location: location
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
+    
   }
 }
 
