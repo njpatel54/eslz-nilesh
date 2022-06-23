@@ -113,6 +113,7 @@
         "value": [
             {
                 "name": "evh-ccs-prod-usva-siem",
+                "partitionCount": "1",
                 "authorizationRules": [
                     {
                         "name": "RootManageSharedAccessKey",
