@@ -50,9 +50,10 @@ jobs:
             az deployment mg validate \
               --name 'Custom-Policy-Definitions-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
-              --parameters targetMgId=${{ secrets.AZURE_MG_TOP }} \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
 
   preview:
       runs-on: ubuntu-latest
@@ -77,9 +78,10 @@ jobs:
             az deployment mg what-if \
               --name 'Custom-Policy-Definitions-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
-              --parameters targetMgId=${{ secrets.AZURE_MG_TOP }} \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -105,6 +107,7 @@ jobs:
             az deployment mg create \
               --name 'Custom-Policy-Definitions-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
-              --parameters targetMgId=${{ secrets.AZURE_MG_TOP }} \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
