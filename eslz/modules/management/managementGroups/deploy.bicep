@@ -30,3 +30,5 @@ output name string = managementGroup.name
 
 @description('The resource ID of the management group.')
 output resourceId string = managementGroup.id
+
+output location string = location
