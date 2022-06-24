@@ -5,17 +5,47 @@ az deployment mg create `
 	--parameters "C:\Temp\test\new\mg.parameters.json" `
 	--management-group-id "mg-A2g"
 
-
 az deployment sub create `
 	--name "PolicyAssignment-SUB-Scope" `
 	--location "USGovVirginia" `
 	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\old\sub.deploy.bicep" `
 	--parameters "C:\Temp\test\new\sub.parameters.json"
 
-
-
 az deployment group create `
 	--name "PolicyAssignment-RG-Scope" `
 	--resource-group "rg-ccs-prod-usva-ui2t" `
 	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\old\rg.deploy.bicep" `
 	--parameters "C:\Temp\test\new\rg.parameters.json"
+
+az deployment mg create `
+	--name "Policy-Assignment-MG-Scope" `
+	--location "USGovVirginia" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\customPolicyAssignments.bicep" `
+	--management-group-id "mg-A2g" `
+	--parameters location="USGovVirginia" targetMgId="mg-A2g" diagnosticWorkspaceId="/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+
+=======
+Tested 
+=======
+
+az deployment mg create `
+  --template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\customPolicyDefinitions.bicep" `
+  --parameters parTargetManagementGroupId="mg-A2g" `
+  --location USGovVirginia `
+  --management-group-id "mg-A2g"
+
+az deployment mg create `
+	--name "Custom-Policy-Definitions-MG-Scope" `
+	--location "USGovVirginia" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\customPolicyDefinition.bicep" `
+	--management-group-id "mg-A2g"
+	
+az deployment mg create `
+	--name "Policy-Assignment-MG-Scope" `
+	--location "USGovVirginia" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\mg.policy.assignment.bicep" `
+	--parameters "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\.parameters\mg.parameters.json" `
+	--management-group-id "mg-A2g"
+
+
+

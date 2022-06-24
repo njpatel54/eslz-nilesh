@@ -108,7 +108,7 @@ param diagnosticEventHubName string = ''
 
 // Create Resoruce Group
 module siem_rg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${uniqueString(deployment().name, location)}-${rgName}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${rgName}'
   scope: subscription(mgmtsubid)
   params: {
     name: rgName
@@ -119,7 +119,7 @@ module siem_rg '../modules/resourceGroups/deploy.bicep'= {
 
 // Create Log Analytics Workspace
 module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
-  name: 'loga-${uniqueString(deployment().name, location)}-${lawName}'
+  name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${lawName}'
   scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     siem_rg
@@ -134,7 +134,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
 
 // Create Storage Account
 module sa '../modules/storageAccounts/deploy.bicep' = {
-  name: 'sa-${uniqueString(deployment().name, location)}-${stgAcctName}'
+  name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     loga
@@ -150,7 +150,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
 
 // Create Event Hub Namespace and Event Hub
 module eh '../modules/namespaces/deploy.bicep' = {
-  name: 'eh_${suffix}'
+  name: 'eh-${take(uniqueString(deployment().name, location), 4)}-${eventhubNamespaceName}'
   scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     loga
@@ -168,7 +168,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
 
 // Create Automation Account and link it to Log Analytics Workspace
 module aa '../modules/automation/automationAccounts/deploy.bicep' = {
-  name: 'aa-${uniqueString(deployment().name, location)}-${automationAcctName}'
+  name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     siem_rg
