@@ -172,13 +172,13 @@
                     "displayName": "Policy initiative - NIST SP 800-171 Rev. 2",
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9",
                     "parameters": {
-                        "logAnalyticsWorkspaceId": {
+                        "logAnalyticsWorkspaceIDForVMAgents": {
                             "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
                         },
-                        "MembersToExclude": {
+                        "membersToExcludeInLocalAdministratorsGroup": {
                             "value": "test@rajdisha.onmicrosoft.us"
                         },                            
-                        "MembersToInclude": {
+                        "membersToIncludeInLocalAdministratorsGroup": {
                             "value": "admin@rajdisha.onmicrosoft.us"
                         }
                     },
