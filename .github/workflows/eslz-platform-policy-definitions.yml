@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/managementServices/policy/customPolicyDefinition.bicep
+      run: az bicep build --file ./eslz/managementServices/customPolicyDefinition.bicep
 
   validate: 
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
               --name 'Custom-Policy-Definitions-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-              --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
+              --template-file ./eslz/managementServices/customPolicyDefinition.bicep \
               --parameters location=${{ secrets.AZURE_LOCATION }} \
                            targetMgId=${{ secrets.AZURE_MG_TOP }}
 
@@ -75,7 +75,7 @@ jobs:
               --name 'Custom-Policy-Definitions-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-              --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
+              --template-file ./eslz/managementServices/customPolicyDefinition.bicep \
               --parameters location=${{ secrets.AZURE_LOCATION }} \
                            targetMgId=${{ secrets.AZURE_MG_TOP }}
 
@@ -104,6 +104,6 @@ jobs:
               --name 'Custom-Policy-Definitions-MG-Scope' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-              --template-file ./eslz/managementServices/policy/customPolicyDefinition.bicep \
+              --template-file ./eslz/managementServices/customPolicyDefinition.bicep \
               --parameters location=${{ secrets.AZURE_LOCATION }} \
                            targetMgId=${{ secrets.AZURE_MG_TOP }}

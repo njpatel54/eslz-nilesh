@@ -1,0 +1,66 @@
+1 - Walk through of Workflow
+
+2 - Walk through of Modules
+
+3 - Run Workflow
+
+	Pre-requisites 
+		Azure AD App - Service Principle
+		Azure AD Group
+		Role Assignment
+		GitHub Secrets
+
+	Management Group
+	Management Services
+		Update Secrets with
+			Storage Account ID
+			LAW ID
+			Event Hub Name
+			Event Hub Namespace Authrization Rule ID
+	Platform VNets
+	Policy Definitions
+	Policy Assignments
+
+4 - Walk through
+
+	Management Group
+		Parameters file
+		Bicep Modules
+		MG Structure
+		Role Assignments	(MG & SUB)
+		Subscriptions under MG
+		Tgas - Subscriptions
+		Deployment Outputs
+
+	Management Services
+		Resource Group
+		LAW
+		SA
+		EH (Namespace & Hubs)
+		AA
+		Diag Settings (Subscriptions)
+		Deployment Outputs
+
+	Platform VNets
+		Parameters (Names of RG, VNets etc.)
+		Resource Group
+		Hub VNet
+		Spoke VNets
+		Peerings
+		Azure Firewall
+		Bastion Hosts
+		Diag Settings for (VNets, RG, Firewall, Bastion Host etc.)
+		Deployment Outputs
+
+	Policy Definitions
+		Code/Folder Structure 
+			policyDefinitions
+			policySetDefinitions
+			bicep files
+		MG Scope Deployment
+		Definitions/Initiatives
+
+	Policy Assignments
+		Parameters file
+		MG Scope Assignment
+

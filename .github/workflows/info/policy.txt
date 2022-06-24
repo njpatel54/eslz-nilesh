@@ -48,4 +48,20 @@ az deployment mg create `
 	--management-group-id "mg-A2g"
 
 
+========================
+NIST SP 800-171 Rev. 2
+========================
 
+Policy Initiative Name - NIST SP 800-171 Rev. 2
+Policy Definition ID - /providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9
+
+
+List of users that should be excluded from Windows virtual machines' Administrators group
+MembersToExclude - test@rajdisha.onmicrosoft.us
+
+
+List of users that should be included in Windows virtual machines' Administrators group
+MembersToInclude - test@rajdisha.onmicrosoft.us
+
+Log Analytics workspace ID for virtual machine agent reporting
+logAnalyticsWorkspaceId - /subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem
