@@ -87,9 +87,6 @@
     "storageaccount_sku": {
       "value":"Standard_LRS"
     },
-    "eventhubNamespaceName": {
-      "value": "evhns-ccs-prod-usva-siem"
-    },
     "authorizationRules": {
         "value": [
             {
@@ -112,7 +109,7 @@
     "eventHubs": {
         "value": [
             {
-                "name": "evh-ccs-prod-usva-siem",
+                "name": "evh-ccs-prod-usva-001",
                 "partitionCount": 1,
                 "authorizationRules": [
                     {

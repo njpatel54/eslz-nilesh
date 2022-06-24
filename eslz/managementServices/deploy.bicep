@@ -6,9 +6,6 @@ param diagSettingName string
 @description('Optional. List of gallerySolutions to be created in the log analytics workspace.')
 param gallerySolutions array = []
 
-@description('Required. Name for the Event Hub Namespace.')
-param eventhubNamespaceName string
-
 @description('Required. Authorization Rules for Event Hub Namespace.')
 param authorizationRules array = []
 
@@ -87,8 +84,9 @@ param region string
 
 // Build param values using string interpolation
 param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
-param lawName string = 'log-${projowner}-${opscope}-${region}-siem'
-param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
+param lawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
+param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-${suffix}'
+param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
 
 // From Parameters Files
