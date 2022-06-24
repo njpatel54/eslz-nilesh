@@ -1,23 +1,17 @@
-# This is a basic workflow to help you get started with Actions
-
 name: eslz - mg policy assignment
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-   branches: 
-      - main 
-   paths:
-     - .github/workflows/eslz-mg-policy-assignment.yml
+  # push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/eslz-mg-policy-assignment.yml
       
-  pull_request:
-    branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
   lint:
@@ -25,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/policy/policyAssignments/mg.deploy.bicep
+      run: az bicep build --file ./eslz/managementServices/mg.policy.assignment.bicep
 
   validate: 
     runs-on: ubuntu-latest
@@ -47,12 +41,12 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-            az deployment mg validate \
-              --name 'PolicyAssignment-MG-Scope' \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyAssignments/mg.deploy.bicep \
-              --parameters ./eslz/policy/policyAssignments/.parameters/mg.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+          az deployment mg validate \
+            --name "Policy-Assignment-MG-Scope" \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/managementServices/mg.policy.assignment.bicep \
+            --parameters ./eslz/managementServices/.parameters/mg.policy.assignment.parameters.json \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
   preview:
       runs-on: ubuntu-latest
@@ -75,10 +69,10 @@ jobs:
         with:
           inlineScript: |
             az deployment mg what-if \
-              --name 'PolicyAssignment-MG-Scope' \
+              --name "Policy-Assignment-MG-Scope" \
               --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyAssignments/mg.deploy.bicep \
-              --parameters ./eslz/policy/policyAssignments/.parameters/mg.parameters.json \
+              --template-file ./eslz/managementServices/mg.policy.assignment.bicep \
+              --parameters ./eslz/managementServices/.parameters/mg.policy.assignment.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
   deploy:
@@ -102,9 +96,11 @@ jobs:
       name: 'Policy Assignment - Management Group Scope'
       with:
         inlineScript: |
-            az deployment mg create \
-              --name 'PolicyAssignment-MG-Scope' \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --template-file ./eslz/policy/policyAssignments/mg.deploy.bicep \
-              --parameters ./eslz/policy/policyAssignments/.parameters/mg.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+          az deployment mg create \
+            --name "Policy-Assignment-MG-Scope" \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/managementServices/mg.policy.assignment.bicep \
+            --parameters ./eslz/managementServices/.parameters/mg.policy.assignment.parameters.json \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }}
+
+

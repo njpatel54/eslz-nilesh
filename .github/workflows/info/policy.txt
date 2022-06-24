@@ -37,13 +37,13 @@ az deployment mg create `
 az deployment mg create `
 	--name "Custom-Policy-Definitions-MG-Scope" `
 	--location "USGovVirginia" `
-	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\customPolicyDefinition.bicep" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\customPolicyDefinition.bicep" `
 	--management-group-id "mg-A2g"
-	
+
 az deployment mg create `
 	--name "Policy-Assignment-MG-Scope" `
 	--location "USGovVirginia" `
-	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\policy\mg.policy.assignment.bicep" `
+	--template-file "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\mg.policy.assignment.bicep" `
 	--parameters "C:\Users\nileshpa\OneDrive - Microsoft\Repos\eslz-nilesh\eslz\managementServices\.parameters\mg.parameters.json" `
 	--management-group-id "mg-A2g"
 
