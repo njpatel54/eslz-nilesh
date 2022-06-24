@@ -100,7 +100,9 @@ jobs:
               --template-file ./eslz/managementGroups/deploy.bicep \
               --parameters ./eslz/managementGroups/.parameters/parameters.json \
               --parameters location=${{ secrets.AZURE_LOCATION }}
-                
+
+  
+  # "deploy" job ---> deploys resoruces/configuration defined in Bicep/Paramters files  
   deploy:
       runs-on: ubuntu-latest
       needs: [preview]

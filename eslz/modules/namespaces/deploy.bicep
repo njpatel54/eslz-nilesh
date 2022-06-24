@@ -2,8 +2,6 @@
 @maxLength(50)
 param eventhubNamespaceName string = ''
 
-//param eventhubName string = ''
-
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
