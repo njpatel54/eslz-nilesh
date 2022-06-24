@@ -169,11 +169,17 @@
                 {
                     "name": "NIST SP 800-171 Rev. 2",
                     "description": "This initiative includes policies that address a subset of NIST SP 800-171 Rev. 2 requirements. Policies may be added or removed in future releases. For more information, visit https://aka.ms/nist800171r2-initiative.",
-                    "displayName": "This initiative includes policies that address a subset of NIST SP 800-171 Rev. 2 requirements. Policies may be added or removed in future releases. For more information, visit https://aka.ms/nist800171r2-initiative.",
+                    "displayName": "Policy initiative - NIST SP 800-171 Rev. 2",
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9",
                     "parameters": {
-                        "logAnalytics_1": {
+                        "logAnalyticsWorkspaceId": {
                             "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+                        },
+                        "MembersToExclude": {
+                            "value": "test@rajdisha.onmicrosoft.us"
+                        },                            
+                        "MembersToInclude": {
+                            "value": "admin@rajdisha.onmicrosoft.us"
                         }
                     },
                     "nonComplianceMessage": "NIST SP 800-171 Rev. 2 must be enabled",                    
