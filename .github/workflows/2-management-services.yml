@@ -44,7 +44,7 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az deployment sub validate \
+          az deployment tenant validate \
             --name 'Deploy-Platform-Management-Services' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
@@ -73,7 +73,7 @@ jobs:
       name: 'Run what-if'
       with:
         inlineScript: |
-          az deployment sub what-if \
+          az deployment tenant what-if \
             --location ${{ secrets.AZURE_LOCATION }} \
             --name 'Deploy-Platform-Management-Services' \
             --template-file ./eslz/managementServices/deploy.bicep \
