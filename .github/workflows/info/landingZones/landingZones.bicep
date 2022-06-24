@@ -7,7 +7,7 @@
 	//Move Subscriptions to appropriate MG
 	//Configure Diagnostic Settings for Subscriptions & MGs
 	//Configure Tags
-  //Configure Rol Assignments
+  //Configure Role Assignments
   //Configure Policy Assignments
 
 

@@ -30,6 +30,8 @@
     # Policies included in Azure Landing Zones reference implementations
     https://github.com/Azure/Enterprise-Scale/blob/main/docs/ESLZ-Policies.md
 
+    # GitHub Action for Azure Policy Compliance Scan
+    https://github.com/Azure/policy-compliance-scan
 
 ======================
 # Azure Cli Commands #
