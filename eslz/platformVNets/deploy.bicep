@@ -153,7 +153,6 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [ for (
   }
 }]
 
-
 // Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${hubVnetName}'
@@ -254,6 +253,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubVnet
+    spokeVnet
     afwPip
     afwp
   ]
@@ -305,6 +305,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubVnet
+    spokeVnet
     bhPip
   ]
   params:{

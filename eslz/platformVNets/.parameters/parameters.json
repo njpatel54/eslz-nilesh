@@ -297,7 +297,7 @@
                         "remotePeeringAllowVirtualNetworkAccess": true,
                         "remotePeeringAllowForwardedTraffic": true
                     }
-                ]                
+                ]         
               },
               {
                 "name": "vnet-ccs-prod-usva-iden",

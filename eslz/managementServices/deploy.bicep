@@ -206,19 +206,6 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
-/*
-// Create Policy Assignments
-module polAssignments '../modules/authorization/policyAssignments/deploy.bicep' = [ for policyAssignment in policyAssignments: {
-  scope: 
-  name: 'polAssignment-${policyAssignment.name}'
-  params: {
-    name: 
-    policyDefinitionId: 
-  }
-}
-*/
-
-
 
 
 
