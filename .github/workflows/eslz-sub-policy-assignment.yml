@@ -2,14 +2,14 @@ name: eslz - sub policy assignment
 
 on:
 
-  push:
-   branches: 
-      - main 
-   paths:
-     - .github/workflows/eslz-sub-policy-assignment.yml
+  #push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/eslz-sub-policy-assignment.yml
       
-  pull_request:
-    branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
 
   workflow_dispatch:
 
