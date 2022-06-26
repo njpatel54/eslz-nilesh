@@ -820,21 +820,6 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).EncryptedVMDisksEffect.parameters
       }
       {
-        definitionReferenceId: 'HealthcareAPIsCMKEffect'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/051cba44-2429-45b9-9649-46cec11c7119'
-        definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).HealthcareAPIsCMKEffect.parameters
-      }
-      {
-        definitionReferenceId: 'MySQLCMKEffect'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/83cef61d-dbd1-4b20-a4fc-5fbc7da10833'
-        definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).MySQLCMKEffect.parameters
-      }
-      {
-        definitionReferenceId: 'PostgreSQLCMKEffect'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/18adea5e-f416-4d0f-8aa8-d24321e3e274'
-        definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).PostgreSQLCMKEffect.parameters
-      }
-      {
         definitionReferenceId: 'SqlServerTDECMKEffect'
         definitionId: '/providers/Microsoft.Authorization/policyDefinitions/0d134df8-db83-46fb-ad72-fe0c9428c8dd'
         definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).SqlServerTDECMKEffect.parameters
@@ -1013,7 +998,6 @@ module policySetDefinitions '../modules/authorization/policySetDefinitions/manag
       policyDefinitionId: policySetDef.definitionId
       parameters: policySetDef.definitionParameters
     }]
-    policyDefinitionGroups: policySet.setDefinition.properties.policyDefinitionGroups
-    
+    policyDefinitionGroups: !empty(policySet.setDefinition.properties.policyDefinitionGroups) ? policySet.setDefinition.properties.policyDefinitionGroups : []
   }
 }]
