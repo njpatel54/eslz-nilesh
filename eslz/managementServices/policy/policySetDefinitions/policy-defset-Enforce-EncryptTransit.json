@@ -359,7 +359,7 @@
         ]
       }
     },
-    "policyDefinitionGroups": [],
+    "policyDefinitionGroups": null,
     "metadata": {
       "version": "1.0.0",
       "category": "Encryption"

@@ -75,7 +75,7 @@
         }
       }
     },
-    "policyDefinitionGroups": [],
+    "policyDefinitionGroups": null,
     "metadata": {
       "version": "3.0.0",
       "category": "Security Center"
