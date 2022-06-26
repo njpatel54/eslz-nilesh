@@ -998,6 +998,6 @@ module policySetDefinitions '../modules/authorization/policySetDefinitions/manag
       policyDefinitionId: policySetDef.definitionId
       parameters: policySetDef.definitionParameters
     }]
-    policyDefinitionGroups: !empty(policySet.setDefinition.properties.policyDefinitionGroups) ? policySet.setDefinition.properties.policyDefinitionGroups : []
+    policyDefinitionGroups: policySet.setDefinition.properties.policyDefinitionGroups
   }
 }]
