@@ -85,7 +85,7 @@
         "policyDefinitionReferenceId": "defenderForVM",
         "parameters": {
           "effect": {
-            "value": "[parameters('enableAscForServers')]"
+            "value": "[[parameters('enableAscForServers')]"
           }
         }
       },
@@ -94,7 +94,7 @@
         "policyDefinitionReferenceId": "defenderForStorageAccounts",
         "parameters": {
           "effect": {
-            "value": "[parameters('enableAscForStorage')]"
+            "value": "[[parameters('enableAscForStorage')]"
           }
         }
       },
@@ -103,7 +103,7 @@
         "policyDefinitionReferenceId": "defenderForContainers",
         "parameters": {
           "effect": {
-            "value": "[parameters('enableAscForContainers')]"
+            "value": "[[parameters('enableAscForContainers')]"
           }
         }
       },
@@ -112,7 +112,7 @@
         "policyDefinitionReferenceId": "defenderForDns",
         "parameters": {
           "effect": {
-            "value": "[parameters('enableAscForDns')]"
+            "value": "[[parameters('enableAscForDns')]"
           }
         }
       },
@@ -121,7 +121,7 @@
         "policyDefinitionReferenceId": "defenderForArm",
         "parameters": {
           "effect": {
-            "value": "[parameters('enableAscForArm')]"
+            "value": "[[parameters('enableAscForArm')]"
           }
         }
       },
@@ -130,7 +130,7 @@
         "policyDefinitionReferenceId": "defenderForSqlPaas",
         "parameters": {
           "effect": {
-            "value": "[parameters('enableAscForSql')]"
+            "value": "[[parameters('enableAscForSql')]"
           }
         }
       },
@@ -139,7 +139,7 @@
         "policyDefinitionReferenceId": "securityEmailContact",
         "parameters": {
           "emailSecurityContact": {
-            "value": "[parameters('emailSecurityContact')]"
+            "value": "[[parameters('emailSecurityContact')]"
           }
         }
       },
@@ -148,13 +148,13 @@
         "policyDefinitionReferenceId": "ascExport",
         "parameters": {
           "resourceGroupName": {
-            "value": "[parameters('ascExportResourceGroupName')]"
+            "value": "[[parameters('ascExportResourceGroupName')]"
           },
           "resourceGroupLocation": {
-            "value": "[parameters('ascExportResourceGroupLocation')]"
+            "value": "[[parameters('ascExportResourceGroupLocation')]"
           },
           "workspaceResourceId": {
-            "value": "[parameters('logAnalytics')]"
+            "value": "[[parameters('logAnalytics')]"
           }
         }
       }

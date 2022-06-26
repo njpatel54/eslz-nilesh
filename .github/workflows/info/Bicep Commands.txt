@@ -38,7 +38,11 @@
     https://docs.microsoft.com/en-us/azure/governance/policy/samples/built-in-policies
     https://docs.microsoft.com/en-us/azure/governance/policy/samples/built-in-initiatives
 
-
+===============
+Tools/Utilities
+===============
+The quick and simple editor for cron schedule expressions by Cronitor
+https://crontab.guru/
 
 ======================
 # Azure Cli Commands #

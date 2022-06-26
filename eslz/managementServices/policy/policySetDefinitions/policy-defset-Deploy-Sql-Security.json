@@ -77,7 +77,7 @@
         "policyDefinitionReferenceId": "SqlDbTdeDeploySqlSecurity",
         "parameters": {
           "effect": {
-            "value": "[parameters('SqlDbTdeDeploySqlSecurityEffect')]"
+            "value": "[[parameters('SqlDbTdeDeploySqlSecurityEffect')]"
           }
         }
       },
@@ -86,7 +86,7 @@
         "policyDefinitionReferenceId": "SqlDbSecurityAlertPoliciesDeploySqlSecurity",
         "parameters": {
           "effect": {
-            "value": "[parameters('SqlDbSecurityAlertPoliciesDeploySqlSecurityEffect')]"
+            "value": "[[parameters('SqlDbSecurityAlertPoliciesDeploySqlSecurityEffect')]"
           }
         }
       },
@@ -95,7 +95,7 @@
         "policyDefinitionReferenceId": "SqlDbAuditingSettingsDeploySqlSecurity",
         "parameters": {
           "effect": {
-            "value": "[parameters('SqlDbAuditingSettingsDeploySqlSecurityEffect')]"
+            "value": "[[parameters('SqlDbAuditingSettingsDeploySqlSecurityEffect')]"
           }
         }
       },
@@ -104,13 +104,13 @@
         "policyDefinitionReferenceId": "SqlDbVulnerabilityAssessmentsDeploySqlSecurity",
         "parameters": {
           "effect": {
-            "value": "[parameters('SqlDbVulnerabilityAssessmentsDeploySqlSecurityEffect')]"
+            "value": "[[parameters('SqlDbVulnerabilityAssessmentsDeploySqlSecurityEffect')]"
           },
           "vulnerabilityAssessmentsEmail": {
-            "value": "[parameters('vulnerabilityAssessmentsEmail')]"
+            "value": "[[parameters('vulnerabilityAssessmentsEmail')]"
           },
           "vulnerabilityAssessmentsStorageID": {
-            "value": "[parameters('vulnerabilityAssessmentsStorageID')]"
+            "value": "[[parameters('vulnerabilityAssessmentsStorageID')]"
           }
         }
       }

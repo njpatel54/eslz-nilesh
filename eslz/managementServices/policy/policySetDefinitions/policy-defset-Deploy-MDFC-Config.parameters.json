@@ -2,62 +2,62 @@
   "ascExport": {
     "parameters": {
       "resourceGroupName": {
-        "value": "[parameters('ascExportResourceGroupName')]"
+        "value": "[[parameters('ascExportResourceGroupName')]"
       },
       "resourceGroupLocation": {
-        "value": "[parameters('ascExportResourceGroupLocation')]"
+        "value": "[[parameters('ascExportResourceGroupLocation')]"
       },
       "workspaceResourceId": {
-        "value": "[parameters('logAnalytics')]"
+        "value": "[[parameters('logAnalytics')]"
       }
     }
   },
   "defenderForArm": {
     "parameters": {
       "effect": {
-        "value": "[parameters('enableAscForArm')]"
+        "value": "[[parameters('enableAscForArm')]"
       }
     }
   },
   "defenderForContainers": {
     "parameters": {
       "effect": {
-        "value": "[parameters('enableAscForContainers')]"
+        "value": "[[parameters('enableAscForContainers')]"
       }
     }
   },
   "defenderForDns": {
     "parameters": {
       "effect": {
-        "value": "[parameters('enableAscForDns')]"
+        "value": "[[parameters('enableAscForDns')]"
       }
     }
   },
   "defenderForSqlPaas": {
     "parameters": {
       "effect": {
-        "value": "[parameters('enableAscForSql')]"
+        "value": "[[parameters('enableAscForSql')]"
       }
     }
   },
   "defenderForStorageAccounts": {
     "parameters": {
       "effect": {
-        "value": "[parameters('enableAscForStorage')]"
+        "value": "[[parameters('enableAscForStorage')]"
       }
     }
   },
   "defenderForVM": {
     "parameters": {
       "effect": {
-        "value": "[parameters('enableAscForServers')]"
+        "value": "[[parameters('enableAscForServers')]"
       }
     }
   },
   "securityEmailContact": {
     "parameters": {
       "emailSecurityContact": {
-        "value": "[parameters('emailSecurityContact')]"
+        "value": "[[parameters('emailSecurityContact')]"
       }
     }
   }

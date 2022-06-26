@@ -370,7 +370,7 @@
         "policyDefinitionReferenceId": "AppServiceHttpEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('AppServiceHttpEffect')]"
+            "value": "[[parameters('AppServiceHttpEffect')]"
           }
         }
       },
@@ -379,10 +379,10 @@
         "policyDefinitionReferenceId": "AppServiceminTlsVersion",
         "parameters": {
           "effect": {
-            "value": "[parameters('AppServiceTlsVersionEffect')]"
+            "value": "[[parameters('AppServiceTlsVersionEffect')]"
           },
           "minTlsVersion": {
-            "value": "[parameters('AppServiceminTlsVersion')]"
+            "value": "[[parameters('AppServiceminTlsVersion')]"
           }
         }
       },
@@ -391,7 +391,7 @@
         "policyDefinitionReferenceId": "APIAppServiceLatestTlsEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('APIAppServiceLatestTlsEffect')]"
+            "value": "[[parameters('APIAppServiceLatestTlsEffect')]"
           }
         }
       },
@@ -400,7 +400,7 @@
         "policyDefinitionReferenceId": "FunctionLatestTlsEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('FunctionLatestTlsEffect')]"
+            "value": "[[parameters('FunctionLatestTlsEffect')]"
           }
         }
       },
@@ -409,7 +409,7 @@
         "policyDefinitionReferenceId": "WebAppServiceLatestTlsEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('WebAppServiceLatestTlsEffect')]"
+            "value": "[[parameters('WebAppServiceLatestTlsEffect')]"
           }
         }
       },
@@ -418,7 +418,7 @@
         "policyDefinitionReferenceId": "APIAppServiceHttpsEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('APIAppServiceHttpsEffect')]"
+            "value": "[[parameters('APIAppServiceHttpsEffect')]"
           }
         }
       },
@@ -427,7 +427,7 @@
         "policyDefinitionReferenceId": "FunctionServiceHttpsEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('FunctionServiceHttpsEffect')]"
+            "value": "[[parameters('FunctionServiceHttpsEffect')]"
           }
         }
       },
@@ -436,7 +436,7 @@
         "policyDefinitionReferenceId": "WebAppServiceHttpsEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('WebAppServiceHttpsEffect')]"
+            "value": "[[parameters('WebAppServiceHttpsEffect')]"
           }
         }
       },
@@ -445,7 +445,7 @@
         "policyDefinitionReferenceId": "AKSIngressHttpsOnlyEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('AKSIngressHttpsOnlyEffect')]"
+            "value": "[[parameters('AKSIngressHttpsOnlyEffect')]"
           }
         }
       },
@@ -454,10 +454,10 @@
         "policyDefinitionReferenceId": "MySQLEnableSSLDeployEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('MySQLEnableSSLDeployEffect')]"
+            "value": "[[parameters('MySQLEnableSSLDeployEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('MySQLminimalTlsVersion')]"
+            "value": "[[parameters('MySQLminimalTlsVersion')]"
           }
         }
       },
@@ -466,10 +466,10 @@
         "policyDefinitionReferenceId": "MySQLEnableSSLEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('MySQLEnableSSLEffect')]"
+            "value": "[[parameters('MySQLEnableSSLEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('MySQLminimalTlsVersion')]"
+            "value": "[[parameters('MySQLminimalTlsVersion')]"
           }
         }
       },
@@ -478,10 +478,10 @@
         "policyDefinitionReferenceId": "PostgreSQLEnableSSLDeployEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('PostgreSQLEnableSSLDeployEffect')]"
+            "value": "[[parameters('PostgreSQLEnableSSLDeployEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('PostgreSQLminimalTlsVersion')]"
+            "value": "[[parameters('PostgreSQLminimalTlsVersion')]"
           }
         }
       },
@@ -490,10 +490,10 @@
         "policyDefinitionReferenceId": "PostgreSQLEnableSSLEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('PostgreSQLEnableSSLEffect')]"
+            "value": "[[parameters('PostgreSQLEnableSSLEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('PostgreSQLminimalTlsVersion')]"
+            "value": "[[parameters('PostgreSQLminimalTlsVersion')]"
           }
         }
       },
@@ -502,10 +502,10 @@
         "policyDefinitionReferenceId": "RedisTLSDeployEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('RedisTLSDeployEffect')]"
+            "value": "[[parameters('RedisTLSDeployEffect')]"
           },
           "minimumTlsVersion": {
-            "value": "[parameters('RedisMinTlsVersion')]"
+            "value": "[[parameters('RedisMinTlsVersion')]"
           }
         }
       },
@@ -514,7 +514,7 @@
         "policyDefinitionReferenceId": "RedisdisableNonSslPort",
         "parameters": {
           "effect": {
-            "value": "[parameters('RedisTLSDeployEffect')]"
+            "value": "[[parameters('RedisTLSDeployEffect')]"
           }
         }
       },
@@ -523,10 +523,10 @@
         "policyDefinitionReferenceId": "RedisDenyhttps",
         "parameters": {
           "effect": {
-            "value": "[parameters('RedisTLSEffect')]"
+            "value": "[[parameters('RedisTLSEffect')]"
           },
           "minimumTlsVersion": {
-            "value": "[parameters('RedisMinTlsVersion')]"
+            "value": "[[parameters('RedisMinTlsVersion')]"
           }
         }
       },
@@ -535,10 +535,10 @@
         "policyDefinitionReferenceId": "SQLManagedInstanceTLSDeployEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('SQLManagedInstanceTLSDeployEffect')]"
+            "value": "[[parameters('SQLManagedInstanceTLSDeployEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('SQLManagedInstanceMinTlsVersion')]"
+            "value": "[[parameters('SQLManagedInstanceMinTlsVersion')]"
           }
         }
       },
@@ -547,10 +547,10 @@
         "policyDefinitionReferenceId": "SQLManagedInstanceTLSEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('SQLManagedInstanceTLSEffect')]"
+            "value": "[[parameters('SQLManagedInstanceTLSEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('SQLManagedInstanceMinTlsVersion')]"
+            "value": "[[parameters('SQLManagedInstanceMinTlsVersion')]"
           }
         }
       },
@@ -559,10 +559,10 @@
         "policyDefinitionReferenceId": "SQLServerTLSDeployEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('SQLServerTLSDeployEffect')]"
+            "value": "[[parameters('SQLServerTLSDeployEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('SQLServerminTlsVersion')]"
+            "value": "[[parameters('SQLServerminTlsVersion')]"
           }
         }
       },
@@ -571,10 +571,10 @@
         "policyDefinitionReferenceId": "SQLServerTLSEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('SQLServerTLSEffect')]"
+            "value": "[[parameters('SQLServerTLSEffect')]"
           },
           "minimalTlsVersion": {
-            "value": "[parameters('SQLServerminTlsVersion')]"
+            "value": "[[parameters('SQLServerminTlsVersion')]"
           }
         }
       },
@@ -583,10 +583,10 @@
         "policyDefinitionReferenceId": "StorageHttpsEnabledEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('StorageHttpsEnabledEffect')]"
+            "value": "[[parameters('StorageHttpsEnabledEffect')]"
           },
           "minimumTlsVersion": {
-            "value": "[parameters('StorageMinimumTlsVersion')]"
+            "value": "[[parameters('StorageMinimumTlsVersion')]"
           }
         }
       },
@@ -595,10 +595,10 @@
         "policyDefinitionReferenceId": "StorageDeployHttpsEnabledEffect",
         "parameters": {
           "effect": {
-            "value": "[parameters('StorageDeployHttpsEnabledEffect')]"
+            "value": "[[parameters('StorageDeployHttpsEnabledEffect')]"
           },
           "minimumTlsVersion": {
-            "value": "[parameters('StorageMinimumTlsVersion')]"
+            "value": "[[parameters('StorageMinimumTlsVersion')]"
           }
         }
       }

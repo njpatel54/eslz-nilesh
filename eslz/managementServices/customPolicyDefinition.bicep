@@ -782,8 +782,8 @@ var customPolicySetDefinitions = [
   }
   {
     name: 'Enforce-Encryption-CMK'
-    setDefinition: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.json'))
-    setChildDefinitions: [
+    libSetDefinition: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.json'))
+    libSetChildDefinitions: [
       {
         definitionReferenceId: 'ACRCmkDeny'
         definitionId: '/providers/Microsoft.Authorization/policyDefinitions/5b9159ae-1701-4a6f-9a7a-aa9c8ddd0580'
@@ -818,6 +818,21 @@ var customPolicySetDefinitions = [
         definitionReferenceId: 'EncryptedVMDisksEffect'
         definitionId: '/providers/Microsoft.Authorization/policyDefinitions/0961003e-5a0a-4549-abde-af6a37f2724d'
         definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).EncryptedVMDisksEffect.parameters
+      }
+      {
+        definitionReferenceId: 'HealthcareAPIsCMKEffect'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/051cba44-2429-45b9-9649-46cec11c7119'
+        definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).HealthcareAPIsCMKEffect.parameters
+      }
+      {
+        definitionReferenceId: 'MySQLCMKEffect'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/83cef61d-dbd1-4b20-a4fc-5fbc7da10833'
+        definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).MySQLCMKEffect.parameters
+      }
+      {
+        definitionReferenceId: 'PostgreSQLCMKEffect'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/18adea5e-f416-4d0f-8aa8-d24321e3e274'
+        definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.parameters.json')).PostgreSQLCMKEffect.parameters
       }
       {
         definitionReferenceId: 'SqlServerTDECMKEffect'
