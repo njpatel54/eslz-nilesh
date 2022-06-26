@@ -782,8 +782,8 @@ var customPolicySetDefinitions = [
   }
   {
     name: 'Enforce-Encryption-CMK'
-    libSetDefinition: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.json'))
-    libSetChildDefinitions: [
+    setDefinition: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-Encryption-CMK.json'))
+    setChildDefinitions: [
       {
         definitionReferenceId: 'ACRCmkDeny'
         definitionId: '/providers/Microsoft.Authorization/policyDefinitions/5b9159ae-1701-4a6f-9a7a-aa9c8ddd0580'
