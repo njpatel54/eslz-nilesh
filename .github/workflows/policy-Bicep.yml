@@ -11,9 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Local repository checkout
+        uses: actions/checkout@v2
 
-    - name: Update Policy Definition Bicep Input Files
-      run: |
-        Write-Information "==> Running script..." -InformationAction Continue
-        .github/info/policy-bicep.ps1
-      shell: pwsh
+      - name: Update Policy Definition Bicep Input Files
+        run: |
+          Write-Information "==> Running script..." -InformationAction Continue
+          .github/info/policy-bicep.ps1
+        shell: pwsh
