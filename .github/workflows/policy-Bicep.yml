@@ -15,5 +15,5 @@ jobs:
     - name: Update Policy Definition Bicep Input Files
       run: |
         Write-Information "==> Running script..." -InformationAction Continue
-        ./eslz/managementServices/policy/policy.bicep.ps1
+        .github/info/policy-bicep.ps1
       shell: pwsh
