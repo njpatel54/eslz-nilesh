@@ -206,21 +206,17 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+@description('Output - Resoruce Id of Log Analytics Workspce')
+output logaId string = loga.outputs.resourceId
 
+@description('Output - Resoruce Id of Storage Account')
+output saId string = sa.outputs.resourceId
 
+@description('Output - Name of Event Hub')
+output ehName string = eventHubs[0].name
 
-
-
-
-
-
-
-
-
-
-
-
-
+@description('Output - Name of Event Hub')
+output ehnsAuthorizationId string = resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
 
 
 

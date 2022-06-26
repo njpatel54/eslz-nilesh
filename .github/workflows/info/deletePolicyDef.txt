@@ -1,13 +1,20 @@
+=====================================================================================
+# Delete all Policy Set Definitions with "policyType=Custom" (At Management Group Scope)
+=====================================================================================
 
-$mgId = "ES"
+$mgId = "mg-A2g"
 $policySets = az policy set-definition list --management-group $mgId --query "[?policyType=='Custom'].{Name:name}" -o tsv
 
 foreach ($policySet in $policySets)
 {
-    az policy set-definition delete --name $policySet --management-group $mgId
+    az policy set-definition delete --name $policySet --management-group $mgId 
 }
 
-$mgId = "ES"
+=====================================================================================
+# Delete all Policy Definitions with "policyType=Custom" (At Management Group Scope)
+=====================================================================================
+
+$mgId = "mg-A2g"
 $policies = az policy definition list --management-group $mgId --query "[?policyType=='Custom'].{Name:name}" -o tsv
 
 foreach ($policy in $policies)

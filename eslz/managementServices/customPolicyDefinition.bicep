@@ -382,7 +382,7 @@ var customPolicyDefinitions = [
   {
     name: 'Deploy-Windows-DomainJoin'
     definition: json(loadTextContent('policy/policyDefinitions/policy-def-Deploy-Windows-DomainJoin.json'))
-  }
+  } 
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')
@@ -961,8 +961,7 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Enforce-EncryptTransit.parameters.json')).WebAppServiceLatestTlsEffect.parameters
       }
     ]
-  }
-  
+  }  
 ]
 
 // Create Custom Policy Defintions
@@ -998,6 +997,6 @@ module policySetDefinitions '../modules/authorization/policySetDefinitions/manag
       policyDefinitionId: policySetDef.definitionId
       parameters: policySetDef.definitionParameters
     }]
-    policyDefinitionGroups: policySet.setDefinition.properties.policyDefinitionGroups
+    //policyDefinitionGroups: policySet.setDefinition.properties.policyDefinitionGroups
   }
 }]

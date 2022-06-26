@@ -124,31 +124,10 @@ Step 3
 # Replacing following ...																										       #
 # 			Old Values							New Values																			   #
 #           ----------					 		----------																			   #		
-#			"[[parameters"						"[parameters"																		   #
 #  			"[concat(variables('scope'), '"		"`${targetMgResourceId}"															   #
 #  			"')]`","							"`","																			       #
 ########################################################################################################################################
 
-
-$oldParams = "[[parameters"
-$newParams = "[parameters"
-$oldConcat = "[concat(variables('scope'), '"
-$newConcat = "`${targetMgResourceId}"
-$oldBracket = "')]`","
-$newBracket = "`","
-$fairfax = Get-Content .\eslz\managementServices\policy\fairfaxPolicies.json | ConvertFrom-Json -Depth 100
-$fairfax.variables.initiatives.policySetDefinitions.Count
-$policySetDefinitions = $fairfax.variables.initiatives.policySetDefinitions
-
-foreach($policySetDefinition in $policySetDefinitions){
-    $fielname = "policy-defset-" + $policySetDefinition.name
-    $filepath = "eslz\managementServices\policy\policySetDefinitions\" + "$fielname.json"
-    $policySetDefinition | ConvertTo-Json -Depth 100 > $filepath
-    $content = Get-Content $filepath
-    $content.Replace($oldParams,$newParams).Replace($oldConcat,$newConcat).Replace($oldBracket,$newBracket) | Set-Content -path $filepath
-}
-
-##########################
 $oldConcat = "[concat(variables('scope'), '"
 $newConcat = "`${targetMgResourceId}"
 $oldBracket = "')]`","
