@@ -1,0 +1,19 @@
+name: Policy to bicep
+
+on:
+  #schedule:
+  #  - cron: '0 8 * * 1-5'
+  workflow_dispatch: {}
+
+jobs:
+  update-templates:
+    name: Update Policy to bicep text file
+    runs-on: ubuntu-latest
+    steps:
+
+
+    - name: Update Policy Definition Bicep Input Files
+      run: |
+        Write-Information "==> Running script..." -InformationAction Continue
+        ./eslz/managementServices/policy/policy.bicep.ps1
+      shell: pwsh

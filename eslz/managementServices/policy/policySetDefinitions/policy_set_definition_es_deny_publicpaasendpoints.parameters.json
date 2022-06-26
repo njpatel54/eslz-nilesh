@@ -1,4 +1,11 @@
 {
+  "CosmosDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('CosmosPublicIpDenyEffect')]"
+      }
+    }
+  },
   "ACRDenyPaasPublicIP": {
     "parameters": {
       "effect": {
@@ -24,13 +31,6 @@
     "parameters": {
       "effect": {
         "value": "[[parameters('BatchPublicIpDenyEffect')]"
-      }
-    }
-  },
-  "CosmosDenyPaasPublicIP": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('CosmosPublicIpDenyEffect')]"
       }
     }
   },

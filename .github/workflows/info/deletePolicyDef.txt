@@ -1,0 +1,32 @@
+
+$mgId = "ES"
+$policySets = az policy set-definition list --management-group $mgId --query "[?policyType=='Custom'].{Name:name}" -o tsv
+
+foreach ($policySet in $policySets)
+{
+    az policy set-definition delete --name $policySet --management-group $mgId
+}
+
+$mgId = "ES"
+$policies = az policy definition list --management-group $mgId --query "[?policyType=='Custom'].{Name:name}" -o tsv
+
+foreach ($policy in $policies)
+{
+    az policy definition delete --name $policy --management-group $mgId
+}
+
+
+# Read json file and store data in hash table
+$policies = Get-Content policyDefinitions.json | Out-String | ConvertFrom-Json
+$values = $policies.policyDefinitions.value
+
+# Read data from hash table with depth of 20 and store in json file
+$values | ConvertTo-Json -depth 20 > c:\temp\test\new\test.json
+
+foreach ($value in $values)
+{
+    echo $value
+}
+
+Out-File -FilePath 'C:\temp\test\new\$value.name.json'
+get-childitem $values

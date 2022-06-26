@@ -1,0 +1,16 @@
+{
+    "Test1": {
+      "parameters": {
+        "tagValue": {
+            "value": "[parameters('costCenterValue')]"
+        }
+      }
+    },
+    "Test3": {
+      "parameters": {
+        "tagValue": {
+            "value": "[parameters('productNameValue')]"
+        }
+      }
+    }
+}

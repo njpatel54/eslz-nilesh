@@ -33,6 +33,13 @@
     # GitHub Action for Azure Policy Compliance Scan
     https://github.com/Azure/policy-compliance-scan
 
+    Built-in Policies
+    https://github.com/Azure/azure-policy/tree/master/built-in-policies
+    https://docs.microsoft.com/en-us/azure/governance/policy/samples/built-in-policies
+    https://docs.microsoft.com/en-us/azure/governance/policy/samples/built-in-initiatives
+
+
+
 ======================
 # Azure Cli Commands #
 ======================
