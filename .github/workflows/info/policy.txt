@@ -66,3 +66,33 @@ logAnalyticsWorkspaceId - /subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/re
 
 Role Assignment - Contributor role 
 "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+
+
+$fairfax = Get-Content .\eslz\managementServices\policy\fairfax.policies.json | ConvertFrom-Json -Depth 100
+$fairfax.variables.policies.policyDefinitions.Count
+$policyDefinitions = $fairfax.variables.policies.policyDefinitions 
+
+foreach($policyDefinition in $policyDefinitions){
+    $fielname = "policy-def-" + $policyDefinition.name
+    $policyDefinition | ConvertTo-Json -Depth 100 > eslz\managementServices\policy\testPolicy\"$fielname.json"
+}
+
+
+
+
+# Retrieve ESLZ Policies from ESLZ deployment (Azure US Government)
+
+	Location - https://github.com/Azure/Enterprise-Scale/tree/main/eslzArm/managementGroupTemplates/policyDefinitions/gov/
+	File Name - fairfaxPolicies.json
+
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure/Enterprise-Scale/main/eslzArm/managementGroupTemplates/policyDefinitions/gov/fairfaxPolicies.json" -OutFile "C:\temp\test\new\fairfaxPolicies.json"
+
+
+$fairfax = Get-Content .\eslz\managementServices\policy\fairfax.policies.json | ConvertFrom-Json -Depth 100
+$fairfax.variables.initiatives.policySetDefinitions.Count
+$policySetDefinitions = $fairfax.variables.initiatives.policySetDefinitions
+
+foreach($policySetDefinition in $policySetDefinitions){
+    $fielname = "policy-defset-" + $policySetDefinition.name
+    $policySetDefinition | ConvertTo-Json -Depth 100 > eslz\managementServices\policy\testPolicySet\"$fielname.json"
+}

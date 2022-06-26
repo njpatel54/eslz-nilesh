@@ -147,7 +147,7 @@
       },
       {
         "policyDefinitionReferenceId": "securityEmailContact",
-        "policyDefinitionId": "${varTargetManagementGroupResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-SecurityContacts",
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-SecurityContacts",
         "parameters": {
           "emailSecurityContact": {
             "value": "[[parameters('emailSecurityContact')]"

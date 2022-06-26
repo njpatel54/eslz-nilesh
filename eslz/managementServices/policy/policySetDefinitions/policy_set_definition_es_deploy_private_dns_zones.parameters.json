@@ -188,15 +188,5 @@
         "value": "[[parameters('effect')]"
       }
     }
-  },
-  "DINE-Private-DNS-Azure-Web": {
-    "parameters": {
-      "privateDnsZoneId": {
-        "value": "[[parameters('azureWebPrivateDnsZoneId')]"
-      },
-      "effect": {
-        "value": "[[parameters('effect')]"
-      }
-    }
   }
 }

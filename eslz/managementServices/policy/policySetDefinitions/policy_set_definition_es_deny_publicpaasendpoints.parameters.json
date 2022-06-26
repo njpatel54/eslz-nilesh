@@ -1,11 +1,4 @@
 {
-  "CosmosDenyPaasPublicIP": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('CosmosPublicIpDenyEffect')]"
-      }
-    }
-  },
   "ACRDenyPaasPublicIP": {
     "parameters": {
       "effect": {
@@ -34,24 +27,17 @@
       }
     }
   },
+  "CosmosDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('CosmosPublicIpDenyEffect')]"
+      }
+    }
+  },
   "KeyVaultDenyPaasPublicIP": {
     "parameters": {
       "effect": {
         "value": "[[parameters('KeyVaultPublicIpDenyEffect')]"
-      }
-    }
-  },
-  "MySQLFlexDenyPublicIP": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('MySQLFlexPublicIpDenyEffect')]"
-      }
-    }
-  },
-  "PostgreSQLFlexDenyPublicIP": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('PostgreSQLFlexPublicIpDenyEffect')]"
       }
     }
   },

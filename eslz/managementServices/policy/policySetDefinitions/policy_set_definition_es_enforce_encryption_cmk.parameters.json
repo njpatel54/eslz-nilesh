@@ -48,27 +48,6 @@
       }
     }
   },
-  "HealthcareAPIsCMKEffect": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('HealthcareAPIsCMKEffect')]"
-      }
-    }
-  },
-  "MySQLCMKEffect": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('MySQLCMKEffect')]"
-      }
-    }
-  },
-  "PostgreSQLCMKEffect": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('PostgreSQLCMKEffect')]"
-      }
-    }
-  },
   "SqlServerTDECMKEffect": {
     "parameters": {
       "effect": {
