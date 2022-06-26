@@ -10,6 +10,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+
+    - uses: actions/checkout@v2
+    
     - name: 'Az CLI login'
       uses: azure/login@v1
       with:
