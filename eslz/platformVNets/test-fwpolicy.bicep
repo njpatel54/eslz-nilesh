@@ -133,13 +133,13 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
 }
 
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
-  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-test-policy'
+  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
   ]
   params:{
-    name: 'test-policy'
+    name: firewallPolicyName
     location: location
     tags: combinedTags
     //defaultWorkspaceId: diagnosticWorkspaceId
