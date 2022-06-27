@@ -20,20 +20,9 @@ jobs:
         
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
-    
-  assess-policy-compliance:
-     runs-on: ubuntu-latest
-     needs: [login-set-subscription]
-     steps:
-     - uses: azure/policy-compliance-scan@v0
-       with:
+
+    - name: 'Assess Policy Compliance'
+      uses: azure/policy-compliance-scan@v0
+      with:
         scopes: |
           /subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889
-        #  /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/QA
-        #  /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/QA/providers/Microsoft.Web/sites/demoApp
-        #  /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/QA/providers/Microsoft.Compute/virtualMachines/my-vm               
-        #scopes-ignore: |
-        #  /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/QA/providers/Microsoft.Web/sites/demoApp
-        #policy-assignments-ignore: |
-        #  /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/providers/Microsoft.Authorization/policyAssignments/SecurityCenterBuiltIn
-        #wait: false
