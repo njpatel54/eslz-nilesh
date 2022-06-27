@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  assess-policy-compliance:    
+  login-set-subscription:    
     runs-on: ubuntu-latest
     steps:
     # Azure Login       
@@ -21,9 +21,12 @@ jobs:
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
     
-    - name: Check for resource compliance
-      uses: azure/policy-compliance-scan@v0
-      with:
+  assess-policy-compliance:
+     runs-on: ubuntu-latest
+     needs: [login-set-subscription]
+     steps:
+     - uses: azure/policy-compliance-scan@v0
+       with:
         scopes: |
           /subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889
         #  /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/QA
