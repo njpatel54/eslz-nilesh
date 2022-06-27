@@ -112,13 +112,38 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }})
           logaId=$(echo $deploymentOutput | jq -r '.properties.outputs.logaId.value')
+          saId=$(echo $deploymentOutput | jq -r '.properties.outputs.saId.value')
+          ehName=$(echo $deploymentOutput | jq -r '.properties.outputs.ehName.value')
+          ehnsAuthorizationId=$(echo $deploymentOutput | jq -r '.properties.outputs.ehnsAuthorizationId.value')
           echo $logaId
+          echo $saId
+          echo $ehName
+          echo $ehnsAuthorizationId
     
     - uses: gliech/create-github-secret-action@v1
-      name: 'Create GitHub Secret'
+      name: 'Create GitHub Secret - AZURE_LAWORKSPACEID'
       with:
        name: AZURE_LAWORKSPACEID
        value: $logaId
        pa_token: ${{ secrets.ESLZ_TOKEN }}
-
+    
+    - uses: gliech/create-github-secret-action@v1
+      name: 'Create GitHub Secret - AZURE_DIAGSTORAGEACCTID'
+      with:
+       name: AZURE_DIAGSTORAGEACCTID
+       value: $saId
+       pa_token: ${{ secrets.ESLZ_TOKEN }} 
   
+    - uses: gliech/create-github-secret-action@v1
+      name: 'Create GitHub Secret - AZURE_DIAGEHNAME'
+      with:
+       name: AZURE_DIAGEHNAME
+       value: $ehName
+       pa_token: ${{ secrets.ESLZ_TOKEN }} 
+
+    - uses: gliech/create-github-secret-action@v1
+      name: 'Create GitHub Secret - AZURE_DIAGEHAUTHRULEID'
+      with:
+       name: AZURE_DIAGEHAUTHRULEID
+       value: $ehnsAuthorizationId
+       pa_token: ${{ secrets.ESLZ_TOKEN }} 
