@@ -456,7 +456,8 @@
                                 {
                                     "name": "Allow-ntp",
                                     "ipProtocols": [
-                                        "Any"
+                                        "TCP",
+                                        "UDP"
                                     ],
                                     "destinationPorts": [
                                         "123",
