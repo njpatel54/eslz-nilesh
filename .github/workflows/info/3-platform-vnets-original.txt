@@ -19,10 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      shell: pwsh
-      run: | 
-        az bicep build --file ./eslz/platformVNets/plat.hub.vnet.bicep
-        az bicep build --file ./eslz/platformVNets/plat.spoke.vnets.bicep
+      run: az bicep build --file ./eslz/platformVNets/deploy.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -41,175 +38,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
-      name: 'Run preflight validation - Platform Hub VNet'
-      with:
-        inlineScript: |
-          az deployment sub validate \
-            --name 'Deploy-Platform-Hub-VNet' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/plat.hub.vnet.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-
-    - uses: Azure/cli@v1
-      name: 'Run preflight validation - Platform Spoke VNets'
-      with:
-        inlineScript: |
-          az deployment sub validate \
-            --name 'Deploy-Platform-Spoke-VNets' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/plat.spoke.vnets.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-
-  preview:
-    runs-on: ubuntu-latest
-    needs: [validate]
-    steps:
-    - uses: actions/checkout@v2
-    
-    - uses: azure/login@v1
-      name: 'Login to Azure'
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        environment: ${{ secrets.AZURE_ENVIRONMENT }}
-        enable-AzPSSession: false
-      
-    - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
-    
-    - uses: Azure/cli@v1
-      name: 'Run what-if - Platform Hub VNet'
-      with:
-        inlineScript: |
-          az deployment sub what-if \
-            --name 'Deploy-Platform-Hub-VNet' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/plat.hub.vnet.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-
-    - uses: Azure/cli@v1
-      name: 'Run what-if - Platform Spoke VNets'
-      with:
-        inlineScript: |
-          az deployment sub what-if \
-            --name 'Deploy-Platform-Spoke-VNets' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/plat.spoke.vnets.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [preview]
-    environment: Production
-    steps:
-    - uses: actions/checkout@v2
-    
-    - uses: azure/login@v1
-      name: 'Login to Azure'
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        environment: ${{ secrets.AZURE_ENVIRONMENT }}
-        enable-AzPSSession: false
-      
-    - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
-              
-    - uses: Azure/cli@v1
-      name: 'Deploy - Platform Hub VNet'
-      with:
-        inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Platform-Hub-VNet' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/plat.hub.vnet.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.hub.parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-
-    - uses: Azure/cli@v1
-      name: 'Deploy - Platform Spoke VNets'
-      with:
-        inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Platform-Spoke-VNets' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/plat.spoke.vnets.bicep \
-            --parameters ./eslz/platformVNets/.parameters/plat.spoke.parameters.json \
-            --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
-                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
-                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
-                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-========
-Modified
-========
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: 'Lint and Build Bicep'
-      shell: pwsh
-      run: | 
-        az bicep build --file ./eslz/platformVNets/deploy.bicep
-
-  validate:
-    runs-on: ubuntu-latest
-    needs: [lint]
-    steps:
-    - uses: actions/checkout@v2
-    
-    - uses: azure/login@v1
-      name: 'Login to Azure'
-      with: 
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          environment: ${{ secrets.AZURE_ENVIRONMENT }}
-          enable-AzPSSession: false
-        
-    - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
-
-    - uses: Azure/cli@v1
-      name: 'Run preflight validation - Platform Hub-Spoke VNet'
+      name: 'Run preflight validation'
       with:
         inlineScript: |
           az deployment sub validate \
@@ -239,9 +68,9 @@ Modified
       
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
-    
+              
     - uses: Azure/cli@v1
-      name: 'Run what-if - Platform Hub-Spoke VNet'
+      name: 'Run what-if'
       with:
         inlineScript: |
           az deployment sub what-if \
@@ -288,3 +117,4 @@ Modified
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+                         
