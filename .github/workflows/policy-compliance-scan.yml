@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  login-set-subscription:    
+  azure-policy-compliance-scan:    
     runs-on: ubuntu-latest
     steps:
     # Azure Login       
@@ -17,9 +17,6 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           environment: ${{ secrets.AZURE_ENVIRONMENT }}
           enable-AzPSSession: false
-        
-    - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
     - name: 'Assess Policy Compliance'
       uses: azure/policy-compliance-scan@v0
