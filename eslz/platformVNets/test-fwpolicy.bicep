@@ -143,8 +143,8 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
     location: location
     tags: combinedTags
     tier: 'Premium'
-    //defaultWorkspaceId: diagnosticWorkspaceId
-    //insightsIsEnabled: true
+    defaultWorkspaceId: diagnosticWorkspaceId
+    insightsIsEnabled: true
     //ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
   }
 }
