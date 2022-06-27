@@ -20,7 +20,16 @@
     "region":{
       "value":"usva"
     },
-    "gallerySolutions": {
+    "logaSentinelGallerySolution": {
+      "value": [
+          {
+            "name": "SecurityInsights",
+            "product": "OMSGallery",
+            "publisher": "Microsoft"
+          }
+      ]
+    },
+    "logaGallerySolutions": {
       "value": [
           {
             "name": "AgentHealthAssessment",
@@ -44,11 +53,6 @@
           },
           {
             "name": "Security",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "SecurityInsights",
             "product": "OMSGallery",
             "publisher": "Microsoft"
           },

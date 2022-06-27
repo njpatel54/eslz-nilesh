@@ -1,0 +1,27 @@
+(1) Configure/update "aaddiagsettings.parameters.json" file with appropriate parameters ....
+
+        Logs                            - (category, enbled, retentionPolicy)
+        workspaceId                     - (resourceId of Log Analytics Workspace)
+        storageAccountId                - (resourceId of Storage Account)
+        eventHubAuthorizationRuleId     - (resourceId of Eventhub Namespace Authorization Rule ID)
+        eventHubName                    - (Name of Event Hub)
+
+(2) Make sure following values are updated/added to command before running it ...
+
+        tenantid                        - (Azure AD Tenent ID)
+        appid                           - (Azure AD Application's Client ID)
+        appsecret                       - (Azure AD Application's secret/password)
+        mgmtsubid                       - (Management Subscription ID)
+
+./set-aaddiagsettings.ps1 -tenantid <TenantID>> -appid <ApplicationClientID> -appsecret <ApplicationSecret> -cloudmetadataurl https://management.usgovcloudapi.net/metadata/endpoints?api-version=2020-06-01 -mgmtsubid <ManagementSubscriptionID> -location usgovvirginia -environment AzureUSGovernment -aaddiagparameterfilepath aaddiagsettings.parameters.json
+
+
+./set-aaddiagsettings.ps1 
+-tenantid <TenantID>>
+-appid <ApplicationClientID> 
+-appsecret <ApplicationSecret>
+-cloudmetadataurl https://management.usgovcloudapi.net/metadata/endpoints?api-version=2020-06-01 
+-mgmtsubid <ManagementSubscriptionID> 
+-location usgovvirginia 
+-environment AzureUSGovernment 
+-aaddiagparameterfilepath aaddiagsettings.parameters.json

@@ -1,0 +1,74 @@
+{
+  "parameters": {
+    "logs":{
+      "value":[
+        {
+          "category": "AuditLogs",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "SignInLogs",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "ServicePrincipalSignInLogs",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "ManagedIdentitySignInLogs",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "ADFSSignInLogs",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "RiskyUsers",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "UserRiskEvents",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "RiskyServicePrincipals",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "ServicePrincipalRiskEvents",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        },
+        {
+          "category": "NonInteractiveUserSignInLogs",
+          "enabled": true,
+          "retentionPolicy": { "enabled": false, "days": 0 }
+        }
+      ]
+    },
+    "metrics":{
+      "value":[]
+    },
+    "workspaceId":{
+      "value":"/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+    },
+    "storageAccountId":{
+      "value":"/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-siem/providers/Microsoft.Storage/storageAccounts/stccsprodusvawmlt"
+    },
+    "eventHubAuthorizationRuleId":{
+      "value":"/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-siem/providers/Microsoft.EventHub/namespaces/evhns-ccs-prod-usva-wmlt/authorizationRules/RootManageSharedAccessKey"
+    },
+    "eventHubName":{
+      "value":"evh-ccs-prod-usva-001"
+    }
+  }
+}
+

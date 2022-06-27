@@ -3,8 +3,11 @@ targetScope = 'tenant'
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string
 
-@description('Optional. List of gallerySolutions to be created in the log analytics workspace.')
-param gallerySolutions array = []
+@description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for Azure Sentinel.')
+param logaSentinelGallerySolution array = []
+
+@description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
+param logaGallerySolutions array = []
 
 @description('Required. Authorization Rules for Event Hub Namespace.')
 param authorizationRules array = []
@@ -83,13 +86,26 @@ param opscope string
 param region string
 
 // Build param values using string interpolation
+@description('Required. SIEM Resource Group Name.')
 param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
-param lawName string = 'log-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
+param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
+param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Eventhub Namespace Name for resource Diagnostics Settings - Log Collection.')
 param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-${suffix}'
+
+@description('Required. Automation Account Name.')
 param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
+
+@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
 
 // From Parameters Files
+@description('Required. Storage Account SKU.')
 param storageaccount_sku string
 
 @description('Optional. Resource ID of the diagnostic storage account.')
@@ -115,18 +131,33 @@ module siem_rg '../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
-// Create Log Analytics Workspace
-module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
-  name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${lawName}'
+// Create Log Analytics Workspace for Azure Sentinel
+module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
+  name: 'logaSentinel-${take(uniqueString(deployment().name, location), 4)}-${sentinelLawName}'
   scope: resourceGroup(mgmtsubid, rgName)
   dependsOn: [
     siem_rg
   ]
   params:{
-    name: lawName
+    name: sentinelLawName
     location: location
     tags: combinedTags
-    gallerySolutions: gallerySolutions    
+    gallerySolutions: logaSentinelGallerySolution    
+  }
+}
+
+// Create Log Analytics Workspace for resource Diagnostics Settings - Log Collection
+module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
+  name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
+  scope: resourceGroup(mgmtsubid, rgName)
+  dependsOn: [
+    siem_rg
+  ]
+  params:{
+    name: logsLawName
+    location: location
+    tags: combinedTags
+    gallerySolutions: logaGallerySolutions    
   }
 }
 
@@ -206,32 +237,43 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
-@description('Output - Resoruce Id of Log Analytics Workspce')
-output logaId string = loga.outputs.resourceId
-
-@description('Output - Resoruce Id of Storage Account')
-output saId string = sa.outputs.resourceId
-
-@description('Output - Name of Event Hub')
-output ehName string = eventHubs[0].name
-
 @description('Output - Name of Event Hub')
 output ehnsAuthorizationId string = resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
 
+@description('Output - SIEM Resource Group Name')
 output siemRgName string = siem_rg.outputs.name
+
+@description('Output - SIEM Resource Group resoruceId')
 output siemRgresoruceId string = siem_rg.outputs.resourceId
+
+@description('Output - Log Analytics Workspce Name - resource Diagnostics Settings - Log Collection')
+output logaSentinelName string = logaSentinel.outputs.name
+
+@description('Output - Log Analytics Workspce resoruceId - resource Diagnostics Settings - Log Collection')
+output logaSentinelResourceId string = logaSentinel.outputs.resourceId
+
+@description('Output - Log Analytics Workspce Name - resource Diagnostics Settings - Log Collection')
 output logaName string = loga.outputs.name
+
+@description('Output - Log Analytics Workspce resoruceId - resource Diagnostics Settings - Log Collection')
 output logaResourceId string = loga.outputs.resourceId
+
+@description('Output - Storage Account Name')
 output saName string = sa.outputs.name
+
+@description('Output - Storage Account resoruceId')
 output saResourceId string = sa.outputs.resourceId
+
+@description('Output - Eventhub Namespace Name')
 output ehNamespaceName string = eh.outputs.name
 
-
+@description('Output - Subscription Diagnostics Settings Names Array')
 output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {  
   subscriptionId: subDiagSettings[i].outputs.resourceId
   diagnosticSettingsName: subDiagSettings[i].outputs.name
 }]
 
+// Start - Outputs to supress warnings - "unused parameters"
 output onboardmg string = onboardmg
 output requireAuthorizationForGroupCreation bool = requireAuthorizationForGroupCreation
 output managementGroups array = managementGroups
@@ -242,6 +284,8 @@ output diagnosticStorageAccountId string = diagnosticStorageAccountId
 output diagnosticWorkspaceId string = diagnosticWorkspaceId
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
 output diagnosticEventHubName string = diagnosticEventHubName
+// End - Outputs to supress warnings - "unused parameters"
+
 
 /*
 // Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)
