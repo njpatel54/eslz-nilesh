@@ -114,7 +114,7 @@ jobs:
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }})
-          echo "::set-output name=logaId::$(echo $deploymentOutput | jq -r '.properties.outputs.logaId.value')"
+          echo "::set-output name=logaId::echo $deploymentOutput | jq -r '.properties.outputs.logaId.value'"
           
   create-github-secrets:
     runs-on: ubuntu-latest
