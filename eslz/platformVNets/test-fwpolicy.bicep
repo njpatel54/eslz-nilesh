@@ -143,7 +143,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
     location: location
     tags: combinedTags
     tier: 'Premium'
-    defaultWorkspaceId: diagnosticWorkspaceId
+    defaultWorkspaceId: '/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem'
     insightsIsEnabled: true
     //ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
   }
