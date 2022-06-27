@@ -142,6 +142,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
     name: firewallPolicyName
     location: location
     tags: combinedTags
+    tier: 'Premium'
     //defaultWorkspaceId: diagnosticWorkspaceId
     //insightsIsEnabled: true
     //ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
