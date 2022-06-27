@@ -1,4 +1,5 @@
 name: Run Azure Login with OpenID Connect
+
 on: 
   workflow_dispatch:
 
@@ -7,6 +8,7 @@ permissions:
       contents: read
       
 jobs: 
+
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:

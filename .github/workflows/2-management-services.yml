@@ -103,12 +103,22 @@ jobs:
       name: 'Deploying Management Services'
       with:
         inlineScript: |
-          az deployment tenant create \
+          deploymentOutput=$(az deployment tenant create \
             --name 'Deploy-Platform-Management-Services' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementServices/deploy.bicep \
             --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }})
+          logaId=$(echo $deploymentOutput | jq -r '.properties.outputs.logaId.value')
+          echo $logaId
+    
+    - uses: gliech/create-github-secret-action@v1
+      name: 'Create GitHub Secret'
+      with:
+       name: AZURE_LAWORKSPACEID
+       value: $logaId
+       pa_token: ${{ secrets.ESLZ_TOKEN }}
+
   
