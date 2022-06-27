@@ -243,7 +243,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
     tags: combinedTags
     defaultWorkspaceId: diagnosticWorkspaceId
     insightsIsEnabled: true
-    //ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
+    ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
   }
 }
 
