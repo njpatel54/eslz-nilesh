@@ -84,7 +84,7 @@ param region string
 
 // Build param values using string interpolation
 param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
-param lawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
+param lawName string = 'log-${projowner}-${opscope}-${region}-siem'
 param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-${suffix}'
 param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
