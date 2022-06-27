@@ -14,12 +14,12 @@ jobs:
     - uses: azure/login@v1
       name: 'Login to Azure'
       with: 
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          environment: ${{ secrets.AZURE_ENVIRONMENT }}
-          enable-AzPSSession: false
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
 
     - name: 'Assess Policy Compliance'
       uses: azure/policy-compliance-scan@v0
       with:
         scopes: |
-          /subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889
+          /subscriptions/${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
