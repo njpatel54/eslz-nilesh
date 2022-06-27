@@ -94,11 +94,17 @@ param publicIPzones array
 @description('Required. Firewall Policy name.')
 param firewallPolicyName string = 'afwp-${projowner}-${opscope}-${region}-0001'
 
+@description('Required. Firewall Policy Tier.')
+param firewallPolicyTier string
+
 @description('Optional. Rule collection groups.')
 param firewallPolicyRuleCollectionGroups array = []
 
 @description('Required. Firewall name.')
 param firewallName string = 'afw-${projowner}-${opscope}-${region}-0001'
+
+@description('Required. Firewall SKU Tier.')
+param firewallSkuTier string
 
 @description('Optional. Zone numbers e.g. 1,2,3.')
 param firewallZones array
@@ -242,7 +248,9 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
     tags: combinedTags
     defaultWorkspaceId: diagnosticWorkspaceId
     insightsIsEnabled: true
-    ruleCollectionGroups: firewallPolicyRuleCollectionGroups    
+    tier: firewallPolicyTier
+    ruleCollectionGroups: firewallPolicyRuleCollectionGroups
+
   }
 }
 
@@ -260,6 +268,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     name: firewallName
     location: location
     tags: combinedTags
+    azureSkuTier: firewallSkuTier
     zones: firewallZones
     ipConfigurations: [
       {
@@ -273,7 +282,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName   
+    diagnosticEventHubName: diagnosticEventHubName
   }
 }
 

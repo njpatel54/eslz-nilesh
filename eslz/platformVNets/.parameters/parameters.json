@@ -420,6 +420,9 @@
                 "3"
             ]
         },
+        "firewallPolicyTier": {
+            "value": "Premium"
+        },
         "firewallPolicyRuleCollectionGroups": {
             "value": [
                 {
@@ -456,8 +459,7 @@
                                 {
                                     "name": "Allow-ntp",
                                     "ipProtocols": [
-                                        "TCP",
-                                        "UDP"
+                                        "Any"
                                     ],
                                     "destinationPorts": [
                                         "123",
@@ -565,6 +567,9 @@
                     ]
                 }
             ]
+        },
+        "firewallSkuTier": {
+            "value": "Premium"
         },
         "firewallZones": {
             "value": [

@@ -86,8 +86,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [preview]
     environment: Production
-    outputs:
-      logaId: ${{ steps.deploy-mgmg-services.outputs.logaId }}
     steps:
     - uses: actions/checkout@v2
     

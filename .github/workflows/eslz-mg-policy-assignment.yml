@@ -102,5 +102,3 @@ jobs:
             --template-file ./eslz/managementServices/mg.policy.assignment.bicep \
             --parameters ./eslz/managementServices/.parameters/mg.policy.assignment.parameters.json \
             --management-group-id ${{ secrets.AZURE_MG_TOP }}
-
-

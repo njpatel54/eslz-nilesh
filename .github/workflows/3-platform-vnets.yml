@@ -117,6 +117,3 @@ jobs:
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-                         
-
-                         
