@@ -132,7 +132,7 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
     tags: combinedTags
   }
 }
-
+/*
 // Create Hub Network Security Group(s)
 module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [ for (nsg, index) in hubNetworkSecurityGroups : {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
@@ -229,7 +229,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     diagnosticEventHubName: diagnosticEventHubName    
   }
 }
-
+*/
 // Create Fireall Policy and Firewall Policy Rule Collection Groups
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
