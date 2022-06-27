@@ -86,6 +86,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [preview]
     environment: Production
+    outputs:
+      logaId: ${{ steps.deploy-mgmg-services.outputs.logaId }}
     steps:
     - uses: actions/checkout@v2
     
@@ -101,6 +103,7 @@ jobs:
               
     - uses: Azure/cli@v1
       name: 'Deploying Management Services'
+      id: 'deploy-mgmg-services'
       with:
         inlineScript: |
           deploymentOutput=$(az deployment tenant create \
@@ -111,39 +114,17 @@ jobs:
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }})
-          logaId=$(echo $deploymentOutput | jq -r '.properties.outputs.logaId.value')
-          saId=$(echo $deploymentOutput | jq -r '.properties.outputs.saId.value')
-          ehName=$(echo $deploymentOutput | jq -r '.properties.outputs.ehName.value')
-          ehnsAuthorizationId=$(echo $deploymentOutput | jq -r '.properties.outputs.ehnsAuthorizationId.value')
-          echo $logaId
-          echo $saId
-          echo $ehName
-          echo $ehnsAuthorizationId
-    
+          echo "::set-output name=logaId::$(echo $deploymentOutput | jq -r '.properties.outputs.logaId.value')"
+          
+  create-github-secrets:
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    steps:
     - uses: gliech/create-github-secret-action@v1
       name: 'Create GitHub Secret - AZURE_LAWORKSPACEID'
       with:
        name: AZURE_LAWORKSPACEID
-       value: $logaId
+       value: ${{needs.deploy.outputs.logaId}}
        pa_token: ${{ secrets.ESLZ_TOKEN }}
-    
-    - uses: gliech/create-github-secret-action@v1
-      name: 'Create GitHub Secret - AZURE_DIAGSTORAGEACCTID'
-      with:
-       name: AZURE_DIAGSTORAGEACCTID
-       value: $saId
-       pa_token: ${{ secrets.ESLZ_TOKEN }} 
-  
-    - uses: gliech/create-github-secret-action@v1
-      name: 'Create GitHub Secret - AZURE_DIAGEHNAME'
-      with:
-       name: AZURE_DIAGEHNAME
-       value: $ehName
-       pa_token: ${{ secrets.ESLZ_TOKEN }} 
 
-    - uses: gliech/create-github-secret-action@v1
-      name: 'Create GitHub Secret - AZURE_DIAGEHAUTHRULEID'
-      with:
-       name: AZURE_DIAGEHAUTHRULEID
-       value: $ehnsAuthorizationId
-       pa_token: ${{ secrets.ESLZ_TOKEN }} 
+    - run: echo ${{needs.deploy.outputs.logaId}}
