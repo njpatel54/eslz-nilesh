@@ -1,4 +1,4 @@
-name: 3 - platform vnets
+name: 3 - firewall policy
 
 on:
   #push:
