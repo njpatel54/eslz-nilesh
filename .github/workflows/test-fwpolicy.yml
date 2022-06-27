@@ -37,7 +37,7 @@ jobs:
           az deployment sub create \
             --name 'Deploy-Platform-Hub-Spoke-VNet' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/deploy.bicep \
+            --template-file ./eslz/platformVNets/test-fwpolicy.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
