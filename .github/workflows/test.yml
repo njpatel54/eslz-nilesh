@@ -32,14 +32,29 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Platform Hub-Spoke VNet'
+      name: 'Deploying Management Services'
+      id: 'deploy-mgmg-services'
       with:
         inlineScript: |
-          id=$(az eventhubs namespace authorization-rule list --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} --resource-group rg-ccs-prod-usva-siem --namespace-name evhns-ccs-prod-usva-siem --query "[?contains(name,'RootManageSharedAccessKey')].{ID:id}" -o tsv)
+          deploymentOutput=$(az deployment tenant create \
+            --name 'Deploy-Platform-Management-Services' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/managementServices/deploy.bicep \
+            --parameters ./eslz/managementServices/.parameters/parameters.json \
+            --parameters ./eslz/managementGroups/.parameters/parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }})
+          echo "::set-output name=logaId::echo $deploymentOutput | jq -r '.properties.outputs.logaId.value'"
           
+  create-github-secrets:
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    steps:
     - uses: gliech/create-github-secret-action@v1
-      name: 'Create GitHub Secret'
+      name: 'Create GitHub Secret - AZURE_LAWORKSPACEID'
       with:
-       name: AZURE_TEST
-       value: $id
+       name: AZURE_LAWORKSPACEID
+       value: ${{needs.deploy.outputs.logaId}}
        pa_token: ${{ secrets.ESLZ_TOKEN }}
+
+    - run: echo ${{needs.deploy.outputs.logaId}}

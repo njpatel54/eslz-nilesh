@@ -129,7 +129,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
     gallerySolutions: gallerySolutions    
   }
 }
-/*
+
 // Create Storage Account
 module sa '../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
@@ -205,10 +205,10 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
     diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }]
-*/
+
 @description('Output - Resoruce Id of Log Analytics Workspce')
 output logaId string = loga.outputs.resourceId
-/*
+
 @description('Output - Resoruce Id of Storage Account')
 output saId string = sa.outputs.resourceId
 
@@ -242,7 +242,7 @@ output diagnosticStorageAccountId string = diagnosticStorageAccountId
 output diagnosticWorkspaceId string = diagnosticWorkspaceId
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
 output diagnosticEventHubName string = diagnosticEventHubName
-*/
+
 /*
 // Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)
 // Configure Diagnostics Settings for Management Groups

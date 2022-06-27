@@ -121,7 +121,6 @@ param bastionHostScaleUnits int
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param bastionHostRoleAssignments array = []
 
-
 // Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${hubVnetSubscriptionId}-${resourceGroupName}'
@@ -132,7 +131,7 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
     tags: combinedTags
   }
 }
-/*
+
 // Create Hub Network Security Group(s)
 module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [ for (nsg, index) in hubNetworkSecurityGroups : {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
@@ -229,7 +228,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     diagnosticEventHubName: diagnosticEventHubName    
   }
 }
-*/
+
 // Create Fireall Policy and Firewall Policy Rule Collection Groups
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
@@ -247,7 +246,6 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   }
 }
 
-/*
 // Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
@@ -325,4 +323,4 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     diagnosticEventHubName: diagnosticEventHubName
   }
 }
-*/
+
