@@ -3,6 +3,84 @@ SUMMARY: This PowerShell script helps with the authoring of the policy definiton
 DESCRIPTION: This PowerShell script outputs the Name & Path to a Bicep strucutred .txt file named '_policyDefinitionsBicepInput.txt' and '_policySetDefinitionsBicepInput.txt' respectively. It also creates a parameters file for each of the policy set definitions. It also outputs the number of policies definition and set definition files to the console for easier reviewing as part of the PR process.
 #>
 
+================================================================================================================================
+================================================================================================================================
+=					=====================================================================									   =
+=					# Retrieve ESLZ Policies from ESLZ deployment (Azure US Government) #									   =
+=					=====================================================================									   =
+=																															   =
+=	Location - https://github.com/Azure/Enterprise-Scale/tree/main/eslzArm/managementGroupTemplates/policyDefinitions/gov/	   =	
+=	File Name - fairfaxPolicies.json																						   =
+================================================================================================================================
+================================================================================================================================
+=======
+Step 1
+=======
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azure/Enterprise-Scale/main/eslzArm/managementGroupTemplates/policyDefinitions/gov/fairfaxPolicies.json" -OutFile "eslz\managementServices\policy\fairfaxPolicies.json"
+
+=======
+Step 2
+=======
+# Policy Definitions 
+##################################################################################################################################
+# Iterating over "policyDefinitions" variable from "fairfaxPolicies.json" file and save indidual json file per policy definition #
+# Replacing following ...																										 #
+# 			Old Values					New Values																				 #
+#           ----------					----------																				 #		
+#			"[[parameters"				"[parameters"																		     #
+#  			"[[field" 					"[field"																				 #
+##################################################################################################################################
+
+$oldParams = "[[parameters"
+$newParams = "[parameters"
+$oldfield = "[[field"
+$newfield = "[field"
+
+$fairfax = Get-Content eslz\managementServices\policy\fairfaxPolicies.json | ConvertFrom-Json -Depth 100
+$fairfax.variables.policies.policyDefinitions.Count
+$policyDefinitions = $fairfax.variables.policies.policyDefinitions 
+
+foreach($policyDefinition in $policyDefinitions){
+    $fielname = "policy-def-" + $policyDefinition.name
+    $filepath = "eslz\managementServices\policy\policyDefinitions\" + "$fielname.json"
+    $policyDefinition | ConvertTo-Json -Depth 100 > $filepath
+    $content = Get-Content $filepath
+    $content.Replace($oldParams,$newParams).Replace($oldfield,$newfield) | Set-Content -path $filepath
+}
+
+=======
+Step 3
+=======
+# PolicySet Definitions 
+
+########################################################################################################################################
+# Iterating over "policySetDefinitions" variable from "fairfaxPolicies.json" file and save indidual json file per policySet definition #
+# Replacing following ...																										       #
+# 			Old Values							New Values																			   #
+#           ----------					 		----------																			   #		
+#  			"[concat(variables('scope'), '"		"`${targetMgResourceId}"															   #
+#  			"')]`","							"`","																			       #
+########################################################################################################################################
+
+$oldConcat = "[concat(variables('scope'), '"
+$newConcat = "`${targetMgResourceId}"
+$oldBracket = "')]`","
+$newBracket = "`","
+$fairfax = Get-Content .\eslz\managementServices\policy\fairfaxPolicies.json | ConvertFrom-Json -Depth 100
+$fairfax.variables.initiatives.policySetDefinitions.Count
+$policySetDefinitions = $fairfax.variables.initiatives.policySetDefinitions
+
+foreach($policySetDefinition in $policySetDefinitions){
+    $fielname = "policy-defset-" + $policySetDefinition.name
+    $filepath = "eslz\managementServices\policy\policySetDefinitions\" + "$fielname.json"
+    $policySetDefinition | ConvertTo-Json -Depth 100 > $filepath
+    $content = Get-Content $filepath
+    $content.Replace($oldConcat,$newConcat).Replace($oldBracket,$newBracket) | Set-Content -path $filepath
+}
+
+=======
+Step 4
+=======
 # Policy Definitions
 
 Write-Information "====> Creating/Emptying '_policyDefinitionsBicepInput.txt'" -InformationAction Continue
@@ -23,7 +101,9 @@ $policyDefCount = Get-ChildItem -Recurse -Path "./eslz/managementServices/policy
 $policyDefCountString = $policyDefCount.Count
 Write-Information "====> Policy Definitions Total: $policyDefCountString" -InformationAction Continue
 
-
+=======
+Step 5
+=======
 # Policy Set Definitions
 
 Write-Information "====> Creating/Emptying '_policySetDefinitionsBicepInput.txt'" -InformationAction Continue
@@ -110,6 +190,9 @@ $policyDefCount = Get-ChildItem -Recurse -Path "./eslz/managementServices/policy
 $policyDefCountString = $policyDefCount.Count
 Write-Information "====> Policy Set/Initiative Definitions Total: $policyDefCountString" -InformationAction Continue
 
+=======
+Step 6
+=======
 # Policy Asssignments
 
 Write-Information "====> Creating/Emptying '_policyAssignmentsBicepInput.txt'" -InformationAction Continue
