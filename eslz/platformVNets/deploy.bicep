@@ -286,7 +286,6 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   }
 }
 
-
 // Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'

@@ -1,0 +1,67 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "billingAccount": {
+        "value": "xxxxxxxx"
+      },
+      "enrollmentAccount": {
+        "value": "xxxxxx"
+      },
+      "subscriptionAlias": {
+        "value": "mySubscription"
+      },
+      "subscriptionDisplayName": {
+        "value": "mySubscription"
+      },
+      "subscriptionWorkload": {
+        "value": "Production"
+      },
+      "managementGroupId": {
+        "value": "mg-A2g-Landing-Zones"
+      },
+      "subscriptionOwnerId": {
+        "value": ""
+      },
+      "subRoleAssignments": {
+        "value": [
+          {
+            "roleDefinitionIdOrName": "Contributor",
+            "principalIds": [
+              "40b2dd0e-b831-4f53-b691-540cacbdd281"
+            ]
+          },
+          {
+            "roleDefinitionIdOrName": "Contributor",
+            "principalIds": [
+              "77037bbd-6c47-446f-aeaf-52ee92ced21d"
+            ]
+          }
+        ]
+      },
+      "diagSettingName": {
+        "value":"centralized-logging-diagSetting"
+      },
+      "storageaccount_sku": {
+        "value":"Standard_LRS"
+      },
+      "tags": {
+        "value": {
+          "Customer": "CCS Azure",
+          "ProjectID": "A2g-0",
+          "ProjectName": "A2g Platform",
+          "SecurityContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+          "TechContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us"
+        }
+      },
+      "projowner":{
+        "value": "ccs"
+      },
+      "opscope":{
+        "value":"prod"
+      },
+      "region":{
+        "value":"usva"
+      }
+    }
+  }

@@ -95,15 +95,15 @@ resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
 
 // Configure Default Management Group Settings
 resource mgSettings 'Microsoft.Management/managementGroups/settings@2021-04-01' = {
-parent: rootmg
-name: 'default'
-dependsOn: [
-  mg
-]
-properties: {
-  defaultManagementGroup: '/providers/Microsoft.Management/managementGroups/${onboardmg}'
-  requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
-}
+  parent: rootmg
+  name: 'default'
+  dependsOn: [
+    mg
+  ]
+  properties: {
+    defaultManagementGroup: '/providers/Microsoft.Management/managementGroups/${onboardmg}'
+    requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
+  }
 }
 
 // Outputs

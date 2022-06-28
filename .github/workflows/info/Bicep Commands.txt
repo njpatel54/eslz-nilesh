@@ -52,4 +52,4 @@ az eventhubs namespace authorization-rule list --namespace-name (az eventhubs na
 
 az storage account list --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem"--query "[].{ID:id}" -o tsv
 
-az monitor log-analytics workspace list --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem" --query "[].{ID:id}" -o tsv  
+az monitor log-analytics workspace list --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem" --query "[].{ID:id}" -o tsv
