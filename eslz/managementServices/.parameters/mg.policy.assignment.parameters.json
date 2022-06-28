@@ -63,7 +63,7 @@
                             "value": "DeployIfNotExists"
                         },
                         "logAnalytics": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
                         }
                     },
                     "nonComplianceMessage": "Activity Logs must be sent to Log Ananlytics Workspace.",                    
@@ -127,7 +127,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/55f3eceb-5573-4f18-9695-226972c6d74a",
                     "parameters": {
                         "logAnalytics_1": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
                         }
                     },
                     "nonComplianceMessage": "Virtual Machines must be enabled for monitoring through Azure Monitor.",                    
@@ -150,7 +150,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/75714362-cae7-409e-9b99-a8e5075b7fad",
                     "parameters": {
                         "logAnalytics_1": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
                         }
                     },
                     "nonComplianceMessage": "Virtual Machines Scale Sets must be enabled for monitoring through Azure Monitor.",                    
@@ -173,7 +173,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9",
                     "parameters": {
                         "logAnalyticsWorkspaceIDForVMAgents": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
                         },
                         "membersToExcludeInLocalAdministratorsGroup": {
                             "value": "test@rajdisha.onmicrosoft.us"
