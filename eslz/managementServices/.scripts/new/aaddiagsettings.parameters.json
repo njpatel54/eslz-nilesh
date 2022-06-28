@@ -58,16 +58,16 @@
       "value":[]
     },
     "workspaceId":{
-      "value":"/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+      "value":"<Log Analytics Workspace resourceId>"
     },
     "storageAccountId":{
-      "value":"/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-siem/providers/Microsoft.Storage/storageAccounts/stccsprodusvawmlt"
+      "value":"<Storage Account resourceId>"
     },
     "eventHubAuthorizationRuleId":{
-      "value":"/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-siem/providers/Microsoft.EventHub/namespaces/evhns-ccs-prod-usva-wmlt/authorizationRules/RootManageSharedAccessKey"
+      "value":"<Eventhub Namespace Authorization Rule ID>"
     },
     "eventHubName":{
-      "value":"evh-ccs-prod-usva-001"
+      "value":"<Eventhub Name>"
     }
   }
 }

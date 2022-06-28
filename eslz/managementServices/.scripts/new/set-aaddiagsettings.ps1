@@ -53,7 +53,7 @@ Register-AzResourceProvider -ProviderNamespace Microsoft.Insights
 #$workspaceId = $workspaceResource.ResourceId
 
 # Define Diagnostic Setting Rule Name
-$ruleName = 'AAD-Logs-to-LogA'
+$ruleName = 'centralized-logging-diagSetting'
 
 # Get Resource Manager URL
 $resourceManagerUrl = (Get-AzContext).Environment.ResourceManagerUrl
