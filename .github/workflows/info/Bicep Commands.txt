@@ -46,10 +46,10 @@ https://crontab.guru/
 # Azure Cli Commands #
 ======================
 
+$mgmtsubid = "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889"
+az eventhubs eventhub list --resource-group "rg-ccs-prod-usva-siem" --namespace-name (az eventhubs namespace list --subscription $mgmtsubid --resource-group "rg-ccs-prod-usva-siem" --query "[].{Name:name}" -o tsv) --query "[].{Name:name}" -o tsv 
+az eventhubs namespace authorization-rule list --namespace-name (az eventhubs namespace list --subscription $mgmtsubid --resource-group "rg-ccs-prod-usva-siem" --query "[].{Name:name}" -o tsv) --subscription $mgmtsubid --resource-group "rg-ccs-prod-usva-siem" --query "[?name=='RootManageSharedAccessKey'].{Id:id}" -o tsv
 
-az eventhubs eventhub list --resource-group "rg-ccs-prod-usva-siem" --namespace-name (az eventhubs namespace list --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem" --query "[].{Name:name}" -o tsv) --query "[].{Name:name}" -o tsv 
-az eventhubs namespace authorization-rule list --namespace-name (az eventhubs namespace list --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem" --query "[].{Name:name}" -o tsv) --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem" --query "[?name=='RootManageSharedAccessKey'].{Id:id}" -o tsv
+az storage account list --subscription $mgmtsubid --resource-group "rg-ccs-prod-usva-siem"--query "[].{ID:id}" -o tsv
 
-az storage account list --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem"--query "[].{ID:id}" -o tsv
-
-az monitor log-analytics workspace list --subscription "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889" --resource-group "rg-ccs-prod-usva-siem" --query "[].{ID:id}" -o tsv
+az monitor log-analytics workspace list --subscription $mgmtsubid --resource-group "rg-ccs-prod-usva-siem" --query "[].{ID:id}" -o tsv
