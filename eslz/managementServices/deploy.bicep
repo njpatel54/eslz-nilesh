@@ -243,25 +243,25 @@ output ehnsAuthorizationId string = resourceId(mgmtsubid, rgName, 'Microsoft.Eve
 @description('Output - SIEM Resource Group Name')
 output siemRgName string = siem_rg.outputs.name
 
-@description('Output - SIEM Resource Group resoruceId')
-output siemRgresoruceId string = siem_rg.outputs.resourceId
+@description('Output - SIEM Resource Group resourceId')
+output siemRgresourceId string = siem_rg.outputs.resourceId
 
 @description('Output - Log Analytics Workspce Name - resource Diagnostics Settings - Log Collection')
 output logaSentinelName string = logaSentinel.outputs.name
 
-@description('Output - Log Analytics Workspce resoruceId - resource Diagnostics Settings - Log Collection')
+@description('Output - Log Analytics Workspce resourceId - resource Diagnostics Settings - Log Collection')
 output logaSentinelResourceId string = logaSentinel.outputs.resourceId
 
 @description('Output - Log Analytics Workspce Name - resource Diagnostics Settings - Log Collection')
 output logaName string = loga.outputs.name
 
-@description('Output - Log Analytics Workspce resoruceId - resource Diagnostics Settings - Log Collection')
+@description('Output - Log Analytics Workspce resourceId - resource Diagnostics Settings - Log Collection')
 output logaResourceId string = loga.outputs.resourceId
 
 @description('Output - Storage Account Name')
 output saName string = sa.outputs.name
 
-@description('Output - Storage Account resoruceId')
+@description('Output - Storage Account resourceId')
 output saResourceId string = sa.outputs.resourceId
 
 @description('Output - Eventhub Namespace Name')

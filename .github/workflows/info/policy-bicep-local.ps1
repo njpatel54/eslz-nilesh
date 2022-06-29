@@ -35,6 +35,8 @@ $oldParams = "[[parameters"
 $newParams = "[parameters"
 $oldfield = "[[field"
 $newfield = "[field"
+$oldconcat = "[[concat"
+$newconcat = "[concat"
 
 $fairfax = Get-Content eslz\managementServices\policy\fairfaxPolicies.json | ConvertFrom-Json -Depth 100
 $fairfax.variables.policies.policyDefinitions.Count
@@ -45,7 +47,7 @@ foreach($policyDefinition in $policyDefinitions){
     $filepath = "eslz\managementServices\policy\policyDefinitions\" + "$fielname.json"
     $policyDefinition | ConvertTo-Json -Depth 100 > $filepath
     $content = Get-Content $filepath
-    $content.Replace($oldParams,$newParams).Replace($oldfield,$newfield) | Set-Content -path $filepath
+    $content.Replace($oldParams,$newParams).Replace($oldfield,$newfield).Replace($oldconcat,$newdconcat) | Set-Content -path $filepath
 }
 
 =======

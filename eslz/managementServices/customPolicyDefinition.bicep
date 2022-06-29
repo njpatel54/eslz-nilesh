@@ -6,7 +6,7 @@ param location string
 @description('The management group scope to which the policy definitions are to be created at.')
 param targetMgId string
 
-@description('The management group resoruceId.')
+@description('The management group resourceId.')
 var targetMgResourceId = tenantResourceId('Microsoft.Management/managementGroups', targetMgId)
 
 @description('Variable containing all Custom Policy Definitions info.')
