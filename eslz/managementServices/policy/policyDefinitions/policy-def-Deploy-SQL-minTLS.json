@@ -85,7 +85,7 @@
                   {
                     "type": "Microsoft.Sql/servers",
                     "apiVersion": "2019-06-01-preview",
-                    "name": "[[concat(parameters('resourceName'))]",
+                    "name": "[concat(parameters('resourceName'))]",
                     "location": "[parameters('location')]",
                     "properties": {
                       "minimalTlsVersion": "[parameters('minimalTlsVersion')]"

@@ -260,7 +260,7 @@
                                 "resources": [
                                   {
                                     "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-                                    "name": "[[concat(parameters('hubName'),'/',last(split(parameters('remoteVirtualNetwork'),'/')))]",
+                                    "name": "('hubName'),'/',last(split(parameters('remoteVirtualNetwork'),'/')))]",
                                     "apiVersion": "2021-02-01",
                                     "properties": {
                                       "allowVirtualNetworkAccess": true,

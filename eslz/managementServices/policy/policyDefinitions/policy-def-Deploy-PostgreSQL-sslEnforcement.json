@@ -98,7 +98,7 @@
                   {
                     "type": "Microsoft.DBforPostgreSQL/servers",
                     "apiVersion": "2017-12-01",
-                    "name": "[[concat(parameters('resourceName'))]",
+                    "name": "[concat(parameters('resourceName'))]",
                     "location": "[parameters('location')]",
                     "properties": {
                       "sslEnforcement": "[[if(equals(parameters('minimalTlsVersion'), 'TLSEnforcementDisabled'),'Disabled', 'Enabled')]",

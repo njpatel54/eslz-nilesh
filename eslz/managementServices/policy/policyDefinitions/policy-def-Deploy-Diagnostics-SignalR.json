@@ -118,7 +118,7 @@
                   {
                     "type": "Microsoft.SignalRService/SignalR/providers/diagnosticSettings",
                     "apiVersion": "2017-05-01-preview",
-                    "name": "[[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                    "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
                     "location": "[parameters('location')]",
                     "dependsOn": [],
                     "properties": {
