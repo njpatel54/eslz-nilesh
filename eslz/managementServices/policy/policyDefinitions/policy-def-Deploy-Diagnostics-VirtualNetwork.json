@@ -46,7 +46,7 @@
       },
       "logsEnabled": {
         "type": "String",
-        "defaultValue": "True",
+        "defaultValue": "False",
         "allowedValues": [
           "True",
           "False"
@@ -137,12 +137,7 @@
                           }
                         }
                       ],
-                      "logs": [
-                        {
-                          "category": "VMProtectionAlerts",
-                          "enabled": "[parameters('logsEnabled')]"
-                        }
-                      ]
+                      "logs": []
                     }
                   }
                 ],
