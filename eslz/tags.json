@@ -1,0 +1,21 @@
+{
+    "ccsTags": {
+        "value": {
+          "Customer": "CCS Azure",
+          "ProjectID": "A2g-0",
+          "ProjectName": "A2g Platform",
+          "SecurityContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+          "TechContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us"
+        }
+    },
+    "lz01Tags": {
+      "value": {
+        "Customer": "LZ Customer",
+        "ProjectID": "LZ01",
+        "ProjectName": "LZ Prod Workload",
+        "SecurityContactEmail": "lz-1669@azgperatonpartners.onmicrosoft.us",
+        "TechContactEmail": "lz-1669@azgperatonpartners.onmicrosoft.us"
+      }
+  }
+}
+  
