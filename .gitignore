@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Files/Folders - ESLZ-Nilesh Repo
-github/workflows/info/*
+.github/workflows/info/*
 
 # User-specific files
 *.suo
