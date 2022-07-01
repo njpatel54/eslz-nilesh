@@ -3,15 +3,15 @@ name: Run Azure Login with OpenID Connect
 on: 
   workflow_dispatch:
 
-permissions:
-      id-token: write
-      contents: read
-      
+    
 jobs: 
 
   build-and-deploy:
     runs-on: ubuntu-latest
     environment: Production
+    permissions:
+      id-token: write
+      contents: read
     steps:
 
     - uses: actions/checkout@v2
