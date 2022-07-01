@@ -36,16 +36,16 @@ param diagnosticEventHubName string = ''
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
 
-@description('Required. Resource Tags.')
-param tags object
-
 @description('Required. Assign utffullvaule to "CreatedOn" tag.')
 param dynamictags object = ({
   CreatedOn: utcfullvalue
 })
 
+var tags = json(loadTextContent('../tags.json'))
+
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-var combinedTags = union(dynamictags, tags)
+var ccsCombinedTags = union(dynamictags, tags.ccsTags.value)
+//var lzCombinedTags = union(dynamictags, tags.lz01Tags.value)
 
 @description('Required. Project Owner (projowner) parameter.')
 @allowed([
@@ -134,7 +134,7 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
   params: {
     name: resourceGroupName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
   }
 }
 
@@ -148,7 +148,7 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [ for (
   params:{
     name: nsg.name
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     securityRules: nsg.securityRules
     roleAssignments: nsg.roleAssignments
     diagnosticStorageAccountId: diagnosticStorageAccountId
@@ -168,7 +168,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   params:{
     name: hubVnetName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     addressPrefixes: hubVnetAddressPrefixes
     subnets: hubVnetSubnets
     virtualNetworkPeerings: hubVnetVirtualNetworkPeerings
@@ -187,7 +187,7 @@ module spokeRg '../modules/resourceGroups/deploy.bicep'= [ for (vNet, index) in 
   params: {
     name: resourceGroupName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
   }
 }]
 
@@ -202,7 +202,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
   params:{
     name: vNet.name
     location: location
-    tags: combinedTags    
+    tags: ccsCombinedTags    
     addressPrefixes: vNet.addressPrefixes
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
@@ -224,7 +224,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   params:{
     name: firewallPublicIPName
     location: location
-    tags: combinedTags 
+    tags: ccsCombinedTags 
     publicIPAllocationMethod: publicIPAllocationMethod
     skuName: publicIPSkuName
     zones: publicIPzones
@@ -245,7 +245,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   params:{
     name: firewallPolicyName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     defaultWorkspaceId: diagnosticWorkspaceId
     insightsIsEnabled: true
     tier: firewallPolicyTier
@@ -267,7 +267,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   params:{
     name: firewallName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     azureSkuTier: firewallSkuTier
     zones: firewallZones
     ipConfigurations: [
@@ -296,7 +296,7 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   params:{
     name: bastionHostPublicIPName
     location: location
-    tags: combinedTags 
+    tags: ccsCombinedTags 
     publicIPAllocationMethod: publicIPAllocationMethod
     skuName: publicIPSkuName
     zones: publicIPzones
@@ -319,7 +319,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
   params:{
     name: bastionHostName
     location: location
-    tags: combinedTags 
+    tags: ccsCombinedTags 
     vNetId: hubVnet.outputs.resourceId
     azureBastionSubnetPublicIpId: bhPip.outputs.resourceId
     skuType: bastionHostSkuType

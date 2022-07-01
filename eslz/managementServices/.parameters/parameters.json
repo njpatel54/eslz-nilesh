@@ -120,15 +120,6 @@
     "diagSettingName": {
       "value":"centralized-logging-diagSetting"
     },
-    "tags": {
-      "value": {
-        "Customer": "CCS Azure",
-        "ProjectID": "A2g-0",
-        "ProjectName": "A2g Platform",
-        "SecurityContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
-        "TechContactEmail": "ccsao-1669@azgperatonpartners.onmicrosoft.us"
-      }
-    },
     "projowner":{
       "value":"ccs"
     },

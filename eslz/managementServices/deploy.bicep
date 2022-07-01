@@ -48,16 +48,16 @@ param suffix string = substring(uniqueString(utcNow()),0,4)
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
 
-@description('Required. Resource Tags.')
-param tags object
-
 @description('Required. Assign utffullvaule to "CreatedOn" tag.')
 param dynamictags object = ({
   CreatedOn: utcfullvalue
 })
 
+var tags = json(loadTextContent('../tags.json'))
+
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-var combinedTags = union(dynamictags, tags)
+var ccsCombinedTags = union(dynamictags, tags.ccsTags.value)
+//var lzCombinedTags = union(dynamictags, tags.lz01Tags.value)
 
 @description('Required. Project Owner (projowner) parameter.')
 @allowed([
@@ -127,7 +127,7 @@ module siem_rg '../modules/resourceGroups/deploy.bicep'= {
   params: {
     name: rgName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
   }
 }
 
@@ -141,7 +141,7 @@ module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
   params:{
     name: sentinelLawName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     gallerySolutions: logaSentinelGallerySolution    
   }
 }
@@ -156,7 +156,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
   params:{
     name: logsLawName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     gallerySolutions: logaGallerySolutions    
   }
 }
@@ -173,7 +173,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     storageAccountName: stgAcctName
     storageSKU: storageaccount_sku
     diagnosticWorkspaceId: loga.outputs.resourceId
-    tags: combinedTags
+    tags: ccsCombinedTags
   }
 }
 
@@ -186,7 +186,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
   ]
   params: {
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     eventhubNamespaceName: eventhubNamespaceName
     eventHubs: eventHubs
     authorizationRules: authorizationRules
@@ -208,7 +208,7 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   params:{
     name: automationAcctName
     location: location
-    tags: combinedTags
+    tags: ccsCombinedTags
     linkedWorkspaceResourceId: loga.outputs.resourceId
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
@@ -285,7 +285,6 @@ output diagnosticWorkspaceId string = diagnosticWorkspaceId
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
 output diagnosticEventHubName string = diagnosticEventHubName
 // End - Outputs to supress warnings - "unused parameters"
-
 
 /*
 // Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)
