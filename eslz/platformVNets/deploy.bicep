@@ -153,8 +153,8 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [ for (
     roleAssignments: nsg.roleAssignments
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
   }
 }]
 
@@ -175,8 +175,8 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
     subscriptionId: hubVnetSubscriptionId
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
   }
 }
 
@@ -209,8 +209,8 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet
     subscriptionId: vNet.subscriptionId
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName    
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName    
   }
 }]
 
@@ -230,8 +230,8 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     zones: publicIPzones
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName    
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName    
   }
 }
 
@@ -281,8 +281,8 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     roleAssignments: firewallRoleAssignments
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
   }
 }
 
@@ -302,8 +302,8 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     zones: publicIPzones
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName    
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName    
   }
 }
 
@@ -327,8 +327,8 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     roleAssignments: bastionHostRoleAssignments
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
   }
 }
 
