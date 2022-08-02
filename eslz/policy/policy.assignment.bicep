@@ -49,7 +49,7 @@ module policyAssignment_sub '../modules/authorization/policyAssignments/subscrip
 //Create Policy Assignment at Resource Group Scope
 module policyAssignment_rg '../modules/authorization/policyAssignments/resourceGroup/deploy.bicep' = [ for (policyAssignment, i) in rgPolicyAssignments :  {
   name: '${policyAssignment.name}-policyAssignment-${i}'
-  scope: subscription(policyAssignment.subscriptionId)
+  scope: resourceGroup(policyAssignment.subscriptionId, policyAssignment.resourceGroupName)
   params: {
     name: policyAssignment.name
     location: policyAssignment.location
