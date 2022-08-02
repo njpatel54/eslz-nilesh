@@ -1,7 +1,12 @@
 targetScope = 'managementGroup'
 
+@description('Required. Array containing all Policy Assignments at Management Group Scope.')
 param mgPolicyAssignments array = []
+
+@description('Required. Array containing all Policy Assignments at Subscription Scope.')
 param subPolicyAssignments array = []
+
+@description('Required. Array containing all Policy Assignments at Resource Group Scope.')
 param rgPolicyAssignments array = []
 
 //Create Policy Assignment at Management Group Scope
