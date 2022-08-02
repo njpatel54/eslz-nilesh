@@ -97,7 +97,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Policy Assignment - Management Group Scope'
+      name: 'Platform Policy Assignments'
       with:
         inlineScript: |
           az deployment mg create \
