@@ -332,3 +332,9 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
   }
 }
 
+
+
+// Start - Outputs to supress warnings - "unused parameters"
+output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
+output diagnosticEventHubName string = diagnosticEventHubName
+// End - Outputs to supress warnings - "unused parameters"
