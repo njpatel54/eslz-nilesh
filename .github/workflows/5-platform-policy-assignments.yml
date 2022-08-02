@@ -42,7 +42,7 @@ jobs:
       with:
         inlineScript: |
           az deployment mg validate \
-            --name 'Platform-Policy-Assignment' \
+            --name 'Platform-Policy-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/policy/policy.assignment.bicep \
             --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
@@ -71,7 +71,7 @@ jobs:
         with:
           inlineScript: |
             az deployment mg what-if \
-              --name 'Platform-Policy-Assignment' \
+              --name 'Platform-Policy-Assignments' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/policy/policy.assignment.bicep \
               --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
@@ -101,7 +101,7 @@ jobs:
       with:
         inlineScript: |
           az deployment mg create \
-            --name 'Platform-Policy-Assignment' \
+            --name 'Platform-Policy-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/policy/policy.assignment.bicep \
             --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
