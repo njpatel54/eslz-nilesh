@@ -47,6 +47,7 @@ jobs:
             --template-file ./eslz/policy/policy.assignment.bicep \
             --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
             --parameters ./eslz/policy/.parameters/sub.policy.assignment.parameters.json \
+            --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json \
             --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
   preview:
@@ -75,6 +76,7 @@ jobs:
               --template-file ./eslz/policy/policy.assignment.bicep \
               --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
               --parameters ./eslz/policy/.parameters/sub.policy.assignment.parameters.json \
+              --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json \
               --management-group-id ${{ secrets.AZURE_MG_TOP }}
 
   deploy:
@@ -104,4 +106,5 @@ jobs:
             --template-file ./eslz/policy/policy.assignment.bicep \
             --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
             --parameters ./eslz/policy/.parameters/sub.policy.assignment.parameters.json \
+            --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json \
             --management-group-id ${{ secrets.AZURE_MG_TOP }}

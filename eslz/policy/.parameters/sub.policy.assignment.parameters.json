@@ -57,8 +57,7 @@
                         "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
                      ],
                     "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889"
-                }
-    
+                }    
             ]      
         }
     }
