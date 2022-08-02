@@ -1,0 +1,201 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {            
+        "policyAssignments": {
+            "value": [
+                {
+                    "name": "Deploy-MDFC-Config",
+                    "description": "Deploy Microsoft Defender for Cloud configuration and Security Contacts",
+                    "displayName": "Deploy Microsoft Defender for Cloud configuration",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deploy-MDFC-Config",
+                    "parameters": {
+                        "emailSecurityContact": {
+                            "value": "ccsao-1669@azgperatonpartners.onmicrosoft.us"
+                        },
+                        "logAnalytics": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                        },
+                        "ascExportResourceGroupName": {
+                            "value": "rg-ccs-prod-usva-siem"
+                        },
+                        "ascExportResourceGroupLocation": {
+                            "value": "usgovvirginia"
+                        },
+                        "enableAscForServers": {
+                            "value": "DeployIfNotExists"
+                        },
+                        "enableAscForSql": {
+                            "value": "DeployIfNotExists"
+                        },
+                        "enableAscForStorage": {
+                            "value": "DeployIfNotExists"
+                        },
+                        "enableAscForContainers": {
+                            "value": "DeployIfNotExists"
+                        },
+                        "enableAscForArm": {
+                            "value": "DeployIfNotExists"
+                        },
+                        "enableAscForDns": {
+                            "value": "DeployIfNotExists"
+                        }
+                    },
+                    "nonComplianceMessage": "Microsoft Defender for Cloud must be deployed.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,                   
+                    "notScopes": [],
+                    "location": "usgovvirginia", 
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                       "/providers/microsoft.authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {                    
+                    "name": "Deploy-AzActivity-Log",
+                    "description": "Ensures that Activity Log Diagnostics settings are set to push logs into Log Analytics workspace.",
+                    "displayName": "Deploy Diagnostic Settings for Activity Log to Log Analytics workspace",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f",
+                    "parameters": {
+                        "effect": {
+                            "value": "DeployIfNotExists"
+                        },
+                        "logAnalytics": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                        }
+                    },
+                    "nonComplianceMessage": "Activity Logs must be sent to Log Ananlytics Workspace.",                    
+                    "enforcementMode": "Default",
+                    "metadata": {},                    
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",                    
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                        "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                     ],
+                     "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy-ASC-Monitoring",
+                    "description": "Enable Monitoring in Microsoft Defender for Cloud.",
+                    "displayName": "Enable Monitoring in Microsoft Defender for Cloud",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
+                    "parameters": {},
+                    "nonComplianceMessage": "Microsoft Defender for Cloud must be enabled for monitoring.",                    
+                    "enforcementMode": "Default",
+                    "metadata": {},                    
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",                    
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+                     ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy-Resource-Diag",
+                    "description": "Ensures that Azure resources are configured to forward diagnostic logs and metrics to an Azure Log Analytics workspace.",
+                    "displayName": "Deploy-Resource-Diag",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deploy-Diagnostics-LogAnalytics",
+                    "parameters": {
+                        "logAnalytics": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                        }
+                    },
+                    "nonComplianceMessage": "Azure resources must be configured to forward diagnostics logs and metrics to Azure Log Analytics workspace.",                    
+                    "enforcementMode": "Default",
+                    "metadata": {},                    
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",                                        
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                        "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                     ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {   
+                    "name": "Deploy-VM-Monitoring",
+                    "description": "Enable Azure Monitor for the virtual machines (VMs) in the specified scope (management group, subscription or resource group). Takes Log Analytics workspace as parameter.",
+                    "displayName": "Enable Azure Monitor for VMs",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/55f3eceb-5573-4f18-9695-226972c6d74a",
+                    "parameters": {
+                        "logAnalytics_1": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                        }
+                    },
+                    "nonComplianceMessage": "Virtual Machines must be enabled for monitoring through Azure Monitor.",                    
+                    "enforcementMode": "Default",
+                    "metadata": {},                    
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",                                        
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+                        "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c"
+                     ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy-VMSS-Monitoring",
+                    "description": "Enable Azure Monitor for the Virtual Machine Scale Sets in the specified scope (Management group, Subscription or resource group). Takes Log Analytics workspace as parameter. Note: if your scale set upgradePolicy is set to Manual, you need to apply the extension to the all VMs in the set by calling upgrade on them. In CLI this would be az vmss update-instances.",
+                    "displayName": "Enable Azure Monitor for Virtual Machine Scale Sets",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/75714362-cae7-409e-9b99-a8e5075b7fad",
+                    "parameters": {
+                        "logAnalytics_1": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                        }
+                    },
+                    "nonComplianceMessage": "Virtual Machines Scale Sets must be enabled for monitoring through Azure Monitor.",                    
+                    "enforcementMode": "Default",
+                    "metadata": {},                    
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",                                        
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+                        "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c"
+                     ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "NIST-SP-800-171-Rev-2",
+                    "description": "This initiative includes policies that address a subset of NIST SP 800-171 Rev. 2 requirements. Policies may be added or removed in future releases. For more information, visit https://aka.ms/nist800171r2-initiative.",
+                    "displayName": "NIST SP 800-171 Rev. 2",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9",
+                    "parameters": {
+                        "logAnalyticsWorkspaceIDForVMAgents": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                        },
+                        "membersToExcludeInLocalAdministratorsGroup": {
+                            "value": "test@rajdisha.onmicrosoft.us"
+                        },                            
+                        "membersToIncludeInLocalAdministratorsGroup": {
+                            "value": "admin@rajdisha.onmicrosoft.us"
+                        }
+                    },
+                    "nonComplianceMessage": "NIST SP 800-171 Rev. 2 must be enabled",                    
+                    "enforcementMode": "Default",
+                    "metadata": {},                    
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",                                        
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                     ],
+                    "managementGroupId": "mg-A2g"
+                }
+    
+            ]      
+        }
+    }
+}
