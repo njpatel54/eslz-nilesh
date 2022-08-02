@@ -1,6 +1,6 @@
 targetScope = 'managementGroup'
 
-param policyAssignments array = []
+param mgPolicyAssignments array = []
 param subPolicyAssignments array = []
 
 //Create Policy Assignment at Management Group Scope
@@ -25,7 +25,7 @@ module policyAssignment_mg '../modules/authorization/policyAssignments/managemen
 }]
 
 //Create Policy Assignment at Subscription Scope
-module policyAssignment_mg '../modules/authorization/policyAssignments/subscription/deploy.bicep' = [ for (policyAssignment, i) in subPolicyAssignments :  {
+module policyAssignment_sub '../modules/authorization/policyAssignments/subscription/deploy.bicep' = [ for (policyAssignment, i) in subPolicyAssignments :  {
   name: '${policyAssignment.name}-policyAssignment-${i}'
   scope: subscription(policyAssignment.subscriptionId)
   params: {
