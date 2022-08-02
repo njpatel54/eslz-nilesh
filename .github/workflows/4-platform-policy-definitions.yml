@@ -44,7 +44,7 @@ jobs:
       with:
         inlineScript: |
             az deployment mg validate \
-              --name 'Custom-Policy-Definitions-MG-Scope' \
+              --name 'Platform-Policy-Definitions' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/policy/customPolicyDefinition.bicep \
@@ -72,7 +72,7 @@ jobs:
         with:
           inlineScript: |
             az deployment mg what-if \
-              --name 'Custom-Policy-Definitions-MG-Scope' \
+              --name 'Platform-Policy-Definitions' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/policy/customPolicyDefinition.bicep \
@@ -101,7 +101,7 @@ jobs:
       with:
         inlineScript: |
             az deployment mg create \
-              --name 'Custom-Policy-Definitions-MG-Scope' \
+              --name 'Platform-Policy-Definitions' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/policy/customPolicyDefinition.bicep \
