@@ -175,6 +175,6 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   ]
   params: {
     name: privateDnsZone
-    location: location
+    location: 'Global'
   }
 }]
