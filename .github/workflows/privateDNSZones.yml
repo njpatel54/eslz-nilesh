@@ -36,6 +36,6 @@ jobs:
       with:
         inlineScript: |
           az deployment sub create \
-            --name 'Deploy-Platform-Hub-Spoke-VNet' \
+            --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/privateDNSZones.bicep

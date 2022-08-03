@@ -333,6 +333,8 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
 }
 
 
+@description('The resource IDs of the deployed Virtual Networks.')
+output spokeVnetsResourceIds array = [for vNet in spokeVnets: az.resourceId('Microsoft.Network/virtualNetworks', vNet.name)]
 
 // Start - Outputs to supress warnings - "unused parameters"
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
