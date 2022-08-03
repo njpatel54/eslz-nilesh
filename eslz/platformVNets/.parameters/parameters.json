@@ -2,47 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "PrivateDNSZones": {
-            "value": [
-                "privatelink.afs.azure.net",
-                "privatelink.api.ml.azure.us",
-                "privatelink.azconfig.azure.us",
-                "privatelink.azure-automation.us",
-                "privatelink.azurecr.us",
-                "privatelink.azure-devices.net",
-                "privatelink.azure-devices.us",
-                "privatelink.azuresynapse.usgovcloudapi.net",
-                "privatelink.azurewebsites.us",
-                "privatelink.blob.core.usgovcloudapi.net",
-                "privatelink.cassandra.cosmos.azure.us",
-                "privatelink.database.usgovcloudapi.net",
-                "privatelink.dev.azuresynapse.usgovcloudapi.net",
-                "privatelink.dfs.core.usgovcloudapi.net",
-                "privatelink.documents.azure.us",
-                "privatelink.eventgrid.windows.net",
-                "privatelink.file.core.usgovcloudapi.net",
-                "privatelink.gremlin.cosmos.azure.us",
-                "privatelink.mariadb.database.usgovcloudapi.net",
-                "privatelink.mongo.cosmos.azure.us",
-                "privatelink.notebooks.usgovcloudapi.net",
-                "privatelink.postgres.database.usgovcloudapi.net",
-                "privatelink.prod.migration.windowsazure.us",
-                "privatelink.queue.core.usgovcloudapi.net",
-                "privatelink.redis.cache.usgovcloudapi.net",
-                "privatelink.search.azure.us",
-                "privatelink.servicebus.usgovcloudapi.net",
-                "privatelink.servicebus.windows.net",
-                "privatelink.signalr.azure.us",
-                "privatelink.siterecovery.windowsazure.us",
-                "privatelink.sql.azuresynapse.usgovcloudapi.net",
-                "privatelink.table.core.usgovcloudapi.net",
-                "privatelink.table.cosmos.azure.us",
-                "privatelink.uga.backup.windowsazure.us",
-                "privatelink.usgovvirginia.batch.usgovcloudapi.net",
-                "privatelink.vaultcore.usgovcloudapi.net",
-                "privatelink.web.core.usgovcloudapi.net"
-            ]
-        },
         "hubNetworkSecurityGroups": {
             "value": [
                 {
