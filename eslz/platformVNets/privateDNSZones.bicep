@@ -48,6 +48,7 @@ param region string = 'usva'
 @description('Required. Resource Group name.')
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
+@description('Required. Array of Private DNS Zones.')
 param privateDNSZones array = [
   'privatelink.adx.monitor.azure.us'
   'privatelink.afs.azure.net'
@@ -94,6 +95,9 @@ param privateDNSZones array = [
   'privatelink.web.core.usgovcloudapi.net'  
 ]
 
+// Azure Geo Codes - https://docs.microsoft.com/en-us/azure/backup/private-endpoints#when-using-custom-dns-server-or-host-files
+// Azure Geo Codes - https://download.microsoft.com/download/1/2/6/126a410b-0e06-45ed-b2df-84f353034fa1/AzureRegionCodesList.docx
+@description('Required. Map of the Geo Codes for each Azure Region.')
 var azureBackupGeoCodes = {
   australiacentral: 'acl'
   australiacentral2: 'acl2'
@@ -153,7 +157,7 @@ var azureBackupGeoCodes = {
   germanynortheast: 'gne'
 }
 
-// If region entered in 'location' parameter and matches a lookup to 'azureBackupGeoCodes' then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in 'privateDnsZones'. If not, just return 'privateDnsZones'
+// If Azure region is entered in 'location' parameter and matches a lookup to 'azureBackupGeoCodes', then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in 'privateDnsZones'. If not, just return 'privateDnsZones'
 //   'privatelink.{region}.backup.windowsazure.us'
 var privateDnsZonesMerge = contains(azureBackupGeoCodes, location) ? union(privateDNSZones, ['privatelink.${azureBackupGeoCodes[toLower(location)]}.backup.windowsazure.us']) : privateDNSZones
 
