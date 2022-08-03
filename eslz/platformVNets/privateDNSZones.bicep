@@ -170,6 +170,9 @@ module PriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
 module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZonesMerge: {
   name: 'PriDNSZones-${privateDnsZone}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
+  dependsOn: [
+    PriDNSZonesRg
+  ]
   params: {
     name: privateDnsZone
     location: location
