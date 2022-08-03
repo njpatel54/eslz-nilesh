@@ -4,6 +4,10 @@ targetScope = 'subscription'
 param hubVnetSubscriptionId string = 'e6c61ac5-feea-4459-93fc-7131f8352553'
 param location string = 'usgovvirginia'
 
+
+@description('Required. Resource Group name.')
+param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
 
@@ -51,9 +55,9 @@ param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
 var vNets = json(loadTextContent('.parameters/parameters.json'))
 
-var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId('Microsoft.Network/virtualNetworks', vNet.name)]
+var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
-var hubVNetsResourceIds = [resourceId('Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
+var hubVNetsResourceIds = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
 
 var vNetResourceIds = union(hubVNetsResourceIds, spokeVNetsResourceIds)
 
