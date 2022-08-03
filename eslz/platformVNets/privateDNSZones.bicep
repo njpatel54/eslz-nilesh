@@ -51,9 +51,9 @@ param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
 var vNets = json(loadTextContent('.parameters/parameters.json'))
 
-var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, 'Microsoft.Network/virtualNetworks', vNet.name)]
+var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId('Microsoft.Network/virtualNetworks', vNet.name)]
 
-var hubVNetsResourceIds = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
+var hubVNetsResourceIds = [resourceId('Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
 
 var vNetResourceIds = union(hubVNetsResourceIds, spokeVNetsResourceIds)
 
