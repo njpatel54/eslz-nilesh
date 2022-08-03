@@ -120,7 +120,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
 
-// Create Resoruce Group
+// 1 - Create Resoruce Group
 module siem_rg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${rgName}'
   scope: subscription(mgmtsubid)
@@ -131,7 +131,7 @@ module siem_rg '../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
-// Create Log Analytics Workspace for Azure Sentinel
+// 2 - Create Log Analytics Workspace for Azure Sentinel
 module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'logaSentinel-${take(uniqueString(deployment().name, location), 4)}-${sentinelLawName}'
   scope: resourceGroup(mgmtsubid, rgName)
@@ -146,7 +146,7 @@ module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
   }
 }
 
-// Create Log Analytics Workspace for resource Diagnostics Settings - Log Collection
+// 3 - Create Log Analytics Workspace for resource Diagnostics Settings - Log Collection
 module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(mgmtsubid, rgName)
@@ -161,7 +161,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
   }
 }
 
-// Create Storage Account
+// 4 - Create Storage Account
 module sa '../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
@@ -177,7 +177,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
   }
 }
 
-// Create Event Hub Namespace and Event Hub
+// 5 - Create Event Hub Namespace and Event Hub
 module eh '../modules/namespaces/deploy.bicep' = {
   name: 'eh-${take(uniqueString(deployment().name, location), 4)}-${eventhubNamespaceName}'
   scope: resourceGroup(mgmtsubid, rgName)
@@ -195,7 +195,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
   }
 }
 
-// Create Automation Account and link it to Log Analytics Workspace
+// 6 - Create Automation Account and link it to Log Analytics Workspace
 module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
@@ -217,7 +217,7 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   }
 }
 
-// Configure Diagnostics Settings for Subscriptions
+// 7 - Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'diagSettings-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)

@@ -964,7 +964,7 @@ var customPolicySetDefinitions = [
   }  
 ]
 
-// Create Custom Policy Defintions
+// 1 - Create Custom Policy Defintions
 module policyDefinitions '../modules/authorization/policyDefinitions/managementGroup/deploy.bicep' = [for policy in customPolicyDefinitions: {
   name: '${policy.name}'
   params: {
@@ -979,7 +979,7 @@ module policyDefinitions '../modules/authorization/policyDefinitions/managementG
   }
 }]
 
-// Create Custom Policy-Set Defintions
+// 2 - Create Custom Policy-Set Defintions
 module policySetDefinitions '../modules/authorization/policySetDefinitions/managementGroup/deploy.bicep' = [for policySet in customPolicySetDefinitions: {
   name: '${policySet.setDefinition.name}'
   dependsOn: [

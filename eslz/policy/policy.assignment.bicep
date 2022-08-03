@@ -9,7 +9,7 @@ param subPolicyAssignments array = []
 @description('Required. Array containing all Policy Assignments at Resource Group Scope.')
 param rgPolicyAssignments array = []
 
-//Create Policy Assignment at Management Group Scope
+// 1 - Create Policy Assignment at Management Group Scope
 module policyAssignment_mg '../modules/authorization/policyAssignments/managementGroup/deploy.bicep' = [ for (policyAssignment, i) in mgPolicyAssignments :  {
   name: '${policyAssignment.name}-policyAssignment-${i}'
   scope: managementGroup(policyAssignment.managementGroupId)
@@ -30,7 +30,7 @@ module policyAssignment_mg '../modules/authorization/policyAssignments/managemen
   }
 }]
 
-//Create Policy Assignment at Subscription Scope
+// 2 - Create Policy Assignment at Subscription Scope
 module policyAssignment_sub '../modules/authorization/policyAssignments/subscription/deploy.bicep' = [ for (policyAssignment, i) in subPolicyAssignments :  {
   name: '${policyAssignment.name}-policyAssignment-${i}'
   scope: subscription(policyAssignment.subscriptionId)
@@ -51,7 +51,7 @@ module policyAssignment_sub '../modules/authorization/policyAssignments/subscrip
   }
 }]
 
-//Create Policy Assignment at Resource Group Scope
+// 3 - Create Policy Assignment at Resource Group Scope
 module policyAssignment_rg '../modules/authorization/policyAssignments/resourceGroup/deploy.bicep' = [ for (policyAssignment, i) in rgPolicyAssignments :  {
   name: '${policyAssignment.name}-policyAssignment-${i}'
   scope: resourceGroup(policyAssignment.subscriptionId, policyAssignment.resourceGroupName)

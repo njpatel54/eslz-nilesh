@@ -26,7 +26,7 @@ param tenantid string
 
 param deploymentId string = substring(uniqueString(utcNow()),0,6)
 
-// Create Management Groups
+// 1 - Create Management Groups
 @batchSize(1)
 module mg '../modules/management/managementGroups/deploy.bicep' = [ for managementGroup in managementGroups: {
   name: 'deploy-mg-${managementGroup.name}'
@@ -40,7 +40,7 @@ module mg '../modules/management/managementGroups/deploy.bicep' = [ for manageme
   }
 }]
 
-// Create Role Assignments for Management Groups
+// 2 - Create Role Assignments for Management Groups
 module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
   name: 'ManagementGroup-Rbac-${roleAssignment.managementGroupName}-${index}'  
   scope: managementGroup(roleAssignment.managementGroupName)
@@ -57,7 +57,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
   }
 }]
 
-// Move Subscriptions to Management Groups
+// 3 - Move Subscriptions to Management Groups
 module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'deploy-movesubs-${subscription.subscriptionId}-${deploymentId}'
   scope: tenant()
@@ -70,7 +70,7 @@ module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscripti
   }
 }]
 
-// Create Role Assignments for Subscriptions
+// 4 - Create Role Assignments for Subscriptions
 module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
   name: 'subscription-Rbac-${roleAssignment.subscriptionId}-${index}'
   scope: subscription(roleAssignment.subscriptionId)
@@ -87,13 +87,13 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
   }
 }]
 
-// Retrieve Tenant Root Management Group
+// 5 - Retrieve Tenant Root Management Group
 resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
   name: tenantid
   scope: tenant()
 }
 
-// Configure Default Management Group Settings
+// 6 - Configure Default Management Group Settings
 resource mgSettings 'Microsoft.Management/managementGroups/settings@2021-04-01' = {
   parent: rootmg
   name: 'default'
