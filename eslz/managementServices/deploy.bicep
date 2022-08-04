@@ -240,10 +240,10 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
-// 8 - Create Custom RBAC Roles (Security operations (SecOps), Network management (NetOps))
+// 8 - Create Custom RBAC Roles at MG Scope (Security operations (SecOps), Network management (NetOps))
 module mgCustomRbac '../modules/authorization/roleDefinitions/managementGroup/deploy.bicep' = [ for (customRbacRole, index) in mgCustomRbacRoles: {
   name: 'mgCustomRbac-${customRbacRole.managementGroupId}-${index}'
-  scope: managementGroup('mg-A2g')
+  scope: managementGroup(customRbacRole.managementGroupId)
   params: {
     roleName: customRbacRole.roleName
     description: customRbacRole.description
@@ -251,7 +251,7 @@ module mgCustomRbac '../modules/authorization/roleDefinitions/managementGroup/de
     actions: customRbacRole.actions
     notActions: customRbacRole.notActions
     assignableScopes: customRbacRole.assignableScopes
-    managementGroupId: 'mg-A2g'
+    managementGroupId: customRbacRole.managementGroupId
   }
 }]
 
