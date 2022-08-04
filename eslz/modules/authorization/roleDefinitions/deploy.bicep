@@ -33,24 +33,6 @@ param location string = deployment().location
 @sys.description('Optional. Role definition assignable scopes. If not provided, will use the current scope provided.')
 param assignableScopes array = []
 
-@sys.description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
-var enableReferencedModulesTelemetry = false
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  location: location
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
-
 module roleDefinition_mg 'managementGroup/deploy.bicep' = if (empty(subscriptionId) && empty(resourceGroupName)) {
   name: '${uniqueString(deployment().name, location)}-RoleDefinition-MG-Module'
   scope: managementGroup(managementGroupId)
@@ -62,7 +44,6 @@ module roleDefinition_mg 'managementGroup/deploy.bicep' = if (empty(subscription
     assignableScopes: !empty(assignableScopes) ? assignableScopes : []
     managementGroupId: managementGroupId
     location: location
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -79,7 +60,6 @@ module roleDefinition_sub 'subscription/deploy.bicep' = if (!empty(subscriptionI
     assignableScopes: !empty(assignableScopes) ? assignableScopes : []
     subscriptionId: subscriptionId
     location: location
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -96,7 +76,6 @@ module roleDefinition_rg 'resourceGroup/deploy.bicep' = if (!empty(resourceGroup
     assignableScopes: !empty(assignableScopes) ? assignableScopes : []
     subscriptionId: subscriptionId
     resourceGroupName: resourceGroupName
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 

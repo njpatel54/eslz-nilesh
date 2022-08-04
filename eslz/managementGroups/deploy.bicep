@@ -18,6 +18,9 @@ param mgRoleAssignments array = []
 @description('Required. Array of role assignment objects to define RBAC on subscriptions.')
 param subRoleAssignments array = []
 
+@description('Required. Array of Custom RBAC Role Definitions.')
+param customRbacRoles array = []
+
 @description('Required. Array of Subscription objects.')
 param subscriptions array
 
@@ -105,6 +108,21 @@ resource mgSettings 'Microsoft.Management/managementGroups/settings@2021-04-01' 
     requireAuthorizationForGroupCreation: requireAuthorizationForGroupCreation
   }
 }
+
+// 7 - Create Custom RBAC Roles (Security operations (SecOps), Network management (NetOps))
+module mgCustomRbacRoles '../modules/authorization/roleDefinitions/managementGroup/deploy.bicep' = [ for (customRbacRole, index) in customRbacRoles: {
+  name: 'mgCustomRbacRoles-${customRbacRole.managementGroupId}-${index}'
+  scope: managementGroup(customRbacRole.managementGroupId)
+  params: {
+    roleName: customRbacRole.roleName
+    description: customRbacRole.description
+    location: location
+    actions: customRbacRole.actions
+    notActions: customRbacRole.notActions
+    assignableScopes: customRbacRole.assignableScopes
+    managementGroupId: customRbacRole.managementGroupId
+  }
+}]
 
 // Outputs
 @description('The management group name and resourceId.')

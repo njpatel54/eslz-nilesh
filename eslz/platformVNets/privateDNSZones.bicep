@@ -1,9 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////////
-// Folloing parameters/variables can be removed in original Bicep Template file.
 targetScope = 'subscription'
-//param hubVnetSubscriptionId string = 'e6c61ac5-feea-4459-93fc-7131f8352553'
-param location string = 'usgovvirginia'
 
+@description('Required. Location for all resources.')
+param location string
 
 @description('Required. Resource Group name.')
 param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
@@ -47,19 +45,47 @@ param opscope string = 'prod'
 ])
 param region string = 'usva'
 
-////////////////////////////////////////////////////////////////////////////////////
-
 // Create PrivateDNSZones
 @description('Required. Resource Group name.')
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
+@description('Required. Array of Custom RBAC Role Definitions.')
+param vNetRgCustomRbacRoles array = []
+
+@description('Required. Array of Custom RBAC Role Definitions.')
+param priDNSZonesRgCustomRbacRoles array = []
+
+@description('Required. Load content from json file.')
 var vNets = json(loadTextContent('.parameters/parameters.json'))
 
+// Variables created to be used as 'virtualNetworkLinks' for Private DNS Zone(s)
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
 var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
-var hubVNetsResourceIds = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
+@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
+var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
 
-var vNetResourceIds = union(hubVNetsResourceIds, spokeVNetsResourceIds)
+@description('Required. Combine two varibales using "union" function.')
+var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
+
+// Variables created to be used as an 'assignableScopes' for Custom RBAC Role(s)
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of ResourceGroup using "subscriptionId" and "resourceGroupName".')
+var spokeVNetsRgResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName)]
+
+@description('Required. Build "resourceId" of ResourceGroup using "hubVnetSubscriptionId" and "resourceGroupName".')
+var hubVNetRgResourceIds = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName)]
+
+@description('Required. Combine two varibales using "union" function.')
+var networkingPermissionsAssignableScopes = union(hubVNetRgResourceIds, spokeVNetsRgResourceIds)
+
+// Variables created to be used as 'assignableScopes' for Custom RBAC Role(s)
+@description('Required. "Connectivity SubscriptionId".')
+param connSubscriptionId string
+
+@description('Required. Build resoruce ID of resourceGroup in Connectivity Subscription hosting all Private DNS Zones.')
+var privateDnsAContributorAssignableScope = [
+  '/subscriptions/${connSubscriptionId}/${resourceGroupName}'
+]
 
 @description('Required. Array of Private DNS Zones.')
 param privateDNSZones array = [
@@ -174,6 +200,7 @@ var azureBackupGeoCodes = {
 //   'privatelink.{region}.backup.windowsazure.us'
 var privateDnsZonesMerge = contains(azureBackupGeoCodes, location) ? union(privateDNSZones, ['privatelink.${azureBackupGeoCodes[toLower(location)]}.backup.windowsazure.us']) : privateDNSZones
 
+// 1 - Create Resource Group
 module PriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${vNets.parameters.hubVnetSubscriptionId.value}-${priDNSZonesRgName}'
   scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
@@ -184,6 +211,7 @@ module PriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
+// 2 - Create Private DNS Zones
 module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZonesMerge: {
   name: 'PriDNSZones-${privateDnsZone}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
@@ -197,5 +225,39 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
       virtualNetworkResourceId: vNetResourceId
       registrationEnabled: false
     }]
+  }
+}]
+
+// 3 - Create Custom RBAC Role (Deploy Private Endpoint - Networking Permissions)
+module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in vNetRgCustomRbacRoles: {
+  name: 'vNetRgCustomRbac-${index}'
+  scope: resourceGroup(priDNSZonesRgName)
+    params: {
+    roleName: customRbacRole.roleName
+    description: customRbacRole.description
+    actions: customRbacRole.actions
+    notActions: customRbacRole.notActions
+    dataActions: customRbacRole.dataActions
+    notDataActions: customRbacRole.notDataActions
+    assignableScopes: networkingPermissionsAssignableScopes
+    subscriptionId: customRbacRole.subscriptionId
+    resourceGroupName: customRbacRole.resourceGroupName
+  }
+}]
+
+// 4 - Create Custom RBAC Role (Deploy Private Endpoint - Private DNS A Contributor)
+module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in priDNSZonesRgCustomRbacRoles: {
+  name: 'priDNSZonesRgCustomRbac-${index}'
+  scope: resourceGroup(priDNSZonesRgName)
+    params: {
+    roleName: customRbacRole.roleName
+    description: customRbacRole.description
+    actions: customRbacRole.actions
+    notActions: customRbacRole.notActions
+    dataActions: customRbacRole.dataActions
+    notDataActions: customRbacRole.notDataActions
+    assignableScopes: privateDnsAContributorAssignableScope
+    subscriptionId: customRbacRole.subscriptionId
+    resourceGroupName: customRbacRole.resourceGroupName
   }
 }]
