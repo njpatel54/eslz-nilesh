@@ -254,6 +254,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   }
 }
 
+/*
 // 8 - Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
@@ -285,6 +286,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     //diagnosticEventHubName: diagnosticEventHubName
   }
 }
+*/
 
 // 9 - Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
