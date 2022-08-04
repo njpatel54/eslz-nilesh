@@ -232,7 +232,10 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
 module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in vNetRgCustomRbacRoles: {
   name: 'vNetRgCustomRbac-${index}'
   scope: resourceGroup(priDNSZonesRgName)
-    params: {
+  dependsOn: [
+    PriDNSZonesRg
+  ]
+  params: {
     roleName: customRbacRole.roleName
     description: customRbacRole.description
     actions: customRbacRole.actions
@@ -249,7 +252,10 @@ module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/
 module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in priDNSZonesRgCustomRbacRoles: {
   name: 'priDNSZonesRgCustomRbac-${index}'
   scope: resourceGroup(priDNSZonesRgName)
-    params: {
+  dependsOn: [
+    PriDNSZonesRg
+  ]
+  params: {
     roleName: customRbacRole.roleName
     description: customRbacRole.description
     actions: customRbacRole.actions
