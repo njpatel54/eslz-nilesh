@@ -254,7 +254,6 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   }
 }
 
-/*
 // 8 - Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
@@ -286,7 +285,6 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     //diagnosticEventHubName: diagnosticEventHubName
   }
 }
-*/
 
 // 9 - Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
@@ -333,10 +331,6 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     //diagnosticEventHubName: diagnosticEventHubName
   }
 }
-
-
-@description('The resource IDs of the deployed Virtual Networks.')
-output spokeVnetsResourceIds array = [for vNet in spokeVnets: az.resourceId('Microsoft.Network/virtualNetworks', vNet.name)]
 
 // Start - Outputs to supress warnings - "unused parameters"
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
