@@ -33,6 +33,12 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
 
+@description('Required. Array of Custom RBAC Role Definitions.')
+param vNetRgCustomRbacRoles array = []
+
+@description('Required. Array of Custom RBAC Role Definitions.')
+param priDNSZonesRgCustomRbacRoles array = []
+
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
 
@@ -335,4 +341,6 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
 // Start - Outputs to supress warnings - "unused parameters"
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
 output diagnosticEventHubName string = diagnosticEventHubName
+output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
+output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 // End - Outputs to supress warnings - "unused parameters"
