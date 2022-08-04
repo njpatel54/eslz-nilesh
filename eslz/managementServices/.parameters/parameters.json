@@ -158,7 +158,13 @@
             "value": []
           },
           "managementGroupId": {
-            "value": "mg-A2g"
+            "value": ""
+          },
+          "subscriptionId": {
+            "value": ""
+          },
+          "resourceGroupName": {
+            "value": ""
           }
         },
         {
@@ -188,7 +194,13 @@
             "value": []
           },
           "managementGroupId": {
-            "value": "mg-A2g"
+            "value": ""
+          },
+          "subscriptionId": {
+            "value": ""
+          },
+          "resourceGroupName": {
+            "value": ""
           }
         }
       ]

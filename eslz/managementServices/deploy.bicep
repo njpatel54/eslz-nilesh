@@ -251,7 +251,7 @@ module mgCustomRbac '../modules/authorization/roleDefinitions/managementGroup/de
     actions: customRbacRole.actions
     notActions: customRbacRole.notActions
     assignableScopes: customRbacRole.assignableScopes
-    managementGroupId: customRbacRole.managementGroupId
+    managementGroupId: 'mg-A2g'
   }
 }]
 
