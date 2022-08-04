@@ -49,12 +49,6 @@ param region string = 'usva'
 @description('Required. Resource Group name.')
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
-@description('Required. Array of Custom RBAC Role Definitions.')
-param vNetRgCustomRbacRoles array = []
-
-@description('Required. Array of Custom RBAC Role Definitions.')
-param priDNSZonesRgCustomRbacRoles array = []
-
 @description('Required. Load content from json file.')
 var vNets = json(loadTextContent('.parameters/parameters.json'))
 
@@ -67,23 +61,6 @@ var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value
 
 @description('Required. Combine two varibales using "union" function.')
 var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
-
-// Variables created to be used as an 'assignableScopes' for Custom RBAC Role(s)
-@description('Required. Iterate over each "spokeVnets" and build "resourceId" of ResourceGroup using "subscriptionId" and "resourceGroupName".')
-var spokeVNetsRgResourceIds = [for vNet in vNets.parameters.spokeVnets.value: '/subscriptions/${vNet.subscriptionId}/resourceGroups/${resourceGroupName}']
-
-@description('Required. Build "resourceId" of ResourceGroup using "hubVnetSubscriptionId" and "resourceGroupName".')
-var hubVNetRgResourceIds = ['/subscriptions/${vNets.parameters.hubVnetSubscriptionId.value}/resourceGroups/${resourceGroupName}']
-
-@description('Required. Combine two varibales using "union" function.')
-var networkingPermissionsAssignableScopes = union(hubVNetRgResourceIds, spokeVNetsRgResourceIds)
-
-// Variables created to be used as 'assignableScopes' for Custom RBAC Role(s)
-@description('Required. "Connectivity SubscriptionId".')
-param connSubscriptionId string
-
-@description('Required. Build resoruce ID of resourceGroup in Connectivity Subscription hosting all Private DNS Zones.')
-var privateDnsAContributorAssignableScope = ['/subscriptions/${connSubscriptionId}/resourcegroups/${priDNSZonesRgName}']
 
 @description('Required. Array of Private DNS Zones.')
 param privateDNSZones array = [
@@ -226,6 +203,31 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
+/*
+
+@description('Required. Array of Custom RBAC Role Definitions.')
+param vNetRgCustomRbacRoles array = []
+
+@description('Required. Array of Custom RBAC Role Definitions.')
+param priDNSZonesRgCustomRbacRoles array = []
+
+// Variables created to be used as an 'assignableScopes' for Custom RBAC Role(s)
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of ResourceGroup using "subscriptionId" and "resourceGroupName".')
+var spokeVNetsRgResourceIds = [for vNet in vNets.parameters.spokeVnets.value: '/subscriptions/${vNet.subscriptionId}/resourceGroups/${resourceGroupName}']
+
+@description('Required. Build "resourceId" of ResourceGroup using "hubVnetSubscriptionId" and "resourceGroupName".')
+var hubVNetRgResourceIds = ['/subscriptions/${vNets.parameters.hubVnetSubscriptionId.value}/resourceGroups/${resourceGroupName}']
+
+@description('Required. Combine two varibales using "union" function.')
+var networkingPermissionsAssignableScopes = union(hubVNetRgResourceIds, spokeVNetsRgResourceIds)
+
+// Variables created to be used as 'assignableScopes' for Custom RBAC Role(s)
+@description('Required. "Connectivity SubscriptionId".')
+param connSubscriptionId string
+
+@description('Required. Build resoruce ID of resourceGroup in Connectivity Subscription hosting all Private DNS Zones.')
+var privateDnsAContributorAssignableScope = ['/subscriptions/${connSubscriptionId}/resourcegroups/${priDNSZonesRgName}']
+
 // 3 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Networking Permissions)
 module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in vNetRgCustomRbacRoles: {
   name: 'vNetRgCustomRbac-${resourceGroupName}-${index}'
@@ -249,7 +251,7 @@ module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/
 // 4 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Private DNS A Contributor)
 module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in priDNSZonesRgCustomRbacRoles: {
   name: 'priDNSZonesRgCustomRbac-${priDNSZonesRgName}-${index}'
-  scope: resourceGroup(split(customRbacRole, '/')[2], split(customRbacRole, '/')[4])
+  scope: resourceGroup(split(customRbacRole.index, '/')[2], split(customRbacRole, '/')[4])
   dependsOn: [
     PriDNSZonesRg
   ]
@@ -269,3 +271,4 @@ module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourc
 
 output networkingPermissionsAssignableScopes array = networkingPermissionsAssignableScopes
 output privateDnsAContributorAssignableScope array = privateDnsAContributorAssignableScope
+*/
