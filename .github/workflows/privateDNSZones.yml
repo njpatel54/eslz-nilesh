@@ -32,7 +32,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Platform Hub-Spoke VNet'
+      name: 'Deploy - Private DNS Zones'
       with:
         inlineScript: |
           az deployment sub create \
