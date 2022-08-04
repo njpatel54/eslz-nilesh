@@ -228,7 +228,7 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
-// 3 - Create Custom RBAC Role at RG Scope (Deploy Private Endpoint - Networking Permissions)
+// 3 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Networking Permissions)
 module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in vNetRgCustomRbacRoles: {
   name: 'vNetRgCustomRbac-${index}'
   scope: resourceGroup(priDNSZonesRgName)
@@ -245,7 +245,7 @@ module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/
   }
 }]
 
-// 4 - Create Custom RBAC Role at RG Scope (Deploy Private Endpoint - Private DNS A Contributor)
+// 4 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Private DNS A Contributor)
 module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in priDNSZonesRgCustomRbacRoles: {
   name: 'priDNSZonesRgCustomRbac-${index}'
   scope: resourceGroup(priDNSZonesRgName)
