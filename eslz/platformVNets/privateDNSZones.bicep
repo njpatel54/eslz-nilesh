@@ -84,7 +84,7 @@ param connSubscriptionId string
 
 @description('Required. Build resoruce ID of resourceGroup in Connectivity Subscription hosting all Private DNS Zones.')
 var privateDnsAContributorAssignableScope = [
-  '/subscriptions/${connSubscriptionId}/${resourceGroupName}'
+  '/subscriptions/${connSubscriptionId}/${priDNSZonesRgName}'
 ]
 
 @description('Required. Array of Private DNS Zones.')
@@ -230,8 +230,8 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
 
 // 3 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Networking Permissions)
 module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in vNetRgCustomRbacRoles: {
-  name: 'vNetRgCustomRbac-${index}'
-  scope: resourceGroup(priDNSZonesRgName)
+  name: 'vNetRgCustomRbac-${resourceGroupName}-${index}'
+  scope: resourceGroup(resourceGroupName)
   dependsOn: [
     PriDNSZonesRg
   ]
@@ -250,7 +250,7 @@ module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/
 
 // 4 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Private DNS A Contributor)
 module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in priDNSZonesRgCustomRbacRoles: {
-  name: 'priDNSZonesRgCustomRbac-${index}'
+  name: 'priDNSZonesRgCustomRbac-${priDNSZonesRgName}-${index}'
   scope: resourceGroup(priDNSZonesRgName)
   dependsOn: [
     PriDNSZonesRg
