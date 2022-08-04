@@ -70,10 +70,10 @@ var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
 // Variables created to be used as an 'assignableScopes' for Custom RBAC Role(s)
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of ResourceGroup using "subscriptionId" and "resourceGroupName".')
-var spokeVNetsRgResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName)]
+var spokeVNetsRgResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId,  'Microsoft.Resources/resourceGroups', resourceGroupName)]
 
 @description('Required. Build "resourceId" of ResourceGroup using "hubVnetSubscriptionId" and "resourceGroupName".')
-var hubVNetRgResourceIds = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName)]
+var hubVNetRgResourceIds = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, 'Microsoft.Resources/resourceGroups', resourceGroupName)]
 
 @description('Required. Combine two varibales using "union" function.')
 var networkingPermissionsAssignableScopes = union(hubVNetRgResourceIds, spokeVNetsRgResourceIds)
