@@ -243,7 +243,7 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
 // 8 - Create Custom RBAC Roles (Security operations (SecOps), Network management (NetOps))
 module mgCustomRbac '../modules/authorization/roleDefinitions/managementGroup/deploy.bicep' = [ for (customRbacRole, index) in mgCustomRbacRoles: {
   name: 'mgCustomRbac-${customRbacRole.managementGroupId}-${index}'
-  scope: managementGroup(customRbacRole.managementGroupId)
+  scope: managementGroup('mg-A2g')
   params: {
     roleName: customRbacRole.roleName
     description: customRbacRole.description
