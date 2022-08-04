@@ -4,130 +4,203 @@
   "parameters": {
     "logaSentinelGallerySolution": {
       "value": [
-          {
-            "name": "SecurityInsights",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          }
+        {
+          "name": "SecurityInsights",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        }
       ]
     },
     "logaGallerySolutions": {
       "value": [
-          {
-            "name": "AgentHealthAssessment",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "AntiMalware",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "AzureActivity",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "ChangeTracking",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "Security",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "ServiceMap",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "SQLAdvancedThreatProtection",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "SQLAssessment",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "SQLVulnerabilityAssessment",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "Updates",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          },
-          {
-            "name": "VMInsights",
-            "product": "OMSGallery",
-            "publisher": "Microsoft"
-          }
+        {
+          "name": "AgentHealthAssessment",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "AntiMalware",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "AzureActivity",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "ChangeTracking",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "Security",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "ServiceMap",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "SQLAdvancedThreatProtection",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "SQLAssessment",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "SQLVulnerabilityAssessment",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "Updates",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "VMInsights",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        }
       ]
     },
     "storageaccount_sku": {
-      "value":"Standard_LRS"
+      "value": "Standard_LRS"
     },
     "authorizationRules": {
-        "value": [
-            {
-                "name": "RootManageSharedAccessKey",
-                "rights": [
-                    "Listen",
-                    "Manage",
-                    "Send"
-                ]
-            },
-            {
-                "name": "SendListenAccess",
-                "rights": [
-                    "Listen",
-                    "Send"
-                ]
-            }
-        ]
+      "value": [
+        {
+          "name": "RootManageSharedAccessKey",
+          "rights": [
+            "Listen",
+            "Manage",
+            "Send"
+          ]
+        },
+        {
+          "name": "SendListenAccess",
+          "rights": [
+            "Listen",
+            "Send"
+          ]
+        }
+      ]
     },
     "eventHubs": {
-        "value": [
+      "value": [
+        {
+          "name": "evh-ccs-prod-usva-001",
+          "partitionCount": 1,
+          "authorizationRules": [
             {
-                "name": "evh-ccs-prod-usva-001",
-                "partitionCount": 1,
-                "authorizationRules": [
-                    {
-                        "name": "RootManageSharedAccessKey",
-                        "rights": [
-                            "Listen",
-                            "Manage",
-                            "Send"
-                        ]
-                    },
-                    {
-                        "name": "SendListenAccess",
-                        "rights": [
-                            "Listen",
-                            "Send"
-                        ]
-                    }
-                ]
+              "name": "RootManageSharedAccessKey",
+              "rights": [
+                "Listen",
+                "Manage",
+                "Send"
+              ]
+            },
+            {
+              "name": "SendListenAccess",
+              "rights": [
+                "Listen",
+                "Send"
+              ]
             }
-        ]
+          ]
+        }
+      ]
     },
     "diagSettingName": {
-      "value":"centralized-logging-diagSetting"
+      "value": "centralized-logging-diagSetting"
     },
-    "projowner":{
-      "value":"ccs"
+    "mgCustomRbacRoles": {
+      "value": [
+        {
+          "roleName": {
+            "value": "Security operations (SecOps)"
+          },
+          "description": {
+            "value": "Security administrator role with a horizontal view across the entire Azure estate and the Azure Key Vault purge policy"
+          },
+          "actions": {
+            "value": [
+              "*/read",
+              "*/register/action",
+              "Microsoft.KeyVault/locations/deletedVaults/purge/action",
+              "Microsoft.PolicyInsights/*",
+              "Microsoft.Authorization/policyAssignments/*",
+              "Microsoft.Authorization/policyDefinitions/*",
+              "Microsoft.Authorization/policyExemptions/*",
+              "Microsoft.Authorization/policySetDefinitions/*",
+              "Microsoft.Insights/alertRules/*",
+              "Microsoft.Resources/deployments/*",
+              "Microsoft.Security/*",
+              "Microsoft.Support/*"
+            ]
+          },
+          "notActions": {
+            "value": []
+          },
+          "dataActions": {
+            "value": []
+          },
+          "notDataActions": {
+            "value": []
+          },
+          "assignableScopes": {
+            "value": []
+          },
+          "managementGroupId": {
+            "value": "mg-A2g"
+          }
+        },
+        {
+          "roleName": {
+            "value": "Network management (NetOps)"
+          },
+          "description": {
+            "value": "Platform-wide global connectivity management: Virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others"
+          },
+          "actions": {
+            "value": [
+              "Microsoft.Network/*",
+              "Microsoft.Resources/deployments/*",
+              "Microsoft.Support/*"
+            ]
+          },
+          "notActions": {
+            "value": []
+          },
+          "dataActions": {
+            "value": []
+          },
+          "notDataActions": {
+            "value": []
+          },
+          "assignableScopes": {
+            "value": []
+          },
+          "managementGroupId": {
+            "value": "mg-A2g"
+          }
+        }
+      ]
     },
-    "opscope":{
-      "value":"prod"
+    "projowner": {
+      "value": "ccs"
     },
-    "region":{
-      "value":"usva"
+    "opscope": {
+      "value": "prod"
+    },
+    "region": {
+      "value": "usva"
     }
   }
 }

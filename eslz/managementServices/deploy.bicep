@@ -3,6 +3,9 @@ targetScope = 'tenant'
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string
 
+@description('Required. Array of Custom RBAC Role Definitions.')
+param mgCustomRbacRoles array = []
+
 @description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for Azure Sentinel.')
 param logaSentinelGallerySolution array = []
 
@@ -237,6 +240,21 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+// 8 - Create Custom RBAC Roles (Security operations (SecOps), Network management (NetOps))
+module mgCustomRbac '../modules/authorization/roleDefinitions/managementGroup/deploy.bicep' = [ for (customRbacRole, index) in mgCustomRbacRoles: {
+  name: 'mgCustomRbac-${customRbacRole.managementGroupId}-${index}'
+  scope: managementGroup(customRbacRole.managementGroupId)
+  params: {
+    roleName: customRbacRole.roleName
+    description: customRbacRole.description
+    location: location
+    actions: customRbacRole.actions
+    notActions: customRbacRole.notActions
+    assignableScopes: customRbacRole.assignableScopes
+    managementGroupId: customRbacRole.managementGroupId
+  }
+}]
+
 @description('Output - Name of Event Hub')
 output ehnsAuthorizationId string = resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
 
@@ -308,4 +326,3 @@ module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' =
   }
 }]
 */
-
