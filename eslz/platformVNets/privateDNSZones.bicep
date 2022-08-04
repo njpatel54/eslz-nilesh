@@ -70,10 +70,10 @@ var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
 // Variables created to be used as an 'assignableScopes' for Custom RBAC Role(s)
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of ResourceGroup using "subscriptionId" and "resourceGroupName".')
-var spokeVNetsRgResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName)]
+var spokeVNetsRgResourceIds = [for vNet in vNets.parameters.spokeVnets.value: '/subscriptions/${vNet.subscriptionId}/resourceGroups/${resourceGroupName}']
 
 @description('Required. Build "resourceId" of ResourceGroup using "hubVnetSubscriptionId" and "resourceGroupName".')
-var hubVNetRgResourceIds = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName)]
+var hubVNetRgResourceIds = ['/subscriptions/${vNets.parameters.hubVnetSubscriptionId.value}/resourceGroups/${resourceGroupName}']
 
 @description('Required. Combine two varibales using "union" function.')
 var networkingPermissionsAssignableScopes = union(hubVNetRgResourceIds, spokeVNetsRgResourceIds)
@@ -83,9 +83,7 @@ var networkingPermissionsAssignableScopes = union(hubVNetRgResourceIds, spokeVNe
 param connSubscriptionId string
 
 @description('Required. Build resoruce ID of resourceGroup in Connectivity Subscription hosting all Private DNS Zones.')
-var privateDnsAContributorAssignableScope = [
-  '/subscriptions/${connSubscriptionId}/${priDNSZonesRgName}'
-]
+var privateDnsAContributorAssignableScope = ['/subscriptions/${connSubscriptionId}/resourcegroups/${priDNSZonesRgName}']
 
 @description('Required. Array of Private DNS Zones.')
 param privateDNSZones array = [
