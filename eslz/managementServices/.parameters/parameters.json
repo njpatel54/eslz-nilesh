@@ -123,12 +123,8 @@
     "mgCustomRbacRoles": {
       "value": [
         {
-          "roleName": {
-            "value": "Security operations (SecOps)"
-          },
-          "description": {
-            "value": "Security administrator role with a horizontal view across the entire Azure estate and the Azure Key Vault purge policy"
-          },
+          "roleName": "Security operations (SecOps)",
+          "description": "Security administrator role with a horizontal view across the entire Azure estate and the Azure Key Vault purge policy",
           "actions": {
             "value": [
               "*/read",
@@ -157,23 +153,13 @@
           "assignableScopes": {
             "value": []
           },
-          "managementGroupId": {
-            "value": ""
-          },
-          "subscriptionId": {
-            "value": ""
-          },
-          "resourceGroupName": {
-            "value": ""
-          }
+          "managementGroupId": "mg-A2g",
+          "subscriptionId": "",
+          "resourceGroupName": ""
         },
         {
-          "roleName": {
-            "value": "Network management (NetOps)"
-          },
-          "description": {
-            "value": "Platform-wide global connectivity management: Virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others"
-          },
+          "roleName": "Network management (NetOps)",
+          "description": "Platform-wide global connectivity management: Virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others",
           "actions": {
             "value": [
               "Microsoft.Network/*",
@@ -193,15 +179,9 @@
           "assignableScopes": {
             "value": []
           },
-          "managementGroupId": {
-            "value": ""
-          },
-          "subscriptionId": {
-            "value": ""
-          },
-          "resourceGroupName": {
-            "value": ""
-          }
+          "managementGroupId": "mg-A2g",
+          "subscriptionId": "",
+          "resourceGroupName": ""
         }
       ]
     },
