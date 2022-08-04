@@ -35,7 +35,7 @@ jobs:
           enable-AzPSSession: false
         
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
       name: 'Run preflight validation'
@@ -57,7 +57,8 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/privateDNSZones.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   preview:
     runs-on: ubuntu-latest
@@ -73,7 +74,7 @@ jobs:
         enable-AzPSSession: false
       
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
       name: 'Run what-if'
@@ -95,7 +96,8 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/privateDNSZones.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -134,4 +136,5 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/privateDNSZones.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
