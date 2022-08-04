@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // Folloing parameters/variables can be removed in original Bicep Template file.
 targetScope = 'subscription'
-param hubVnetSubscriptionId string = 'e6c61ac5-feea-4459-93fc-7131f8352553'
+//param hubVnetSubscriptionId string = 'e6c61ac5-feea-4459-93fc-7131f8352553'
 param location string = 'usgovvirginia'
 
 
@@ -175,8 +175,8 @@ var azureBackupGeoCodes = {
 var privateDnsZonesMerge = contains(azureBackupGeoCodes, location) ? union(privateDNSZones, ['privatelink.${azureBackupGeoCodes[toLower(location)]}.backup.windowsazure.us']) : privateDNSZones
 
 module PriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${hubVnetSubscriptionId}-${priDNSZonesRgName}'
-  scope: subscription(hubVnetSubscriptionId)
+  name: 'rg-${vNets.parameters.hubVnetSubscriptionId.value}-${priDNSZonesRgName}'
+  scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
   params: {
     name: priDNSZonesRgName
     location: location
@@ -186,7 +186,7 @@ module PriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
 
 module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZonesMerge: {
   name: 'PriDNSZones-${privateDnsZone}'
-  scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
+  scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
   dependsOn: [
     PriDNSZonesRg
   ]

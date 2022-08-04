@@ -52,10 +52,11 @@ jobs:
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-          az deployment sub create \
+          az deployment sub validate \
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/privateDNSZones.bicep
+            --template-file ./eslz/platformVNets/privateDNSZones.bicep \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
     runs-on: ubuntu-latest
@@ -88,10 +89,11 @@ jobs:
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
                          diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
-          az deployment sub create \
+          az deployment sub what-if \
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/privateDNSZones.bicep
+            --template-file ./eslz/platformVNets/privateDNSZones.bicep \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -128,4 +130,5 @@ jobs:
           az deployment sub create \
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/privateDNSZones.bicep
+            --template-file ./eslz/platformVNets/privateDNSZones.bicep \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
