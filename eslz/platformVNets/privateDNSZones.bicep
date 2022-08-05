@@ -89,6 +89,7 @@ param privateDNSZones array = [
   'privatelink.gremlin.cosmos.azure.us'
   'privatelink.mariadb.database.usgovcloudapi.net'
   'privatelink.mongo.cosmos.azure.us'
+  'privatelink.monitor.azure.us'
   'privatelink.mysql.database.usgovcloudapi.net'
   'privatelink.notebooks.usgovcloudapi.net'
   'privatelink.ods.opinsights.azure.us'
@@ -203,6 +204,7 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
+// 3 - Create Private Endpoint for 
 
 
 
