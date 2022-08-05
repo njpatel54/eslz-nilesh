@@ -1,4 +1,4 @@
-name: test role definitions
+name: test
 
 on:
   #push:
