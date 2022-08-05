@@ -94,7 +94,7 @@ module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceG
 // 2 - Create Custom RBAC Role Definition(s) at RG Scope (Hub)
 // Role Definition Name --> "Deploy Private Endpoint - Networking Permissions)"
 module vNetRgCustomRbacHub '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = {
-  name: 'vNetRgCustomRbacHub-${resourceGroupName}'
+  name: 'vNetRgCustomRbacHub-${location}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName)
   params: { 
     roleName: roleName
