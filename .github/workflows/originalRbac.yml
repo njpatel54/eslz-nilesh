@@ -1,11 +1,11 @@
-name: test
+name: original rbac
 
 on:
   #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/test.yml
+  #   - .github/workflows/originalRbac.yml
       
   # pull_request:
   #  branches: [ main ]
@@ -18,13 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: 'Lint and Build Bicep'
+      run: az bicep build --file ./eslz/customRoleDefinitions/originalRbac.bicep
 
-    - uses: Azure/cli@v1
-      name: 'Lint and Build Bicep'
-      with:
-        inlineScript: |
-          az bicep build --file ./eslz/customRoleDefinitions/originalRbac.bicep
-          
   validate:
     runs-on: ubuntu-latest
     needs: [lint]
@@ -45,13 +41,12 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az deployment mg validate \
+          az deployment sub validate \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/customRoleDefinitions/originalRbac.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters ./eslz/customRoleDefinitions/.parameters/originalRbac.json \
+            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   preview:
     runs-on: ubuntu-latest
@@ -73,13 +68,12 @@ jobs:
       name: 'Run what-if'
       with:
         inlineScript: |
-          az deployment mg what-if \
+          az deployment sub what-if \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/customRoleDefinitions/originalRbac.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters ./eslz/customRoleDefinitions/.parameters/originalRbac.json \
+            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -99,13 +93,12 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Custom Role Definitions'
+      name: 'Deploy - Platform Hub-Spoke VNet'
       with:
         inlineScript: |
-          az deployment mg create \
+          az deployment sub create \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/customRoleDefinitions/originalRbac.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters ./eslz/customRoleDefinitions/.parameters/originalRbac.json \
+            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
