@@ -39,6 +39,6 @@ jobs:
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/privateDnsZones/testPrivateDnsZones.bicep \
-            --parameters ./eslz/privateDnsZones/privateDnsZones.json \
+            --parameters ./eslz/privateDnsZones/test.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          MGMTSUBSCRIPTIONID=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
