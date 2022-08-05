@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+
+    - uses: Azure/cli@v1
       name: 'Lint and Build Bicep'
       with:
         inlineScript: |
@@ -49,8 +51,7 @@ jobs:
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \ 
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json
 
   preview:
     runs-on: ubuntu-latest
@@ -76,8 +77,7 @@ jobs:
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json
 
   deploy:
     runs-on: ubuntu-latest
@@ -104,5 +104,4 @@ jobs:
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json

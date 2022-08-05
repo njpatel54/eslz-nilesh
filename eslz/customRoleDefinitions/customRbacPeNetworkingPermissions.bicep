@@ -60,7 +60,7 @@ param subscriptionId string = ''
 param assignableScopes array = []
 
 @sys.description('Optional. Location deployment metadata.')
-param location string
+param location string = 'USGovVirginia'
 
 @sys.description('Required. Load content from json file.')
 var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json'))
