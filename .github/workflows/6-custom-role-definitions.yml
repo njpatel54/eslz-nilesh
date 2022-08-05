@@ -132,12 +132,14 @@ jobs:
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
           az deployment sub create \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPrivateDnsAContributor.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPrivateDnsAContributor.json
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPrivateDnsAContributor.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
           az deployment mg create \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
