@@ -47,6 +47,9 @@ param dataActions array = []
 @sys.description('Optional. List of denied data actions. This is not supported if the assignableScopes contains Management Group Scopes.')
 param notDataActions array = []
 
+@sys.description('Optional. The group ID of the Management Group where the Role Definition and Target Scope will be applied to. If not provided, will use the current scope for deployment.')
+param managementGroupId string
+
 @sys.description('Optional. The subscription ID where the Role Definition and Target Scope will be applied to. Use for both Subscription level and Resource Group Level.')
 param subscriptionId string = ''
 
@@ -79,5 +82,6 @@ module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/
 
 
 // Start - Outputs to supress warnings - "unused parameters"
+output managementGroupId string = managementGroupId
 output assignableScopes array = assignableScopes
 // End - Outputs to supress warnings - "unused parameters"
