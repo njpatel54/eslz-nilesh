@@ -1,0 +1,40 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "roleName": {
+            "value": "Network management (NetOps)"
+        },
+        "description": {
+            "value": "Platform-wide global connectivity management: Virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others"
+        },
+        "actions": {
+            "value": [
+                "Microsoft.Network/*",
+                "Microsoft.Resources/deployments/*",
+                "Microsoft.Support/*"
+            ]
+        },
+        "notActions": {
+            "value": []
+        },
+        "dataActions": {
+            "value": []
+        },
+        "notDataActions": {
+            "value": []
+        },
+        "assignableScopes": {
+            "value": []
+        },
+        "managementGroupId": {
+            "value": "mg-A2g"
+        },
+        "subscriptionId": {
+            "value": ""
+        },
+        "resourceGroupName": {
+            "value": ""
+        }
+    }
+}
