@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep && az bicep build --file ./eslz/customRoleDefinitions/customRbacPrivateDnsAContributor.bicep && az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
+      run: az bicep build --file ./eslz/customRoleDefinitions/customRbacPrivateDnsAContributor.bicep && az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -41,13 +41,6 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az deployment sub validate \
-            --name 'Deploy-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \            
-            --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
           az deployment sub validate \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
@@ -90,13 +83,6 @@ jobs:
           az deployment sub what-if \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \            
-            --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment sub what-if \
-            --name 'Deploy-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPrivateDnsAContributor.bicep \
             --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPrivateDnsAContributor.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
@@ -134,13 +120,6 @@ jobs:
       name: 'Deploy - Custom Role Definitions'
       with:
         inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \            
-            --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
           az deployment sub create \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
