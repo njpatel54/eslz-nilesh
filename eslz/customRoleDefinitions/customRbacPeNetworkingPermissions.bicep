@@ -75,7 +75,7 @@ var hubVNetRgResourceIdsAssignableScopes = ['/subscriptions/${vNets.parameters.h
 // 1 - Create Custom RBAC Role Definition(s) at RG Scope (Spokes)
 // Role Definition Name --> "Deploy Private Endpoint - Networking Permissions)"
 module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (spokeVnet, index) in spokeVnets: {
-  name: 'vNetRgCustomRbac-${resourceGroupName}-${index}'
+  name: 'vNetRgCustomRbacSpoke-${resourceGroupName}-${index}'
   scope: resourceGroup(spokeVnet.subscriptionId, resourceGroupName)
   params: { 
     roleName: roleName
@@ -94,7 +94,7 @@ module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceG
 // 2 - Create Custom RBAC Role Definition(s) at RG Scope (Hub)
 // Role Definition Name --> "Deploy Private Endpoint - Networking Permissions)"
 module vNetRgCustomRbacHub '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = {
-  name: 'vNetRgCustomRbac-${resourceGroupName}'
+  name: 'vNetRgCustomRbacHub-${resourceGroupName}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName)
   params: { 
     roleName: roleName
