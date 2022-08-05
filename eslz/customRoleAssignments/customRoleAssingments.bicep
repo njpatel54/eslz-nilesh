@@ -14,7 +14,7 @@ param rgRoleAssignments array = []
 
 // 1 - Create Role Assignments at Management Groups Scope
 module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
-  name: 'ManagementGroup-Rbac-${roleAssignment.managementGroupName}-${index}'  
+  name: 'mgRbac-${roleAssignment.managementGroupName}-${index}'  
   scope: managementGroup(roleAssignment.managementGroupName)
   params: {
     location: location
@@ -28,7 +28,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
 
 // 2 - Create Role Assignments at Subscriptions Scope
 module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
-  name: 'subscription-Rbac-${roleAssignment.subscriptionId}-${index}'
+  name: 'subRbac-${roleAssignment.subscriptionId}-${index}'
   scope: subscription(roleAssignment.subscriptionId)
   params: {
     location: location
@@ -42,7 +42,7 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
 
 // 3 - Create Role Assignments at Resource Groups Scope
 module rgRbac '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, index) in rgRoleAssignments :{
-  name: 'subscription-Rbac-${roleAssignment.subscriptionId}-${index}'
+  name: 'rgRbac-${roleAssignment.resourceGroupName}-${index}'
   scope: resourceGroup(roleAssignment.subscriptionId, roleAssignment.resourceGroupName)
   params: {
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
