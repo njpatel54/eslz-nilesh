@@ -1,4 +1,4 @@
-name: 6 - custom role definitions
+name: test role definitions
 
 on:
   #push:
@@ -45,19 +45,11 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az deployment mg validate \
+          az deployment sub validate \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacNetworkManagement.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment mg validate \
-            --name 'Deploy-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacSecurityOperations.json \
+            --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \ 
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
@@ -80,19 +72,11 @@ jobs:
       name: 'Run what-if'
       with:
         inlineScript: |
-          az deployment mg what-if \
+          az deployment sub what-if \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacNetworkManagement.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment mg what-if \
-            --name 'Deploy-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacSecurityOperations.json \
+            --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -116,17 +100,9 @@ jobs:
       name: 'Deploy - Custom Role Definitions'
       with:
         inlineScript: |
-          az deployment mg create \
+          az deployment sub create \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacNetworkManagement.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment mg create \
-            --name 'Deploy-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacSecurityOperations.json \
+            --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
