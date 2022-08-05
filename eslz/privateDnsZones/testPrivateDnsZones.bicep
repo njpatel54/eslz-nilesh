@@ -81,7 +81,7 @@ module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for 
     testPriDNSZonesRg
   ]
   params: {
-    name: privateDnsZone.value
+    name: privateDnsZone
     location: 'Global'
     tags: ccsCombinedTags
     virtualNetworkLinks: [for vNetResourceId in spokeVNetsResourceIds: {
