@@ -1,4 +1,4 @@
-name: 6 - custom role definitions
+name: 8 - custom role assignments
 
 on:
   #push:
@@ -23,7 +23,7 @@ jobs:
       name: 'Lint and Build Bicep'
       with:
         inlineScript: |
-          az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
+          az bicep build --file ./eslz/customRoleAssignments/customRoleAssingments.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -39,18 +39,17 @@ jobs:
           enable-AzPSSession: false
         
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az deployment mg validate \
-            --name 'Deploy-MG-Custom-Role-Definitions' \
+          az deployment tenant validate \
+            --name 'Deploy-Custom-Role-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
+            --template-file ./eslz/customRoleAssignments/customRoleAssingments.bicep \
+            --parameters ./eslz/customRoleAssignments/.parameters/customRoleAssignments.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
@@ -67,18 +66,17 @@ jobs:
         enable-AzPSSession: false
       
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
       name: 'Run what-if'
       with:
         inlineScript: |
-          az deployment mg what-if \
-            --name 'Deploy-MG-Custom-Role-Definitions' \
+          az deployment tenant what-if \
+            --name 'Deploy-Custom-Role-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
+            --template-file ./eslz/customRoleAssignments/customRoleAssingments.bicep \
+            --parameters ./eslz/customRoleAssignments/.parameters/customRoleAssignments.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -96,16 +94,15 @@ jobs:
         enable-AzPSSession: false
       
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Custom Role Definitions'
+      name: 'Deploy - Custom Role Assignments'
       with:
         inlineScript: |
-          az deployment mg create \
-            --name 'Deploy-MG-Custom-Role-Definitions' \
+          az deployment tenant create \
+            --name 'Deploy-Custom-Role-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
+            --template-file ./eslz/customRoleAssignments/customRoleAssingments.bicep \
+            --parameters ./eslz/customRoleAssignments/.parameters/customRoleAssignments.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}

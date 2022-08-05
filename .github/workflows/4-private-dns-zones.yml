@@ -1,11 +1,11 @@
-name: 7 - custom role assignments
+name: 4 - private dns zones
 
 on:
   #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/6-custom-role-definitions.yml
+  #   - .github/workflows/4-private-dns-zones.yml
       
   # pull_request:
   #  branches: [ main ]
@@ -18,12 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
-    - uses: Azure/cli@v1
-      name: 'Lint and Build Bicep'
-      with:
-        inlineScript: |
-          az bicep build --file ./eslz/customRoleAssignments/customRoleAssingments.bicep
+    - name: 'Lint and Build Bicep'
+      run: az bicep build --file ./eslz/privateDnsZones/privateDNSZones.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -39,17 +35,16 @@ jobs:
           enable-AzPSSession: false
         
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
     - uses: Azure/cli@v1
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az deployment tenant validate \
-            --name 'Deploy-Custom-Role-Assignments' \
+          az deployment sub validate \
+            --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleAssignments/customRoleAssingments.bicep \
-            --parameters ./eslz/customRoleAssignments/.parameters/customRoleAssignments.json \
+            --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
@@ -66,17 +61,16 @@ jobs:
         enable-AzPSSession: false
       
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
       name: 'Run what-if'
       with:
         inlineScript: |
-          az deployment tenant what-if \
-            --name 'Deploy-Custom-Role-Assignments' \
+          az deployment sub what-if \
+            --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleAssignments/customRoleAssingments.bicep \
-            --parameters ./eslz/customRoleAssignments/.parameters/customRoleAssignments.json \
+            --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -94,15 +88,14 @@ jobs:
         enable-AzPSSession: false
       
     - name: 'Set Azure Subscription'
-      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Custom Role Assignments'
+      name: 'Deploy - Private DNS Zones'
       with:
         inlineScript: |
-          az deployment tenant create \
-            --name 'Deploy-Custom-Role-Assignments' \
+          az deployment sub create \
+            --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleAssignments/customRoleAssingments.bicep \
-            --parameters ./eslz/customRoleAssignments/.parameters/customRoleAssignments.json \
+            --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
             --parameters location=${{ secrets.AZURE_LOCATION }}

@@ -50,7 +50,7 @@ param region string = 'usva'
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
 @description('Required. Load content from json file.')
-var vNets = json(loadTextContent('.parameters/parameters.json'))
+var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json'))
 
 // Variables created to be used as 'virtualNetworkLinks' for Private DNS Zone(s)
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
@@ -197,6 +197,7 @@ module PriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   params: {
     name: privateDnsZone
     location: 'Global'
+    tags: ccsCombinedTags
     virtualNetworkLinks: [for vNetResourceId in vNetResourceIds: {
       virtualNetworkResourceId: vNetResourceId
       registrationEnabled: false
