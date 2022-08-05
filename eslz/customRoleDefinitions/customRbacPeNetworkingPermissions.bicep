@@ -1,5 +1,3 @@
-targetScope = 'subscription'
-
 @sys.description('Required. Project Owner (projowner) parameter.')
 @allowed([
   'ccs'
