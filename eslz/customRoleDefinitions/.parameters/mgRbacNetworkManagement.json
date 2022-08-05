@@ -18,23 +18,11 @@
         "notActions": {
             "value": []
         },
-        "dataActions": {
-            "value": []
-        },
-        "notDataActions": {
-            "value": []
-        },
         "assignableScopes": {
             "value": []
         },
         "managementGroupId": {
             "value": "mg-A2g"
-        },
-        "subscriptionId": {
-            "value": ""
-        },
-        "resourceGroupName": {
-            "value": ""
         }
     }
 }
