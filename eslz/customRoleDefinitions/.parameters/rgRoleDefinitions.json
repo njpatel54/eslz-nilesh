@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vNetRgCustomRbacRoles": {
+        "rgRbacPeNetworkingPermissions": {
             "value": [
                 {
                     "roleName": "Deploy Private Endpoint - Networking Permissions",
@@ -28,7 +28,7 @@
                 }
             ]
         },
-        "priDNSZonesRgCustomRbacRoles": {
+        "rgRbacPrivateDnsAContributor": {
             "value": [
                 {
                     "roleName": "Deploy Private Endpoint - Private DNS A Contributor",

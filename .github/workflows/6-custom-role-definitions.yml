@@ -22,8 +22,7 @@ jobs:
       with:
         inlineScript: |
           az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
-          az bicep build --file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep
-          az bicep build --file ./eslz/customRoleDefinitions/customRbacPrivateDnsAContributor.bicep
+          az bicep build --file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -46,19 +45,18 @@ jobs:
       with:
         inlineScript: |
           az deployment mg validate \
-            --name 'Deploy-Custom-Role-Definitions' \
+            --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacNetworkManagement.json \
+            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment mg validate \
-            --name 'Deploy-Custom-Role-Definitions' \
+          az deployment sub validate \
+            --name 'Deploy-RG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacSecurityOperations.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
+            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   preview:
     runs-on: ubuntu-latest
@@ -81,19 +79,18 @@ jobs:
       with:
         inlineScript: |
           az deployment mg what-if \
-            --name 'Deploy-Custom-Role-Definitions' \
+            --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacNetworkManagement.json \
+            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment mg what-if \
-            --name 'Deploy-Custom-Role-Definitions' \
+          az deployment sub what-if \
+            --name 'Deploy-RG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacSecurityOperations.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
+            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -117,16 +114,15 @@ jobs:
       with:
         inlineScript: |
           az deployment mg create \
-            --name 'Deploy-Custom-Role-Definitions' \
+            --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacNetworkManagement.json \
+            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment mg create \
+          az deployment sub create \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRbacSecurityOperations.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
+            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}

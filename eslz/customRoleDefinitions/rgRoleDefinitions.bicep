@@ -35,10 +35,10 @@ param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
 @description('Required. Array of Custom RBAC Role Definitions.')
-param vNetRgCustomRbacRoles array = []
+param rgRbacPeNetworkingPermissions array = []
 
 @description('Required. Array of Custom RBAC Role Definitions.')
-param priDNSZonesRgCustomRbacRoles array = []
+param rgRbacPrivateDnsAContributor array = []
 
 @description('Required. Load content from json file.')
 var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json'))
@@ -61,9 +61,10 @@ param connSubscriptionId string
 var privateDnsAContributorAssignableScope = ['/subscriptions/${connSubscriptionId}/resourcegroups/${priDNSZonesRgName}']
 
 // 3 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Networking Permissions)
-module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in vNetRgCustomRbacRoles: {
+// These permissions are needed at EACH Resource Group(s) level where Virtual Networks are located - Whose Subnets are used by Private Endpoint NIC to assign Private IP.
+module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in rgRbacPeNetworkingPermissions: {
   name: 'vNetRgCustomRbac-${resourceGroupName}-${index}'
-  scope: resourceGroup(resourceGroupName)
+  scope: resourceGroup(connSubscriptionId, resourceGroupName)
   params: {
     roleName: customRbacRole.roleName
     description: customRbacRole.description
@@ -78,9 +79,10 @@ module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/
 }]
 
 // 4 - Create Custom RBAC Role Definition(s) at RG Scope (Deploy Private Endpoint - Private DNS A Contributor)
-module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in priDNSZonesRgCustomRbacRoles: {
+// These permissions are only needed at Resource Group level where all centralized Private DNS Zones are located.
+module priDNSZonesRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (customRbacRole, index) in rgRbacPrivateDnsAContributor: {
   name: 'priDNSZonesRgCustomRbac-${priDNSZonesRgName}-${index}'
-  scope: resourceGroup(priDNSZonesRgName)
+  scope: resourceGroup(connSubscriptionId, priDNSZonesRgName)
   params: {
     roleName: customRbacRole.roleName
     description: customRbacRole.description

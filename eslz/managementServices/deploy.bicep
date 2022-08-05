@@ -326,3 +326,5 @@ module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' =
   }
 }]
 */
+
+

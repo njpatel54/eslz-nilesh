@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/customRoleDefinitions/originalRbac.bicep
+      run: az bicep build --file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -44,8 +44,8 @@ jobs:
           az deployment sub validate \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/originalRbac.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/originalRbac.json \
+            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
             --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   preview:
@@ -71,8 +71,8 @@ jobs:
           az deployment sub what-if \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/originalRbac.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/originalRbac.json \
+            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
             --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   deploy:
@@ -99,6 +99,6 @@ jobs:
           az deployment sub create \
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/originalRbac.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/originalRbac.json \
+            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
             --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}

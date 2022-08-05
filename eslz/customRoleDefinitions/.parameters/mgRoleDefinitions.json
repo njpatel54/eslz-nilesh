@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "mgRbacRoleDefinitions": {
+            "value": [
+                {
+                    "roleName": "Network management (NetOps)",
+                    "description": "Platform-wide global connectivity management: Virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others",
+                    "actions": [
+                        "Microsoft.Network/*",
+                        "Microsoft.Resources/deployments/*",
+                        "Microsoft.Support/*"
+                    ],
+                    "notActions": [],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "roleName": "Security operations (SecOps)",
+                    "description": "Security administrator role with a horizontal view across the entire Azure estate and the Azure Key Vault purge policy",
+                    "actions": [
+                        "*/read",
+                        "*/register/action",
+                        "Microsoft.KeyVault/locations/deletedVaults/purge/action",
+                        "Microsoft.PolicyInsights/*",
+                        "Microsoft.Authorization/policyAssignments/*",
+                        "Microsoft.Authorization/policyDefinitions/*",
+                        "Microsoft.Authorization/policyExemptions/*",
+                        "Microsoft.Authorization/policySetDefinitions/*",
+                        "Microsoft.Insights/alertRules/*",
+                        "Microsoft.Resources/deployments/*",
+                        "Microsoft.Security/*",
+                        "Microsoft.Support/*"
+                    ],
+                    "notActions": [],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "roleName": "Application owners (DevOps/AppOps)",
+                    "description": "Contributor role granted for application/operations team at resource group level",
+                    "actions": [
+                        "Microsoft.Authorization/*/write",
+                        "Microsoft.Network/publicIPAddresses/write",
+                        "Microsoft.Network/virtualNetworks/write",
+                        "Microsoft.KeyVault/locations/deletedVaults/purge/action"
+                    ],
+                    "notActions": [],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "roleName": "Subscription owner",
+                    "description": "Delegated role for subscription owner derived from subscription Owner role",
+                    "actions": [
+                        "*"
+                    ],
+                    "notActions": [
+                        "Microsoft.Authorization/*/write",
+                        "Microsoft.Network/vpnGateways/*",
+                        "Microsoft.Network/expressRouteCircuits/*",
+                        "Microsoft.Network/routeTables/write",
+                        "Microsoft.Network/vpnSites/*"
+                    ],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g"
+                }
+            ]
+        }
+    }
+}
