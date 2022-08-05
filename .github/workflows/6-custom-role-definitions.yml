@@ -18,11 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+
+    - uses: Azure/cli@v1
       name: 'Lint and Build Bicep'
       with:
         inlineScript: |
           az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
-          az bicep build --file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -51,12 +52,6 @@ jobs:
             --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
             --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment sub validate \
-            --name 'Deploy-RG-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
-            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   preview:
     runs-on: ubuntu-latest
@@ -85,12 +80,6 @@ jobs:
             --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
             --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment sub what-if \
-            --name 'Deploy-RG-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
-            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -120,9 +109,3 @@ jobs:
             --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
             --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
-          az deployment sub create \
-            --name 'Deploy-Custom-Role-Definitions' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/customRoleDefinitions/rgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRoleDefinitions.json \
-            --parameters connSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}

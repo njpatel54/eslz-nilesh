@@ -65,6 +65,50 @@
                     ],
                     "assignableScopes": [],
                     "managementGroupId": "mg-A2g"
+                },
+                {
+                    "roleName": "Deploy Private Endpoint - Networking Permissions",
+                    "description": "Allows you to configure virtual NIC representing Private Endpoint and link it to specific Virtual Network's subnet",
+                    "actions": [
+                        "Microsoft.Resources/deployments/*",
+                        "Microsoft.Resources/subscriptions/resourceGroups/read",
+                        "Microsoft.Network/virtualNetworks/read",
+                        "Microsoft.Network/virtualNetworks/subnets/read",
+                        "Microsoft.Network/virtualNetworks/subnets/write",
+                        "Microsoft.Network/virtualNetworks/subnets/join/action",
+                        "Microsoft.Network/privateEndpoints/read",
+                        "Microsoft.Network/privateEndpoints/write",
+                        "Microsoft.Network/locations/availablePrivateEndpointTypes/read"
+                    ],
+                    "notActions": [],
+                    "dataActions": [],
+                    "notDataActions": [],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g",
+                    "subscriptionId": "",
+                    "resourceGroupName": ""
+                },
+                {
+                    "roleName": "Deploy Private Endpoint - Private DNS A Contributor",
+                    "description": "Allows you to manage DNS A records for Private Endpoint(s)",
+                    "actions": [
+                        "Microsoft.Network/privateDnsZones/A/*",
+                        "Microsoft.Network/privateDNSZones/read",
+                        "Microsoft.Network/privateDnsZones/join/action",
+                        "Microsoft.Authorization/*/read",
+                        "Microsoft.Insights/alertRules/*",
+                        "Microsoft.ResourceHealth/availabilityStatuses/read",
+                        "Microsoft.Resources/deployments/*",
+                        "Microsoft.Resources/subscriptions/resourceGroups/read",
+                        "Microsoft.Support/*"
+                    ],
+                    "notActions": [],
+                    "dataActions": [],
+                    "notDataActions": [],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g",
+                    "subscriptionId": "",
+                    "resourceGroupName": ""
                 }
             ]
         }
