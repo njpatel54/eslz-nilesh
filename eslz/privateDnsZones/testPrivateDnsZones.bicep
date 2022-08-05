@@ -59,7 +59,9 @@ var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json')
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
 var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
-var privateDnsZones = array(json(loadTextContent('privateDNSZones.json')))
+//var privateDnsZones = array(json(loadTextContent('privateDNSZones.json')))
+
+param privateDnsZones array
 
 // 1 - Create Resource Group
 module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
