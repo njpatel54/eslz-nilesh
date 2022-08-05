@@ -45,7 +45,8 @@ jobs:
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \            
+            --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
           az deployment sub validate \
             --name 'Deploy-Custom-Role-Definitions' \
@@ -90,7 +91,8 @@ jobs:
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \            
+            --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
           az deployment sub what-if \
             --name 'Deploy-Custom-Role-Definitions' \
@@ -136,7 +138,8 @@ jobs:
             --name 'Deploy-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/customRoleDefinitions/customRbacPeNetworkingPermissions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \
+            --parameters ./eslz/customRoleDefinitions/.parameters/rgRbacPeNetworkingPermissions.json \            
+            --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
           az deployment sub create \
             --name 'Deploy-Custom-Role-Definitions' \

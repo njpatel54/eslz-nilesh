@@ -86,7 +86,7 @@ module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceG
     dataActions: dataActions
     notDataActions: notDataActions
     assignableScopes: spokeVNetsRgResourceIdsAssignableScopes
-    subscriptionId: subscriptionId
+    subscriptionId: spokeVnet.subscriptionId
     resourceGroupName: resourceGroupName
   }
 }]
@@ -105,12 +105,13 @@ module vNetRgCustomRbacHub '../modules/authorization/roleDefinitions/resourceGro
     dataActions: dataActions
     notDataActions: notDataActions
     assignableScopes: hubVNetRgResourceIdsAssignableScopes
-    subscriptionId: subscriptionId
+    subscriptionId: vNets.parameters.hubVnetSubscriptionId.value
     resourceGroupName: resourceGroupName
   }
 }
 
 // Start - Outputs to supress warnings - "unused parameters"
+output subscriptionId string = subscriptionId
 output managementGroupId string = managementGroupId
 output assignableScopes array = assignableScopes
 // End - Outputs to supress warnings - "unused parameters"
