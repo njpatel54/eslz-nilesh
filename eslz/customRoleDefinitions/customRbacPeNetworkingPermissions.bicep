@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 @sys.description('Required. Project Owner (projowner) parameter.')
 @allowed([
   'ccs'
@@ -57,6 +59,9 @@ param subscriptionId string = ''
 @sys.description('Optional. Role definition assignable scopes. If not provided, will use the current scope provided.')
 param assignableScopes array = []
 
+@sys.description('Optional. Location deployment metadata.')
+param location string
+
 @sys.description('Required. Load content from json file.')
 var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json'))
 
@@ -67,7 +72,7 @@ var spokeVNetsRgResourceIdsAssignableScopes = [for vNet in vNets.parameters.spok
 @sys.description('Required. Build "resourceId" of ResourceGroup using "hubVnetSubscriptionId" and "resourceGroupName".')
 var hubVNetRgResourceIdsAssignableScopes = ['/subscriptions/${vNets.parameters.hubVnetSubscriptionId.value}/resourceGroups/${resourceGroupName}']
 
-// 1 - Create Custom RBAC Role Definition(s) at RG Scope (Spoke Networks)
+// 1 - Create Custom RBAC Role Definition(s) at RG Scope (Spokes)
 // Role Definition Name --> "Deploy Private Endpoint - Networking Permissions)"
 module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = [ for (spokeVnet, index) in spokeVnets: {
   name: 'vNetRgCustomRbac-${resourceGroupName}-${index}'
@@ -75,6 +80,7 @@ module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceG
   params: { 
     roleName: roleName
     description: description
+    location: location
     actions: actions
     notActions: notActions
     dataActions: dataActions
@@ -85,7 +91,7 @@ module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceG
   }
 }]
 
-// 2 - Create Custom RBAC Role Definition(s) at RG Scope (Hub Network)
+// 2 - Create Custom RBAC Role Definition(s) at RG Scope (Hub)
 // Role Definition Name --> "Deploy Private Endpoint - Networking Permissions)"
 module vNetRgCustomRbacHub '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = {
   name: 'vNetRgCustomRbac-${resourceGroupName}'
@@ -93,6 +99,7 @@ module vNetRgCustomRbacHub '../modules/authorization/roleDefinitions/resourceGro
   params: { 
     roleName: roleName
     description: description
+    location: location
     actions: actions
     notActions: notActions
     dataActions: dataActions
@@ -102,7 +109,6 @@ module vNetRgCustomRbacHub '../modules/authorization/roleDefinitions/resourceGro
     resourceGroupName: resourceGroupName
   }
 }
-
 
 // Start - Outputs to supress warnings - "unused parameters"
 output managementGroupId string = managementGroupId

@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 @sys.description('Required. Project Owner (projowner) parameter.')
 @allowed([
   'ccs'
@@ -54,6 +56,9 @@ param subscriptionId string = ''
 @sys.description('Optional. Role definition assignable scopes. If not provided, will use the current scope provided.')
 param assignableScopes array = []
 
+@sys.description('Optional. Location deployment metadata.')
+param location string
+
 @sys.description('Required. Load content from json file.')
 var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json'))
 
@@ -67,7 +72,8 @@ module vNetRgCustomRbac '../modules/authorization/roleDefinitions/resourceGroup/
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName)
   params: { 
     roleName: roleName
-    description: description
+    description: description    
+    location: location
     actions: actions
     notActions: notActions
     dataActions: dataActions
