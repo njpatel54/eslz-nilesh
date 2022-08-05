@@ -120,51 +120,6 @@
     "diagSettingName": {
       "value": "centralized-logging-diagSetting"
     },
-    "mgCustomRbacRoles": {
-      "value": [
-        {
-          "roleName": "Security operations (SecOps)",
-          "description": "Security administrator role with a horizontal view across the entire Azure estate and the Azure Key Vault purge policy",
-          "actions": [
-            "*/read",
-            "*/register/action",
-            "Microsoft.KeyVault/locations/deletedVaults/purge/action",
-            "Microsoft.PolicyInsights/*",
-            "Microsoft.Authorization/policyAssignments/*",
-            "Microsoft.Authorization/policyDefinitions/*",
-            "Microsoft.Authorization/policyExemptions/*",
-            "Microsoft.Authorization/policySetDefinitions/*",
-            "Microsoft.Insights/alertRules/*",
-            "Microsoft.Resources/deployments/*",
-            "Microsoft.Security/*",
-            "Microsoft.Support/*"
-          ],
-          "notActions": [],
-          "dataActions": [],
-          "notDataActions": [],
-          "assignableScopes": [],
-          "managementGroupId": "mg-A2g",
-          "subscriptionId": "",
-          "resourceGroupName": ""
-        },
-        {
-          "roleName": "Network management (NetOps)",
-          "description": "Platform-wide global connectivity management: Virtual networks, UDRs, NSGs, NVAs, VPN, Azure ExpressRoute, and others",
-          "actions": [
-            "Microsoft.Network/*",
-            "Microsoft.Resources/deployments/*",
-            "Microsoft.Support/*"
-          ],
-          "notActions": [],
-          "dataActions": [],
-          "notDataActions": [],
-          "assignableScopes": [],
-          "managementGroupId": "mg-A2g",
-          "subscriptionId": "",
-          "resourceGroupName": ""
-        }
-      ]
-    },
     "projowner": {
       "value": "ccs"
     },

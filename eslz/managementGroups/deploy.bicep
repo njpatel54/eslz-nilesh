@@ -18,9 +18,6 @@ param mgRoleAssignments array = []
 @description('Required. Array of role assignment objects to define RBAC on subscriptions.')
 param subRoleAssignments array = []
 
-@description('Required. Array of Custom RBAC Role Definitions.')
-param customRbacRoles array = []
-
 @description('Required. Array of Subscription objects.')
 param subscriptions array
 
