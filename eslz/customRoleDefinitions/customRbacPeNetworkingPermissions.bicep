@@ -1,4 +1,4 @@
-targetScope = 'subscription'
+targetScope = 'managementGroup'
 
 @sys.description('Required. Project Owner (projowner) parameter.')
 @allowed([
@@ -60,7 +60,7 @@ param subscriptionId string = ''
 param assignableScopes array = []
 
 @sys.description('Optional. Location deployment metadata.')
-param location string = 'USGovVirginia'
+param location string
 
 @sys.description('Required. Load content from json file.')
 var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json'))
@@ -94,7 +94,7 @@ module vNetRgCustomRbacSpoke '../modules/authorization/roleDefinitions/resourceG
 // 2 - Create Custom RBAC Role Definition(s) at RG Scope (Hub)
 // Role Definition Name --> "Deploy Private Endpoint - Networking Permissions)"
 module vNetRgCustomRbacHub '../modules/authorization/roleDefinitions/resourceGroup/deploy.bicep' = {
-  name: 'vNetRgCustomRbacHub-${location}'
+  name: 'vNetRgCustomRbacHub-${resourceGroupName}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName)
   params: { 
     roleName: roleName
