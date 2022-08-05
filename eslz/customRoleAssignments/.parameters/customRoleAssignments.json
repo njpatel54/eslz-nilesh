@@ -133,24 +133,6 @@
                     "principalIds": [
                         "4210c224-4d79-4c15-ab4c-66937bf6979c"
                     ]
-                },
-                {
-                    "subscriptionId": "df3b1809-17d0-47a0-9241-d2724780bdac",
-                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
-                    "description": "Deploy Private Endpoint - Networking Permissions",
-                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
-                    "principalIds": [
-                        "5da6724f-843a-4f0b-89b6-2a530c758ff7"
-                    ]
-                },
-                {
-                    "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
-                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
-                    "description": "Deploy Private Endpoint - Networking Permissions",
-                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
-                    "principalIds": [
-                        "c0f38eff-4a74-4e1e-a174-e3a71820b1ea"
-                    ]
                 }
             ]
         }
