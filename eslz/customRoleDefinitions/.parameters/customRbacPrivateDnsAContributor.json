@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "roleName": {
+            "value": "Deploy Private Endpoint - Private DNS A Contributor"
+        },
+        "description": {
+            "value": "Allows you to manage DNS A records for Private Endpoint(s)"
+        },
+        "actions": {
+            "value": [
+                "Microsoft.Network/privateDnsZones/A/*",
+                "Microsoft.Network/privateDNSZones/read",
+                "Microsoft.Network/privateDnsZones/join/action",
+                "Microsoft.Authorization/*/read",
+                "Microsoft.Insights/alertRules/*",
+                "Microsoft.ResourceHealth/availabilityStatuses/read",
+                "Microsoft.Resources/deployments/*",
+                "Microsoft.Resources/subscriptions/resourceGroups/read",
+                "Microsoft.Support/*"
+            ]
+        },
+        "notActions": {
+            "value": []
+        },
+        "dataActions": {
+            "value": []
+        },
+        "notDataActions": {
+            "value": []
+        },
+        "assignableScopes": {
+            "value": []
+        },
+        "managementGroupId": {
+            "value": ""
+        },
+        "subscriptionId": {
+            "value": ""
+        },
+        "resourceGroupName": {
+            "value": ""
+        }
+    }
+}

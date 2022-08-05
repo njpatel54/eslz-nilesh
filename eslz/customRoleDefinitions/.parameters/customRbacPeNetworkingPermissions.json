@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "roleName": {
+            "value": "Deploy Private Endpoint - PE Networking Permissions"
+        },
+        "description": {
+            "value": "Allows you to configure virtual NIC representing Private Endpoint and link it to specific Virtual Network's subnet"
+        },
+        "actions": {
+            "value": [
+                "Microsoft.Resources/deployments/*",
+                "Microsoft.Resources/subscriptions/resourceGroups/read",
+                "Microsoft.Network/virtualNetworks/read",
+                "Microsoft.Network/virtualNetworks/subnets/read",
+                "Microsoft.Network/virtualNetworks/subnets/write",
+                "Microsoft.Network/virtualNetworks/subnets/join/action",
+                "Microsoft.Network/privateEndpoints/read",
+                "Microsoft.Network/privateEndpoints/write",
+                "Microsoft.Network/locations/availablePrivateEndpointTypes/read"
+            ]
+        },
+        "notActions": {
+            "value": []
+        },
+        "dataActions": {
+            "value": []
+        },
+        "notDataActions": {
+            "value": []
+        },
+        "assignableScopes": {
+            "value": []
+        },
+        "managementGroupId": {
+            "value": ""
+        },
+        "subscriptionId": {
+            "value": ""
+        },
+        "resourceGroupName": {
+            "value": ""
+        }
+    }
+}
