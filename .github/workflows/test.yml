@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: 'Lint and Build Bicep'
+      name: 'Lint and Build Bicep'
       with:
         inlineScript: |
           az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
