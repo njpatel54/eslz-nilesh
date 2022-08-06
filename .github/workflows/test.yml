@@ -39,5 +39,5 @@ jobs:
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/privateDnsZones/testPrivateDnsZones.bicep \
-            --parameters ./eslz/privateDnsZones/privateDNSZones.json \
+            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}

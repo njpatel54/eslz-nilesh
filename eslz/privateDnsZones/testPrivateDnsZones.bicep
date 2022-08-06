@@ -1,4 +1,3 @@
-
 targetScope = 'subscription'
 
 @description('Required. Location for all resources.')
@@ -76,6 +75,7 @@ module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
+// 2 - Create Private DNS Zones
 module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'testPriDNSZones-${privateDnsZone}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
@@ -86,22 +86,9 @@ module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for 
     name: privateDnsZone
     location: 'Global'
     tags: ccsCombinedTags
-    lock: 'CanNotDelete'
     virtualNetworkLinks: [for vNetResourceId in vNetResourceIds: {
       virtualNetworkResourceId: vNetResourceId
       registrationEnabled: false
     }]
   }
 }]
-
-
-
-
-/*
-@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
-var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
-
-@description('Required. Combine two varibales using "union" function.')
-var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
-
-*/

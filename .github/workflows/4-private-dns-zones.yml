@@ -45,6 +45,7 @@ jobs:
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
+            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
@@ -71,6 +72,7 @@ jobs:
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
+            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -98,4 +100,5 @@ jobs:
             --name 'Deploy-Private-DNS-Zones' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
+            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}

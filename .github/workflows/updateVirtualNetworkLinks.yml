@@ -39,4 +39,4 @@ jobs:
             --name 'Update-Virtual-Network-Links' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/privateDnsZones/updateVirtualNetworkLinks.bicep \
-            --parameters ./eslz/privateDnsZones/privateDNSZones.json
+            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json
