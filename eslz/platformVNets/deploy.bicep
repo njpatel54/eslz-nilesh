@@ -389,6 +389,8 @@ module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for 
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
   dependsOn: [
     testPriDNSZonesRg
+    hubVnet
+    spokeVnet
   ]
   params: {
     name: privateDnsZone
