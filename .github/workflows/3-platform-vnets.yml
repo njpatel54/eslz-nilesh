@@ -50,7 +50,6 @@ jobs:
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -85,7 +84,6 @@ jobs:
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -121,7 +119,6 @@ jobs:
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
