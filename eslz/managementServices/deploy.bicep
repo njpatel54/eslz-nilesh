@@ -12,6 +12,12 @@ param logaSentinelGallerySolution array = []
 @description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
 param logaGallerySolutions array = []
 
+@description('Optional. The network access type for accessing Log Analytics ingestion.')
+param publicNetworkAccessForIngestion string = ''
+
+@description('Optional. The network access type for accessing Log Analytics query.')
+param publicNetworkAccessForQuery string = ''
+
 @description('Required. Authorization Rules for Event Hub Namespace.')
 param authorizationRules array = []
 
@@ -146,6 +152,8 @@ module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
     location: location
     tags: ccsCombinedTags
     gallerySolutions: logaSentinelGallerySolution    
+    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery
   }
 }
 
@@ -160,7 +168,9 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
     name: logsLawName
     location: location
     tags: ccsCombinedTags
-    gallerySolutions: logaGallerySolutions    
+    gallerySolutions: logaGallerySolutions
+    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery
   }
 }
 
@@ -177,6 +187,9 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     storageSKU: storageaccount_sku
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
+    networkAcls: {
+      defaultAction: 'deny'
+    }
   }
 }
 

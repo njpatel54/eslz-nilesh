@@ -413,9 +413,6 @@ param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
 param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
 
-@description('Required. Eventhub Namespace Name for resource Diagnostics Settings - Log Collection.')
-param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-logs'
-
 @description('Required. Automation Account Name.')
 param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 
@@ -431,18 +428,6 @@ var aaGroupIds = [
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
-/*
-// 13 - Retrieve an existing Virtual Network & Subnet resource (in Management Subscription) to be used to Private Endpoint
-resource mgmtVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
-  name: mgmtVnetName
-  scope: resourceGroup(mgmtsubid, resourceGroupName)
-}
-
-resource mgmtPeSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
-  name : peSubnetName
-  parent: mgmtVnet
-}
-*/
 // 14 - Create Private Endpoint for Storage Account
 // 14.1 - Retrieve an existing Storage Account resource
 resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
@@ -455,7 +440,7 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
   params: {
-    name: '${stgAcctName}-pe'
+    name: '${stgAcctName}-blob-pe'
     location: location
     tags: ccsCombinedTags
     serviceResourceId: sa.id
@@ -548,3 +533,19 @@ module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
+
+
+
+
+/*
+// 13 - Retrieve an existing Virtual Network & Subnet resource (in Management Subscription) to be used to Private Endpoint
+resource mgmtVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
+  name: mgmtVnetName
+  scope: resourceGroup(mgmtsubid, resourceGroupName)
+}
+
+resource mgmtPeSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
+  name : peSubnetName
+  parent: mgmtVnet
+}
+*/
