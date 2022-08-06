@@ -75,7 +75,7 @@ module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
 }
 
 module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for (privateDnsZone, index) in privateDnsZonesMerge: {
-  name: 'testPriDNSZones-${privateDnsZone}-${index}'
+  name: 'testPriDNSZones-${index}'
   scope: resourceGroup(MGMTSUBSCRIPTIONID, priDNSZonesRgName)
   dependsOn: [
     testPriDNSZonesRg
