@@ -505,7 +505,7 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   params: {
     name: amplsName
-    location: location
+    location: 'Global'
     tags: ccsCombinedTags
     scopedResources: [
       resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', logsLawName)
