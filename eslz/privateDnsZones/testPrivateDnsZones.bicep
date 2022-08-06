@@ -46,7 +46,7 @@ param opscope string = 'prod'
 ])
 param region string = 'usva'
 
-param MGMTSUBSCRIPTIONID string
+param mgmtsubscriptionid string
 
 // Create PrivateDNSZones
 @description('Required. Resource Group name.')
@@ -59,14 +59,14 @@ var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json')
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
 var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
+//var privateDnsZones = array(json(loadTextContent('privateDNSZones.json')))
 
-
-//param privateDnsZones array
+param privateDnsZones array
 
 // 1 - Create Resource Group
 module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${MGMTSUBSCRIPTIONID}-${priDNSZonesRgName}'
-  scope: subscription(MGMTSUBSCRIPTIONID)
+  name: 'rg-${mgmtsubscriptionid}-${priDNSZonesRgName}'
+  scope: subscription(mgmtsubscriptionid)
   params: {
     name: priDNSZonesRgName
     location: location
@@ -74,9 +74,9 @@ module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
-module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for (privateDnsZone, index) in privateDnsZonesMerge: {
-  name: 'testPriDNSZones-${index}'
-  scope: resourceGroup(MGMTSUBSCRIPTIONID, priDNSZonesRgName)
+module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
+  name: 'testPriDNSZones-${privateDnsZone}'
+  scope: resourceGroup(mgmtsubscriptionid, priDNSZonesRgName)
   dependsOn: [
     testPriDNSZonesRg
   ]
@@ -90,77 +90,6 @@ module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for 
     }]
   }
 }]
-
-
-
-// Azure Geo Codes - https://docs.microsoft.com/en-us/azure/backup/private-endpoints#when-using-custom-dns-server-or-host-files
-// Azure Geo Codes - https://download.microsoft.com/download/1/2/6/126a410b-0e06-45ed-b2df-84f353034fa1/AzureRegionCodesList.docx
-@description('Required. Map of the Geo Codes for each Azure Region.')
-var azureBackupGeoCodes = {
-  australiacentral: 'acl'
-  australiacentral2: 'acl2'
-  australiaeast: 'ae'
-  australiasoutheast: 'ase'
-  brazilsouth: 'brs'
-  centraluseuap: 'ccy'
-  canadacentral: 'cnc'
-  canadaeast: 'cne'
-  centralus: 'cus'
-  eastasia: 'ea'
-  eastus2euap: 'ecy'
-  eastus: 'eus'
-  eastus2: 'eus2'
-  francecentral: 'frc'
-  francesouth: 'frs'
-  germanynorth: 'gn'
-  germanywestcentral: 'gwc'
-  centralindia: 'inc'
-  southindia: 'ins'
-  westindia: 'inw'
-  japaneast: 'jpe'
-  japanwest: 'jpw'
-  koreacentral: 'krc'
-  koreasouth: 'krs'
-  northcentralus: 'ncus'
-  northeurope: 'ne'
-  norwayeast: 'nwe'
-  norwaywest: 'nww'
-  southafricanorth: 'san'
-  southafricawest: 'saw'
-  southcentralus: 'scus'
-  swedencentral: 'sdc'
-  swedensouth: 'sds'
-  southeastasia: 'sea'
-  switzerlandnorth: 'szn'
-  switzerlandwest: 'szw'
-  uaecentral: 'uac'
-  uaenorth: 'uan'
-  uksouth: 'uks'
-  ukwest: 'ukw'
-  westcentralus: 'wcus'
-  westeurope: 'we'
-  westus: 'wus'
-  westus2: 'wus2'
-  usdodcentral: 'udc'
-  usdodeast: 'ude'
-  usgovarizona: 'uga'
-  usgoviowa: 'ugi'
-  usgovtexas: 'ugt'
-  usgovvirginia: 'ugv'
-  chinanorth: 'bjb'
-  chinanorth2: 'bjb2'
-  chinaeast: 'sha'
-  chinaeast2: 'sha2'
-  germanycentral: 'gec'
-  germanynortheast: 'gne'
-}
-
-var privateDNSZones = array(json(loadTextContent('test.json')))
-
-// If Azure region is entered in 'location' parameter and matches a lookup to 'azureBackupGeoCodes', then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in 'privateDnsZones'. If not, just return 'privateDnsZones'
-//   'privatelink.{region}.backup.windowsazure.us'
-var privateDnsZonesMerge = contains(azureBackupGeoCodes, location) ? union(privateDNSZones, ['privatelink.${azureBackupGeoCodes[toLower(location)]}.backup.windowsazure.us']) : privateDNSZones
-
 
 
 

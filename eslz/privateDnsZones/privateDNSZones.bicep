@@ -107,7 +107,7 @@ param privateDNSZones array = [
   'privatelink.table.core.usgovcloudapi.net'
   'privatelink.table.cosmos.azure.us'
   'privatelink.vaultcore.usgovcloudapi.net'
-  'privatelink.web.core.usgovcloudapi.net'  
+  'privatelink.web.core.usgovcloudapi.net' 
 ]
 
 // Azure Geo Codes - https://docs.microsoft.com/en-us/azure/backup/private-endpoints#when-using-custom-dns-server-or-host-files

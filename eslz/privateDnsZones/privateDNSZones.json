@@ -46,6 +46,12 @@
                 "privatelink.sql.azuresynapse.usgovcloudapi.net",
                 "privatelink.table.core.usgovcloudapi.net",
                 "privatelink.table.cosmos.azure.us",
+                "privatelink.udc.backup.windowsazure.us",
+                "privatelink.ude.backup.windowsazure.us",
+                "privatelink.uga.backup.windowsazure.us",
+                "privatelink.ugi.backup.windowsazure.us",
+                "privatelink.ugt.backup.windowsazure.us",
+                "privatelink.ugv.backup.windowsazure.us",
                 "privatelink.vaultcore.usgovcloudapi.net",
                 "privatelink.web.core.usgovcloudapi.net"
             ]
