@@ -470,7 +470,7 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
 
 // 15 - Create Private Endpoint for Automation Account
 // 15.1 - Retrieve an existing Automation Account resource
-resource aa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+resource aa 'Microsoft.Automanage/accounts@2020-06-30-preview' existing = {
   name: automationAcctName
   scope: resourceGroup(mgmtsubid, rgName)
 }
@@ -522,7 +522,7 @@ module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
     name: '${amplsName}-pe'
     location: location
     tags: ccsCombinedTags
-    serviceResourceId: aa.id
+    serviceResourceId: ampls.outputs.resourceId
     groupIds: [
       'azuremonitor'
     ]
