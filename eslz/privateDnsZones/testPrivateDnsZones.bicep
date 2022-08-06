@@ -86,6 +86,7 @@ module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for 
     name: privateDnsZone
     location: 'Global'
     tags: ccsCombinedTags
+    lock: 'CanNotDelete'
     virtualNetworkLinks: [for vNetResourceId in vNetResourceIds: {
       virtualNetworkResourceId: vNetResourceId
       registrationEnabled: false
