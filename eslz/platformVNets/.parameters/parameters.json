@@ -607,7 +607,7 @@
         "mgmtVnetName": {
             "value": "vnet-ccs-prod-usva-mgmt"
         },
-        "mgmtPeSubnetName": {
+        "peSubnetName": {
             "value": "snet-ccs-prod-usva-mgmt"
         },
         "projowner": {

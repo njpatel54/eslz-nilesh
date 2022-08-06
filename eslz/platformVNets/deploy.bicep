@@ -401,14 +401,11 @@ output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
-@description('Required. Subscription ID of Connectivity Subscription.')
-param connsubid string
-
 @description('Required. Virtual Network name in Management Subscription.')
 param mgmtVnetName string
 
 @description('Required. Subnet name to be used for Private Endpoint (in Management Subscription).')
-param mgmtPeSubnetName string
+param peSubnetName string
 
 @description('Required. SIEM Resource Group Name.')
 param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
@@ -428,26 +425,29 @@ param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
 
-// 13 - Create Private Endpoint for Storage Account
-// 13.1 - Retrieve an existing Storage Account resource
-resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: stgAcctName
-  scope: resourceGroup(mgmtsubid, rgName)
-}
+@description('Required. Azure Monitor Private Link Scope Name.')
+param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
-// 13.2 - Retrieve an existing Virtual Network resource
+/*
+// 13 - Retrieve an existing Virtual Network & Subnet resource (in Management Subscription) to be used to Private Endpoint
 resource mgmtVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
   name: mgmtVnetName
   scope: resourceGroup(mgmtsubid, resourceGroupName)
 }
 
-// 13.3 - Retrieve an existing Subnet resource to be used to Private Endpoint
 resource mgmtPeSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
-  name : mgmtPeSubnetName
+  name : peSubnetName
   parent: mgmtVnet
 }
+*/
+// 14 - Create Private Endpoint for Storage Account
+// 14.1 - Retrieve an existing Storage Account resource
+resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: stgAcctName
+  scope: resourceGroup(mgmtsubid, rgName)
+}
 
-// 13.4 - Create Private Endpoint for Storage Account
+// 14.2 - Create Private Endpoint for Storage Account
 module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
@@ -459,16 +459,82 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
     groupIds: [
       'blob'
     ]
-    subnetResourceId: mgmtPeSubnet.id
+    subnetResourceId: resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
-        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
       ]
     }
   }
 }
 
+// 15 - Create Private Endpoint for Automation Account
+// 15.1 - Retrieve an existing Automation Account resource
+resource aa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: automationAcctName
+  scope: resourceGroup(mgmtsubid, rgName)
+}
 
+// 15.2 - Create Private Endpoint for Automation Account
+module aaPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'saPe-${automationAcctName}'
+  scope: resourceGroup(mgmtsubid, rgName)
+  params: {
+    name: '${automationAcctName}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: aa.id
+    groupIds: [
+      'Webhook'
+      'DSCAndHybridWorker'
+    ]
+    subnetResourceId: resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.azure-automation.us')
+      ]
+    }
+  }
+}
 
+// 16 - Create Azure Monitor Private Link Scope
+// An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).
+// 16.1 - Create Private Endpoint for Automation Account
+module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
+  name: 'ampls'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  params: {
+    name: amplsName
+    location: location
+    tags: ccsCombinedTags
+    scopedResources: [
+      resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', logsLawName)
+      resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
+    ]
+  }
+}
 
-
+// 16.2 - Create Private Endpoint for Azure Monitor Private Link Scope
+module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'amplsPe-${amplsName}'
+  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  params: {
+    name: '${amplsName}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: aa.id
+    groupIds: [
+      'azuremonitor'
+    ]
+    subnetResourceId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.monitor.azure.us')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.oms.opinsights.azure.us')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.ods.opinsights.azure.us')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.agentsvc.azure-automation.us')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+      ]
+    }
+  }
+}
