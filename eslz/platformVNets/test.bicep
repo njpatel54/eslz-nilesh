@@ -67,11 +67,18 @@ param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 */
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 // End - Copied from deploy.bicep
 
 // Start - Define following Parameters in parameters.json file
 param mgmtVnetName string
 param mgmtPeSubnetName string
+
+@description('Required. Subscription ID of Management Subscription.')
+param connsubid string
+
 // End - Define following Parameters in parameters.json file
 
 // 13 - Create Private Endpoint for Storage Account
@@ -98,18 +105,19 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
   params: {
-    groupIds: [
-      'blob'
-    ]
     name: '${stgAcctName}-pe'
     location: location
     tags: ccsCombinedTags
     serviceResourceId: sa.id
+    groupIds: [
+      'blob'
+    ]
     subnetResourceId: mgmtPeSubnet.id
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
-        resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
       ]
     }
   }
 }
+

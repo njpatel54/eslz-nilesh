@@ -41,4 +41,5 @@ jobs:
             --template-file ./eslz/platformVNets/test.bicep \
             --parameters ./eslz/platformVNets/.parameters/test.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
