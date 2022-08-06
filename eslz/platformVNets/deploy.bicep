@@ -401,6 +401,15 @@ output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
+@description('Required. Subscription ID of Connectivity Subscription.')
+param connsubid string
+
+@description('Required. Virtual Network name in Management Subscription.')
+param mgmtVnetName string
+
+@description('Required. Subnet name to be used for Private Endpoint (in Management Subscription).')
+param mgmtPeSubnetName string
+
 @description('Required. SIEM Resource Group Name.')
 param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
@@ -420,29 +429,46 @@ param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
 
 // 13 - Create Private Endpoint for Storage Account
+// 13.1 - Retrieve an existing Storage Account resource
 resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: stgAcctName
   scope: resourceGroup(mgmtsubid, rgName)
 }
 
+// 13.2 - Retrieve an existing Virtual Network resource
+resource mgmtVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
+  name: mgmtVnetName
+  scope: resourceGroup(mgmtsubid, resourceGroupName)
+}
+
+// 13.3 - Retrieve an existing Subnet resource to be used to Private Endpoint
+resource mgmtPeSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
+  name : mgmtPeSubnetName
+  parent: mgmtVnet
+}
+
+// 13.4 - Create Private Endpoint for Storage Account
 module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
   params: {
+    name: '${stgAcctName}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: sa.id
     groupIds: [
       'blob'
     ]
-    name: '${stgAcctName}-pe'
-    location: location
-    serviceResourceId: sa.id
-    subnetResourceId: resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', 'vnet-ccs-prod-usva-mgmt', 'snet-ccs-prod-usva-mgmt')
+    subnetResourceId: mgmtPeSubnet.id
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
-        resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
       ]
     }
   }
 }
+
+
 
 
 

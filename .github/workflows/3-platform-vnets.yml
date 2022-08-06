@@ -48,7 +48,9 @@ jobs:
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
+                         location=${{ secrets.AZURE_LOCATION }} \ \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -81,7 +83,9 @@ jobs:
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
+                         location=${{ secrets.AZURE_LOCATION }} \ \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -115,7 +119,9 @@ jobs:
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
-                         location=${{ secrets.AZURE_LOCATION }} \
+                         location=${{ secrets.AZURE_LOCATION }} \ \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
