@@ -99,13 +99,13 @@ param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
 param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
 
 @description('Required. Eventhub Namespace Name for resource Diagnostics Settings - Log Collection.')
-param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-${suffix}'
+param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-logs'
 
 @description('Required. Automation Account Name.')
-param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-${suffix}'
+param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
+param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
 
 // From Parameters Files
 @description('Required. Storage Account SKU.')
