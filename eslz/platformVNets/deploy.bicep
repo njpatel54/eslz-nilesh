@@ -473,17 +473,22 @@ resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
 }
 
 // 15.2 - Create Private Endpoint for Automation Account
-module aaPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'saPe-${automationAcctName}'
+
+var aaGroupIds = [
+  'Webhook'
+  'DSCAndHybridWorker'
+]
+
+module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
+  name: 'saPe-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, rgName)
   params: {
-    name: '${automationAcctName}-pe'
+    name: '${automationAcctName}-${aaGroupId}-pe'
     location: location
     tags: ccsCombinedTags
     serviceResourceId: aa.id
     groupIds: [
-      'Webhook'
-      'DSCAndHybridWorker'
+      aaGroupId
     ]
     subnetResourceId: resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
@@ -492,7 +497,7 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = {
       ]
     }
   }
-}
+}]
 
 // 16 - Create Azure Monitor Private Link Scope
 // An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).
