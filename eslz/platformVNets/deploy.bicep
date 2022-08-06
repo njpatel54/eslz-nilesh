@@ -480,7 +480,7 @@ resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
 
 // 15.2 - Create Private Endpoint for Automation Account
 module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
-  name: 'saPe-${automationAcctName}-${aaGroupId}'
+  name: 'aaPe-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, rgName)
   params: {
     name: '${automationAcctName}-${aaGroupId}-pe'
