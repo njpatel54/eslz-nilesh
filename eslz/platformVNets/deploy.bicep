@@ -374,7 +374,7 @@ var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
 // 1 - Create Resource Group
 module priDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'priDNSZonesRg-${vNets.parameters.hubVnetSubscriptionId.value}-${priDNSZonesRgName}'
+  name: 'priDNSZonesRg-${priDNSZonesRgName}'
   scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
   params: {
     name: priDNSZonesRgName
