@@ -1,11 +1,11 @@
-name: 4 - private dns zones
+name: 6 - custom role definitions
 
 on:
   #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/4-private-dns-zones.yml
+  #   - .github/workflows/6-custom-role-definitions.yml
       
   # pull_request:
   #  branches: [ main ]
@@ -18,8 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/privateDnsZones/privateDNSZones.bicep
+
+    - uses: Azure/cli@v1
+      name: 'Lint and Build Bicep'
+      with:
+        inlineScript: |
+          az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -41,11 +45,12 @@ jobs:
       name: 'Run preflight validation'
       with:
         inlineScript: |
-          az deployment sub validate \
-            --name 'Deploy-Private-DNS-Zones' \
+          az deployment mg validate \
+            --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
-            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
@@ -68,11 +73,12 @@ jobs:
       name: 'Run what-if'
       with:
         inlineScript: |
-          az deployment sub what-if \
-            --name 'Deploy-Private-DNS-Zones' \
+          az deployment mg what-if \
+            --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
-            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -93,12 +99,13 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Private DNS Zones'
+      name: 'Deploy - Custom Role Definitions'
       with:
         inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Private-DNS-Zones' \
+          az deployment mg create \
+            --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/privateDnsZones/privateDNSZones.bicep \
-            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
+            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
