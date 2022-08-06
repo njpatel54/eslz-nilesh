@@ -147,13 +147,13 @@ var vNets = json(loadTextContent('.parameters/parameters.json'))
 var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
 @description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
-var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
+var hubVNetResourceId = [ resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value) ]
 
 @description('Required. Combine two varibales using "union" function - This will be input for "virtualNetworkLinks" configuration for each Private DNS Zones.')
 var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
 // 1 - Create Hub Resoruce Group
-module hubRg '../modules/resourceGroups/deploy.bicep'= {
+module hubRg '../modules/resourceGroups/deploy.bicep' = {
   name: 'rg-${hubVnetSubscriptionId}-${resourceGroupName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {
@@ -164,13 +164,13 @@ module hubRg '../modules/resourceGroups/deploy.bicep'= {
 }
 
 // 2 - Create Hub Network Security Group(s)
-module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [ for (nsg, index) in hubNetworkSecurityGroups : {
+module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in hubNetworkSecurityGroups: {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   dependsOn: [
     hubRg
   ]
-  params:{
+  params: {
     name: nsg.name
     location: location
     tags: ccsCombinedTags
@@ -190,7 +190,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   dependsOn: [
     hubNsgs
   ]
-  params:{
+  params: {
     name: hubVnetName
     location: location
     tags: ccsCombinedTags
@@ -206,7 +206,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
 }
 
 // 4 - Create Spoke Resoruce Group(s)
-module spokeRg '../modules/resourceGroups/deploy.bicep'= [ for (vNet, index) in spokeVnets : {
+module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'rg-${vNet.subscriptionId}-${resourceGroupName}'
   scope: subscription(vNet.subscriptionId)
   params: {
@@ -217,17 +217,17 @@ module spokeRg '../modules/resourceGroups/deploy.bicep'= [ for (vNet, index) in 
 }]
 
 // 5 - Create Spoke Virtual Network(s)
-module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [ for (vNet, index) in spokeVnets : {
+module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
   dependsOn: [
     spokeRg
     hubVnet
   ]
-  params:{
+  params: {
     name: vNet.name
     location: location
-    tags: ccsCombinedTags    
+    tags: ccsCombinedTags
     addressPrefixes: vNet.addressPrefixes
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
@@ -246,10 +246,10 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   dependsOn: [
     hubRg
   ]
-  params:{
+  params: {
     name: firewallPublicIPName
     location: location
-    tags: ccsCombinedTags 
+    tags: ccsCombinedTags
     publicIPAllocationMethod: publicIPAllocationMethod
     skuName: publicIPSkuName
     zones: publicIPzones
@@ -267,7 +267,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   dependsOn: [
     hubRg
   ]
-  params:{
+  params: {
     name: firewallPolicyName
     location: location
     tags: ccsCombinedTags
@@ -289,7 +289,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     afwPip
     afwp
   ]
-  params:{
+  params: {
     name: firewallName
     location: location
     tags: ccsCombinedTags
@@ -318,10 +318,10 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   dependsOn: [
     hubRg
   ]
-  params:{
+  params: {
     name: bastionHostPublicIPName
     location: location
-    tags: ccsCombinedTags 
+    tags: ccsCombinedTags
     publicIPAllocationMethod: publicIPAllocationMethod
     skuName: publicIPSkuName
     zones: publicIPzones
@@ -341,10 +341,10 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     spokeVnet
     bhPip
   ]
-  params:{
+  params: {
     name: bastionHostName
     location: location
-    tags: ccsCombinedTags 
+    tags: ccsCombinedTags
     vNetId: hubVnet.outputs.resourceId
     azureBastionSubnetPublicIpId: bhPip.outputs.resourceId
     skuType: bastionHostSkuType
@@ -358,7 +358,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
 }
 
 // 11 - Create Resource Group for Private DNS Zones
-module priDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
+module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
   name: 'priDNSZonesRg-${priDNSZonesRgName}'
   scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
   params: {
@@ -394,9 +394,6 @@ output diagnosticEventHubName string = diagnosticEventHubName
 output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
 output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 // End - Outputs to supress warnings - "unused parameters"
-
-
-
 
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
@@ -470,7 +467,7 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
 
 // 15 - Create Private Endpoint for Automation Account
 // 15.1 - Retrieve an existing Automation Account resource
-resource aa 'Microsoft.Automanage/accounts@2020-06-30-preview' existing = {
+resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
   name: automationAcctName
   scope: resourceGroup(mgmtsubid, rgName)
 }
@@ -502,14 +499,22 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = {
 // 16.1 - Create Private Endpoint for Automation Account
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   name: 'ampls'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId,  resourceGroupName)
   params: {
     name: amplsName
     location: 'Global'
     tags: ccsCombinedTags
-    scopedResources: [
-      resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', logsLawName)
-      resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
+    scopedResources: [           
+      {
+        name: logsLawName
+        privateLinkScopeName: amplsName
+        linkedResourceId: resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', logsLawName)
+      }
+      {
+        name: sentinelLawName
+        privateLinkScopeName: amplsName
+        linkedResourceId: resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
+      }
     ]
   }
 }
