@@ -133,6 +133,25 @@ param bastionHostScaleUnits int
 @description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'')
 param bastionHostRoleAssignments array = []
 
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
+
+@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
+param privateDnsZones array
+
+@description('Required. Load content from json file to iterate over virtual networks in "hubVnet" and "spokeVnets"')
+var vNets = json(loadTextContent('.parameters/parameters.json'))
+
+// Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
+var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+
+@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
+var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
+
+@description('Required. Combine two varibales using "union" function - This will be input for "virtualNetworkLinks" configuration for each Private DNS Zones.')
+var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
+
 // 1 - Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${hubVnetSubscriptionId}-${resourceGroupName}'
@@ -338,41 +357,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
   }
 }
 
-// Start - Outputs to supress warnings - "unused parameters"
-output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
-output diagnosticEventHubName string = diagnosticEventHubName
-output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
-output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
-// End - Outputs to supress warnings - "unused parameters"
-
-
-
-
-
-
-
-
-
-@description('Required. Resource Group name.')
-param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
-
-@description('Required. Array of Azure US Govrenment Private DNS Zones.')
-param privateDnsZones array
-
-@description('Required. Load content from json file.')
-var vNets = json(loadTextContent('.parameters/parameters.json'))
-
-// Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
-@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
-var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
-
-@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
-var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
-
-@description('Required. Combine two varibales using "union" function.')
-var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
-
-// 1 - Create Resource Group
+// 11 - Create Resource Group for Private DNS Zones
 module priDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
   name: 'priDNSZonesRg-${priDNSZonesRgName}'
   scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
@@ -383,7 +368,7 @@ module priDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
-// 2 - Create Private DNS Zones
+// 12 - Create Private DNS Zones
 module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'priDNSZones-${privateDnsZone}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
@@ -402,3 +387,62 @@ module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
     }]
   }
 }]
+
+// Start - Outputs to supress warnings - "unused parameters"
+output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
+output diagnosticEventHubName string = diagnosticEventHubName
+output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
+output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
+// End - Outputs to supress warnings - "unused parameters"
+
+
+
+
+@description('Required. Subscription ID of Management Subscription.')
+param mgmtsubid string
+
+@description('Required. SIEM Resource Group Name.')
+param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
+param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
+param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Eventhub Namespace Name for resource Diagnostics Settings - Log Collection.')
+param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Automation Account Name.')
+param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
+param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
+
+// 13 - Create Private Endpoint for Storage Account
+resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: stgAcctName
+  scope: resourceGroup(mgmtsubid, rgName)
+}
+
+module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'saPe-${stgAcctName}'
+  scope: resourceGroup(mgmtsubid, rgName)
+  params: {
+    groupIds: [
+      'blob'
+    ]
+    name: '${stgAcctName}-pe'
+    location: location
+    serviceResourceId: sa.id
+    subnetResourceId: resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', 'vnet-ccs-prod-usva-mgmt', 'snet-ccs-prod-usva-mgmt')
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+
+
