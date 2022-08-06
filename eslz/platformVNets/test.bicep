@@ -84,7 +84,7 @@ resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
 // 13.2 - Retrieve an existing Virtual Network resource
 resource mgmtVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
   name: mgmtVnetName
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, resourceGroupName)
 }
 
 // 13.3 - Retrieve an existing Subnet resource to be used to Private Endpoint
