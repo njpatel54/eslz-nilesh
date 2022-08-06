@@ -373,8 +373,8 @@ var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value
 var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
 // 1 - Create Resource Group
-module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${vNets.parameters.hubVnetSubscriptionId.value}-${priDNSZonesRgName}'
+module priDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
+  name: 'priDNSZonesRg-${vNets.parameters.hubVnetSubscriptionId.value}-${priDNSZonesRgName}'
   scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
   params: {
     name: priDNSZonesRgName
@@ -384,11 +384,11 @@ module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
 }
 
 // 2 - Create Private DNS Zones
-module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
-  name: 'testPriDNSZones-${privateDnsZone}'
+module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
+  name: 'priDNSZones-${privateDnsZone}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
   dependsOn: [
-    testPriDNSZonesRg
+    priDNSZonesRg
     hubVnet
     spokeVnet
   ]

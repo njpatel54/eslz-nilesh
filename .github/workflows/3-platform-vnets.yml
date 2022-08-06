@@ -46,7 +46,7 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/deploy.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
+            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
@@ -79,7 +79,7 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/deploy.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
+            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
@@ -113,7 +113,7 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/platformVNets/deploy.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
-            --parameters ./eslz/privateDnsZones/.parameters/privateDNSZones.json \
+            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters resourceGroupName=${{ secrets.AZURE_VNETRG }} \
                          location=${{ secrets.AZURE_LOCATION }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
