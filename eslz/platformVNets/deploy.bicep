@@ -344,3 +344,59 @@ output diagnosticEventHubName string = diagnosticEventHubName
 output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
 output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 // End - Outputs to supress warnings - "unused parameters"
+
+
+
+
+
+
+
+
+
+@description('Required. Resource Group name.')
+param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
+
+@description('Required. Array of Azure US Govrenment Private DNS Zones.')
+param privateDnsZones array
+
+@description('Required. Load content from json file.')
+var vNets = json(loadTextContent('.parameters/parameters.json'))
+
+// Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
+var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+
+@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
+var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
+
+@description('Required. Combine two varibales using "union" function.')
+var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
+
+// 1 - Create Resource Group
+module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
+  name: 'rg-${vNets.parameters.hubVnetSubscriptionId.value}-${priDNSZonesRgName}'
+  scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
+  params: {
+    name: priDNSZonesRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}
+
+// 2 - Create Private DNS Zones
+module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
+  name: 'testPriDNSZones-${privateDnsZone}'
+  scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
+  dependsOn: [
+    testPriDNSZonesRg
+  ]
+  params: {
+    name: privateDnsZone
+    location: 'Global'
+    tags: ccsCombinedTags
+    virtualNetworkLinks: [for vNetResourceId in vNetResourceIds: {
+      virtualNetworkResourceId: vNetResourceId
+      registrationEnabled: false
+    }]
+  }
+}]

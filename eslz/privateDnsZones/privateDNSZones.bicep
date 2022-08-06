@@ -3,9 +3,6 @@ targetScope = 'subscription'
 @description('Required. Location for all resources.')
 param location string
 
-@description('Required. Array of Azure US Govrenment Private DNS Zones.')
-param privateDnsZones array
-
 @description('Required. Resource Group name.')
 param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
@@ -48,14 +45,16 @@ param opscope string = 'prod'
 ])
 param region string = 'usva'
 
-// Create PrivateDNSZones
 @description('Required. Resource Group name.')
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
+
+@description('Required. Array of Azure US Govrenment Private DNS Zones.')
+param privateDnsZones array
 
 @description('Required. Load content from json file.')
 var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json'))
 
-// Variables created to be used as 'virtualNetworkLinks' for Private DNS Zone(s)
+// Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
 var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
