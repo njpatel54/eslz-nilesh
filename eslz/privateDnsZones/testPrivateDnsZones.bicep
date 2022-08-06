@@ -46,8 +46,6 @@ param opscope string = 'prod'
 ])
 param region string = 'usva'
 
-param mgmtsubscriptionid string
-
 // Create PrivateDNSZones
 @description('Required. Resource Group name.')
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
@@ -59,14 +57,18 @@ var vNets = json(loadTextContent('../platformVNets/.parameters/parameters.json')
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
 var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
-//var privateDnsZones = array(json(loadTextContent('privateDNSZones.json')))
+@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
+var hubVNetResourceId = [resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value)]
+
+@description('Required. Combine two varibales using "union" function.')
+var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
 param privateDnsZones array
 
 // 1 - Create Resource Group
 module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${mgmtsubscriptionid}-${priDNSZonesRgName}'
-  scope: subscription(mgmtsubscriptionid)
+  name: 'rg-${vNets.parameters.hubVnetSubscriptionId.value}-${priDNSZonesRgName}'
+  scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
   params: {
     name: priDNSZonesRgName
     location: location
@@ -76,7 +78,7 @@ module testPriDNSZonesRg '../modules/resourceGroups/deploy.bicep'= {
 
 module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'testPriDNSZones-${privateDnsZone}'
-  scope: resourceGroup(mgmtsubscriptionid, priDNSZonesRgName)
+  scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
   dependsOn: [
     testPriDNSZonesRg
   ]
@@ -84,7 +86,7 @@ module testPriDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for 
     name: privateDnsZone
     location: 'Global'
     tags: ccsCombinedTags
-    virtualNetworkLinks: [for vNetResourceId in spokeVNetsResourceIds: {
+    virtualNetworkLinks: [for vNetResourceId in vNetResourceIds: {
       virtualNetworkResourceId: vNetResourceId
       registrationEnabled: false
     }]
