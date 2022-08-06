@@ -422,6 +422,12 @@ param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
 
+@description('Required. Automation Account subresource IDs (groupId).')
+var aaGroupIds = [
+  'Webhook'
+  'DSCAndHybridWorker'
+]
+
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
@@ -473,12 +479,6 @@ resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
 }
 
 // 15.2 - Create Private Endpoint for Automation Account
-
-var aaGroupIds = [
-  'Webhook'
-  'DSCAndHybridWorker'
-]
-
 module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
   name: 'saPe-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, rgName)
