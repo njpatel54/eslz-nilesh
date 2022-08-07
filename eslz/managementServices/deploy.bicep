@@ -190,6 +190,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
     networkAcls: {
+      bypass: 'AzureServices'
       defaultAction: 'Deny'
     }
   }
