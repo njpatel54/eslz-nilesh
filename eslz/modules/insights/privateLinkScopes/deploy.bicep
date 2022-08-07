@@ -25,11 +25,35 @@ param privateEndpoints array = []
 @description('Optional. Resource tags.')
 param tags object = {}
 
-resource privateLinkScope 'Microsoft.Insights/privateLinkScopes@2019-10-17-preview' = {
+@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param ingestionAccessMode string = 'Open'
+
+@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param queryAccessMode string = 'Open'
+
+@description('Optional. List of exclusions that override the default access mode settings for specific private endpoint connections.')
+param exclusions array = []
+
+
+resource privateLinkScope 'microsoft.insights/privateLinkScopes@2021-07-01-preview' = {
   name: name
   location: location
   tags: tags
-  properties: {}
+  properties: {
+    accessModeSettings: {
+      exclusions: !empty(exclusions) ? exclusions : []
+      ingestionAccessMode: !empty(ingestionAccessMode) ? ingestionAccessMode : 'Open'
+      queryAccessMode: !empty(queryAccessMode) ? queryAccessMode : 'Open'
+    }
+  }
 }
 
 module privateLinkScope_scopedResource 'scopedResources/deploy.bicep' = [for (scopedResource, index) in scopedResources: {

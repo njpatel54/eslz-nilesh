@@ -188,7 +188,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
     networkAcls: {
-      defaultAction: 'deny'
+      defaultAction: 'Deny'
     }
   }
 }

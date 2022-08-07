@@ -1,123 +1,43 @@
-// Start - Copied from deploy.bicep
-targetScope = 'subscription'
+param name string = 'testampls'
+param tags object = {}
 
-@description('Required. utcfullvalue to be used in Tags.')
-param utcfullvalue string = utcNow('F')
-
-@description('Required. Assign utffullvaule to "CreatedOn" tag.')
-param dynamictags object = ({
-  CreatedOn: utcfullvalue
-})
-
-var tags = json(loadTextContent('../tags.json'))
-
-@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-var ccsCombinedTags = union(dynamictags, tags.ccsTags.value)
-//var lzCombinedTags = union(dynamictags, tags.lz01Tags.value)
-
-@description('Required. Project Owner (projowner) parameter.')
+@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
 @allowed([
-  'ccs'
-  'proj'
+  'Open'
+  'PrivateOnly'
 ])
-param projowner string
+param ingestionAccessMode string = 'PrivateOnly'
 
-@description('Required. Operational Scope (opscope) parameter.')
+@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
 @allowed([
-  'prod'
-  'dev'
-  'qa'
-  'stage'
-  'test'
-  'sand'
+  'Open'
+  'PrivateOnly'
 ])
-param opscope string
+param queryAccessMode string = 'PrivateOnly'
 
-@description('Required. Region (region) parameter.')
-@allowed([
-  'usva'
-  'ustx'
-  'usaz'
-])
-param region string
+@description('Optional. List of exclusions that override the default access mode settings for specific private endpoint connections.')
+param exclusions array = []
 
-@description('Required. Location for all resources.')
-param location string
 
-@description('Required. Resource Group name.')
-param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
-
-@description('Required. Subscription ID of Management Subscription.')
-param mgmtsubid string
-
-@description('Required. SIEM Resource Group Name.')
-param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
-/*
-@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
-param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
-
-@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
-param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
-
-@description('Required. Eventhub Namespace Name for resource Diagnostics Settings - Log Collection.')
-param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-logs'
-
-@description('Required. Automation Account Name.')
-param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
-*/
-@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
-
-@description('Required. Resource Group name for Private DNS Zones.')
-param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
-// End - Copied from deploy.bicep
-
-// Start - Define following Parameters in parameters.json file
-param mgmtVnetName string
-param mgmtPeSubnetName string
-
-@description('Required. Subscription ID of Management Subscription.')
-param connsubid string
-
-// End - Define following Parameters in parameters.json file
-
-// 13 - Create Private Endpoint for Storage Account
-// 13.1 - Retrieve an existing Storage Account resource
-resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: stgAcctName
-  scope: resourceGroup(mgmtsubid, rgName)
-}
-
-// 13.2 - Retrieve an existing Virtual Network resource
-resource mgmtVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
-  name: mgmtVnetName
-  scope: resourceGroup(mgmtsubid, resourceGroupName)
-}
-
-// 13.3 - Retrieve an existing Subnet resource to be used to Private Endpoint
-resource mgmtPeSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
-  name : mgmtPeSubnetName
-  parent: mgmtVnet
-}
-
-// 13.4 - Create Private Endpoint for Storage Account
-module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'saPe-${stgAcctName}'
-  scope: resourceGroup(mgmtsubid, rgName)
-  params: {
-    name: '${stgAcctName}-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: sa.id
-    groupIds: [
-      'blob'
-    ]
-    subnetResourceId: mgmtPeSubnet.id
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
-      ]
+resource privateLinkScope 'microsoft.insights/privateLinkScopes@2021-07-01-preview' = {
+  name: name
+  location: 'Global'
+  tags: tags
+  properties: {
+    accessModeSettings: {
+      exclusions: !empty(exclusions) ? exclusions : []
+      ingestionAccessMode: !empty(ingestionAccessMode) ? ingestionAccessMode : 'Open'
+      queryAccessMode: !empty(queryAccessMode) ? queryAccessMode : 'Open'
     }
   }
 }
 
+
+
+
+
+/*
+tags: contains(privateEndpoint, 'tags') ? privateEndpoint.tags : {}
+manualPrivateLinkServiceConnections: contains(privateEndpoint, 'manualPrivateLinkServiceConnections') ? privateEndpoint.manualPrivateLinkServiceConnections : []
+customDnsConfigs: contains(privateEndpoint, 'customDnsConfigs') ? privateEndpoint.customDnsConfigs : []
+*/

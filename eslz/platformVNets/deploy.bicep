@@ -428,6 +428,20 @@ var aaGroupIds = [
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
+@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param ingestionAccessMode string = 'PrivateOnly'
+
+@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param queryAccessMode string = 'PrivateOnly'
+
 // 14 - Create Private Endpoint for Storage Account
 // 14.1 - Retrieve an existing Storage Account resource
 resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
@@ -494,6 +508,9 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
     name: amplsName
     location: 'Global'
     tags: ccsCombinedTags
+    exclusions: []
+    ingestionAccessMode: ingestionAccessMode
+    queryAccessMode: queryAccessMode
     scopedResources: [           
       {
         name: logsLawName
