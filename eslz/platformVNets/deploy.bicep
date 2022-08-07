@@ -156,10 +156,10 @@ var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 param mgmtsubid string
 
 @description('Required. Virtual Network name in Management Subscription.')
-param mgmtVnetName string
+param mgmtVnetName string = 'vnet-${projowner}-${opscope}-${region}-mgmt'
 
-@description('Required. Subnet name to be used for Private Endpoint (in Management Subscription).')
-param peSubnetName string
+@description('Required. Subnet name to be used for Private Endpoint.')
+param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
 
 @description('Required. SIEM Resource Group Name.')
 param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'

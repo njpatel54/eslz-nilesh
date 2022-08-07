@@ -604,12 +604,6 @@
                 }
             ]
         },
-        "mgmtVnetName": {
-            "value": "vnet-ccs-prod-usva-mgmt"
-        },
-        "peSubnetName": {
-            "value": "snet-ccs-prod-usva-mgmt"
-        },
         "projowner": {
             "value": "ccs"
         },
