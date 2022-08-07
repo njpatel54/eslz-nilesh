@@ -23,7 +23,7 @@ jobs:
       name: 'Lint and Build Bicep'
       with:
         inlineScript: |
-          az bicep build --file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep
+          az bicep build --file ./eslz/roles/mgRoleDefinitions.bicep
 
   validate:
     runs-on: ubuntu-latest
@@ -49,8 +49,8 @@ jobs:
             --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
+            --template-file ./eslz/roles/mgRoleDefinitions.bicep \
+            --parameters ./eslz/roles/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
@@ -77,8 +77,8 @@ jobs:
             --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
+            --template-file ./eslz/roles/mgRoleDefinitions.bicep \
+            --parameters ./eslz/roles/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}
 
   deploy:
@@ -106,6 +106,6 @@ jobs:
             --name 'Deploy-MG-Custom-Role-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/customRoleDefinitions/mgRoleDefinitions.bicep \
-            --parameters ./eslz/customRoleDefinitions/.parameters/mgRoleDefinitions.json \
+            --template-file ./eslz/roles/mgRoleDefinitions.bicep \
+            --parameters ./eslz/roles/.parameters/mgRoleDefinitions.json \
             --parameters location=${{ secrets.AZURE_LOCATION }}

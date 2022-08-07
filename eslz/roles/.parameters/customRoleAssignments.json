@@ -1,0 +1,140 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "mgRoleAssignments": {
+            "value": [
+                {
+                    "managementGroupName": "mg-A2g",
+                    "description": "Security operations (SecOps)",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/506e468a-265b-562b-9f29-b044501af240",
+                    "principalIds": [
+                        "c18dae24-02af-4ba9-b56e-3c56ebda8296"
+                    ]
+                },
+                {
+                    "managementGroupName": "mg-A2g",
+                    "description": "Application owners (DevOps/AppOps)",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/4b313130-9a85-59d1-b001-372028299f7e",
+                    "principalIds": [
+                        "38b4e59d-9309-4fc9-a7a4-5f602b691f2f"
+                    ]
+                },
+                {
+                    "managementGroupName": "mg-A2g",
+                    "description": "Network management (NetOps)",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/bb782d25-de43-593c-882a-c60150c17d19",
+                    "principalIds": [
+                        "d3764c55-16ee-4d59-be60-ec3b9e2fb296"
+                    ]
+                }
+            ]
+        },
+        "subRoleAssignments": {
+            "value": [
+                {
+                    "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+                    "description": "Subscription owner",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
+                    "principalIds": [
+                        "8eda81d9-4056-4341-9701-84de1152ebb3"
+                    ]
+                },
+                {
+                    "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
+                    "description": "Subscription owner",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
+                    "principalIds": [
+                        "83138297-3c3a-4186-b8fb-1839dc00aa85"
+                    ]
+                },
+                {
+                    "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+                    "description": "Subscription owner",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
+                    "principalIds": [
+                        "cb43e4c9-f0b0-469a-9c5e-29e46e79abcc"
+                    ]
+                },
+                {
+                    "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
+                    "description": "Subscription owner",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
+                    "principalIds": [
+                        "1612b180-6a42-4bc7-ba34-57ac8284659d"
+                    ]
+                },
+                {
+                    "subscriptionId": "df3b1809-17d0-47a0-9241-d2724780bdac",
+                    "description": "Subscription owner",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
+                    "principalIds": [
+                        "c4beea9a-5d9d-438c-ba60-66d6238fc3d4"
+                    ]
+                },
+                {
+                    "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
+                    "description": "Subscription owner",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
+                    "principalIds": [
+                        "cdd52409-56a2-4a94-8f2a-5c6052b56038"
+                    ]
+                }
+            ]
+        },
+        "rgRoleAssignments": {
+            "value": [
+                {
+                    "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
+                    "resourceGroupName": "rg-ccs-prod-usva-dnsz",
+                    "description": "Deploy Private Endpoint - Private DNS A Contributor",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/794b3548-dc7a-5f71-8074-48e5ef635a26",
+                    "principalIds": [
+                        "75eab1d3-1172-410b-94cb-05c15b9a9baf",
+                        "5468371f-8d0d-4722-af4f-b465ccbb2491",
+                        "454a7ba5-08d3-4bb4-bd8b-567dc7f67b13",
+                        "4210c224-4d79-4c15-ab4c-66937bf6979c",
+                        "5da6724f-843a-4f0b-89b6-2a530c758ff7",
+                        "c0f38eff-4a74-4e1e-a174-e3a71820b1ea"
+                    ]
+                },
+                {
+                    "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "description": "Deploy Private Endpoint - Networking Permissions",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
+                    "principalIds": [
+                        "75eab1d3-1172-410b-94cb-05c15b9a9baf"
+                    ]
+                },
+                {
+                    "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
+                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "description": "Deploy Private Endpoint - Networking Permissions",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
+                    "principalIds": [
+                        "5468371f-8d0d-4722-af4f-b465ccbb2491"
+                    ]
+                },
+                {
+                    "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "description": "Deploy Private Endpoint - Networking Permissions",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
+                    "principalIds": [
+                        "454a7ba5-08d3-4bb4-bd8b-567dc7f67b13"
+                    ]
+                },
+                {
+                    "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
+                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "description": "Deploy Private Endpoint - Networking Permissions",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
+                    "principalIds": [
+                        "4210c224-4d79-4c15-ab4c-66937bf6979c"
+                    ]
+                }
+            ]
+        }
+    }
+}
