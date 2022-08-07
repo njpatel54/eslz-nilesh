@@ -152,7 +152,6 @@ var hubVNetResourceId = [ resourceId(vNets.parameters.hubVnetSubscriptionId.valu
 @description('Required. Combine two varibales using "union" function - This will be input for "virtualNetworkLinks" configuration for each Private DNS Zones.')
 var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
-
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
