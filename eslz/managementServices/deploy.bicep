@@ -98,7 +98,7 @@ param region string
 
 // Build param values using string interpolation
 @description('Required. SIEM Resource Group Name.')
-param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
 @description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
 param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
@@ -133,10 +133,10 @@ param diagnosticEventHubName string = ''
 
 // 1 - Create Resoruce Group
 module siem_rg '../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${rgName}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${siemRgName}'
   scope: subscription(mgmtsubid)
   params: {
-    name: rgName
+    name: siemRgName
     location: location
     tags: ccsCombinedTags
   }
@@ -145,7 +145,7 @@ module siem_rg '../modules/resourceGroups/deploy.bicep'= {
 // 2 - Create Log Analytics Workspace for Azure Sentinel
 module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'logaSentinel-${take(uniqueString(deployment().name, location), 4)}-${sentinelLawName}'
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     siem_rg
   ]
@@ -162,7 +162,7 @@ module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
 // 3 - Create Log Analytics Workspace for resource Diagnostics Settings - Log Collection
 module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     siem_rg
   ]
@@ -179,7 +179,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
 // 4 - Create Storage Account
 module sa '../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     loga
   ]
@@ -196,7 +196,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
 // 5 - Create Event Hub Namespace and Event Hub
 module eh '../modules/namespaces/deploy.bicep' = {
   name: 'eh-${take(uniqueString(deployment().name, location), 4)}-${eventhubNamespaceName}'
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     loga
   ]
@@ -214,7 +214,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
 // 6 - Create Automation Account and link it to Log Analytics Workspace
 module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}'
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     siem_rg
     loga
@@ -229,7 +229,7 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
-    //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+    //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }
 
@@ -249,7 +249,7 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
-    //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+    //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }]
 
@@ -269,7 +269,7 @@ module mgCustomRbac '../modules/authorization/roleDefinitions/managementGroup/de
 }]
 
 @description('Output - Name of Event Hub')
-output ehnsAuthorizationId string = resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+output ehnsAuthorizationId string = resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
 
 @description('Output - SIEM Resource Group Name')
 output siemRgName string = siem_rg.outputs.name
@@ -335,7 +335,7 @@ module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' =
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     diagnosticEventHubName: eventHubs[0].name
-    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, rgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+    diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }]
 */
