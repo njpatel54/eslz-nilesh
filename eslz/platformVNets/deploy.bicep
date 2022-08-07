@@ -83,7 +83,7 @@ param region string
 param location string
 
 @description('Required. Resource Group name.')
-param resourceGroupName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
 @description('Required. Firewall Public IP name.')
 param firewallPublicIPName string = 'pip-${projowner}-${opscope}-${region}-fwip'
@@ -143,11 +143,11 @@ param privateDnsZones array
 var vNets = json(loadTextContent('.parameters/parameters.json'))
 
 // Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
-@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "resourceGroupName" and "vNet.name".')
-var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
+var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
-@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "resourceGroupName" and "hubVnetName".')
-var hubVNetResourceId = [ resourceId(vNets.parameters.hubVnetSubscriptionId.value, resourceGroupName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value) ]
+@description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "vnetRgName" and "hubVnetName".')
+var hubVNetResourceId = [ resourceId(vNets.parameters.hubVnetSubscriptionId.value, vnetRgName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value) ]
 
 @description('Required. Combine two varibales using "union" function - This will be input for "virtualNetworkLinks" configuration for each Private DNS Zones.')
 var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
@@ -162,7 +162,7 @@ param mgmtVnetName string = 'vnet-${projowner}-${opscope}-${region}-mgmt'
 param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
 
 @description('Required. SIEM Resource Group Name.')
-param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
 @description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
 param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
@@ -201,10 +201,10 @@ param queryAccessMode string = 'PrivateOnly'
 
 // 1 - Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep' = {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroupName}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {
-    name: resourceGroupName
+    name: vnetRgName
     location: location
     tags: ccsCombinedTags
   }
@@ -213,7 +213,7 @@ module hubRg '../modules/resourceGroups/deploy.bicep' = {
 // 2 - Create Hub Network Security Group(s)
 module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in hubNetworkSecurityGroups: {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
   ]
@@ -233,7 +233,7 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 // 3 - Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${hubVnetName}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubNsgs
   ]
@@ -254,10 +254,10 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
 
 // 4 - Create Spoke Resoruce Group(s)
 module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroupName}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(vNet.subscriptionId)
   params: {
-    name: resourceGroupName
+    name: vnetRgName
     location: location
     tags: ccsCombinedTags
   }
@@ -266,7 +266,7 @@ module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in 
 // 5 - Create Spoke Virtual Network(s)
 module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
-  scope: resourceGroup(vNet.subscriptionId, resourceGroupName)
+  scope: resourceGroup(vNet.subscriptionId, vnetRgName)
   dependsOn: [
     spokeRg
     hubVnet
@@ -289,7 +289,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
 // 6 - Create Public IP Address for Azure Firewall
 module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${firewallPublicIPName}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
   ]
@@ -310,7 +310,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
 // 7 - Create Fireall Policy and Firewall Policy Rule Collection Groups
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
   ]
@@ -329,7 +329,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
 // 8 - Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubVnet
     spokeVnet
@@ -346,7 +346,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
       {
         name: 'ipConfig01'
         publicIPAddressResourceId: afwPip.outputs.resourceId
-        subnetResourceId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureFirewallSubnet')
+        subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureFirewallSubnet')
       }
     ]
     firewallPolicyId: afwp.outputs.resourceId
@@ -361,7 +361,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
 // 9 - Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
   ]
@@ -382,7 +382,7 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
 // 10 - Create Azure Bastion Host
 module bas '../modules/network/bastionHosts/deploy.bicep' = {
   name: 'bas-${take(uniqueString(deployment().name, location), 4)}-${bastionHostName}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubVnet
     spokeVnet
@@ -439,13 +439,13 @@ module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
 // 14.1 - Retrieve an existing Storage Account resource
 resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: stgAcctName
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
 // 14.2 - Create Private Endpoint for Storage Account
 module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     hubVnet
     spokeVnet
@@ -459,7 +459,7 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
     groupIds: [
       'blob'
     ]
-    subnetResourceId: resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
@@ -472,13 +472,13 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
 // 15.1 - Retrieve an existing Automation Account resource
 resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
   name: automationAcctName
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
 // 15.2 - Create Private Endpoint for Automation Account
 module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}-${aaGroupId}'
-  scope: resourceGroup(mgmtsubid, rgName)
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     hubVnet
     spokeVnet
@@ -492,7 +492,7 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
     groupIds: [
       aaGroupId
     ]
-    subnetResourceId: resourceId(mgmtsubid, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.azure-automation.us')
@@ -506,7 +506,7 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
 // 16.1 - Create Private Endpoint for Automation Account
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   name: 'ampls-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
-  scope: resourceGroup(hubVnetSubscriptionId,  resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId,  vnetRgName)
   dependsOn: [
     hubVnet
     spokeVnet
@@ -523,12 +523,12 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
       {
         name: logsLawName
         privateLinkScopeName: amplsName
-        linkedResourceId: resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', logsLawName)
+        linkedResourceId: resourceId(mgmtsubid, siemRgName, 'Microsoft.OperationalInsights/workspaces', logsLawName)
       }
       {
         name: sentinelLawName
         privateLinkScopeName: amplsName
-        linkedResourceId: resourceId(mgmtsubid, rgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
+        linkedResourceId: resourceId(mgmtsubid, siemRgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
       }
     ]
   }
@@ -537,7 +537,7 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
 // 16.2 - Create Private Endpoint for Azure Monitor Private Link Scope
 module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'amplsPe-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
-  scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubVnet
     spokeVnet
@@ -551,7 +551,7 @@ module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
     groupIds: [
       'azuremonitor'
     ]
-    subnetResourceId: resourceId(hubVnetSubscriptionId, resourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, peSubnetName)
+    subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.monitor.azure.us')
