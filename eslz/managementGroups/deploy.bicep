@@ -24,7 +24,7 @@ param subscriptions array
 @description('Required. Azure AD Tenant ID.')
 param tenantid string
 
-// 1 - Create Management Groups
+// 1. Create Management Groups
 @batchSize(1)
 module mg '../modules/management/managementGroups/deploy.bicep' = [ for managementGroup in managementGroups: {
   name: 'mg-${take(uniqueString(deployment().name, location), 4)}-${managementGroup.name}'
@@ -38,7 +38,7 @@ module mg '../modules/management/managementGroups/deploy.bicep' = [ for manageme
   }
 }]
 
-// 2 - Create Role Assignments for Management Groups
+// 2. Create Role Assignments for Management Groups
 module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
   name: 'mgRbac-${take(uniqueString(deployment().name, location), 4)}-${roleAssignment.managementGroupName}-${index}'  
   scope: managementGroup(roleAssignment.managementGroupName)
@@ -55,7 +55,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
   }
 }]
 
-// 3 - Move Subscriptions to Management Groups
+// 3. Move Subscriptions to Management Groups
 module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'movesubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: tenant()
@@ -68,7 +68,7 @@ module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscripti
   }
 }]
 
-// 4 - Create Role Assignments for Subscriptions
+// 4. Create Role Assignments for Subscriptions
 module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
   name: 'subRbac-${take(uniqueString(deployment().name, location), 4)}-${roleAssignment.subscriptionId}-${index}'
   scope: subscription(roleAssignment.subscriptionId)
@@ -85,13 +85,13 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
   }
 }]
 
-// 5 - Retrieve Tenant Root Management Group
+// 5. Retrieve Tenant Root Management Group
 resource rootmg 'Microsoft.Management/managementGroups@2021-04-01' existing = {
   name: tenantid
   scope: tenant()
 }
 
-// 6 - Configure Default Management Group Settings
+// 6. Configure Default Management Group Settings
 resource mgSettings 'Microsoft.Management/managementGroups/settings@2021-04-01' = {
   parent: rootmg
   name: 'default'

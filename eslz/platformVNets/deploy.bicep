@@ -199,7 +199,7 @@ param ingestionAccessMode string = 'PrivateOnly'
 ])
 param queryAccessMode string = 'PrivateOnly'
 
-// 1 - Create Hub Resoruce Group
+// 1. Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep' = {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(hubVnetSubscriptionId)
@@ -210,7 +210,7 @@ module hubRg '../modules/resourceGroups/deploy.bicep' = {
   }
 }
 
-// 2 - Create Hub Network Security Group(s)
+// 2. Create Hub Network Security Group(s)
 module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in hubNetworkSecurityGroups: {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -230,7 +230,7 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
   }
 }]
 
-// 3 - Create Hub Virtual Network
+// 3. Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${hubVnetName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -252,7 +252,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   }
 }
 
-// 4 - Create Spoke Resoruce Group(s)
+// 4. Create Spoke Resoruce Group(s)
 module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(vNet.subscriptionId)
@@ -263,7 +263,7 @@ module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in 
   }
 }]
 
-// 5 - Create Spoke Virtual Network(s)
+// 5. Create Spoke Virtual Network(s)
 module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   scope: resourceGroup(vNet.subscriptionId, vnetRgName)
@@ -286,7 +286,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
   }
 }]
 
-// 6 - Create Public IP Address for Azure Firewall
+// 6. Create Public IP Address for Azure Firewall
 module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${firewallPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -307,7 +307,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// 7 - Create Fireall Policy and Firewall Policy Rule Collection Groups
+// 7. Create Fireall Policy and Firewall Policy Rule Collection Groups
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -326,7 +326,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   }
 }
 
-// 8 - Create Firewall
+// 8. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -358,7 +358,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   }
 }
 
-// 9 - Create Public IP Address for Azure Bastion Host
+// 9. Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -379,7 +379,7 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// 10 - Create Azure Bastion Host
+// 10. Create Azure Bastion Host
 module bas '../modules/network/bastionHosts/deploy.bicep' = {
   name: 'bas-${take(uniqueString(deployment().name, location), 4)}-${bastionHostName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -404,7 +404,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
   }
 }
 
-// 11 - Create Resource Group for Private DNS Zones
+// 11. Create Resource Group for Private DNS Zones
 module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
   name: 'priDNSZonesRg-${take(uniqueString(deployment().name, location), 4)}-${priDNSZonesRgName}'
   scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
@@ -415,7 +415,7 @@ module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
   }
 }
 
-// 12 - Create Private DNS Zones
+// 12. Create Private DNS Zones
 module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'priDNSZones-${privateDnsZone}'
   scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
