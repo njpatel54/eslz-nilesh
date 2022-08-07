@@ -446,6 +446,11 @@ resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
 module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
+  dependsOn: [
+    hubVnet
+    spokeVnet
+    priDNSZones
+  ]
   params: {
     name: '${stgAcctName}-blob-pe'
     location: location
@@ -474,6 +479,11 @@ resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
 module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, rgName)
+  dependsOn: [
+    hubVnet
+    spokeVnet
+    priDNSZones
+  ]
   params: {
     name: '${automationAcctName}-${aaGroupId}-pe'
     location: location
@@ -497,6 +507,11 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   name: 'ampls-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId,  resourceGroupName)
+  dependsOn: [
+    hubVnet
+    spokeVnet
+    priDNSZones
+  ]
   params: {
     name: amplsName
     location: 'Global'
@@ -523,6 +538,11 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
 module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'amplsPe-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
+  dependsOn: [
+    hubVnet
+    spokeVnet
+    priDNSZones
+  ]
   params: {
     name: '${amplsName}-pe'
     location: location
