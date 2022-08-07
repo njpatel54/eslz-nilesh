@@ -152,6 +152,54 @@ var hubVNetResourceId = [ resourceId(vNets.parameters.hubVnetSubscriptionId.valu
 @description('Required. Combine two varibales using "union" function - This will be input for "virtualNetworkLinks" configuration for each Private DNS Zones.')
 var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
 
+
+@description('Required. Subscription ID of Management Subscription.')
+param mgmtsubid string
+
+@description('Required. Virtual Network name in Management Subscription.')
+param mgmtVnetName string
+
+@description('Required. Subnet name to be used for Private Endpoint (in Management Subscription).')
+param peSubnetName string
+
+@description('Required. SIEM Resource Group Name.')
+param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
+param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
+param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Automation Account Name.')
+param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
+param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
+
+@description('Required. Automation Account subresource IDs (groupId).')
+var aaGroupIds = [
+  'Webhook'
+  'DSCAndHybridWorker'
+]
+
+@description('Required. Azure Monitor Private Link Scope Name.')
+param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
+
+@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param ingestionAccessMode string = 'PrivateOnly'
+
+@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param queryAccessMode string = 'PrivateOnly'
+
 // 1 - Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep' = {
   name: 'rg-${hubVnetSubscriptionId}-${resourceGroupName}'
@@ -388,60 +436,6 @@ module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
-// Start - Outputs to supress warnings - "unused parameters"
-output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
-output diagnosticEventHubName string = diagnosticEventHubName
-output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
-output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
-// End - Outputs to supress warnings - "unused parameters"
-
-@description('Required. Subscription ID of Management Subscription.')
-param mgmtsubid string
-
-@description('Required. Virtual Network name in Management Subscription.')
-param mgmtVnetName string
-
-@description('Required. Subnet name to be used for Private Endpoint (in Management Subscription).')
-param peSubnetName string
-
-@description('Required. SIEM Resource Group Name.')
-param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
-
-@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
-param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
-
-@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
-param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
-
-@description('Required. Automation Account Name.')
-param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
-
-@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
-
-@description('Required. Automation Account subresource IDs (groupId).')
-var aaGroupIds = [
-  'Webhook'
-  'DSCAndHybridWorker'
-]
-
-@description('Required. Azure Monitor Private Link Scope Name.')
-param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
-
-@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
-@allowed([
-  'Open'
-  'PrivateOnly'
-])
-param ingestionAccessMode string = 'PrivateOnly'
-
-@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
-@allowed([
-  'Open'
-  'PrivateOnly'
-])
-param queryAccessMode string = 'PrivateOnly'
-
 // 14 - Create Private Endpoint for Storage Account
 // 14.1 - Retrieve an existing Storage Account resource
 resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
@@ -552,17 +546,11 @@ module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
 }
 
 
+// Start - Outputs to supress warnings - "unused parameters"
+output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
+output diagnosticEventHubName string = diagnosticEventHubName
+output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
+output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
+// End - Outputs to supress warnings - "unused parameters"
 
 
-/*
-// 13 - Retrieve an existing Virtual Network & Subnet resource (in Management Subscription) to be used to Private Endpoint
-resource mgmtVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing ={
-  name: mgmtVnetName
-  scope: resourceGroup(mgmtsubid, resourceGroupName)
-}
-
-resource mgmtPeSubnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing =  {
-  name : peSubnetName
-  parent: mgmtVnet
-}
-*/
