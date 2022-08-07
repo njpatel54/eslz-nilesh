@@ -24,12 +24,10 @@ param subscriptions array
 @description('Required. Azure AD Tenant ID.')
 param tenantid string
 
-param deploymentId string = substring(uniqueString(utcNow()),0,6)
-
 // 1 - Create Management Groups
 @batchSize(1)
 module mg '../modules/management/managementGroups/deploy.bicep' = [ for managementGroup in managementGroups: {
-  name: 'deploy-mg-${managementGroup.name}'
+  name: 'mg-${take(uniqueString(deployment().name, location), 4)}-${managementGroup.name}'
   //scope: managementGroup(managementGroup.name)
   params:{
     location: location
@@ -42,7 +40,7 @@ module mg '../modules/management/managementGroups/deploy.bicep' = [ for manageme
 
 // 2 - Create Role Assignments for Management Groups
 module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.bicep' = [ for (roleAssignment, index) in mgRoleAssignments :{
-  name: 'ManagementGroup-Rbac-${roleAssignment.managementGroupName}-${index}'  
+  name: 'mgRbac-${take(uniqueString(deployment().name, location), 4)}-${roleAssignment.managementGroupName}-${index}'  
   scope: managementGroup(roleAssignment.managementGroupName)
   dependsOn: [
     mg
@@ -59,7 +57,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
 
 // 3 - Move Subscriptions to Management Groups
 module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'deploy-movesubs-${subscription.subscriptionId}-${deploymentId}'
+  name: 'movesubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: tenant()
   dependsOn: [
     mg
@@ -72,7 +70,7 @@ module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscripti
 
 // 4 - Create Role Assignments for Subscriptions
 module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
-  name: 'subscription-Rbac-${roleAssignment.subscriptionId}-${index}'
+  name: 'subRbac-${take(uniqueString(deployment().name, location), 4)}-${roleAssignment.subscriptionId}-${index}'
   scope: subscription(roleAssignment.subscriptionId)
   dependsOn: [
     mg

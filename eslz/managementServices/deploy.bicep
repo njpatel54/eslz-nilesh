@@ -51,8 +51,10 @@ param tenantid string
 @description('Required. Location for all resources.')
 param location string
 
+/*
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string = substring(uniqueString(utcNow()),0,4)
+*/
 
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')

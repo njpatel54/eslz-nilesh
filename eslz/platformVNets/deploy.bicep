@@ -201,7 +201,7 @@ param queryAccessMode string = 'PrivateOnly'
 
 // 1 - Create Hub Resoruce Group
 module hubRg '../modules/resourceGroups/deploy.bicep' = {
-  name: 'rg-${hubVnetSubscriptionId}-${resourceGroupName}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroupName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {
     name: resourceGroupName
@@ -254,7 +254,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
 
 // 4 - Create Spoke Resoruce Group(s)
 module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
-  name: 'rg-${vNet.subscriptionId}-${resourceGroupName}'
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroupName}'
   scope: subscription(vNet.subscriptionId)
   params: {
     name: resourceGroupName
@@ -406,7 +406,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
 
 // 11 - Create Resource Group for Private DNS Zones
 module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
-  name: 'priDNSZonesRg-${priDNSZonesRgName}'
+  name: 'priDNSZonesRg-${take(uniqueString(deployment().name, location), 4)}-${priDNSZonesRgName}'
   scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
   params: {
     name: priDNSZonesRgName
@@ -444,7 +444,7 @@ resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
 
 // 14.2 - Create Private Endpoint for Storage Account
 module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'saPe-${stgAcctName}'
+  name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, rgName)
   params: {
     name: '${stgAcctName}-blob-pe'
@@ -472,7 +472,7 @@ resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
 
 // 15.2 - Create Private Endpoint for Automation Account
 module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${automationAcctName}-${aaGroupId}'
+  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, rgName)
   params: {
     name: '${automationAcctName}-${aaGroupId}-pe'
@@ -495,7 +495,7 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
 // An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).
 // 16.1 - Create Private Endpoint for Automation Account
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
-  name: 'ampls'
+  name: 'ampls-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId,  resourceGroupName)
   params: {
     name: amplsName
@@ -521,7 +521,7 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
 
 // 16.2 - Create Private Endpoint for Azure Monitor Private Link Scope
 module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'amplsPe-${amplsName}'
+  name: 'amplsPe-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId, resourceGroupName)
   params: {
     name: '${amplsName}-pe'
