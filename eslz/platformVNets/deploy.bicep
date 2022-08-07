@@ -435,14 +435,13 @@ module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
-// 14 - Create Private Endpoint for Storage Account
-// 14.1 - Retrieve an existing Storage Account resource
+// 13. Retrieve an existing Storage Account resource
 resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: stgAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 14.2 - Create Private Endpoint for Storage Account
+// 14. Create Private Endpoint for Storage Account
 module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -468,14 +467,13 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 15 - Create Private Endpoint for Automation Account
-// 15.1 - Retrieve an existing Automation Account resource
+// 15. Retrieve an existing Automation Account resource
 resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
   name: automationAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 15.2 - Create Private Endpoint for Automation Account
+// 16. Create Private Endpoint for Automation Account
 module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -501,9 +499,8 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
   }
 }]
 
-// 16 - Create Azure Monitor Private Link Scope
+// 17. Create Azure Monitor Private Link Scope
 // An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).
-// 16.1 - Create Private Endpoint for Automation Account
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   name: 'ampls-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId,  vnetRgName)
@@ -534,7 +531,7 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   }
 }
 
-// 16.2 - Create Private Endpoint for Azure Monitor Private Link Scope
+// 18. Create Private Endpoint for Azure Monitor Private Link Scope
 module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'amplsPe-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
