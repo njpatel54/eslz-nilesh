@@ -125,6 +125,14 @@ param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
 
+@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
+@allowed([
+  ''
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccess string = 'Disabled'
+
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
 
@@ -237,6 +245,7 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     publicNetworkAccessForQuery: publicNetworkAccessForQuery
     amplsName: amplsName
     akvName: akvName
+    publicNetworkAccess: publicNetworkAccess
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticStorageAccountId: diagnosticStorageAccountId

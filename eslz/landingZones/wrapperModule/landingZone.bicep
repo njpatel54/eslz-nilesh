@@ -83,6 +83,14 @@ param amplsName string
 @maxLength(24)
 param akvName string
 
+@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
+@allowed([
+  ''
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccess string = ''
+
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
 
@@ -263,6 +271,7 @@ module akv '../../modules//keyVault/vaults/deploy.bicep' = {
       location: location
       tags: combinedTags
       vaultSku: 'premium'
+      publicNetworkAccess: publicNetworkAccess
     }
 }
 
