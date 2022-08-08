@@ -9,6 +9,9 @@ param subRoleAssignments array = []
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
 
+@description('Required. Resource Group name.')
+param vnetRgName string
+
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string
 
@@ -60,6 +63,25 @@ param virtualNetworkPeerings array = []
 
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
+
+@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
+param logsLawName string
+
+@description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
+param logaGallerySolutions array = []
+
+@description('Optional. The network access type for accessing Log Analytics ingestion.')
+param publicNetworkAccessForIngestion string = ''
+
+@description('Optional. The network access type for accessing Log Analytics query.')
+param publicNetworkAccessForQuery string = ''
+
+@description('Required. Azure Monitor Private Link Scope Name.')
+param amplsName string
+
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string
 
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
@@ -197,6 +219,78 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
+
+// 9. Create Log Analytics Workspace
+module loga '../../modules/operationalInsights/workspaces/deploy.bicep' = {
+  name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
+  scope: resourceGroup(subscriptionId, lzRgName)
+  dependsOn: [
+    rg
+  ]
+  params:{
+    name: logsLawName
+    location: location
+    tags: combinedTags
+    gallerySolutions: logaGallerySolutions
+    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery
+  }
+}
+
+// 10. Add Log Analytics Workspace to Azure Monitor Private Link Scope (AMPLS)
+module amplssr '../../modules//insights//privateLinkScopes/scopedResources/deploy.bicep' = {
+  name: 'amplssr-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
+  scope: resourceGroup(connsubid, vnetRgName)
+  dependsOn: [
+    loga
+  ]
+  params: {
+    linkedResourceId: loga.outputs.resourceId
+    name: logsLawName
+    privateLinkScopeName: amplsName
+  }
+}
+
+// 11. Create Azure Key Vault
+module akv '../../modules//keyVault/vaults/deploy.bicep' = {
+  name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(subscriptionId, lzRgName)
+  dependsOn: [
+    rg
+  ]
+    params: {
+      name: akvName
+      location: location
+      tags: combinedTags
+      vaultSku: 'premium'
+    }
+}
+
+// 12. Create Private Endpoint for Key Vault
+module akvPe '../../modules//network//privateEndpoints/deploy.bicep' = {
+  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(subscriptionId, lzRgName)
+  dependsOn: [
+    lzVnet
+    akv
+  ]
+  params: {
+    name: '${akvName}-vault-pe'
+    location: location
+    tags: combinedTags
+    serviceResourceId: akv.outputs.resourceId
+    groupIds: [
+      'vault'
+    ]
+    subnetResourceId: resourceId(subscriptionId, lzRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
 
 @description('Output - Resoruce Group Name')
 output rgName string = rg.outputs.name

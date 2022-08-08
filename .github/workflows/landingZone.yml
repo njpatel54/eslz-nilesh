@@ -42,5 +42,4 @@ jobs:
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}

@@ -42,7 +42,6 @@ targetScope =  'managementGroup'
 // For PartnerLed - /billingAccounts/{billingAccountName}/customers/{customerName}                                                                  //
 // For Legacy EA - /billingAccounts/{billingAccountName}/enrollmentAccounts/{enrollmentAccountName}                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 @description('BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -77,6 +76,9 @@ param location string
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
 
+@description('Required. Resource Group name.')
+param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+
 @description('Name of the resourceGroup, will be created in the same location as the deployment.')
 param lzRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
 
@@ -100,6 +102,25 @@ param virtualNetworkPeerings array = []
 
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
+
+@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
+param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
+
+@description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
+param logaGallerySolutions array = []
+
+@description('Optional. The network access type for accessing Log Analytics ingestion.')
+param publicNetworkAccessForIngestion string = ''
+
+@description('Optional. The network access type for accessing Log Analytics query.')
+param publicNetworkAccessForQuery string = ''
+
+@description('Required. Azure Monitor Private Link Scope Name.')
+param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
+
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-lz01', 24))
 
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
@@ -168,6 +189,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
 
+/*
 // Create the Subscription
 module subAlias '../modules/subscription/alias/deploy.bicep' = {
   name: 'subAlias-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
@@ -181,21 +203,25 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
     subscriptionOwnerId: subscriptionOwnerId
   }
 }
+*/
 
 // creating resources in the subscription requires an extra level of "nesting" to reference the subscriptionId as a module output and use for a scope
 // The module outputs cannot be used for the scope property so needs to be passed down as a parameter one level
 module landingZone  './wrapperModule/landingZone.bicep' = {
   name: 'landingZone-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
-  dependsOn: [
-    subAlias
-  ]
+  //dependsOn: [
+  //  subAlias
+  //]
   params: {
     subRoleAssignments: subRoleAssignments
+    rgRoleAssignments: rgRoleAssignments
     lzRgName: lzRgName
     location: location
     combinedTags: combinedTags
-    subscriptionId: subAlias.outputs.subscriptionId
+    //subscriptionId: subAlias.outputs.subscriptionId
+    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
     connsubid: connsubid
+    vnetRgName: vnetRgName
     priDNSZonesRgName: priDNSZonesRgName
     peSubnetName: peSubnetName
     vnetName: vnetName
@@ -205,6 +231,12 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     privateDnsZones: privateDnsZones
     stgAcctName: stgAcctName
     storageaccount_sku: storageaccount_sku
+    logsLawName: logsLawName
+    logaGallerySolutions: logaGallerySolutions
+    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery
+    amplsName: amplsName
+    akvName: akvName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticStorageAccountId: diagnosticStorageAccountId
@@ -213,8 +245,10 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
   }
 }
 
+/*
 @description('Output - Subscrition ID')
 output subscriptionId string = subAlias.outputs.subscriptionId
+*/
 
 @description('Output - Resoruce Group Name')
 output rgName string = landingZone.outputs.rgName
