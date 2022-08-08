@@ -90,12 +90,7 @@
                     "description": "Deploy Private Endpoint - Private DNS A Contributor",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/794b3548-dc7a-5f71-8074-48e5ef635a26",
                     "principalIds": [
-                        "75eab1d3-1172-410b-94cb-05c15b9a9baf",
-                        "5468371f-8d0d-4722-af4f-b465ccbb2491",
-                        "454a7ba5-08d3-4bb4-bd8b-567dc7f67b13",
-                        "4210c224-4d79-4c15-ab4c-66937bf6979c",
-                        "5da6724f-843a-4f0b-89b6-2a530c758ff7",
-                        "c0f38eff-4a74-4e1e-a174-e3a71820b1ea"
+                        "5d568f11-8bb0-427d-8bb2-cb0eb54229e3"
                     ]
                 },
                 {
@@ -123,6 +118,15 @@
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
                     "principalIds": [
                         "454a7ba5-08d3-4bb4-bd8b-567dc7f67b13"
+                    ]
+                },
+                {
+                    "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
+                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "description": "Deploy Private Endpoint - Networking Permissions",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
+                    "principalIds": [
+                        "4210c224-4d79-4c15-ab4c-66937bf6979c"
                     ]
                 },
                 {

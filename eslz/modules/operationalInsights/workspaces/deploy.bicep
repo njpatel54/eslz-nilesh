@@ -265,3 +265,8 @@ output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.properties.custome
 
 @description('The location the resource was deployed into.')
 output location string = logAnalyticsWorkspace.location
+
+
+
+
+

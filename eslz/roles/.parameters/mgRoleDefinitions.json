@@ -109,6 +109,20 @@
                     "managementGroupId": "mg-A2g",
                     "subscriptionId": "",
                     "resourceGroupName": ""
+                },
+                {
+                    "roleName": "Bastion Host Reader",
+                    "description": "Allows you to Read Bastion Host(s)",
+                    "actions": [
+                        "Microsoft.Network/bastionHosts/read"
+                    ],
+                    "notActions": [],
+                    "dataActions": [],
+                    "notDataActions": [],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g",
+                    "subscriptionId": "",
+                    "resourceGroupName": ""
                 }
             ]
         }

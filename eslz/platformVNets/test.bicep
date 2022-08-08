@@ -1,43 +1,80 @@
-param name string = 'testampls'
-param tags object = {}
 
-@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
+@description('Required. Project Owner (projowner) parameter.')
 @allowed([
-  'Open'
-  'PrivateOnly'
+  'ccs'
+  'proj'
 ])
-param ingestionAccessMode string = 'PrivateOnly'
+param projowner string = 'ccs'
 
-@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
+@description('Required. Operational Scope (opscope) parameter.')
 @allowed([
-  'Open'
-  'PrivateOnly'
+  'prod'
+  'dev'
+  'qa'
+  'stage'
+  'test'
+  'sand'
 ])
-param queryAccessMode string = 'PrivateOnly'
+param opscope string = 'prod'
 
-@description('Optional. List of exclusions that override the default access mode settings for specific private endpoint connections.')
-param exclusions array = []
+@description('Required. Region (region) parameter.')
+@allowed([
+  'usva'
+  'ustx'
+  'usaz'
+])
+param region string = 'usva'
+@description('Required. Subscription ID of Management Subscription.')
+param mgmtsubid string
+
+@description('Required. SIEM Resource Group Name.')
+param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
 
-resource privateLinkScope 'microsoft.insights/privateLinkScopes@2021-07-01-preview' = {
-  name: name
-  location: 'Global'
-  tags: tags
-  properties: {
-    accessModeSettings: {
-      exclusions: !empty(exclusions) ? exclusions : []
-      ingestionAccessMode: !empty(ingestionAccessMode) ? ingestionAccessMode : 'Open'
-      queryAccessMode: !empty(queryAccessMode) ? queryAccessMode : 'Open'
-    }
+@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
+param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-test'
+
+@description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for Azure Sentinel.')
+param logaSentinelGallerySolution array = []
+
+@description('Optional. The network access type for accessing Log Analytics ingestion.')
+param publicNetworkAccessForIngestion string = ''
+
+@description('Optional. The network access type for accessing Log Analytics query.')
+param publicNetworkAccessForQuery string = ''
+
+@description('Required. Location for all resources.')
+param location string
+
+/*
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param suffix string = substring(uniqueString(utcNow()),0,4)
+*/
+
+@description('Required. utcfullvalue to be used in Tags.')
+param utcfullvalue string = utcNow('F')
+
+@description('Required. Assign utffullvaule to "CreatedOn" tag.')
+param dynamictags object = ({
+  CreatedOn: utcfullvalue
+})
+
+var tags = json(loadTextContent('../tags.json'))
+
+@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
+var ccsCombinedTags = union(dynamictags, tags.ccsTags.value)
+//var lzCombinedTags = union(dynamictags, tags.lz01Tags.value)
+
+module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
+  name: 'logaSentinel-${take(uniqueString(deployment().name, location), 4)}-${sentinelLawName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  params:{
+    name: sentinelLawName
+    location: location
+    tags: ccsCombinedTags
+    gallerySolutions: logaSentinelGallerySolution    
+    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery
   }
 }
 
-
-
-
-
-/*
-tags: contains(privateEndpoint, 'tags') ? privateEndpoint.tags : {}
-manualPrivateLinkServiceConnections: contains(privateEndpoint, 'manualPrivateLinkServiceConnections') ? privateEndpoint.manualPrivateLinkServiceConnections : []
-customDnsConfigs: contains(privateEndpoint, 'customDnsConfigs') ? privateEndpoint.customDnsConfigs : []
-*/
