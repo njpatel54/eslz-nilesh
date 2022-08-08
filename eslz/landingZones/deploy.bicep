@@ -110,10 +110,10 @@ param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
 param logaGallerySolutions array = []
 
 @description('Optional. The network access type for accessing Log Analytics ingestion.')
-param publicNetworkAccessForIngestion string = ''
+param publicNetworkAccessForIngestion string = 'Enabled'
 
 @description('Optional. The network access type for accessing Log Analytics query.')
-param publicNetworkAccessForQuery string = ''
+param publicNetworkAccessForQuery string = 'Enabled'
 
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'

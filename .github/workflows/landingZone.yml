@@ -43,4 +43,8 @@ jobs:
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
