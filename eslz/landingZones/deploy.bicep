@@ -103,8 +103,11 @@ param virtualNetworkPeerings array = []
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
 
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param suffix string = 'lz01'
+
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
-param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
+param logsLawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
 
 @description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
 param logaGallerySolutions array = []
@@ -120,13 +123,10 @@ param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
-param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-lz01', 24))
+param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
 
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
-
-@description('Required. Suffix to be used in resource naming with 4 characters.')
-param suffix string = substring(uniqueString(utcNow()),0,4)
 
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
