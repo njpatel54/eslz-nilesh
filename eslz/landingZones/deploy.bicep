@@ -21,7 +21,7 @@
 	//Configure Diagnostic Settins for VNets
 	//Route Table
   //Configure Tags
-  //Configure Rol Assignments
+  //Configure Role Assignments
 	
 // Module - Azure Resources/Workloads
 
@@ -74,6 +74,30 @@ param subRoleAssignments array = []
 @description('Required. Location for all resources.')
 param location string
 
+@description('Required. Subscription ID of Connectivity Subscription')
+param connsubscriptionid string
+
+@description('Name of the resourceGroup, will be created in the same location as the deployment.')
+param lzRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
+
+@description('Required. Subnet name to be used for Private Endpoint.')
+param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
+
+@description('Required. The Virtual Network (vNet) Name.')
+param vnetName string
+
+@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
+param vnetAddressPrefixes array
+
+@description('Optional. An Array of subnets to deploy to the Virtual Network.')
+param subnets array = []
+
+@description('Optional. Virtual Network Peerings configurations')
+param virtualNetworkPeerings array = []
+
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string = substring(uniqueString(utcNow()),0,4)
 
@@ -117,9 +141,6 @@ param opscope string
 ])
 param region string
 
-@description('Required. SIEM Resource Group Name.')
-param rgName string = 'rg-${projowner}-${opscope}-${region}-siem'
-
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
 
@@ -158,16 +179,23 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 // creating resources in the subscription requires an extra level of "nesting" to reference the subscriptionId as a module output and use for a scope
 // The module outputs cannot be used for the scope property so needs to be passed down as a parameter one level
 module landingZone  './wrapperModule/landingZone.bicep' = {
-  name: 'landingZone-${take(uniqueString(deployment().name, location), 4)}-${rgName}'
+  name: 'landingZone-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
   dependsOn: [
     subAlias
   ]
   params: {
     subRoleAssignments: subRoleAssignments
-    rgName: rgName
+    lzRgName: lzRgName
     location: location
     combinedTags: combinedTags
     subscriptionId: subAlias.outputs.subscriptionId
+    connsubscriptionid: connsubscriptionid
+    priDNSZonesRgName: priDNSZonesRgName
+    peSubnetName: peSubnetName
+    vnetName: vnetName
+    vnetAddressPrefixes: vnetAddressPrefixes
+    subnets: subnets
+    virtualNetworkPeerings: virtualNetworkPeerings
     stgAcctName: stgAcctName
     storageaccount_sku: storageaccount_sku
     diagSettingName: diagSettingName

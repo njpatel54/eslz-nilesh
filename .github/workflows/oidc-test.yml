@@ -1,4 +1,4 @@
-name: Azure Login with OpenID Connect
+name: Az Login with OpenID Connect
 
 on: 
   workflow_dispatch:
