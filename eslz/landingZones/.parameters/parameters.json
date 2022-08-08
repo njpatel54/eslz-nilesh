@@ -150,6 +150,12 @@
     "storageaccount_sku": {
       "value": "Standard_LRS"
     },
+    "publicNetworkAccessForIngestion": {
+      "value": "Disabled"
+    },
+    "publicNetworkAccessForQuery": {
+      "value": "Disabled"
+    },
     "tags": {
       "value": {
         "Customer": "CCS Azure",
