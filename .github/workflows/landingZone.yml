@@ -1,0 +1,46 @@
+name: landing zone
+
+on:
+  #push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/landingZone.yml
+      
+  # pull_request:
+  #  branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    #needs: [preview]
+    environment: Production
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploy - Landing Zone'
+      with:
+        inlineScript: |
+          az deployment sub create \
+            --name 'Deploy-Landing-Zone' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/landingZones/deploy.bicep \
+            --parameters ./eslz/landingZones/.parameters/parameters.json \
+            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}

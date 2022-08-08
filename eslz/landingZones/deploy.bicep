@@ -75,7 +75,7 @@ param subRoleAssignments array = []
 param location string
 
 @description('Required. Subscription ID of Connectivity Subscription')
-param connsubscriptionid string
+param connsubid string
 
 @description('Name of the resourceGroup, will be created in the same location as the deployment.')
 param lzRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
@@ -97,6 +97,12 @@ param subnets array = []
 
 @description('Optional. Virtual Network Peerings configurations')
 param virtualNetworkPeerings array = []
+
+@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
+param privateDnsZones array
+
+@description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
+param rgRoleAssignments array = []
 
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string = substring(uniqueString(utcNow()),0,4)
@@ -189,13 +195,14 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     location: location
     combinedTags: combinedTags
     subscriptionId: subAlias.outputs.subscriptionId
-    connsubscriptionid: connsubscriptionid
+    connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
     peSubnetName: peSubnetName
     vnetName: vnetName
     vnetAddressPrefixes: vnetAddressPrefixes
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
+    privateDnsZones: privateDnsZones
     stgAcctName: stgAcctName
     storageaccount_sku: storageaccount_sku
     diagSettingName: diagSettingName

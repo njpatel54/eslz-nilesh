@@ -7,7 +7,7 @@ param subscriptionId string
 param subRoleAssignments array = []
 
 @description('Required. Subscription ID of Connectivity Subscription')
-param connsubscriptionid string
+param connsubid string
 
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string
@@ -58,6 +58,12 @@ param subnets array = []
 @description('Optional. Virtual Network Peerings configurations')
 param virtualNetworkPeerings array = []
 
+@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
+param privateDnsZones array
+
+@description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
+param rgRoleAssignments array = []
+
 // 1. Create Role Assignments for Subscriptions
 module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, i) in subRoleAssignments :{
   name: 'subscription-Rbac-${subscriptionId}-${i}'
@@ -72,7 +78,21 @@ module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.
   }
 }]
 
-// 2. Configure Diagnostics Settings for Subscriptions
+// 2. Create Role Assignments for Subscriptions
+module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, i) in rgRoleAssignments :{
+  name: 'subscription-Rbac-${subscriptionId}-${i}'
+  scope: resourceGroup(roleAssignment.subscriptionId, roleAssignment.resourceGroupName)
+  params: {
+    description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
+    principalIds: roleAssignment.principalIds
+    principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
+    roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
+    subscriptionId: roleAssignment.subscriptionId
+    resourceGroupName: roleAssignment.resourceGroupName
+  }
+}]
+
+// 3. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' = {
   name: 'diagSettings-${subscriptionId}'
   scope: subscription(subscriptionId)
@@ -85,7 +105,7 @@ module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' 
   }
 }
 
-// 3. Create Resoruce Group
+// 4. Create Resoruce Group
 module rg '../../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
   scope: subscription(subscriptionId)
@@ -96,8 +116,8 @@ module rg '../../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
-// 4. Create Spoke Virtual Network(s)
-module lzVnets '../../modules/network/virtualNetworks/deploy.bicep' = {
+// 5. Create Virtual Network
+module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'lzVnets-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, lzRgName)
   dependsOn: [
@@ -118,7 +138,22 @@ module lzVnets '../../modules/network/virtualNetworks/deploy.bicep' = {
   }
 }
 
-// 6. Create Storage Account
+// 6. Update Virtual Network Links on Provate DNS Zones
+module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
+  name: 'vnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
+  scope: resourceGroup(connsubid, priDNSZonesRgName)
+  dependsOn: [
+    lzVnet
+  ]
+  params: {
+    location: 'global'
+    privateDnsZoneName: privateDnsZone
+    virtualNetworkResourceId: lzVnet.outputs.resourceId
+    tags: combinedTags
+  }
+}]
+
+// 7. Create Storage Account
 module sa '../../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -138,13 +173,13 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
   }
 }
 
-// 7. Create Private Endpoint for Storage Account
+// 8. Create Private Endpoint for Storage Account
 module saPe '../../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, lzRgName)
   dependsOn: [
     sa
-    lzVnets
+    lzVnet
   ]
   params: {
     name: '${stgAcctName}-blob-pe'
@@ -157,7 +192,7 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = {
     subnetResourceId: resourceId(subscriptionId, lzRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
-        resourceId(connsubscriptionid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
       ]
     }
   }
