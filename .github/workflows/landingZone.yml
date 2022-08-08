@@ -35,9 +35,10 @@ jobs:
       name: 'Deploy - Landing Zone'
       with:
         inlineScript: |
-          az deployment sub create \
-            --name 'Deploy-Landing-Zone' \
+          az deployment mg create \
+            --name 'Platform-Policy-Definitions' \
             --location ${{ secrets.AZURE_LOCATION }} \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/landingZones/deploy.bicep \
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
