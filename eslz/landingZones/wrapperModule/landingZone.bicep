@@ -195,8 +195,12 @@ var mgmtSubnet = params.parameters.subnets.value[2]
 var mgmgNsg = params.parameters.networkSecurityGroups.value[0].name
 
 module linkNsgToMgmtSubnet '../../modules/network/virtualNetworks/subnets/deploy.bicep' = {
+  name: '${mgmtSubnet.name}'
   scope: resourceGroup(subscriptionId, lzRgName)
-  name: '${vnetName}/${mgmtSubnet.name}'
+  dependsOn: [
+    nsgs
+    lzVnet
+  ]
   params: {
     name: mgmtSubnet.name
     virtualNetworkName: vnetName
