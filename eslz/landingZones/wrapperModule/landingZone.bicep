@@ -55,6 +55,9 @@ param vnetName string
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param vnetAddressPrefixes array
 
+@description('Required. Hub - Network Security Groups Array.')
+param networkSecurityGroups array
+
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
 param subnets array = []
 
@@ -164,7 +167,44 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName    
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}
+
+module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
+  name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(subscriptionId, lzRgName)
+  dependsOn: [
+    rg
+  ]
+  params: {
+    name: nsg.name
+    location: location
+    tags: combinedTags
+    securityRules: nsg.securityRules
+    roleAssignments: nsg.roleAssignments
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}]
+
+var params = json(loadTextContent('../.parameters/parameters.json'))
+var mgmtSubnet = params.parameters.subnets.value[2]
+var mgmgNsg = params.parameters.networkSecurityGroups.value[0].name
+
+module linkNsgToMgmtSubnet '../../modules/network/virtualNetworks/subnets/deploy.bicep' = {
+  scope: resourceGroup(subscriptionId, lzRgName)
+  name: '${vnetName}/${mgmtSubnet.name}'
+  params: {
+    name: mgmtSubnet.name
+    virtualNetworkName: vnetName
+    addressPrefix: mgmtSubnet.addressPrefix
+    serviceEndpoints: mgmtSubnet.serviceEndpoints
+    privateEndpointNetworkPolicies: mgmtSubnet.privateEndpointNetworkPolicies
+    privateLinkServiceNetworkPolicies: mgmtSubnet.privateLinkServiceNetworkPolicies
+    networkSecurityGroupId: resourceId(subscriptionId, lzRgName, 'Microsoft.Network/networkSecurityGroups', mgmgNsg)
   }
 }
 

@@ -139,8 +139,7 @@ param rgRoleAssignments array = []
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
 
-@description('Required. Resource Tags.')
-param tags object
+var tags = json(loadTextContent('lzTags.json'))
 
 @description('Required. Assign utffullvaule to "CreatedOn" tag.')
 param dynamictags object = ({
@@ -185,6 +184,9 @@ param storageaccount_sku string
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string
 
+@description('Required. Hub - Network Security Groups Array.')
+param networkSecurityGroups array
+
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
 
@@ -213,7 +215,7 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 }
 */
 
-// creating resources in the subscription requires an extra level of "nesting" to reference the subscriptionId as a module output and use for a scope
+// Creating resources in the subscription requires an extra level of "nesting" to reference the subscriptionId as a module output and use for a scope
 // The module outputs cannot be used for the scope property so needs to be passed down as a parameter one level
 module landingZone  './wrapperModule/landingZone.bicep' = {
   name: 'landingZone-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
@@ -251,6 +253,7 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     diagnosticEventHubName: diagnosticEventHubName
+    networkSecurityGroups: networkSecurityGroups
   }
 }
 

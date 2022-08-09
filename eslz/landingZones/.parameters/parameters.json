@@ -65,6 +65,34 @@
     "diagSettingName": {
       "value": "centralized-logging-diagSetting"
     },
+    "networkSecurityGroups": {
+      "value": [
+        {
+          "name": "nsg-css-prod-usva-vms",
+          "securityRules": [
+            {
+              "name": "nsg-css-prod-usva-vms",
+              "description": "Controls inboud traffic from Bastion Host",
+              "securityRules": [
+                {
+                  "name": "AllowBastionHostRDPSSH",
+                  "properties": {
+                    "access": "Allow",
+                    "direction": "Inbound",
+                    "priority": 120,
+                    "sourceAddressPrefix": "10.30.0.192/26",
+                    "destinationAddressPrefix": "*",
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "3389,22"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     "vnetName": {
       "value": "vnet-ccs-prod-usva-lz01"
     },
