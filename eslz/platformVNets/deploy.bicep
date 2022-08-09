@@ -273,10 +273,10 @@ module attachNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets
     name: AzureBastionSubnet.name
     virtualNetworkName: hubVnetName
     addressPrefix: AzureBastionSubnet.addressPrefix
-    privateEndpointNetworkPolicies: AzureBastionSubnet.privateEndpointNetworkPolicies
-    privateLinkServiceNetworkPolicies: AzureBastionSubnet.privateLinkServiceNetworkPolicies
     networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)
-    //serviceEndpoints: AzureBastionSubnet.serviceEndpoints   
+    //serviceEndpoints: AzureBastionSubnet.serviceEndpoints
+    //privateEndpointNetworkPolicies: AzureBastionSubnet.privateEndpointNetworkPolicies
+    //privateLinkServiceNetworkPolicies: AzureBastionSubnet.privateLinkServiceNetworkPolicies
   }
 }
 
