@@ -104,7 +104,7 @@ param virtualNetworkPeerings array = []
 param privateDnsZones array
 
 @description('Required. Suffix to be used in resource naming with 4 characters.')
-param suffix string = 'lz01'
+param suffix string
 
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
 param logsLawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
@@ -231,6 +231,7 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     //subscriptionId: subAlias.outputs.subscriptionId
     subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
     connsubid: connsubid
+    suffix: suffix
     vnetRgName: vnetRgName
     priDNSZonesRgName: priDNSZonesRgName
     peSubnetName: peSubnetName

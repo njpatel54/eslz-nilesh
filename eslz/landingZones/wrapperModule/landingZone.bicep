@@ -12,11 +12,19 @@ param connsubid string
 @description('Required. Resource Group name.')
 param vnetRgName string
 
+// Variables created to be used to attach NSG to Management Subnet
+var params = json(loadTextContent('../.parameters/parameters.json'))
+var mgmtSubnet = params.parameters.subnets.value[2]
+var mgmgNsg = params.parameters.networkSecurityGroups.value[0].name
+
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string
 
 @description('Required. Subnet name to be used for Private Endpoint.')
 param peSubnetName string
+
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param suffix string
 
 @description('Name of the resourceGroup, will be created in the same location as the deployment.')
 param lzRgName string
@@ -125,20 +133,7 @@ module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.
   }
 }]
 
-// 3. Configure Diagnostics Settings for Subscriptions
-module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' = {
-  name: 'diagSettings-${subscriptionId}'
-  scope: subscription(subscriptionId)
-  params:{
-    name: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName
-  }
-}
-
-// 4. Create Resoruce Group
+// 3. Create Resoruce Group
 module rg '../../modules/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
   scope: subscription(subscriptionId)
@@ -149,7 +144,7 @@ module rg '../../modules/resourceGroups/deploy.bicep'= {
   }
 }
 
-// 5. Create Virtual Network
+// 4. Create Virtual Network
 module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'lzVnets-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -171,6 +166,7 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   }
 }
 
+// 5. Create Network Security Group(s)
 module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -190,10 +186,7 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
   }
 }]
 
-var params = json(loadTextContent('../.parameters/parameters.json'))
-var mgmtSubnet = params.parameters.subnets.value[2]
-var mgmgNsg = params.parameters.networkSecurityGroups.value[0].name
-
+// 6. Attach NSG to Management Subnet
 module linkNsgToMgmtSubnet '../../modules/network/virtualNetworks/subnets/deploy.bicep' = {
   name: '${mgmtSubnet.name}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -212,7 +205,7 @@ module linkNsgToMgmtSubnet '../../modules/network/virtualNetworks/subnets/deploy
   }
 }
 
-// 6. Update Virtual Network Links on Provate DNS Zones
+// 7. Update Virtual Network Links on Provate DNS Zones
 module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'vnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
@@ -227,7 +220,7 @@ module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/depl
   }
 }]
 
-// 7. Create Storage Account
+// 8. Create Storage Account
 module sa '../../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -247,7 +240,7 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
   }
 }
 
-// 8. Create Private Endpoint for Storage Account
+// 9. Create Private Endpoint for Storage Account
 module saPe '../../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -272,7 +265,7 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 9. Create Log Analytics Workspace
+// 10. Create Log Analytics Workspace
 module loga '../../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -289,7 +282,7 @@ module loga '../../modules/operationalInsights/workspaces/deploy.bicep' = {
   }
 }
 
-// 10. Add Log Analytics Workspace to Azure Monitor Private Link Scope (AMPLS)
+// 11. Add Log Analytics Workspace to Azure Monitor Private Link Scope (AMPLS)
 module amplssr '../../modules//insights//privateLinkScopes/scopedResources/deploy.bicep' = {
   name: 'amplssr-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(connsubid, vnetRgName)
@@ -303,7 +296,7 @@ module amplssr '../../modules//insights//privateLinkScopes/scopedResources/deplo
   }
 }
 
-// 11. Create Azure Key Vault
+// 12. Create Azure Key Vault
 module akv '../../modules//keyVault/vaults/deploy.bicep' = {
   name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -319,7 +312,7 @@ module akv '../../modules//keyVault/vaults/deploy.bicep' = {
     }
 }
 
-// 12. Create Private Endpoint for Key Vault
+// 13. Create Private Endpoint for Key Vault
 module akvPe '../../modules//network//privateEndpoints/deploy.bicep' = {
   name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(subscriptionId, lzRgName)
@@ -344,6 +337,18 @@ module akvPe '../../modules//network//privateEndpoints/deploy.bicep' = {
   }
 }
 
+// 14. Configure Diagnostics Settings for Subscriptions
+module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' = {
+  name: 'diagSettings-${subscriptionId}'
+  scope: subscription(subscriptionId)
+  params:{
+    name: '${diagSettingName}-${suffix}'
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}
 
 @description('Output - Resoruce Group Name')
 output rgName string = rg.outputs.name

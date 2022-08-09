@@ -23,6 +23,9 @@
     "subscriptionOwnerId": {
       "value": ""
     },
+    "suffix": {
+      "value": "lz01"
+    },
     "subRoleAssignments": {
       "value": [
         {
