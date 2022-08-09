@@ -71,7 +71,7 @@
           "name": "nsg-css-prod-usva-vms",
           "securityRules": [
             {
-              "name": "nsg-css-prod-usva-vms",
+              "name": "AllowInboundBastionHostTraffic",
               "description": "Controls inboud traffic from Bastion Host",
               "securityRules": [
                 {
