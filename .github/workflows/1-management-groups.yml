@@ -69,7 +69,8 @@ jobs:
             --location ${{ secrets.AZURE_LOCATION }} \
             --template-file ./eslz/managementGroups/deploy.bicep \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         tenantid=${{ secrets.AZURE_TENANTID }}
 
 
   # "preview" job ---> will verify what exactly will be created, updated, and deleted. 
@@ -99,7 +100,8 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/managementGroups/deploy.bicep \
               --parameters ./eslz/managementGroups/.parameters/parameters.json \
-              --parameters location=${{ secrets.AZURE_LOCATION }}
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           tenantid=${{ secrets.AZURE_TENANTID }}
 
   
   # "deploy" job ---> deploys resoruces/configuration defined in Bicep/Paramters files  
@@ -129,4 +131,5 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --template-file ./eslz/managementGroups/deploy.bicep \
               --parameters ./eslz/managementGroups/.parameters/parameters.json \
-              --parameters location=${{ secrets.AZURE_LOCATION }}
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           tenantid=${{ secrets.AZURE_TENANTID }}
