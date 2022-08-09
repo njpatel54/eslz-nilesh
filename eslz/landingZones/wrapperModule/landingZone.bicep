@@ -182,11 +182,11 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
     location: location
     tags: combinedTags
     securityRules: nsg.securityRules
-    roleAssignments: nsg.roleAssignments
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
+    //roleAssignments: nsg.roleAssignments
   }
 }]
 
