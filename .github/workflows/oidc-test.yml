@@ -28,12 +28,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploying Management Groups'
+      name: 'Azure Cli - List Subscriptions'
       with:
         inlineScript: |
-          az deployment tenant create \
-            --name 'Deploy-Platform-Management-Groups' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/managementGroups/deploy.bicep \
-            --parameters ./eslz/managementGroups/.parameters/parameters.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }}
+          az account list -o table
