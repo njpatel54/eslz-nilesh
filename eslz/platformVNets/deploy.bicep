@@ -280,7 +280,7 @@ module attachNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets
   }
 }
 
-// 4. Create Spoke Resoruce Group(s)
+// 5. Create Spoke Resoruce Group(s)
 module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(vNet.subscriptionId)
@@ -291,7 +291,7 @@ module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in 
   }
 }]
 
-// 5. Create Spoke Virtual Network(s)
+// 6. Create Spoke Virtual Network(s)
 module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   scope: resourceGroup(vNet.subscriptionId, vnetRgName)
@@ -314,7 +314,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
   }
 }]
 
-// 6. Create Public IP Address for Azure Firewall
+// 7. Create Public IP Address for Azure Firewall
 module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${firewallPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -335,7 +335,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// 7. Create Fireall Policy and Firewall Policy Rule Collection Groups
+// 8. Create Fireall Policy and Firewall Policy Rule Collection Groups
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -354,7 +354,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
   }
 }
 
-// 8. Create Firewall
+// 9. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -386,7 +386,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   }
 }
 
-// 9. Create Public IP Address for Azure Bastion Host
+// 10. Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -407,7 +407,7 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// 10. Create Azure Bastion Host
+// 11. Create Azure Bastion Host
 module bas '../modules/network/bastionHosts/deploy.bicep' = {
   name: 'bas-${take(uniqueString(deployment().name, location), 4)}-${bastionHostName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -432,7 +432,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
   }
 }
 
-// 11. Create Resource Group for Private DNS Zones
+// 12. Create Resource Group for Private DNS Zones
 module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
   name: 'priDNSZonesRg-${take(uniqueString(deployment().name, location), 4)}-${priDNSZonesRgName}'
   scope: subscription(hubVnetSubscriptionId)
@@ -443,7 +443,7 @@ module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
   }
 }
 
-// 12. Create Private DNS Zones
+// 13. Create Private DNS Zones
 module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'priDNSZones-${privateDnsZone}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -463,13 +463,13 @@ module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
-// 13. Retrieve an existing Storage Account resource
+// 14. Retrieve an existing Storage Account resource
 resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: stgAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 14. Create Private Endpoint for Storage Account
+// 15. Create Private Endpoint for Storage Account
 module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -495,13 +495,13 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 15. Retrieve an existing Automation Account resource
+// 16. Retrieve an existing Automation Account resource
 resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
   name: automationAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 16. Create Private Endpoint for Automation Account
+// 17. Create Private Endpoint for Automation Account
 module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -527,7 +527,7 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
   }
 }]
 
-// 17. Create Azure Monitor Private Link Scope
+// 18. Create Azure Monitor Private Link Scope
 // An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   name: 'ampls-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
@@ -559,7 +559,7 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   }
 }
 
-// 18. Create Private Endpoint for Azure Monitor Private Link Scope
+// 19. Create Private Endpoint for Azure Monitor Private Link Scope
 module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'amplsPe-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)

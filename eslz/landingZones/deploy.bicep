@@ -200,7 +200,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 param diagnosticEventHubName string = ''
 
 /*
-// Create the Subscription
+// 1. Create the Subscription
 module subAlias '../modules/subscription/alias/deploy.bicep' = {
   name: 'subAlias-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
@@ -215,6 +215,7 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 }
 */
 
+// 2. Deploy Landing Zone using Wraper Module
 // Creating resources in the subscription requires an extra level of "nesting" to reference the subscriptionId as a module output and use for a scope
 // The module outputs cannot be used for the scope property so needs to be passed down as a parameter one level
 module landingZone  './wrapperModule/landingZone.bicep' = {
