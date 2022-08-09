@@ -341,6 +341,10 @@ module akvPe '../../modules//network//privateEndpoints/deploy.bicep' = {
 module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' = {
   name: 'diagSettings-${subscriptionId}'
   scope: subscription(subscriptionId)
+  dependsOn: [
+    sa
+    loga
+  ]
   params:{
     name: '${diagSettingName}-${suffix}'
     diagnosticStorageAccountId: sa.outputs.resourceId
