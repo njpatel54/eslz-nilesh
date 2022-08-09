@@ -89,6 +89,14 @@
                 }
               ]
             }
+          ],
+          "roleAssignments": [
+              {
+                  "roleDefinitionIdOrName": "",
+                  "principalIds": [
+                      ""
+                  ]
+              }
           ]
         }
       ]
