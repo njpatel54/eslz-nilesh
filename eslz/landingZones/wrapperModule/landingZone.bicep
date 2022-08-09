@@ -12,10 +12,15 @@ param connsubid string
 @description('Required. Resource Group name.')
 param vnetRgName string
 
-// Variables created to be used to attach NSG to Management Subnet
+// Start - Variables created to be used to attach NSG to Management Subnet
 var params = json(loadTextContent('../.parameters/parameters.json'))
+
+@description('Required. Iterate over each "hubVnetSubnets" and build variable to store Managemet Subnet.')
 var mgmtSubnet = params.parameters.subnets.value[2]
+
+@description('Required. Iterate over each "networkSecurityGroups" and build variable to store NSG for Managemet Subnet.')
 var mgmgNsg = params.parameters.networkSecurityGroups.value[0].name
+// End - Variables created to be used to attach NSG to Management Subnet
 
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string

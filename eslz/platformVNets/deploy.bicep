@@ -140,17 +140,26 @@ param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 param privateDnsZones array
 
 @description('Required. Load content from json file to iterate over virtual networks in "hubVnet" and "spokeVnets"')
-var vNets = json(loadTextContent('.parameters/parameters.json'))
+var params = json(loadTextContent('.parameters/parameters.json'))
 
-// Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
+// Start - Variables created to be used to attach NSG to AzureBastionSubnet
+@description('Required. Iterate over each "hubVnetSubnets" and build variable to store "AzureBastionSubnet".')
+var AzureBastionSubnet = params.parameters.hubVnetSubnets.value[3]
+
+@description('Required. Iterate over each "hubNetworkSecurityGroups" and build variable to store NSG for "AzureBastionSubnet".')
+var bastionNsg = params.parameters.hubNetworkSecurityGroups.value[0].name
+// End - Variables created to be used to attach NSG to AzureBastionSubnet
+
+// Start - Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
-var spokeVNetsResourceIds = [for vNet in vNets.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+var spokeVNetsResourceIds = [for vNet in params.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
 @description('Required. Build "resourceId" of Hub Virtual Network using "hubVnetSubscriptionId", "vnetRgName" and "hubVnetName".')
-var hubVNetResourceId = [ resourceId(vNets.parameters.hubVnetSubscriptionId.value, vnetRgName, 'Microsoft.Network/virtualNetworks', vNets.parameters.hubVnetName.value) ]
+var hubVNetResourceId = [ resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', params.parameters.hubVnetName.value) ]
 
 @description('Required. Combine two varibales using "union" function - This will be input for "virtualNetworkLinks" configuration for each Private DNS Zones.')
 var vNetResourceIds = union(hubVNetResourceId, spokeVNetsResourceIds)
+// End - Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
 
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
@@ -249,6 +258,25 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
+  }
+}
+
+// 4. Attach NSG to AzureBastionSubnet
+module linkNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets/deploy.bicep' = {
+  name: '${AzureBastionSubnet.name}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubNsgs
+    hubVnet
+  ]
+  params: {
+    name: AzureBastionSubnet.name
+    virtualNetworkName: hubVnetName
+    addressPrefix: AzureBastionSubnet.addressPrefix
+    serviceEndpoints: AzureBastionSubnet.serviceEndpoints
+    privateEndpointNetworkPolicies: AzureBastionSubnet.privateEndpointNetworkPolicies
+    privateLinkServiceNetworkPolicies: AzureBastionSubnet.privateLinkServiceNetworkPolicies
+    networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)    
   }
 }
 
@@ -407,7 +435,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
 // 11. Create Resource Group for Private DNS Zones
 module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
   name: 'priDNSZonesRg-${take(uniqueString(deployment().name, location), 4)}-${priDNSZonesRgName}'
-  scope: subscription(vNets.parameters.hubVnetSubscriptionId.value)
+  scope: subscription(hubVnetSubscriptionId)
   params: {
     name: priDNSZonesRgName
     location: location
@@ -418,7 +446,7 @@ module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
 // 12. Create Private DNS Zones
 module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'priDNSZones-${privateDnsZone}'
-  scope: resourceGroup(vNets.parameters.hubVnetSubscriptionId.value, priDNSZonesRgName)
+  scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
   dependsOn: [
     priDNSZonesRg
     hubVnet

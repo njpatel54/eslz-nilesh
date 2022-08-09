@@ -48,6 +48,7 @@ jobs:
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
@@ -81,6 +82,7 @@ jobs:
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
@@ -115,6 +117,7 @@ jobs:
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
