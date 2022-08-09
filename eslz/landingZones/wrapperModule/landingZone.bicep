@@ -208,7 +208,7 @@ module linkNsgToMgmtSubnet '../../modules/network/virtualNetworks/subnets/deploy
     serviceEndpoints: mgmtSubnet.serviceEndpoints
     privateEndpointNetworkPolicies: mgmtSubnet.privateEndpointNetworkPolicies
     privateLinkServiceNetworkPolicies: mgmtSubnet.privateLinkServiceNetworkPolicies
-    networkSecurityGroupId: resourceId(subscriptionId, lzRgName, 'Microsoft.Network/networkSecurityGroups', mgmgNsg)
+    networkSecurityGroupId: resourceId(subscriptionId, lzRgName, 'Microsoft.Network/networkSecurityGroups', mgmgNsg)    
   }
 }
 
