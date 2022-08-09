@@ -147,7 +147,7 @@ param dynamictags object = ({
 })
 
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-var combinedTags = union(dynamictags, tags)
+var combinedTags = union(dynamictags, tags.lzTags.value)
 
 @description('Required. Project Owner (projowner) parameter.')
 @allowed([
