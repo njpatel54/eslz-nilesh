@@ -192,8 +192,8 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 }]
 
 // 6. Attach NSG to Management Subnet
-module linkNsgToMgmtSubnet '../../modules/network/virtualNetworks/subnets/deploy.bicep' = {
-  name: '${mgmtSubnet.name}'
+module attachNsgToMgmtSubnet '../../modules/network/virtualNetworks/subnets/deploy.bicep' = {
+  name: 'attachNsgToMgmtSubnet-${mgmtSubnet.name}'
   scope: resourceGroup(subscriptionId, lzRgName)
   dependsOn: [
     nsgs

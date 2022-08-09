@@ -262,8 +262,8 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
 }
 
 // 4. Attach NSG to AzureBastionSubnet
-module linkNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets/deploy.bicep' = {
-  name: '${AzureBastionSubnet.name}'
+module attachNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets/deploy.bicep' = {
+  name: 'attachNsgToAzureBastionSubnet-${AzureBastionSubnet.name}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubNsgs
@@ -273,10 +273,10 @@ module linkNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets/d
     name: AzureBastionSubnet.name
     virtualNetworkName: hubVnetName
     addressPrefix: AzureBastionSubnet.addressPrefix
-    serviceEndpoints: AzureBastionSubnet.serviceEndpoints
     privateEndpointNetworkPolicies: AzureBastionSubnet.privateEndpointNetworkPolicies
     privateLinkServiceNetworkPolicies: AzureBastionSubnet.privateLinkServiceNetworkPolicies
-    networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)    
+    networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)
+    //serviceEndpoints: AzureBastionSubnet.serviceEndpoints   
   }
 }
 
