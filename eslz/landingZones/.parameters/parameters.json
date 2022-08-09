@@ -73,25 +73,28 @@
             {
               "name": "AllowInboundBastionHostTraffic",
               "description": "Controls inboud traffic from Bastion Host",
-               "properties": {
-                    "access": "Allow",
-                    "direction": "Inbound",
-                    "priority": 120,
-                    "sourceAddressPrefix": "10.30.0.192/26",
-                    "destinationAddressPrefix": "*",
-                    "protocol": "Tcp",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "3389,22"
-                  }
-                }
+              "properties": {
+                "access": "Allow",
+                "direction": "Inbound",
+                "priority": 120,
+                "sourceAddressPrefix": "10.30.0.192/26",
+                "destinationAddressPrefix": "*",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRanges": [
+                  "3389",
+                  "22"
+                ]
+              }
+            }
           ],
           "roleAssignments": [
-              {
-                  "roleDefinitionIdOrName": "",
-                  "principalIds": [
-                      ""
-                  ]
-              }
+            {
+              "roleDefinitionIdOrName": "",
+              "principalIds": [
+                ""
+              ]
+            }
           ]
         }
       ]
