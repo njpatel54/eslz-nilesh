@@ -251,7 +251,7 @@
         {
           "name": "sqldb-ccs-prod-usva-lz01",
           "collation": "SQL_Latin1_General_CP1_CI_AS",
-          "skuTier": "BusinessCritical",
+          "skuTier": "GeneralPurpose",
           "skuName": "GP_Gen5",
           "skuCapacity": 2,
           "skuFamily": "Gen5",
