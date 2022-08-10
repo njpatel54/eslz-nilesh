@@ -384,6 +384,10 @@ param sqlAdministratorLogin string
 @secure()
 param sqlAdministratorLoginPassword string
 
+resource akvtest 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: akvName
+  scope: resourceGroup(subscriptionId, lzRgName)
+}
 
 // 15. Create Azure SQL Server & Database
 module sql '../../modules/sql/servers/deploy.bicep' = {
@@ -395,8 +399,8 @@ module sql '../../modules/sql/servers/deploy.bicep' = {
   params: {
     name: sqlServerName
     location: location
-    administratorLogin: resourceId(subscriptionId, lzRgName, 'Microsoft.KeyVault/vaults/secrets', akvName, sqlAdministratorLogin)
-    administratorLoginPassword: resourceId(subscriptionId, lzRgName, 'Microsoft.KeyVault/vaults/secrets', akvName, sqlAdministratorLoginPassword)
+    administratorLogin: akvtest.getSecret(sqlAdministratorLogin)
+    administratorLoginPassword: akvtest.getSecret(sqlAdministratorLoginPassword) 
     administrators: {
       administratorType: administrators.administratorType
       azureADOnlyAuthentication: administrators.azureADOnlyAuthentication

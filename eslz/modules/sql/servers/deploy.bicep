@@ -1,4 +1,5 @@
 @description('Conditional. The administrator username for the server. Required if no `administrators` object for AAD authentication is provided.')
+@secure()
 param administratorLogin string = ''
 
 @description('Conditional. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
