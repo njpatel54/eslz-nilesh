@@ -223,14 +223,12 @@
       "value": "Disabled"
     },
     "networkAcls": {
-      "value": [
-        {
-          "bypass": "AzureServices",
-          "defaultAction": "Deny",
-          "ipRules": [],
-          "virtualNetworkRules": []
-        }
-      ]
+      "value": {
+        "bypass": "AzureServices",
+        "defaultAction": "Deny",
+        "ipRules": [],
+        "virtualNetworkRules": []
+      }
     },
     "sqlAdministratorLogin": {
       "value": "sqlAdministratorLogin"
