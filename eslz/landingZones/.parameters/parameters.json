@@ -238,6 +238,18 @@
     "sqlAdministratorLoginPassword": {
       "value": "sqlAdministratorLoginPassword"
     },
+    "administrators": {
+      "value": [
+        {
+          "administratorType": "ActiveDirectory",
+          "azureADOnlyAuthentication": "false",
+          "login": "IRAD01 SQL Server Admins",
+          "principalType": "Group",
+          "sid": "8c482db7-2379-405d-b681-e205b2d9f945",
+          "tenantId": "624e5a3d-aa66-4393-9eba-9fb802780e70"
+        }
+      ]
+    },
     "projowner": {
       "value": "ccs"
     },
