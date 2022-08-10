@@ -137,7 +137,7 @@ param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suff
 param sqlServerName string = 'sql-${projowner}-${opscope}-${region}-${suffix}'
 param sqlDbName string = 'sqldb-${projowner}-${opscope}-${region}-${suffix}'
 param administrators object
-
+param databases array = []
 @secure()
 param sqlAdministratorLogin string
 
@@ -279,6 +279,7 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
     administrators: administrators
     sqlDbName: sqlDbName
+    databases: databases
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticStorageAccountId: diagnosticStorageAccountId
