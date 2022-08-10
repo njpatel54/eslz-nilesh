@@ -378,6 +378,11 @@ param administrators object
 
 param sqlDbName string
 
+@description('Optional. The databases to create in the server.')
+param databases array = []
+
+
+
 @secure()
 param sqlAdministratorLogin string
 
@@ -399,6 +404,7 @@ module sql '../../modules/sql/servers/deploy.bicep' = {
   params: {
     name: sqlServerName
     location: location
+    tags: combinedTags
     administratorLogin: akvtest.getSecret(sqlAdministratorLogin)
     administratorLoginPassword: akvtest.getSecret(sqlAdministratorLoginPassword) 
     administrators: {
@@ -412,6 +418,29 @@ module sql '../../modules/sql/servers/deploy.bicep' = {
     systemAssignedIdentity: true    
   }
 }
+
+module sqldb '../../modules//sql/servers//databases/deploy.bicep' = [for database in databases: {
+  name: 'sqldb-${take(uniqueString(deployment().name, location), 4)}-${database.name}'
+  scope: resourceGroup(subscriptionId, lzRgName)
+  params: {
+    name: database.name
+    serverName: sqlServerName
+    location: location
+    tags: combinedTags
+    skuTier: database.skuTier
+    skuName: database.skuName
+    skuCapacity: database.skuCapacity
+    skuFamily: database.skuFamily
+    maxSizeBytes: database.maxSizeBytes
+    licenseType: database.licenseType
+    diagnosticSettingsName: '${diagSettingName}-${database.name}'
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName    
+  }
+}]
+
 
 @description('Output - Resoruce Group Name')
 output rgName string = rg.outputs.name
