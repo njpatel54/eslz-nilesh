@@ -397,7 +397,14 @@ module sql '../../modules/sql/servers/deploy.bicep' = {
     location: location
     administratorLogin: resourceId(subscriptionId, lzRgName, 'Microsoft.KeyVault/vaults/secrets', akvName, sqlAdministratorLogin)
     administratorLoginPassword: resourceId(subscriptionId, lzRgName, 'Microsoft.KeyVault/vaults/secrets', akvName, sqlAdministratorLoginPassword)
-    administrators: administrators
+    administrators: {
+      administratorType: 'ActiveDirectory'
+      azureADOnlyAuthentication: administrators.azureADOnlyAuthentication
+      login: administrators.login
+      principalType: administrators.principalType
+      sid: administrators.sid
+      tenantId: administrators.tenantId
+    }
     systemAssignedIdentity: true    
   }
 }
