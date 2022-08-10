@@ -373,19 +373,12 @@ module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' 
 
 
 param sqlServerName string
-
 param administrators object
-
 param sqlDbName string
-
 @description('Optional. The databases to create in the server.')
 param databases array = []
-
-
-
 @secure()
 param sqlAdministratorLogin string
-
 @secure()
 param sqlAdministratorLoginPassword string
 
