@@ -113,10 +113,18 @@ param logsLawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
 param logaGallerySolutions array = []
 
 @description('Optional. The network access type for accessing Log Analytics ingestion.')
-param publicNetworkAccessForIngestion string = ''
+@allowed([
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccessForIngestion string
 
 @description('Optional. The network access type for accessing Log Analytics query.')
-param publicNetworkAccessForQuery string = ''
+@allowed([
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccessForQuery string
 
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
@@ -125,6 +133,18 @@ param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
 
+
+param sqlServerName string = 'sql-${projowner}-${opscope}-${region}-${suffix}'
+param sqlDbName string = 'sqldb-${projowner}-${opscope}-${region}-${suffix}'
+param administrators object
+
+@secure()
+param sqlAdministratorLogin string
+
+@secure()
+param sqlAdministratorLoginPassword string
+
+
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 @allowed([
   ''
@@ -132,6 +152,9 @@ param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suff
   'Disabled'
 ])
 param publicNetworkAccess string = 'Disabled'
+
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param networkAcls object
 
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
@@ -250,6 +273,12 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     amplsName: amplsName
     akvName: akvName
     publicNetworkAccess: publicNetworkAccess
+    networkAcls: networkAcls
+    sqlServerName: sqlServerName
+    sqlAdministratorLogin: sqlAdministratorLogin
+    sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
+    administrators: administrators
+    sqlDbName: sqlDbName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticStorageAccountId: diagnosticStorageAccountId

@@ -230,10 +230,19 @@
                             "addressPrefix": "10.30.8.0/24",
                             "serviceEndpoints": [
                                 {
+                                    "service": "Microsoft.EventHub"
+                                },
+                                {
+                                    "service": "Microsoft.KeyVault"
+                                },
+                                {
                                     "service": "Microsoft.Storage"
                                 },
                                 {
                                     "service": "Microsoft.Sql"
+                                },
+                                {
+                                    "service": "Microsoft.Web"
                                 }
                             ],
                             "privateEndpointNetworkPolicies": "Disabled",
@@ -244,10 +253,19 @@
                             "addressPrefix": "10.30.9.0/24",
                             "serviceEndpoints": [
                                 {
+                                    "service": "Microsoft.EventHub"
+                                },
+                                {
+                                    "service": "Microsoft.KeyVault"
+                                },
+                                {
                                     "service": "Microsoft.Storage"
                                 },
                                 {
                                     "service": "Microsoft.Sql"
+                                },
+                                {
+                                    "service": "Microsoft.Web"
                                 }
                             ],
                             "privateEndpointNetworkPolicies": "Disabled",
@@ -258,10 +276,19 @@
                             "addressPrefix": "10.30.10.0/24",
                             "serviceEndpoints": [
                                 {
+                                    "service": "Microsoft.EventHub"
+                                },
+                                {
+                                    "service": "Microsoft.KeyVault"
+                                },
+                                {
                                     "service": "Microsoft.Storage"
                                 },
                                 {
                                     "service": "Microsoft.Sql"
+                                },
+                                {
+                                    "service": "Microsoft.Web"
                                 }
                             ],
                             "privateEndpointNetworkPolicies": "Disabled",
@@ -272,10 +299,19 @@
                             "addressPrefix": "10.30.11.0/24",
                             "serviceEndpoints": [
                                 {
+                                    "service": "Microsoft.EventHub"
+                                },
+                                {
+                                    "service": "Microsoft.KeyVault"
+                                },
+                                {
                                     "service": "Microsoft.Storage"
                                 },
                                 {
                                     "service": "Microsoft.Sql"
+                                },
+                                {
+                                    "service": "Microsoft.Web"
                                 }
                             ],
                             "privateEndpointNetworkPolicies": "Disabled",

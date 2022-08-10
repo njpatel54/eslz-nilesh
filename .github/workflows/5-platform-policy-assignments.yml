@@ -44,11 +44,11 @@ jobs:
           az deployment mg validate \
             --name 'Platform-Policy-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/policy/policy.assignment.bicep \
             --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
             --parameters ./eslz/policy/.parameters/sub.policy.assignment.parameters.json \
-            --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }}
+            --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json
 
   preview:
       runs-on: ubuntu-latest
@@ -73,11 +73,11 @@ jobs:
             az deployment mg what-if \
               --name 'Platform-Policy-Assignments' \
               --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/policy/policy.assignment.bicep \
               --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
               --parameters ./eslz/policy/.parameters/sub.policy.assignment.parameters.json \
-              --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }}
+              --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json
 
   deploy:
     runs-on: ubuntu-latest
@@ -103,8 +103,8 @@ jobs:
           az deployment mg create \
             --name 'Platform-Policy-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/policy/policy.assignment.bicep \
             --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
             --parameters ./eslz/policy/.parameters/sub.policy.assignment.parameters.json \
-            --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }}
+            --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json

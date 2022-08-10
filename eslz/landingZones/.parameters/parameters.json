@@ -110,10 +110,19 @@
           "addressPrefix": "10.30.64.0/26",
           "serviceEndpoints": [
             {
+              "service": "Microsoft.EventHub"
+            },
+            {
+              "service": "Microsoft.KeyVault"
+            },
+            {
               "service": "Microsoft.Storage"
             },
             {
               "service": "Microsoft.Sql"
+            },
+            {
+              "service": "Microsoft.Web"
             }
           ],
           "privateEndpointNetworkPolicies": "Disabled",
@@ -124,10 +133,19 @@
           "addressPrefix": "10.30.64.64/26",
           "serviceEndpoints": [
             {
+              "service": "Microsoft.EventHub"
+            },
+            {
+              "service": "Microsoft.KeyVault"
+            },
+            {
               "service": "Microsoft.Storage"
             },
             {
               "service": "Microsoft.Sql"
+            },
+            {
+              "service": "Microsoft.Web"
             }
           ],
           "privateEndpointNetworkPolicies": "Disabled",
@@ -138,10 +156,19 @@
           "addressPrefix": "10.30.64.128/26",
           "serviceEndpoints": [
             {
+              "service": "Microsoft.EventHub"
+            },
+            {
+              "service": "Microsoft.KeyVault"
+            },
+            {
               "service": "Microsoft.Storage"
             },
             {
               "service": "Microsoft.Sql"
+            },
+            {
+              "service": "Microsoft.Web"
             }
           ],
           "privateEndpointNetworkPolicies": "Disabled",
@@ -152,10 +179,19 @@
           "addressPrefix": "10.30.64.192/26",
           "serviceEndpoints": [
             {
+              "service": "Microsoft.EventHub"
+            },
+            {
+              "service": "Microsoft.KeyVault"
+            },
+            {
               "service": "Microsoft.Storage"
             },
             {
               "service": "Microsoft.Sql"
+            },
+            {
+              "service": "Microsoft.Web"
             }
           ],
           "privateEndpointNetworkPolicies": "Disabled",
@@ -185,6 +221,22 @@
     },
     "publicNetworkAccessForQuery": {
       "value": "Disabled"
+    },
+    "networkAcls": {
+      "value": [
+        {
+          "bypass": "AzureServices",
+          "defaultAction": "Deny",
+          "ipRules": [],
+          "virtualNetworkRules": []
+        }
+      ]
+    },
+    "sqlAdministratorLogin": {
+      "value": "sqlAdministratorLogin"
+    },
+    "sqlAdministratorLoginPassword": {
+      "value": "sqlAdministratorLoginPassword"
     },
     "projowner": {
       "value": "ccs"

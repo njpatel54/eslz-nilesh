@@ -1,4 +1,4 @@
-name: test
+name: update virtual network links
 
 on:
   #push:
@@ -38,8 +38,5 @@ jobs:
           az deployment sub create \
             --name 'Update-Virtual-Network-Links' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/platformVNets/test.bicep \
-            --parameters ./eslz/platformVNets/.parameters/test.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+            --template-file ./eslz/test/test.bicep \
+            --parameters ./eslz/test/test.json

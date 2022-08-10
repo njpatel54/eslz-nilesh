@@ -87,10 +87,18 @@ param logsLawName string
 param logaGallerySolutions array = []
 
 @description('Optional. The network access type for accessing Log Analytics ingestion.')
-param publicNetworkAccessForIngestion string = ''
+@allowed([
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccessForIngestion string
 
 @description('Optional. The network access type for accessing Log Analytics query.')
-param publicNetworkAccessForQuery string = ''
+@allowed([
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccessForQuery string
 
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string
@@ -107,12 +115,15 @@ param akvName string
 ])
 param publicNetworkAccess string = ''
 
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param networkAcls object
+
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
 
 // 1. Create Role Assignments for Subscriptions
 module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, i) in subRoleAssignments :{
-  name: 'subscription-Rbac-${subscriptionId}-${i}'
+  name: 'subRbac-${subscriptionId}-${i}'
   scope: subscription(subscriptionId)
   params: {
     location: location
@@ -124,9 +135,20 @@ module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.
   }
 }]
 
-// 2. Create Role Assignments for Subscriptions
+// 2. Create Resoruce Group
+module rg '../../modules/resourceGroups/deploy.bicep'= {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
+  scope: subscription(subscriptionId)
+  params: {
+    name: lzRgName
+    location: location
+    tags: combinedTags
+  }
+}
+
+// 3. Create Role Assignments for Subscriptions
 module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, i) in rgRoleAssignments :{
-  name: 'subscription-Rbac-${subscriptionId}-${i}'
+  name: 'rgRbac-${roleAssignment.resourceGroupName}-${i}'
   scope: resourceGroup(roleAssignment.subscriptionId, roleAssignment.resourceGroupName)
   params: {
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
@@ -137,17 +159,6 @@ module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.
     resourceGroupName: roleAssignment.resourceGroupName
   }
 }]
-
-// 3. Create Resoruce Group
-module rg '../../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
-  scope: subscription(subscriptionId)
-  params: {
-    name: lzRgName
-    location: location
-    tags: combinedTags
-  }
-}
 
 // 4. Create Virtual Network
 module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
@@ -314,6 +325,7 @@ module akv '../../modules//keyVault/vaults/deploy.bicep' = {
       tags: combinedTags
       vaultSku: 'premium'
       publicNetworkAccess: publicNetworkAccess
+      networkAcls: networkAcls
     }
 }
 
@@ -356,6 +368,37 @@ module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' 
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
+  }
+}
+
+
+param sqlServerName string
+
+param administrators object
+
+param sqlDbName string
+
+@secure()
+param sqlAdministratorLogin string
+
+@secure()
+param sqlAdministratorLoginPassword string
+
+
+// 15. Create Azure SQL Server & Database
+module sql '../../modules/sql/servers/deploy.bicep' = {
+  name: 'sql-${take(uniqueString(deployment().name, location), 4)}-${sqlServerName}'
+  scope: resourceGroup(subscriptionId, lzRgName)
+  dependsOn: [
+    akvPe
+  ]
+  params: {
+    name: sqlServerName
+    location: location
+    administratorLogin: resourceId(subscriptionId, lzRgName, 'Microsoft.KeyVault/vaults/secrets', akvName, sqlAdministratorLogin)
+    administratorLoginPassword: resourceId(subscriptionId, lzRgName, 'Microsoft.KeyVault/vaults/secrets', akvName, sqlAdministratorLoginPassword)
+    administrators: administrators
+    systemAssignedIdentity: true    
   }
 }
 
