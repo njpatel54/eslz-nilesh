@@ -264,6 +264,7 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'rgs-${take(uniqueString(deployment().name, location), 4)}'
+  scope: subscription('df3b1809-17d0-47a0-9241-d2724780bdac')
   params: {
     subRoleAssignments: subRoleAssignments
     subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
