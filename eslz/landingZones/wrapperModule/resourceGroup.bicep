@@ -12,7 +12,7 @@ param location string
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
 param combinedTags object
 
-@description('Contains the resourceGroup names, will be created in the same location as the deployment.')
+@description('Contains the resourceGroup names.')
 param resourceGroups array
 
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
@@ -42,11 +42,14 @@ module rg '../../modules/resourceGroups/deploy.bicep'= [ for (resourceGroup, ind
     tags: combinedTags
   }
 }]
-
+/*
 // 3. Create Role Assignments for Resoruce Group
 module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, index) in rgRoleAssignments :{
   name: 'rgRbac-${roleAssignment.resourceGroupName}-${index}'
   scope: resourceGroup(roleAssignment.subscriptionId, roleAssignment.resourceGroupName)
+  dependsOn: [
+    rg
+  ]
   params: {
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
     principalIds: roleAssignment.principalIds
@@ -56,15 +59,13 @@ module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.
     resourceGroupName: roleAssignment.resourceGroupName
   }
 }]
-
+*/
 @description('Output - Resource Group "name" Array')
-output rgNames array = [ for (resourceGroup, index) in resourceGroups :{
-  wlRgName: rg[0].outputs.name
-  vnetRgName: rg[1].outputs.name
+output name array = [ for (resourceGroup, index) in resourceGroups :{
+  resourceId: rg[index].outputs.resourceId
 }]
 
 @description('Output - Resource Group "resoruceId" Array')
-output rgResourceIds array = [ for (resourceGroup, index) in resourceGroups :{
-  wlRgResourceId: rg[0].outputs.resourceId
-  vnetRgResourceId: rg[1].outputs.resourceId
+output resoruceId array = [ for (resourceGroup, index) in resourceGroups :{
+  resourceId: rg[index].outputs.resourceId
 }]

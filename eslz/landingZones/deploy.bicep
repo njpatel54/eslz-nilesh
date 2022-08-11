@@ -103,7 +103,7 @@ param rgRoleAssignments array = []
 @description('Required. Resource Group name for Virtual Network.')
 param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
-@description('Contains the resourceGroup names, will be created in the same location as the deployment.')
+@description('Contains the resourceGroup names.')
 param resourceGroups array = [
   wlRgName
   vnetRgName
