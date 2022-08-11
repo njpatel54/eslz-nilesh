@@ -275,7 +275,7 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
 }
 
 module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
-  name: 'virtulNetwork-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'virtulNetwork-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup('df3b1809-17d0-47a0-9241-d2724780bdac', vnetRgName)
   dependsOn: [
     rgs
