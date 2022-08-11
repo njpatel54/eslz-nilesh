@@ -81,7 +81,7 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGro
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}-${stgGroupId}'
   scope: resourceGroup(subscriptionId, wlRgName)
   params: {
-    name: '${stgAcctName}-blob-pe'
+    name: '${stgAcctName}-${stgGroupId}-pe'
     location: location
     tags: combinedTags
     serviceResourceId: sa.outputs.resourceId

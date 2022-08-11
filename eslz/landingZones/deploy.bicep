@@ -47,7 +47,7 @@ targetScope =  'managementGroup'
 param location string
 
 @description('subscriptionId for the deployment')
-param subscriptionId string
+param subscriptionId string = 'df3b1809-17d0-47a0-9241-d2724780bdac'
 
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
@@ -279,7 +279,7 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 // 2. Create Role Assignments for Subscription
 module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
   name: 'subRbac-${take(uniqueString(deployment().name, location), 4)}-${index}'
-  scope: subscription('sdf3b1809-17d0-47a0-9241-d2724780bdac')
+  scope: subscription(subscriptionId)
   params: {
     location: location
     description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
@@ -293,20 +293,20 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
 // 3. Create Resoruce Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'rgs-${take(uniqueString(deployment().name, location), 4)}'
-  scope: subscription('df3b1809-17d0-47a0-9241-d2724780bdac')
+  scope: subscription(subscriptionId)
   params: {
     location: location
     combinedTags: combinedTags
     resourceGroups: resourceGroups
     rgRoleAssignments: rgRoleAssignments
-    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
+    subscriptionId: subscriptionId
   }
 }
 
 // 4. Create Virtual Network
 module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
   name: 'virtulNetwork-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
-  scope: resourceGroup('df3b1809-17d0-47a0-9241-d2724780bdac', vnetRgName)
+  scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
     rgs
   ]
@@ -315,7 +315,7 @@ module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
     location: location
     combinedTags: combinedTags
     vnetRgName: vnetRgName
-    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
+    subscriptionId: subscriptionId
     vnetAddressPrefixes: vnetAddressPrefixes
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
@@ -334,7 +334,7 @@ module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
 // 5. Create Storage Account
 module sa 'wrapperModule/storage.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
-  scope: resourceGroup('df3b1809-17d0-47a0-9241-d2724780bdac', wlRgName)
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     stgAcctName: stgAcctName
     location: location
@@ -342,7 +342,7 @@ module sa 'wrapperModule/storage.bicep' = {
     wlRgName: wlRgName
     storageaccount_sku: storageaccount_sku
     stgGroupIds: stgGroupIds
-    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
+    subscriptionId: subscriptionId
     vnetRgName: vnetRgName
     mgmtVnetName: mgmtVnetName
     peSubnetName: peSubnetName
@@ -374,7 +374,7 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     location: location
     combinedTags: combinedTags
     //subscriptionId: subAlias.outputs.subscriptionId
-    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
+    subscriptionId: subscriptionId
     connsubid: connsubid
     suffix: suffix
     vnetRgName: vnetRgName
