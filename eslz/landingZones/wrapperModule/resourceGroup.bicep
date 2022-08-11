@@ -1,4 +1,4 @@
-targetScope = 'managementGroup'
+targetScope = 'subscription'
 
 @description('Required. Array of role assignment objects to define RBAC on subscriptions.')
 param subRoleAssignments array = []
