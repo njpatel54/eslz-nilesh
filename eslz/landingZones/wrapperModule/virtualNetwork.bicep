@@ -58,7 +58,7 @@ var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 
 // 1. Create Virtual Network
 module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
-  name: 'lzVnets-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
+  name: 'lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   //scope: resourceGroup(subscriptionId, vnetRgName)
   params: {
     name: vnetName
@@ -78,7 +78,7 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
 
 // 2. Create Network Security Group(s)
 module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
-  name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  name: 'nsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   dependsOn: [
     lzVnet
   ]

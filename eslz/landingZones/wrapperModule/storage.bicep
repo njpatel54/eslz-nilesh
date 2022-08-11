@@ -43,8 +43,10 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
 
+@description('Required. Storage Account Subresource(s) (aka "groupIds").')
 param stgGroupIds array
 
+@description('Required. Mapping Storage Account Subresource(s) with required Privaate DNS Zone(s) for Private Endpoint creation.')
 var groupIds = {
   blob: 'privatelink.blob.core.usgovcloudapi.net'
   blob_secondary: 'privatelink.blob.core.usgovcloudapi.net'
@@ -77,7 +79,7 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
 }
 
 // 2. Create Private Endpoint for Storage Account
-module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: {
+module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}-${stgGroupId}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [

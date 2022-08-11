@@ -165,35 +165,46 @@ param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suff
 @description('Required. Storage Account SKU.')
 param storageaccount_sku string
 
-param stgGroupIds array = [
+@description('Required. Storage Account Subresource(s) (aka "groupIds").')
+@allowed([
   'blob'
+  'blob_secondary'
   'table'
-]
+  'table_secondary'
+  'queue'
+  'queue_secondary'
+  'file'
+  'web'
+  'web_secondary'
+  'dfs'
+  'dfs_secondary'
+])
+param stgGroupIds array
 // End - 'sa' Module Parameters
 
-@description('BillingAccount used for subscription billing')
+@description('Required. BillingAccount used for subscription billing')
 param billingAccount string
 
-@description('EnrollmentAccount used for subscription billing')
+@description('Required. EnrollmentAccount used for subscription billing')
 param enrollmentAccount string
 
-@description('Alias to assign to the subscription')
+@description('Required. Alias to assign to the subscription')
 param subscriptionAlias string
 
-@description('Display name for the subscription')
+@description('Required. Display name for the subscription')
 param subscriptionDisplayName string
 
-@description('Workload type for the subscription')
+@description('Required. Workload type for the subscription')
 @allowed([
     'Production'
     'DevTest'
 ])
 param subscriptionWorkload string
 
-@description('Management Group target for the subscription')
+@description('Required. Management Group target for the subscription')
 param managementGroupId string
 
-@description('Subscription Owner Id for the subscription')
+@description('Required. Subscription Owner Id for the subscription')
 param subscriptionOwnerId string
 
 
