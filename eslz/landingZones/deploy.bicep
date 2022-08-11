@@ -42,6 +42,64 @@ targetScope =  'managementGroup'
 // For PartnerLed - /billingAccounts/{billingAccountName}/customers/{customerName}                                                                  //
 // For Legacy EA - /billingAccounts/{billingAccountName}/enrollmentAccounts/{enrollmentAccountName}                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Start - Common parameters
+@description('Required. Location for all resources.')
+param location string
+
+@description('Required. utcfullvalue to be used in Tags.')
+param utcfullvalue string = utcNow('F')
+
+var tags = json(loadTextContent('lzTags.json'))
+
+@description('Required. Assign utffullvaule to "CreatedOn" tag.')
+param dynamictags object = ({
+  CreatedOn: utcfullvalue
+})
+
+@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
+var combinedTags = union(dynamictags, tags.lzTags.value)
+
+@description('Required. Project Owner (projowner) parameter.')
+@allowed([
+  'ccs'
+  'proj'
+])
+param projowner string
+
+@description('Required. Operational Scope (opscope) parameter.')
+@allowed([
+  'prod'
+  'dev'
+  'qa'
+  'stage'
+  'test'
+  'sand'
+])
+param opscope string
+
+@description('Required. Region (region) parameter.')
+@allowed([
+  'usva'
+  'ustx'
+  'usaz'
+])
+param region string
+
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param suffix string
+// End - Common parameters
+
+// Start - Module 'resoruceGroup' Parameters
+@description('Required. Array of role assignment objects to define RBAC on subscriptions.')
+param subRoleAssignments array = []
+
+@description('Name of the resourceGroup, will be created in the same location as the deployment.')
+param lzRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
+
+@description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
+param rgRoleAssignments array = []
+// End - Module 'resoruceGroup' Parameters
+
 @description('BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -67,11 +125,8 @@ param managementGroupId string
 @description('Subscription Owner Id for the subscription')
 param subscriptionOwnerId string
 
-@description('Required. Array of role assignment objects to define RBAC on subscriptions.')
-param subRoleAssignments array = []
 
-@description('Required. Location for all resources.')
-param location string
+
 
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
@@ -79,8 +134,7 @@ param connsubid string
 @description('Required. Resource Group name.')
 param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
-@description('Name of the resourceGroup, will be created in the same location as the deployment.')
-param lzRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
+
 
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
@@ -103,8 +157,7 @@ param virtualNetworkPeerings array = []
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
 
-@description('Required. Suffix to be used in resource naming with 4 characters.')
-param suffix string
+
 
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
 param logsLawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
@@ -159,47 +212,8 @@ param publicNetworkAccess string = 'Disabled'
 @description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
 param networkAcls object
 
-@description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
-param rgRoleAssignments array = []
 
-@description('Required. utcfullvalue to be used in Tags.')
-param utcfullvalue string = utcNow('F')
 
-var tags = json(loadTextContent('lzTags.json'))
-
-@description('Required. Assign utffullvaule to "CreatedOn" tag.')
-param dynamictags object = ({
-  CreatedOn: utcfullvalue
-})
-
-@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-var combinedTags = union(dynamictags, tags.lzTags.value)
-
-@description('Required. Project Owner (projowner) parameter.')
-@allowed([
-  'ccs'
-  'proj'
-])
-param projowner string
-
-@description('Required. Operational Scope (opscope) parameter.')
-@allowed([
-  'prod'
-  'dev'
-  'qa'
-  'stage'
-  'test'
-  'sand'
-])
-param opscope string
-
-@description('Required. Region (region) parameter.')
-@allowed([
-  'usva'
-  'ustx'
-  'usaz'
-])
-param region string
 
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
@@ -241,6 +255,26 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 }
 */
 
+module rgsourceGroup './wrapperModule/resourceGroup.bicep' = {
+  name: 'rgsourceGroup-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
+  params: {
+    subRoleAssignments: subRoleAssignments
+    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
+    location: location
+    combinedTags: combinedTags
+    lzRgName: lzRgName
+    rgRoleAssignments: rgRoleAssignments    
+  }
+}
+
+
+
+
+
+
+
+
+/*
 // 2. Deploy Landing Zone using Wraper Module
 // Creating resources in the subscription requires an extra level of "nesting" to reference the subscriptionId as a module output and use for a scope
 // The module outputs cannot be used for the scope property so needs to be passed down as a parameter one level
@@ -294,10 +328,8 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
   }
 }
 
-/*
 @description('Output - Subscrition ID')
 output subscriptionId string = subAlias.outputs.subscriptionId
-*/
 
 @description('Output - Resoruce Group Name')
 output rgName string = landingZone.outputs.rgName
@@ -307,3 +339,5 @@ output rgResoruceId string = landingZone.outputs.rgResoruceId
 
 @description('Output - Storage Account resourceId')
 output saResourceId string = landingZone.outputs.saResourceId
+
+*/

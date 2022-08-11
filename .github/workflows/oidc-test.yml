@@ -23,8 +23,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANTID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           environment: ${{ secrets.AZURE_ENVIRONMENT }}
-          enable-AzPSSession: true
-
+          
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
