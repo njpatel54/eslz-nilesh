@@ -131,3 +131,15 @@ module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/depl
     tags: combinedTags
   }
 }]
+
+@description('Output - Virtual Network "name"')
+output vNetName string = lzVnet.outputs.name
+
+@description('Output - Virtual Network "resoruceId"')
+output vNetResoruceId string = lzVnet.outputs.resourceId
+
+@description('Output - Subnets "name" Array')
+output subnetNames array = lzVnet.outputs.subnetNames
+
+@description('Output - Subnets "resoruceId" Array')
+output subnetResourceIds array = lzVnet.outputs.subnetResourceIds

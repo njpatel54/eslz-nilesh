@@ -100,26 +100,8 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGro
   }
 }]
 
+@description('Output - Storage Account "name"')
+output saName string = sa.outputs.name
 
-/*
-// 2. Create Private Endpoint for Storage Account
-module saPe '../../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
-  scope: resourceGroup(subscriptionId, wlRgName)
-  params: {
-    name: '${stgAcctName}-blob-pe'
-    location: location
-    tags: combinedTags
-    serviceResourceId: sa.outputs.resourceId
-    groupIds: [
-      'blob'
-    ]
-    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
-      ]
-    }
-  }
-}
-*/
+@description('Output - Storage Account "resoruceId"')
+output saResoruceId string = sa.outputs.resourceId

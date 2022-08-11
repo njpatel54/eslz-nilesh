@@ -275,7 +275,7 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 
 // 2. Create Role Assignments for Subscription
 module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
-  name: 'subRbac-${take(uniqueString(deployment().name, location), 4)}-${index}'
+  name: 'mod-subRbac-${take(uniqueString(deployment().name, location), 4)}-${index}'
   scope: subscription(subscriptionId)
   params: {
     location: location
@@ -289,7 +289,7 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
 
 // 3. Create Resoruce Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
-  name: 'rgs-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   scope: subscription(subscriptionId)
   params: {
     location: location
@@ -301,8 +301,8 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
 }
 
 // 4. Create Virtual Network
-module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
-  name: 'virtulNetwork-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
+module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
+  name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
     rgs
@@ -330,10 +330,10 @@ module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
 
 // 5. Create Storage Account
 module sa 'wrapperModule/storage.bicep' = {
-  name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
+  name: 'mod-sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
-    virtulNetwork
+    lzVnet
   ]
   params: {
     stgAcctName: stgAcctName
@@ -355,8 +355,29 @@ module sa 'wrapperModule/storage.bicep' = {
   }
 }
 
+@description('Output - Resource Group "name" Array')
+output rgNames array = rgs.outputs.rgNames
 
+@description('Output - Resource Group "resoruceId" Array')
+output rgResoruceIds array = rgs.outputs.rgResoruceIds
 
+@description('Output - Storage Account "name"')
+output saName string = sa.outputs.saName
+
+@description('Output - Storage Account "resoruceId"')
+output saResoruceId string = sa.outputs.saResoruceId
+
+@description('Output - Virtual Network "name"')
+output vNetName string = lzVnet.outputs.vNetName
+
+@description('Output - Virtual Network "resoruceId"')
+output vNetResoruceId string = lzVnet.outputs.vNetResoruceId
+
+@description('Output - Subnets "name" Array')
+output subnetNames array = lzVnet.outputs.subnetNames
+
+@description('Output - Subnets "resoruceId" Array')
+output subnetResourceIds array = lzVnet.outputs.subnetResourceIds
 
 /*
 // 2. Deploy Landing Zone using Wraper Module

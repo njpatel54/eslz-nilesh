@@ -44,11 +44,11 @@ module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.
 }]
 
 @description('Output - Resource Group "name" Array')
-output name array = [ for (resourceGroup, index) in resourceGroups :{
+output rgNames array = [ for (resourceGroup, index) in resourceGroups :{
   resourceId: rg[index].outputs.resourceId
 }]
 
 @description('Output - Resource Group "resoruceId" Array')
-output resoruceId array = [ for (resourceGroup, index) in resourceGroups :{
+output rgResoruceIds array = [ for (resourceGroup, index) in resourceGroups :{
   resourceId: rg[index].outputs.resourceId
 }]
