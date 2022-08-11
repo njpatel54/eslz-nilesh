@@ -134,7 +134,8 @@ param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
 
 
-param sqlServerName string = 'sql-${projowner}-${opscope}-${region}-${suffix}'
+param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv1'
+param sqlSecondaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv2'
 param sqlDbName string = 'sqldb-${projowner}-${opscope}-${region}-${suffix}'
 param administrators object
 param databases array = []
@@ -143,6 +144,8 @@ param sqlAdministratorLogin string
 
 @secure()
 param sqlAdministratorLoginPassword string
+
+param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
 
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
@@ -274,7 +277,9 @@ module landingZone  './wrapperModule/landingZone.bicep' = {
     akvName: akvName
     publicNetworkAccess: publicNetworkAccess
     networkAcls: networkAcls
-    sqlServerName: sqlServerName
+    sqlPrimaryServerName: sqlPrimaryServerName
+    sqlSecondaryServerName: sqlSecondaryServerName
+    sqlFailOverGroupName: sqlFailOverGroupName
     sqlAdministratorLogin: sqlAdministratorLogin
     sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
     administrators: administrators

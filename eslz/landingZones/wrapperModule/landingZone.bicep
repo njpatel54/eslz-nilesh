@@ -372,7 +372,8 @@ module subDiagSettings '../../modules/insights/diagnosticSettings/deploy.bicep' 
 }
 
 
-param sqlServerName string
+param sqlPrimaryServerName string
+param sqlSecondaryServerName string
 param administrators object
 param sqlDbName string
 @description('Optional. The databases to create in the server.')
@@ -381,21 +382,22 @@ param databases array = []
 param sqlAdministratorLogin string
 @secure()
 param sqlAdministratorLoginPassword string
+param sqlFailOverGroupName string
 
 resource akvtest 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(subscriptionId, lzRgName)
 }
 
-// 15. Create Azure SQL Server & Database
-module sql '../../modules/sql/servers/deploy.bicep' = {
-  name: 'sql-${take(uniqueString(deployment().name, location), 4)}-${sqlServerName}'
+// 15. Create Primary Azure SQL Server
+module sqlPrimaryServer '../../modules/sql/servers/deploy.bicep' = {
+  name: 'sqlPrimaryServer-${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
   scope: resourceGroup(subscriptionId, lzRgName)
   dependsOn: [
     akvPe
   ]
   params: {
-    name: sqlServerName
+    name: sqlPrimaryServerName
     location: location
     tags: combinedTags
     administratorLogin: akvtest.getSecret(sqlAdministratorLogin)
@@ -412,12 +414,38 @@ module sql '../../modules/sql/servers/deploy.bicep' = {
   }
 }
 
+// 16. Create Secondary Azure SQL Server
+module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
+  name: 'sqlSecondaryServer-${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
+  scope: resourceGroup(subscriptionId, lzRgName)
+  dependsOn: [
+    akvPe
+  ]
+  params: {
+    name: sqlSecondaryServerName
+    location: location
+    tags: combinedTags
+    administratorLogin: akvtest.getSecret(sqlAdministratorLogin)
+    administratorLoginPassword: akvtest.getSecret(sqlAdministratorLoginPassword) 
+    administrators: {
+      administratorType: administrators.administratorType
+      azureADOnlyAuthentication: administrators.azureADOnlyAuthentication
+      login: administrators.login
+      principalType: administrators.principalType
+      sid: administrators.sid
+      tenantId: administrators.tenantId
+    }
+    systemAssignedIdentity: true    
+  }
+}
+
+// 17. Create Azure SQL Database
 module sqldb '../../modules//sql/servers//databases/deploy.bicep' = [for database in databases: {
   name: 'sqldb-${take(uniqueString(deployment().name, location), 4)}-${database.name}'
   scope: resourceGroup(subscriptionId, lzRgName)
   params: {
     name: database.name
-    serverName: sqlServerName
+    serverName: sqlPrimaryServerName
     location: location
     tags: combinedTags
     skuTier: database.skuTier
@@ -434,6 +462,35 @@ module sqldb '../../modules//sql/servers//databases/deploy.bicep' = [for databas
   }
 }]
 
+/*
+// 18. Create Azure SQL Failover Group
+resource sqlsrv 'Microsoft.Sql/servers@2022-02-01-preview' existing = {
+  name: sqlPrimaryServerName
+  scope: resourceGroup(subscriptionId, lzRgName)
+}
+resource sqlFailoverGroup 'Microsoft.Sql/servers/failoverGroups@2022-02-01-preview' = {
+  name: '${sqlPrimaryServerName}/sqlFailOverGroupName'
+  parent: sqlsrv
+  dependsOn: [
+    sqlPrimaryServer
+    sqlSecondaryServer
+    sqldb
+  ]
+  tags: combinedTags
+  properties: {
+    databases: [for database in databases: resourceId(subscriptionId, lzRgName, 'Microsoft.Sql/servers/databases', sqlPrimaryServerName, database.name)]
+    partnerServers: [
+      {
+        id: sqlSecondaryServer.outputs.resourceId
+      }
+    ]
+    readWriteEndpoint: {
+      failoverPolicy: 'Automatic'
+      failoverWithDataLossGracePeriodMinutes: 60
+    }
+  }
+}
+*/
 
 @description('Output - Resoruce Group Name')
 output rgName string = rg.outputs.name
