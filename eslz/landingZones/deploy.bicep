@@ -339,17 +339,15 @@ module sa 'wrapperModule/storage.bicep' = {
     stgAcctName: stgAcctName
     location: location
     combinedTags: combinedTags
+    wlRgName: wlRgName
     storageaccount_sku: storageaccount_sku
     stgGroupIds: stgGroupIds
-    connsubid: connsubid
-
+    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
+    vnetRgName: vnetRgName
     mgmtVnetName: mgmtVnetName
     peSubnetName: peSubnetName
+    connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
-    subscriptionId: subscriptionId
-    vnetRgName: vnetRgName
-    wlRgName: wlRgName
-
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
     diagnosticEventHubName: diagnosticEventHubName
