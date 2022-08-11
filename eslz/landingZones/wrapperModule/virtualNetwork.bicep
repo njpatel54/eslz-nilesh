@@ -98,6 +98,7 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 }]
 
 // 3. Attach NSG to Subnets
+@batchSize(1)
 module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
   name: 'attachNsgToSubnets-${subnet.name}'
   //scope: resourceGroup(subscriptionId, vnetRgName)
