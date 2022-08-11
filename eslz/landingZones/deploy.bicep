@@ -107,7 +107,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 param diagnosticEventHubName string = ''
 
 @description('Required. Virtual Network name in Management Subscription.')
-param mgmtVnetName string = 'vnet-${projowner}-${opscope}-${region}-mgmt'
+param mgmtVnetName string = 'vnet-${projowner}-${opscope}-${region}-${suffix}'
 
 @description('Required. Subnet name to be used for Private Endpoint.')
 param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
