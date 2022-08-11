@@ -335,6 +335,9 @@ module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
 module sa 'wrapperModule/storage.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    virtulNetwork
+  ]
   params: {
     stgAcctName: stgAcctName
     location: location
