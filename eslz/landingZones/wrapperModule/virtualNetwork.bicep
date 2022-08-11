@@ -143,3 +143,13 @@ output subnetNames array = lzVnet.outputs.subnetNames
 
 @description('Output - Subnets "resoruceId" Array')
 output subnetResourceIds array = lzVnet.outputs.subnetResourceIds
+
+@description('Output - NSG "name" Array')
+output nsgsNames array = [for (nsg, index) in networkSecurityGroups: {
+  name: nsgs[index].outputs.name
+}]
+
+@description('Output - NSG "resoruceId" Array')
+output nsgsResourceIds array = [for (nsg, index) in networkSecurityGroups: {
+  resoruceId: nsgs[index].outputs.resourceId
+}]

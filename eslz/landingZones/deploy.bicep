@@ -379,6 +379,12 @@ output subnetNames array = lzVnet.outputs.subnetNames
 @description('Output - Subnets "resoruceId" Array')
 output subnetResourceIds array = lzVnet.outputs.subnetResourceIds
 
+@description('Output - NSG "name" Array')
+output nsgsNames array = lzVnet.outputs.nsgsNames
+
+@description('Output - NSG "resoruceId" Array')
+output nsgsResourceIds array = lzVnet.outputs.nsgsResourceIds
+
 /*
 // 2. Deploy Landing Zone using Wraper Module
 // Creating resources in the subscription requires an extra level of "nesting" to reference the subscriptionId as a module output and use for a scope
