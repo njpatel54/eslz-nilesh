@@ -42,7 +42,7 @@ module rg '../../modules/resourceGroups/deploy.bicep'= [ for (resourceGroup, ind
     tags: combinedTags
   }
 }]
-/*
+
 // 3. Create Role Assignments for Resoruce Group
 module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, index) in rgRoleAssignments :{
   name: 'rgRbac-${roleAssignment.resourceGroupName}-${index}'
@@ -59,7 +59,7 @@ module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.
     resourceGroupName: roleAssignment.resourceGroupName
   }
 }]
-*/
+
 @description('Output - Resource Group "name" Array')
 output name array = [ for (resourceGroup, index) in resourceGroups :{
   resourceId: rg[index].outputs.resourceId
