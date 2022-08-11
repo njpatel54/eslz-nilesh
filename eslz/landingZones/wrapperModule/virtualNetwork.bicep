@@ -79,6 +79,9 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
 // 2. Create Network Security Group(s)
 module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  dependsOn: [
+    lzVnet
+  ]
   //scope: resourceGroup(subscriptionId, vnetRgName)
   params: {
     name: nsg.name
@@ -118,7 +121,7 @@ module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/depl
   name: 'vnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
   dependsOn: [
-    lzVnet
+    attachNsgToSubnets
   ]
   params: {
     location: 'global'

@@ -80,6 +80,9 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
 module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}-${stgGroupId}'
   scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    sa
+  ]
   params: {
     name: '${stgAcctName}-${stgGroupId}-pe'
     location: location
