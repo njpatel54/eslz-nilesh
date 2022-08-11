@@ -1,8 +1,5 @@
 targetScope = 'subscription'
 
-@description('Required. Array of role assignment objects to define RBAC on subscriptions.')
-param subRoleAssignments array = []
-
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
@@ -18,21 +15,7 @@ param resourceGroups array
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
 
-// 1. Create Role Assignments for Subscription
-module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
-  name: 'subRbac-${subscriptionId}-${index}'
-  scope: subscription(subscriptionId)
-  params: {
-    location: location
-    description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
-    principalIds: roleAssignment.principalIds
-    principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
-    roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    subscriptionId: subscriptionId
-  }
-}]
-
-// 2. Create Resoruce Groups
+// 1. Create Resoruce Groups
 module rg '../../modules/resourceGroups/deploy.bicep'= [ for (resourceGroup, index) in resourceGroups :{
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroup}'
   scope: subscription(subscriptionId)
@@ -43,7 +26,7 @@ module rg '../../modules/resourceGroups/deploy.bicep'= [ for (resourceGroup, ind
   }
 }]
 
-// 3. Create Role Assignments for Resoruce Group
+// 2. Create Role Assignments for Resoruce Group
 module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, index) in rgRoleAssignments :{
   name: 'rgRbac-${roleAssignment.resourceGroupName}-${index}'
   scope: resourceGroup(roleAssignment.subscriptionId, roleAssignment.resourceGroupName)

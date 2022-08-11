@@ -46,6 +46,9 @@ targetScope =  'managementGroup'
 @description('Required. Location for all resources.')
 param location string
 
+@description('subscriptionId for the deployment')
+param subscriptionId string
+
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
 
@@ -87,27 +90,90 @@ param region string
 
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string
+
+@description('Required. Name for the Diagnostics Setting Configuration.')
+param diagSettingName string
+
+@description('Optional. Resource ID of the diagnostic storage account.')
+param diagnosticStorageAccountId string = ''
+
+@description('Optional. Resource ID of the diagnostic log analytics workspace.')
+param diagnosticWorkspaceId string = ''
+
+@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to.')
+param diagnosticEventHubAuthorizationRuleId string = ''
+
+@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
+param diagnosticEventHubName string = ''
+
+@description('Required. Virtual Network name in Management Subscription.')
+param mgmtVnetName string = 'vnet-${projowner}-${opscope}-${region}-mgmt'
+
+@description('Required. Subnet name to be used for Private Endpoint.')
+param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
 // End - Common parameters
 
-// Start - Module 'resoruceGroup' Parameters
+// Start - 'subRbac' Module Parameters
 @description('Required. Array of role assignment objects to define RBAC on subscriptions.')
 param subRoleAssignments array = []
+// End - 'subRbac' Module Parameters
 
-@description('Name of the resourceGroup, will be created in the same location as the deployment.')
+// Start - 'rgs' Module Parameters
+@description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
 
-@description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
-param rgRoleAssignments array = []
-// End - Module 'resoruceGroup' Parameters
-
-@description('Required. Resource Group name for Virtual Network.')
+@description('Required. Name of the resourceGroup, where networking components will be.')
 param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
-@description('Contains the resourceGroup names.')
+@description('Contains the array of resourceGroup names.')
 param resourceGroups array = [
   wlRgName
   vnetRgName
 ]
+
+@description('Required. Array of role assignment objects to assign RBAC roles at Resource Groups.')
+param rgRoleAssignments array = []
+// End - 'rgs' Module Parameters
+
+// Start - 'virtualNetwork' Module Parameters
+@description('Required. The Virtual Network (vNet) Name.')
+param vnetName string
+
+@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
+param vnetAddressPrefixes array
+
+@description('Optional. An Array of subnets to deploy to the Virtual Network.')
+param subnets array = []
+
+@description('Optional. Virtual Network Peerings configurations')
+param virtualNetworkPeerings array = []
+
+@description('Required. Hub - Network Security Groups Array.')
+param networkSecurityGroups array
+
+@description('Required. Subscription ID of Connectivity Subscription')
+param connsubid string
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
+
+@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
+param privateDnsZones array
+// End - 'virtualNetwork' Module Parameters
+
+// Start - 'sa' Module Parameters
+@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
+param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
+
+@description('Required. Storage Account SKU.')
+param storageaccount_sku string
+
+param stgGroupIds array = [
+  'blob'
+  'table'
+]
+// End - 'sa' Module Parameters
+
 @description('BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -132,38 +198,6 @@ param managementGroupId string
 
 @description('Subscription Owner Id for the subscription')
 param subscriptionOwnerId string
-
-
-
-
-@description('Required. Subscription ID of Connectivity Subscription')
-param connsubid string
-
-
-
-
-
-@description('Required. Resource Group name for Private DNS Zones.')
-param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
-
-@description('Required. Subnet name to be used for Private Endpoint.')
-param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
-
-@description('Required. The Virtual Network (vNet) Name.')
-param vnetName string
-
-@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param vnetAddressPrefixes array
-
-@description('Optional. An Array of subnets to deploy to the Virtual Network.')
-param subnets array = []
-
-@description('Optional. Virtual Network Peerings configurations')
-param virtualNetworkPeerings array = []
-
-@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
-param privateDnsZones array
-
 
 
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
@@ -222,29 +256,9 @@ param networkAcls object
 
 
 
-@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
 
-@description('Required. Storage Account SKU.')
-param storageaccount_sku string
 
-@description('Required. Name for the Diagnostics Setting Configuration.')
-param diagSettingName string
 
-@description('Required. Hub - Network Security Groups Array.')
-param networkSecurityGroups array
-
-@description('Optional. Resource ID of the diagnostic storage account.')
-param diagnosticStorageAccountId string = ''
-
-@description('Optional. Resource ID of the diagnostic log analytics workspace.')
-param diagnosticWorkspaceId string = ''
-
-@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to.')
-param diagnosticEventHubAuthorizationRuleId string = ''
-
-@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
-param diagnosticEventHubName string = ''
 
 /*
 // 1. Create the Subscription
@@ -262,19 +276,34 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 }
 */
 
+// 2. Create Role Assignments for Subscription
+module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
+  name: 'subRbac-${take(uniqueString(deployment().name, location), 4)}-${index}'
+  scope: subscription('sdf3b1809-17d0-47a0-9241-d2724780bdac')
+  params: {
+    location: location
+    description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
+    principalIds: roleAssignment.principalIds
+    principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
+    roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
+    subscriptionId: subscriptionId
+  }
+}]
+
+// 3. Create Resoruce Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'rgs-${take(uniqueString(deployment().name, location), 4)}'
   scope: subscription('df3b1809-17d0-47a0-9241-d2724780bdac')
   params: {
-    subRoleAssignments: subRoleAssignments
-    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
     location: location
     combinedTags: combinedTags
     resourceGroups: resourceGroups
-    rgRoleAssignments: rgRoleAssignments    
+    rgRoleAssignments: rgRoleAssignments
+    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
   }
 }
 
+// 4. Create Virtual Network
 module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
   name: 'virtulNetwork-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup('df3b1809-17d0-47a0-9241-d2724780bdac', vnetRgName)
@@ -302,7 +331,31 @@ module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
   }
 }
 
+// 5. Create Storage Account
+module sa 'wrapperModule/storage.bicep' = {
+  name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
+  scope: resourceGroup('df3b1809-17d0-47a0-9241-d2724780bdac', wlRgName)
+  params: {
+    stgAcctName: stgAcctName
+    location: location
+    combinedTags: combinedTags
+    storageaccount_sku: storageaccount_sku
+    stgGroupIds: stgGroupIds
+    connsubid: connsubid
 
+    mgmtVnetName: mgmtVnetName
+    peSubnetName: peSubnetName
+    priDNSZonesRgName: priDNSZonesRgName
+    subscriptionId: subscriptionId
+    vnetRgName: vnetRgName
+    wlRgName: wlRgName
+
+    diagSettingName: diagSettingName
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubName: diagnosticEventHubName
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+  }
+}
 
 
 
