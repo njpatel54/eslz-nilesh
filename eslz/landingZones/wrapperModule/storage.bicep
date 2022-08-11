@@ -19,11 +19,11 @@ param storageaccount_sku string
 @description('Required. Name of the resourceGroup, where networking components will be.')
 param vnetRgName string
 
-@description('Required. Virtual Network name in Management Subscription.')
-param mgmtVnetName string
+@description('Required. Virtual Network name in Landing Zone Subscription.')
+param vnetName string
 
 @description('Required. Subnet name to be used for Private Endpoint.')
-param peSubnetName string
+param mgmtSubnetName string
 
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
@@ -91,7 +91,7 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGro
     groupIds: [
       stgGroupId
     ]
-    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, mgmtSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')

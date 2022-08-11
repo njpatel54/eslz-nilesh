@@ -106,11 +106,8 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
 
-@description('Required. Virtual Network name in Management Subscription.')
-param mgmtVnetName string = 'vnet-${projowner}-${opscope}-${region}-${suffix}'
-
 @description('Required. Subnet name to be used for Private Endpoint.')
-param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
+param mgmtSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
 // End - Common parameters
 
 // Start - 'subRbac' Module Parameters
@@ -347,8 +344,8 @@ module sa 'wrapperModule/storage.bicep' = {
     stgGroupIds: stgGroupIds
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName
-    mgmtVnetName: mgmtVnetName
-    peSubnetName: peSubnetName
+    vnetName: vnetName
+    mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
     diagSettingName: diagSettingName
