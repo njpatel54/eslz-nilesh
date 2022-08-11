@@ -94,12 +94,20 @@ param suffix string
 param subRoleAssignments array = []
 
 @description('Name of the resourceGroup, will be created in the same location as the deployment.')
-param lzRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
+param wlRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
 
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
 // End - Module 'resoruceGroup' Parameters
 
+@description('Required. Resource Group name for Virtual Network.')
+param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+
+@description('Contains the resourceGroup names, will be created in the same location as the deployment.')
+param resourceGroups array = [
+  wlRgName
+  vnetRgName
+]
 @description('BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -131,8 +139,7 @@ param subscriptionOwnerId string
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
 
-@description('Required. Resource Group name.')
-param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+
 
 
 
@@ -255,19 +262,41 @@ module subAlias '../modules/subscription/alias/deploy.bicep' = {
 }
 */
 
-module rgsourceGroup './wrapperModule/resourceGroup.bicep' = {
-  name: 'rgsourceGroup-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
+module rgs './wrapperModule/resourceGroup.bicep' = {
+  name: 'rgs-${take(uniqueString(deployment().name, location), 4)}'
   params: {
     subRoleAssignments: subRoleAssignments
     subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
     location: location
     combinedTags: combinedTags
-    lzRgName: lzRgName
+    resourceGroups: resourceGroups
     rgRoleAssignments: rgRoleAssignments    
   }
 }
 
-
+module virtulNetwork 'wrapperModule/virtualNetwork.bicep' = {
+  name: 'virtulNetwork-${take(uniqueString(deployment().name, location), 4)}'
+  scope: resourceGroup('df3b1809-17d0-47a0-9241-d2724780bdac', vnetRgName)
+  params: {
+    vnetName: vnetName
+    location: location
+    combinedTags: combinedTags
+    vnetRgName: vnetRgName
+    subscriptionId: 'df3b1809-17d0-47a0-9241-d2724780bdac'
+    vnetAddressPrefixes: vnetAddressPrefixes
+    subnets: subnets
+    virtualNetworkPeerings: virtualNetworkPeerings
+    networkSecurityGroups: networkSecurityGroups
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    privateDnsZones: privateDnsZones
+    diagSettingName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticEventHubName: diagnosticEventHubName
+    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+  }
+}
 
 
 

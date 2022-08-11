@@ -7,13 +7,13 @@ param subRoleAssignments array = []
 param subscriptionId string
 
 @description('Location for the deployments and the resources')
-param location string = deployment().location
+param location string
 
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
 param combinedTags object
 
-@description('Name of the resourceGroup, will be created in the same location as the deployment.')
-param lzRgName string
+@description('Contains the resourceGroup names, will be created in the same location as the deployment.')
+param resourceGroups array
 
 @description('Required. Array of role assignment objects to define RBAC on Resource Groups.')
 param rgRoleAssignments array = []
@@ -32,16 +32,16 @@ module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.
   }
 }]
 
-// 2. Create Resoruce Group
-module rg '../../modules/resourceGroups/deploy.bicep'= {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${lzRgName}'
+// 2. Create Resoruce Groups
+module rg '../../modules/resourceGroups/deploy.bicep'= [ for (resourceGroup, index) in resourceGroups :{
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroup}'
   scope: subscription(subscriptionId)
   params: {
-    name: lzRgName
+    name: resourceGroup
     location: location
     tags: combinedTags
   }
-}
+}]
 
 // 3. Create Role Assignments for Resoruce Group
 module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, index) in rgRoleAssignments :{
@@ -52,13 +52,19 @@ module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.
     principalIds: roleAssignment.principalIds
     principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
     roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    subscriptionId: roleAssignment.subscriptionId
+    subscriptionId: contains(roleAssignment, 'subscriptionId') && !empty(roleAssignment.subscriptionId) ? roleAssignment.subscriptionId : subscriptionId
     resourceGroupName: roleAssignment.resourceGroupName
   }
 }]
 
-@description('Output - Resoruce Group Name')
-output rgName string = rg.outputs.name
+@description('Output - Resource Group "name" Array')
+output rgNames array = [ for (resourceGroup, index) in resourceGroups :{
+  wlRgName: rg[0].outputs.name
+  vnetRgName: rg[1].outputs.name
+}]
 
-@description('Output - Resoruce Group resourceId')
-output rgResoruceId string = rg.outputs.resourceId
+@description('Output - Resource Group "resoruceId" Array')
+output rgResourceIds array = [ for (resourceGroup, index) in resourceGroups :{
+  wlRgResourceId: rg[0].outputs.resourceId
+  vnetRgResourceId: rg[1].outputs.resourceId
+}]
