@@ -53,7 +53,7 @@ param vnetRgName string
 var params = json(loadTextContent('../.parameters/parameters.json'))
 
 @description('Required. Iterate over each "networkSecurityGroups" and build variable to store NSG for Managemet Subnet.')
-var mgNsg = params.parameters.networkSecurityGroups.value[0].name
+var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 // End - Variables created to be used to attach NSG to Management Subnet
 
 // 1. Create Virtual Network
@@ -96,8 +96,12 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 
 // 3. Attach NSG to Subnets
 module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
-  name: 'attachNsgToMgmtSubnet-${subnet.name}'
+  name: 'attachNsgToSubnets-${subnet.name}'
   //scope: resourceGroup(subscriptionId, vnetRgName)
+  dependsOn: [
+    lzVnet
+    nsgs
+  ]
   params: {
     name: subnet.name
     virtualNetworkName: vnetName
@@ -105,7 +109,7 @@ module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.
     serviceEndpoints: subnet.serviceEndpoints
     privateEndpointNetworkPolicies: subnet.privateEndpointNetworkPolicies
     privateLinkServiceNetworkPolicies: subnet.privateLinkServiceNetworkPolicies
-    networkSecurityGroupId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', mgNsg)    
+    networkSecurityGroupId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)    
   }
 }]
 
@@ -113,6 +117,9 @@ module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.
 module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'vnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
+  dependsOn: [
+    lzVnet
+  ]
   params: {
     location: 'global'
     privateDnsZoneName: privateDnsZone
