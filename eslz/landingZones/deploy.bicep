@@ -195,6 +195,24 @@ param storageaccount_sku string
 param stgGroupIds array
 // End - 'sa' Module Parameters
 
+// Start - 'akv' Module Parameters
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
+
+@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
+@allowed([
+  ''
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccess string = 'Disabled'
+
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param networkAcls object
+// End - 'akv' Module Parameters
+
+
 @description('Required. BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -244,9 +262,6 @@ param publicNetworkAccessForQuery string
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
-@description('Required. Name of the Key Vault. Must be globally unique.')
-@maxLength(24)
-param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
 
 
 param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv1'
@@ -261,19 +276,6 @@ param sqlAdministratorLogin string
 param sqlAdministratorLoginPassword string
 
 param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
-
-
-@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
-@allowed([
-  ''
-  'Enabled'
-  'Disabled'
-])
-param publicNetworkAccess string = 'Disabled'
-
-@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
-param networkAcls object
-
 
 /*
 // 1. Create the Subscription
@@ -305,7 +307,21 @@ module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bic
   }
 }]
 
-// 3. Create Resoruce Groups
+// 3. Configure Diagnostics Settings for Subscriptions
+module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = {
+  name: 'mod-subDiagSettings-${subscriptionId}'
+  scope: subscription(subscriptionId)
+  params:{
+    name: diagSettingName
+    location: location
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}
+
+// 4. Create Resoruce Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   scope: subscription(subscriptionId)
@@ -318,7 +334,7 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
   }
 }
 
-// 4. Create Log Analytics Workspace
+// 5. Create Log Analytics Workspace
 module loga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -340,7 +356,7 @@ module loga 'wrapperModule/logAnalytics.bicep' = {
   }
 }
 
-// 5. Create Virtual Network
+// 6. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, vnetRgName)
@@ -362,14 +378,14 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     privateDnsZones: privateDnsZones
     diagSettingName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: loga.outputs.logaResoruceId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubName: diagnosticEventHubName
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
   }
 }
 
-// 6. Create Storage Account
+// 7. Create Storage Account
 module sa 'wrapperModule/storage.bicep' = {
   name: 'mod-sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -391,11 +407,37 @@ module sa 'wrapperModule/storage.bicep' = {
     priDNSZonesRgName: priDNSZonesRgName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubName: diagnosticEventHubName
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
   }
 }
 
+// 8. Create Azure Key Vault
+module akv 'wrapperModule/keyVault.bicep' = {
+  name: 'mod-akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  params: {
+    akvName: akvName
+    location: location
+    combinedTags: combinedTags
+    wlRgName: wlRgName
+    networkAcls: networkAcls
+    publicNetworkAccess: publicNetworkAccess    
+    subscriptionId: subscriptionId
+    vnetRgName: vnetRgName
+    vnetName: vnetName
+    mgmtSubnetName: mgmtSubnetName
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    diagSettingName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
+  }
+}
 
 @description('Output - Resource Group "name" Array')
 output rgNames array = rgs.outputs.rgNames
@@ -433,7 +475,14 @@ output saName string = sa.outputs.saName
 @description('Output - Storage Account "resoruceId"')
 output saResoruceId string = sa.outputs.saResoruceId
 
+@description('Output - Log Analytics Workspace "name"')
+output akvName string = akv.outputs.akvName
 
+@description('Output - Log Analytics Workspace "resoruceId"')
+output akvResoruceId string = akv.outputs.akvResoruceId
+
+@description('Output - Log Analytics Workspace "resoruceId"')
+output akvUri string = akv.outputs.akvUri
 
 
 /*

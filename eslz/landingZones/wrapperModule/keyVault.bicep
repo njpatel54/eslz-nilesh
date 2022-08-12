@@ -7,14 +7,23 @@ param location string
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
 param combinedTags object
 
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string
+
+@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
+@allowed([
+  ''
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccess string
+
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param networkAcls object
+
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string
-
-@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string
-
-@description('Required. Storage Account SKU.')
-param storageaccount_sku string
 
 @description('Required. Name of the resourceGroup, where networking components will be.')
 param vnetRgName string
@@ -37,13 +46,13 @@ param diagSettingName string
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
+@description('Optional. Resource ID of the diagnostic storage account.')
+param diagnosticStorageAccountId string = ''
+
 @description('Optional. Resource ID of the diagnostic log analytics workspace - Local.')
 param localDiagnosticWorkspaceId string = ''
 
 /*
-@description('Optional. Resource ID of the diagnostic storage account.')
-param diagnosticStorageAccountId string = ''
-
 @description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to.')
 param diagnosticEventHubAuthorizationRuleId string = ''
 
@@ -60,68 +69,59 @@ param localDiagnosticEventHubAuthorizationRuleId string = ''
 param localDiagnosticEventHubName string = ''
 */
 
-@description('Required. Storage Account Subresource(s) (aka "groupIds").')
-param stgGroupIds array
-
-@description('Required. Mapping Storage Account Subresource(s) with required Privaate DNS Zone(s) for Private Endpoint creation.')
-var groupIds = {
-  blob: 'privatelink.blob.core.usgovcloudapi.net'
-  blob_secondary: 'privatelink.blob.core.usgovcloudapi.net'
-  table: 'privatelink.table.core.usgovcloudapi.net'
-  table_secondary: 'privatelink.table.core.usgovcloudapi.net'
-  queue: 'privatelink.queue.core.usgovcloudapi.net'
-  queue_secondary: 'privatelink.queue.core.usgovcloudapi.net'
-  file: 'privatelink.file.core.usgovcloudapi.net'
-  web: 'privatelink.web.core.usgovcloudapi.net'
-  web_secondary: 'privatelink.web.core.usgovcloudapi.net'
-  dfs: 'privatelink.dfs.core.usgovcloudapi.net'
-  dfs_secondary: 'privatelink.dfs.core.usgovcloudapi.net'
-}
-
-// 1. Create Storage Account
-module sa '../../modules/storageAccounts/deploy.bicep' = {
-  name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
+// 1. Create Azure Key Vault
+module akv '../../modules/keyVault/vaults/deploy.bicep' = {
+  name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(subscriptionId, wlRgName)
-  params: {
-    storageAccountName: stgAcctName
-    location: location
-    tags: combinedTags
-    storageSKU: storageaccount_sku
-    publicNetworkAccess: 'Disabled'
-    diagnosticSettingsName: diagSettingName
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName
-    localDiagnosticWorkspaceId: localDiagnosticWorkspaceId
-  }
+    params: {
+      name: akvName
+      location: location
+      tags: combinedTags
+      vaultSku: 'premium'
+      publicNetworkAccess: publicNetworkAccess
+      networkAcls: networkAcls
+      diagnosticSettingsName: diagSettingName
+      diagnosticStorageAccountId: diagnosticStorageAccountId
+      diagnosticWorkspaceId: diagnosticWorkspaceId
+      //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+      //diagnosticEventHubName: diagnosticEventHubName
+      localDiagnosticWorkspaceId: localDiagnosticWorkspaceId
+      //localDiagnosticStorageAccountId: localDiagnosticStorageAccountId
+      //localDiagnosticEventHubAuthorizationRuleId: localDiagnosticEventHubAuthorizationRuleId
+      //localDiagnosticEventHubName: localDiagnosticEventHubName
+
+    }
 }
 
-// 2. Create Private Endpoint for Storage Account
-module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
-  name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}-${stgGroupId}'
+// 2. Create Private Endpoint for Key Vault
+module akvPe '../../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
-    sa
+    akv
   ]
   params: {
-    name: '${stgAcctName}-${stgGroupId}-pe'
+    name: '${akvName}-vault-pe'
     location: location
     tags: combinedTags
-    serviceResourceId: sa.outputs.resourceId
+    serviceResourceId: akv.outputs.resourceId
     groupIds: [
-      stgGroupId
+      'vault'
     ]
     subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, mgmtSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
-        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
       ]
     }
   }
-}]
+}
 
-@description('Output - Storage Account "name"')
-output saName string = sa.outputs.name
+@description('Output - Log Analytics Workspace "name"')
+output akvName string = akv.outputs.name
 
-@description('Output - Storage Account "resoruceId"')
-output saResoruceId string = sa.outputs.resourceId
+@description('Output - Log Analytics Workspace "resoruceId"')
+output akvResoruceId string = akv.outputs.resourceId
+
+@description('Output - Log Analytics Workspace "resoruceId"')
+output akvUri string = akv.outputs.uri

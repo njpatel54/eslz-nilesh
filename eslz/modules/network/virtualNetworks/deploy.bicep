@@ -189,7 +189,9 @@ resource virtualNetwork_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
   scope: virtualNetwork
 }
 
-
+// Start - Second Diagnostic Settings for the resource
+@description('Optional. The name of the diagnostic setting, if deployed.')
+param localDdiagnosticSettingsName string = 'logging-diagSetting-local'
 
 @description('Optional. Resource ID of the diagnostic storage account - Local.')
 param localDiagnosticStorageAccountId string = ''
@@ -203,9 +205,8 @@ param localDiagnosticEventHubAuthorizationRuleId string = ''
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category - Local.')
 param localDiagnosticEventHubName string = ''
 
-// Second Diagnostic Settings for the resource
 resource diagSettingsLocal 'Microsoft.Insights/diagnosticsettings@2021-05-01-preview' = if (!empty(localDiagnosticStorageAccountId) || !empty(localDiagnosticWorkspaceId) || !empty(localDiagnosticEventHubAuthorizationRuleId) || !empty(localDiagnosticEventHubName)) {
-  name: '${diagnosticSettingsName}-local'
+  name: localDdiagnosticSettingsName
   properties: {
     storageAccountId: !empty(localDiagnosticStorageAccountId) ? localDiagnosticStorageAccountId : null
     workspaceId: !empty(localDiagnosticWorkspaceId) ? localDiagnosticWorkspaceId : null
@@ -216,7 +217,7 @@ resource diagSettingsLocal 'Microsoft.Insights/diagnosticsettings@2021-05-01-pre
   }
   scope: virtualNetwork
 }
-
+// End - Second Diagnostic Settings for the resource
 
 
 module virtualNetwork_rbac '.bicep/nested_roleAssignments.bicep' = [for (roleAssignment, index) in roleAssignments: {

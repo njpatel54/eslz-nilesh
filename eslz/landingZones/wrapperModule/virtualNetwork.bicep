@@ -34,7 +34,6 @@ param diagnosticStorageAccountId string = ''
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
-
 @description('Optional. Resource ID of the diagnostic log analytics workspace - Local.')
 param localDiagnosticWorkspaceId string = ''
 
@@ -95,7 +94,6 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   }
 }
 
-
 // 2. Create Network Security Group(s)
 module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
   name: 'nsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
@@ -114,6 +112,10 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
+    localDiagnosticWorkspaceId: localDiagnosticWorkspaceId
+    //localDiagnosticStorageAccountId: localDiagnosticStorageAccountId
+    //localDiagnosticEventHubAuthorizationRuleId: localDiagnosticEventHubAuthorizationRuleId
+    //localDiagnosticEventHubName: localDiagnosticEventHubName
   }
 }]
 
