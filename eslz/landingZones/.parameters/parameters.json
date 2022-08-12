@@ -57,7 +57,7 @@
       ]
     },
     "diagSettingName": {
-      "value": "centralized-logging-diagSetting"
+      "value": "logging-diagSetting-centralized"
     },
     "networkSecurityGroups": {
       "value": [
