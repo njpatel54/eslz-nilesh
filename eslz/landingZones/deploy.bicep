@@ -261,7 +261,7 @@ param publicNetworkAccessForQuery string
 
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
-
+/*
 @description('Required. Azure SQL Server Name (Primary)')
 param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv1'
 
@@ -287,7 +287,7 @@ param administratorLoginPassword string
 
 @description('Conditional. Azure SQL Fail Over Group Name.')
 param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
-
+*/
 
 
 /*
