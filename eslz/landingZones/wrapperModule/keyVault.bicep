@@ -41,7 +41,7 @@ param connsubid string
 param priDNSZonesRgName string
 
 @description('Required. Name for the Diagnostics Setting Configuration.')
-param diagSettingName string
+param diagSettingName string = ''
 
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
