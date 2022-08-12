@@ -26,7 +26,7 @@ param virtualNetworkPeerings array = []
 param privateDnsZones array
 
 @description('Required. Name for the Diagnostics Setting Configuration.')
-param diagSettingName string
+param diagSettingName string = ''
 
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
