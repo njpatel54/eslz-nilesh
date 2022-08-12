@@ -279,11 +279,11 @@ param databases array = []
 
 @description('Conditional. The administrator username for the server. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
-param administratorLogin string = ''
+param sqlAdministratorLogin string = ''
 
 @description('Conditional. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
-param administratorLoginPassword string = ''
+param sqlAdministratorLoginPassword string = ''
 
 @description('Conditional. Azure SQL Fail Over Group Name.')
 param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
