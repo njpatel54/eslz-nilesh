@@ -80,9 +80,9 @@ module akv '../../modules/keyVault/vaults/deploy.bicep' = {
       vaultSku: 'premium'
       publicNetworkAccess: publicNetworkAccess
       networkAcls: networkAcls
-      diagnosticSettingsName: diagSettingName
-      diagnosticStorageAccountId: diagnosticStorageAccountId
-      diagnosticWorkspaceId: diagnosticWorkspaceId
+      //diagnosticSettingsName: diagSettingName
+      //diagnosticStorageAccountId: diagnosticStorageAccountId
+      //diagnosticWorkspaceId: diagnosticWorkspaceId
       //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
       //diagnosticEventHubName: diagnosticEventHubName
       localDiagnosticWorkspaceId: localDiagnosticWorkspaceId

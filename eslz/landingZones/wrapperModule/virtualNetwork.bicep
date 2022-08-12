@@ -82,9 +82,9 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
     subscriptionId: subscriptionId
-    diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticSettingsName: diagSettingName
+    //diagnosticStorageAccountId: diagnosticStorageAccountId
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
     localDiagnosticWorkspaceId: localDiagnosticWorkspaceId
@@ -107,9 +107,9 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
     tags: combinedTags
     securityRules: nsg.securityRules
     roleAssignments: nsg.roleAssignments
-    diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticSettingsName: diagSettingName
+    //diagnosticStorageAccountId: diagnosticStorageAccountId
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
     localDiagnosticWorkspaceId: localDiagnosticWorkspaceId

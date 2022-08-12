@@ -88,8 +88,8 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
     tags: combinedTags
     storageSKU: storageaccount_sku
     publicNetworkAccess: 'Disabled'
-    diagnosticSettingsName: diagSettingName
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticSettingsName: diagSettingName
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
     localDiagnosticWorkspaceId: localDiagnosticWorkspaceId
