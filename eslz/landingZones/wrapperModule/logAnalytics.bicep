@@ -42,7 +42,7 @@ param amplsName string
 
 // 1. Create Log Analytics Workspace
 module loga '../../modules/operationalInsights/workspaces/deploy.bicep' = {
-  name: 'mod-loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
+  name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   params:{
     name: logsLawName
@@ -56,7 +56,7 @@ module loga '../../modules/operationalInsights/workspaces/deploy.bicep' = {
 
 // 2. Add Log Analytics Workspace to Azure Monitor Private Link Scope (AMPLS)
 module amplssr '../../modules//insights//privateLinkScopes/scopedResources/deploy.bicep' = {
-  name: 'mod-amplssr-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
+  name: 'amplssr-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(connsubid, vnetRgName)
   dependsOn: [
     loga

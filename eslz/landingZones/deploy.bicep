@@ -262,20 +262,33 @@ param publicNetworkAccessForQuery string
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
-
-
+@description('Required. Azure SQL Server Name (Primary)')
 param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv1'
+
+@description('Required. Azure SQL Server Name (Secondary)')
 param sqlSecondaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv2'
+
+@description('Required. Azure SQL Database Name')
 param sqlDbName string = 'sqldb-${projowner}-${opscope}-${region}-${suffix}'
-param administrators object
+
+@description('Conditional. The Azure Active Directory (AAD) administrator authentication. Required if no `administratorLogin` & `administratorLoginPassword` is provided.')
+param administrators object = {}
+
+@description('Optional. The databases to create in the server.')
 param databases array = []
-@secure()
-param sqlAdministratorLogin string
 
+@description('Conditional. The administrator username for the server. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
-param sqlAdministratorLoginPassword string
+param administratorLogin string
 
+@description('Conditional. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
+@secure()
+param administratorLoginPassword string
+
+@description('Conditional. Azure SQL Fail Over Group Name.')
 param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
+
+
 
 /*
 // 1. Create the Subscription
@@ -417,6 +430,9 @@ module sa 'wrapperModule/storage.bicep' = {
 module akv 'wrapperModule/keyVault.bicep' = {
   name: 'mod-akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    lzVnet
+  ]
   params: {
     akvName: akvName
     location: location
