@@ -105,6 +105,19 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
+/*
+@description('Optional. Resource ID of the diagnostic storage account - Local.')
+param localDiagnosticStorageAccountId string = ''
+
+@description('Optional. Resource ID of the diagnostic log analytics workspace - Local.')
+param localDiagnosticWorkspaceId string = ''
+
+@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to - Local.')
+param localDiagnosticEventHubAuthorizationRuleId string = ''
+
+@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category - Local.')
+param localDiagnosticEventHubName string = ''
+*/
 
 @description('Required. Subnet name to be used for Private Endpoint.')
 param mgmtSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
@@ -146,7 +159,7 @@ param subnets array = []
 param virtualNetworkPeerings array = []
 
 @description('Required. Hub - Network Security Groups Array.')
-param networkSecurityGroups array
+param networkSecurityGroups array = []
 
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
@@ -262,16 +275,10 @@ param publicNetworkAccess string = 'Disabled'
 param networkAcls object
 
 
-
-
-
-
-
-
 /*
 // 1. Create the Subscription
-module subAlias '../modules/subscription/alias/deploy.bicep' = {
-  name: 'subAlias-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+module sub '../modules/subscription/alias/deploy.bicep' = {
+  name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
     billingAccount: billingAccount
     enrollmentAccount: enrollmentAccount
@@ -311,12 +318,34 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
   }
 }
 
-// 4. Create Virtual Network
+// 4. Create Log Analytics Workspace
+module loga 'wrapperModule/logAnalytics.bicep' = {
+  name: 'mod-loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    rgs
+  ]
+  params: {
+    logsLawName: logsLawName
+    location: location
+    combinedTags: combinedTags
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName
+    logaGallerySolutions: logaGallerySolutions
+    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery
+    connsubid: connsubid
+    vnetRgName: vnetRgName
+    amplsName: amplsName
+  }
+}
+
+// 5. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
-    rgs
+    loga
   ]
   params: {
     vnetName: vnetName
@@ -333,13 +362,14 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     privateDnsZones: privateDnsZones
     diagSettingName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-    diagnosticEventHubName: diagnosticEventHubName
-    diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    diagnosticWorkspaceId: loga.outputs.logaResoruceId
+    //diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
   }
 }
 
-// 5. Create Storage Account
+// 6. Create Storage Account
 module sa 'wrapperModule/storage.bicep' = {
   name: 'mod-sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -366,17 +396,18 @@ module sa 'wrapperModule/storage.bicep' = {
   }
 }
 
+
 @description('Output - Resource Group "name" Array')
 output rgNames array = rgs.outputs.rgNames
 
 @description('Output - Resource Group "resoruceId" Array')
 output rgResoruceIds array = rgs.outputs.rgResoruceIds
 
-@description('Output - Storage Account "name"')
-output saName string = sa.outputs.saName
+@description('Output - Log Analytics Workspace "name"')
+output logaName string = loga.outputs.logaName
 
-@description('Output - Storage Account "resoruceId"')
-output saResoruceId string = sa.outputs.saResoruceId
+@description('Output - Log Analytics Workspace "resoruceId"')
+output logaResoruceId string = loga.outputs.logaResoruceId
 
 @description('Output - Virtual Network "name"')
 output vNetName string = lzVnet.outputs.vNetName
@@ -395,6 +426,15 @@ output nsgsNames array = lzVnet.outputs.nsgsNames
 
 @description('Output - NSG "resoruceId" Array')
 output nsgsResourceIds array = lzVnet.outputs.nsgsResourceIds
+
+@description('Output - Storage Account "name"')
+output saName string = sa.outputs.saName
+
+@description('Output - Storage Account "resoruceId"')
+output saResoruceId string = sa.outputs.saResoruceId
+
+
+
 
 /*
 // 2. Deploy Landing Zone using Wraper Module
