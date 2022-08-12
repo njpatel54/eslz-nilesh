@@ -261,7 +261,7 @@ param publicNetworkAccessForQuery string
 
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
-/*
+
 @description('Required. Azure SQL Server Name (Primary)')
 param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv1'
 
@@ -279,15 +279,15 @@ param databases array = []
 
 @description('Conditional. The administrator username for the server. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
-param administratorLogin string
+param administratorLogin string = ''
 
 @description('Conditional. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
-param administratorLoginPassword string
+param administratorLoginPassword string = ''
 
 @description('Conditional. Azure SQL Fail Over Group Name.')
 param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
-*/
+
 
 
 /*
