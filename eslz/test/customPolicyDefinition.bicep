@@ -12,8 +12,8 @@ var targetMgResourceId = tenantResourceId('Microsoft.Management/managementGroups
 @description('Variable containing all Custom Policy Definitions info.')
 var customPolicyDefinitions = [
   {
-    name: 'Deploy-DiagVNet-Stg'
-    definition: json(loadTextContent('azurepolicy.json'))
+    name: 'Deploy-Diag-AA-StgAcct'
+    definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-AA.json'))
   }
 ]
 
