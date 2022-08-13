@@ -89,7 +89,6 @@ module akv '../../modules/keyVault/vaults/deploy.bicep' = {
       //localDiagnosticStorageAccountId: localDiagnosticStorageAccountId
       //localDiagnosticEventHubAuthorizationRuleId: localDiagnosticEventHubAuthorizationRuleId
       //localDiagnosticEventHubName: localDiagnosticEventHubName
-
     }
 }
 

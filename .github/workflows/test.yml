@@ -32,11 +32,13 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Update - Virtual Network Links'
+      name: 'Test - Policy Def'
       with:
         inlineScript: |
-          az deployment sub create \
-            --name 'Update-Virtual-Network-Links' \
-            --location ${{ secrets.AZURE_LOCATION }} \
-            --template-file ./eslz/test/test.bicep \
-            --parameters ./eslz/test/test.json
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/test/customPolicyDefinition.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
