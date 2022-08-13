@@ -13,7 +13,7 @@ var targetMgResourceId = tenantResourceId('Microsoft.Management/managementGroups
 var customPolicyDefinitions = [
   {
     name: 'Deploy-Diag-AA-StgAcct'
-    definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-AA.json'))
+    definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-AA.json'))
   }
 ]
 
