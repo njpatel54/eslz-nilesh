@@ -1,4 +1,4 @@
-name: update virtual network links
+name: test policy def
 
 on:
   #push:
