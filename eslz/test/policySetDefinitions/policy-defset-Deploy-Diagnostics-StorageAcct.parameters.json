@@ -1,0 +1,662 @@
+{
+  "ACIDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('ACIstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "ACRDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('ACRstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "AnalysisServiceDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AnalysisServicestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "APIforFHIRDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('APIforFHIRstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "APIMgmtDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('APIMgmtstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "ApplicationGatewayDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('ApplicationGatewaystorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "AppServiceDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AppServicestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "AppServiceWebappDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AppServiceWebappstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "AutomationDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AutomationstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "BastionDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('BastionstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "CDNEndpointsDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('CDNEndpointsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "CognitiveServicesDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('CognitiveServicesstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "CosmosDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('CosmosstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "DatabricksDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('DatabricksstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "DataExplorerClusterDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('DataExplorerClusterstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "DataFactoryDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('DataFactorystorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "DataLakeAnalyticsDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('DataLakeAnalyticsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "EventGridSubDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('EventGridSubstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "EventGridTopicDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('EventGridTopicstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "EventSystemTopicDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('EventSystemTopicstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "ExpressRouteDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('ExpressRoutestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "FirewallDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('FirewallstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "FrontDoorDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('FrontDoorstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "FunctionAppDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('FunctionAppstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "HDInsightDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('HDInsightstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "IotHubDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('IotHubstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "LoadBalancerDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('LoadBalancerstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "LogicAppsISEDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('LogicAppsISEstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "MariaDBDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('MariaDBstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "MediaServiceDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('MediaServicestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "MlWorkspaceDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('MlWorkspacestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "MySQLDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('MySQLstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "NetworkNICDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('NetworkNICstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "NetworkSecurityGroupsDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('NetworkSecurityGroupsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "PostgreSQLDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('PostgreSQLstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "PowerBIEmbeddedDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('PowerBIEmbeddedstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "RecoveryVaultDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "RedisCacheDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('RedisCachestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "RelayDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('RelaystorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "SignalRDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('SignalRstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "SQLElasticPoolsDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('SQLElasticPoolsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "SQLMDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('SQLMstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "TimeSeriesInsightsDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('TimeSeriesInsightsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "TrafficManagerDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('TrafficManagerstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "VirtualMachinesDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('VirtualMachinesstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "VirtualNetworkDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('VirtualNetworkstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "VMSSDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('VMSSstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "VNetGWDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('VNetGWstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "WVDAppGroupDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('WVDAppGroupsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "WVDHostPoolsDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('WVDHostPoolsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "WVDWorkspaceDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('WVDWorkspacestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  }
+}

@@ -4,14 +4,14 @@
     "displayName": "Deploy Diagnostic Settings for Time Series Insights to a Storage Account",
     "mode": "Indexed",
     "parameters": {
-            "storageAccountId": {
-                "type": "String",
-                "metadata": {
-                    "displayName": "storageAccountId",
-                    "description": "The Storage Account ID for for Azure Diagnostics",
-                    "strongType": "Microsoft.Storage/StorageAccounts"
-                }
-            },
+      "storageAccountId": {
+        "type": "String",
+        "metadata": {
+          "displayName": "storageAccountId",
+          "description": "The Storage Account ID for for Azure Diagnostics",
+          "strongType": "Microsoft.Storage/StorageAccounts"
+        }
+      },
       "effect": {
         "type": "String",
         "defaultValue": "DeployIfNotExists",
@@ -81,10 +81,10 @@
                 "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
                 "equals": "true"
               },
-                            {
-                                "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",
-                                "equals": "[last(split(parameters('storageAccountId'), '/'))]"
-                            }
+              {
+                "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",
+                "equals": "[last(split(parameters('storageAccountId'), '/'))]"
+              }
             ]
           },
           "roleDefinitionIds": [
@@ -101,9 +101,9 @@
                   "resourceName": {
                     "type": "String"
                   },
-                                    "storageAccountId": {
-                                        "type": "string"
-                                    },
+                  "storageAccountId": {
+                    "type": "string"
+                  },
                   "location": {
                     "type": "String"
                   },
@@ -126,7 +126,7 @@
                     "location": "[parameters('location')]",
                     "dependsOn": [],
                     "properties": {
-                                            "storageAccountId": "[parameters('storageAccountId')]",
+                      "storageAccountId": "[parameters('storageAccountId')]",
                       "metrics": [
                         {
                           "category": "AllMetrics",
@@ -154,9 +154,9 @@
                 "outputs": {}
               },
               "parameters": {
-                                "storageAccountId": {
-                                    "value": "[parameters('storageAccountId')]"
-                                },
+                "storageAccountId": {
+                  "value": "[parameters('storageAccountId')]"
+                },
                 "location": {
                   "value": "[field('location')]"
                 },
