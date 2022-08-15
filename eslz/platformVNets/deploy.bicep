@@ -182,8 +182,11 @@ param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
 @description('Required. Automation Account Name.')
 param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 
+@description('Required. Last four digits of Enrollment Number.')
+param enrollmentID string
+
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
+param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
 
 @description('Required. Automation Account subresource IDs (groupId).')
 var aaGroupIds = [
