@@ -51,7 +51,8 @@ jobs:
             --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         tenantid=${{ secrets.AZURE_TENANTID }}
 
   preview:
     runs-on: ubuntu-latest
@@ -80,7 +81,8 @@ jobs:
             --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         tenantid=${{ secrets.AZURE_TENANTID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -110,4 +112,5 @@ jobs:
             --parameters ./eslz/managementServices/.parameters/parameters.json \
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         tenantid=${{ secrets.AZURE_TENANTID }}
