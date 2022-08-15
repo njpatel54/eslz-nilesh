@@ -112,7 +112,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-iotHub.json'))
   }
   {
-    name: 'Deploy-Diagnostics-Kubernetes-EH'
+    name: 'Deploy-Diagnostics-AKS-EH'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-Kubernetes.json'))
   }
   {
@@ -140,7 +140,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-MySQL.json'))
   }
   {
-    name: 'Deploy-Diagnostics-NetworkSecurityGroups-EH'
+    name: 'Deploy-Diag-NetworkSecurityGroups-EH'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-NetworkSecurityGroups.json'))
   }
   {
@@ -172,7 +172,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-SignalR.json'))
   }
   {
-    name: 'Deploy-Diagnostics-SQLDatabase-EH'
+    name: 'Deploy-Diagnostics-SQLDBs-EH'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-SQLDatabase.json'))
   }
   {
@@ -184,7 +184,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-SQLMI.json'))
   }
   {
-    name: 'Deploy-Diagnostics-StorageAccount-EH'
+    name: 'Deploy-Diagnostics-StorageAccounts-EH'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-StorageAccount.json'))
   }
   {
@@ -340,7 +340,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-KeyVault.json'))
   }
   {
-    name: 'Deploy-Diagnostics-Kubernetes-StgAcct'
+    name: 'Deploy-Diagnostics-AKS-StgAcct'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-Kubernetes.json'))
   }
   {
@@ -348,7 +348,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-LoadBalancer.json'))
   }
   {
-    name: 'Deploy-Diagnostics-LogicApps-StgAcct'
+    name: 'Deploy-Diagnostics-LogicAppsWF-StgAcct'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-LogicApps.json'))
   }
   {
@@ -372,7 +372,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-MySQL.json'))
   }
   {
-    name: 'Deploy-Diag-NSGs-StgAcct'
+    name: 'Deploy-Diag-NetworkSecurityGroups-StgAcct'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-NetworkSecurityGroups.json'))
   }
   {
@@ -400,7 +400,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-Relay.json'))
   }
   {
-    name: 'Deploy-Diagnostics-SearchService-StgAcct'
+    name: 'Deploy-Diagnostics-SearchServices-StgAcct'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SearchService.json'))
   }
   {
@@ -412,7 +412,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SignalR.json'))
   }
   {
-    name: 'Deploy-Diagnostics-SQLDatabase-StgAcct'
+    name: 'Deploy-Diagnostics-SQLDBs-StgAcct'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SQLDatabase.json'))
   }
   {
@@ -424,7 +424,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SQLMI.json'))
   }
   {
-    name: 'Deploy-Diagnostics-StorageAccount-StgAcct'
+    name: 'Deploy-Diagnostics-StorageAccounts-StgAcct'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-StorageAccount.json'))
   }
   {
@@ -474,7 +474,7 @@ var customPolicyDefinitions = [
   {
     name: 'Deploy-Diagnostics-WVDWorkspace-StgAcct'
     definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-WVDWorkspace.json'))
-  }  
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')

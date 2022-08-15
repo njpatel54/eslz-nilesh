@@ -127,7 +127,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-MySQL.json'))
 }
 {
-	name: 'Deploy-Diagnostics-NetworkSecurityGroups-EH'
+	name: 'Deploy-Diag-NetworkSecurityGroups-EH'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-NetworkSecurityGroups.json'))
 }
 {
@@ -159,7 +159,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-SignalR.json'))
 }
 {
-	name: 'Deploy-Diagnostics-SQLDatabase-EH'
+	name: 'Deploy-Diagnostics-SQLDBs-EH'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-SQLDatabase.json'))
 }
 {
@@ -171,7 +171,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-SQLMI.json'))
 }
 {
-	name: 'Deploy-Diagnostics-StorageAccount-EH'
+	name: 'Deploy-Diagnostics-StorageAccounts-EH'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-StorageAccount.json'))
 }
 {
