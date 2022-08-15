@@ -1,0 +1,311 @@
+{
+	name: 'Deploy-Diagnostics-StorageAcct'
+	setDefinition: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.json'))
+	setChildDefinitions: [
+		{
+			definitionReferenceId: 'ACIDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ACI-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).ACIDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'ACRDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ACR-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).ACRDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'AKSDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AKS-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).AKSDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'AnalysisServiceDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AnalysisService-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).AnalysisServiceDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'APIforFHIRDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ApiForFHIR-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).APIforFHIRDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'APIMgmtDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-APIMgmt-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).APIMgmtDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'ApplicationGatewayDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AppGateway-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).ApplicationGatewayDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'AppServiceDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WebServerFarm-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).AppServiceDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'AppServiceWebappDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Website-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).AppServiceWebappDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'AutomationDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-AA-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).AutomationDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'BastionDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Bastion-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).BastionDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'BatchDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Batch-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).BatchDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'CDNEndpointsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-CDNEndpoints-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).CDNEndpointsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'CognitiveServicesDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-CognitiveServices-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).CognitiveServicesDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'CosmosDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-CosmosDB-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).CosmosDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'DatabricksDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Databricks-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).DatabricksDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'DataExplorerClusterDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-DataExplorerCluster-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).DataExplorerClusterDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'DataFactoryDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-DataFactory-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).DataFactoryDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'DataLakeAnalyticsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-DLAnalytics-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).DataLakeAnalyticsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'EventGridSubDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-EventGridSub-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).EventGridSubDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'EventGridTopicDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-EventGridTopic-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).EventGridTopicDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'EventHubDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-EventHub-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).EventHubDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'EventSystemTopicDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-EventGridSystemTopic-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).EventSystemTopicDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'ExpressRouteDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-ExpressRoute-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).ExpressRouteDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'FirewallDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Firewall-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).FirewallDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'FrontDoorDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-FrontDoor-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).FrontDoorDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'FunctionAppDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Function-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).FunctionAppDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'HDInsightDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-HDInsight-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).HDInsightDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'IotHubDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-iotHub-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).IotHubDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'KeyVaultDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-KeyVault-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).KeyVaultDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'LoadBalancerDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LoadBalancer-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).LoadBalancerDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'LogicAppsISEDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LogicAppsISE-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).LogicAppsISEDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'LogicAppsWFDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LogicAppsWF-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).LogicAppsWFDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'MariaDBDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MariaDB-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).MariaDBDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'MediaServiceDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MediaService-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).MediaServiceDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'MlWorkspaceDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MlWorkspace-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).MlWorkspaceDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'MySQLDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MySQL-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).MySQLDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'NetworkNICDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-NIC-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).NetworkNICDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'NetworkSecurityGroupsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-NetworkSecurityGroups-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).NetworkSecurityGroupsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'PostgreSQLDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-PostgreSQL-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).PostgreSQLDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'PowerBIEmbeddedDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-PowerBIEmbedded-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).PowerBIEmbeddedDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'PublicIPDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-PublicIP-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).PublicIPDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'RedisCacheDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RedisCache-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).RedisCacheDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'RelayDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Relay-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).RelayDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'SearchServicesDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SearchServices-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SearchServicesDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'ServiceBusDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ServiceBus-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).ServiceBusDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'SignalRDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SignalR-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SignalRDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'SQLDBsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SQLDBsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'SQLElasticPoolsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLElasticPools-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SQLElasticPoolsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'SQLMDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLMI-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SQLMDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'StorageAccountsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-StorageAccounts-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).StorageAccountsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'StreamAnalyticsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-StreamAnalytics-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).StreamAnalyticsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'TimeSeriesInsightsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-TimeSeriesInsights-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).TimeSeriesInsightsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'TrafficManagerDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-TrafficManager-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).TrafficManagerDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'VirtualMachinesDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VM-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).VirtualMachinesDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'VirtualNetworkDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VirtualNetwork-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).VirtualNetworkDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'VMSSDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VMSS-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).VMSSDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'VNetGWDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VNetGW-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).VNetGWDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'WVDAppGroupDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WVDAppGroup-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).WVDAppGroupDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'WVDHostPoolsDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WVDHostPools-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).WVDHostPoolsDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+		{
+			definitionReferenceId: 'WVDWorkspaceDeployDiagnosticLogDeployStorageAcct'
+			definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WVDWorkspace-StgAcct'
+			definitionParameters: json(loadTextContent('policy/policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).WVDWorkspaceDeployDiagnosticLogDeployStorageAcct.parameters
+		}
+	]
+}

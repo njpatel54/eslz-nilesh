@@ -174,5 +174,5 @@
       }
     }
   },
-  "name": "Deploy-Diagnostics-LogicApps-StgAcct"
+  "name": "Deploy-Diagnostics-LogicAppsWF-StgAcct"
 }

@@ -147,5 +147,5 @@
       }
     }
   },
-  "name": "Deploy-Diag-NSGs-StgAcct"
+  "name": "Deploy-Diag-NetworkSecurityGroups-StgAcct"
 }

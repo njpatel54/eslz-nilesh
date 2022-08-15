@@ -380,5 +380,5 @@
       }
     }
   },
-  "name": "Deploy-Diagnostics-StorageAccount-StgAcct"
+  "name": "Deploy-Diagnostics-StorageAccounts-StgAcct"
 }

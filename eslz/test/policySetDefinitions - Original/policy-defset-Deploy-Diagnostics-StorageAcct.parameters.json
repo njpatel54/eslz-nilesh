@@ -1,4 +1,18 @@
 {
+  
+  "AutomationDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AutomationstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
   "ACIDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
       "storageAccountId": {
@@ -19,19 +33,6 @@
       },
       "effect": {
         "value": "[[parameters('ACRstorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "AKSDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('AKSstorageAccountIdEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -84,45 +85,6 @@
       },
       "effect": {
         "value": "[[parameters('ApplicationGatewaystorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "AppServiceDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('AppServicestorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "AppServiceWebappDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('AppServiceWebappstorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "AutomationDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('AutomationstorageAccountIdEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -259,6 +221,19 @@
       }
     }
   },
+  "EventSystemTopicDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('EventSystemTopicstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
   "EventGridTopicDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
       "storageAccountId": {
@@ -279,19 +254,6 @@
       },
       "effect": {
         "value": "[[parameters('EventHubstorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "EventSystemTopicDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('EventSystemTopicstorageAccountIdEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -388,6 +350,19 @@
         "value": "[[parameters('profileName')]"
       }
     }
+  },  
+  "AKSDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AKSstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
   },
   "LoadBalancerDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
@@ -402,19 +377,6 @@
       }
     }
   },
-  "LogicAppsISEDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('LogicAppsISEstorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
   "LogicAppsWFDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
       "storageAccountId": {
@@ -422,6 +384,19 @@
       },
       "effect": {
         "value": "[[parameters('LogicAppsWFstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "LogicAppsISEDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('LogicAppsISEstorageAccountIdEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -480,19 +455,6 @@
       }
     }
   },
-  "NetworkNICDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('NetworkNICstorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
   "NetworkSecurityGroupsDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
       "storageAccountId": {
@@ -500,6 +462,19 @@
       },
       "effect": {
         "value": "[[parameters('NetworkSecurityGroupsstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "NetworkNICDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('NetworkNICstorageAccountIdEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -701,19 +676,6 @@
       }
     }
   },
-  "VirtualMachinesDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('VirtualMachinesstorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
   "VirtualNetworkDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
       "storageAccountId": {
@@ -721,6 +683,19 @@
       },
       "effect": {
         "value": "[[parameters('VirtualNetworkstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "VirtualMachinesDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('VirtualMachinesstorageAccountIdEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -747,6 +722,32 @@
       },
       "effect": {
         "value": "[[parameters('VNetGWstorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "AppServiceDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AppServicestorageAccountIdEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "AppServiceWebappDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('AppServiceWebappstorageAccountIdEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"

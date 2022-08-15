@@ -469,5 +469,5 @@
             }
         }
     },
-    "name": "Deploy-Diagnostics-Kubernetes-StgAcct"
+    "name": "Deploy-Diagnostics-AKS-StgAcct"
 }
