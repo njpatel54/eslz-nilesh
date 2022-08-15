@@ -93,6 +93,9 @@ param opscope string
 ])
 param region string
 
+@description('Required. Last four digits of Enrollment Number.')
+param enrollmentID string
+
 // Build param values using string interpolation
 @description('Required. SIEM Resource Group Name.')
 param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
@@ -110,7 +113,7 @@ param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-lo
 param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${region}logs', 24))
+param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
 
 // From Parameters Files
 @description('Required. Storage Account SKU.')
