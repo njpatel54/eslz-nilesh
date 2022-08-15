@@ -587,5 +587,5 @@
       }
     }
   },
-  "name": "Deploy-Diagnostics-SQLDatabase-StgAcct"
+  "name": "Deploy-Diagnostics-SQLDBs-StgAcct"
 }

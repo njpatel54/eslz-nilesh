@@ -99,7 +99,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-iotHub.json'))
 }
 {
-	name: 'Deploy-Diagnostics-Kubernetes-EH'
+	name: 'Deploy-Diagnostics-AKS-EH'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-eh-Kubernetes.json'))
 }
 {
@@ -327,7 +327,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-KeyVault.json'))
 }
 {
-	name: 'Deploy-Diagnostics-Kubernetes-StgAcct'
+	name: 'Deploy-Diagnostics-AKS-StgAcct'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-Kubernetes.json'))
 }
 {
@@ -335,7 +335,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-LoadBalancer.json'))
 }
 {
-	name: 'Deploy-Diagnostics-LogicApps-StgAcct'
+	name: 'Deploy-Diagnostics-LogicAppsWF-StgAcct'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-LogicApps.json'))
 }
 {
@@ -359,7 +359,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-MySQL.json'))
 }
 {
-	name: 'Deploy-Diag-NSGs-StgAcct'
+	name: 'Deploy-Diag-NetworkSecurityGroups-StgAcct'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-NetworkSecurityGroups.json'))
 }
 {
@@ -387,7 +387,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-Relay.json'))
 }
 {
-	name: 'Deploy-Diagnostics-SearchService-StgAcct'
+	name: 'Deploy-Diagnostics-SearchServices-StgAcct'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SearchService.json'))
 }
 {
@@ -399,7 +399,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SignalR.json'))
 }
 {
-	name: 'Deploy-Diagnostics-SQLDatabase-StgAcct'
+	name: 'Deploy-Diagnostics-SQLDBs-StgAcct'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SQLDatabase.json'))
 }
 {
@@ -411,7 +411,7 @@
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-SQLMI.json'))
 }
 {
-	name: 'Deploy-Diagnostics-StorageAccount-StgAcct'
+	name: 'Deploy-Diagnostics-StorageAccounts-StgAcct'
 	definition: json(loadTextContent('./policyDefinitions/policy-def-Deploy-Diagnostics-stg-StorageAccount.json'))
 }
 {

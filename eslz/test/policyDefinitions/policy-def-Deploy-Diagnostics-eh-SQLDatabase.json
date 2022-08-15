@@ -604,5 +604,5 @@
       }
     }
   },
-  "name": "Deploy-Diagnostics-SQLDatabase-EH"
+  "name": "Deploy-Diagnostics-SQLDBs-EH"
 }

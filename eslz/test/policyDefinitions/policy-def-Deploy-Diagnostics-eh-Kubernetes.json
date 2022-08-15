@@ -486,5 +486,5 @@
             }
         }
     },
-    "name": "Deploy-Diagnostics-Kubernetes-EH"
+    "name": "Deploy-Diagnostics-AKS-EH"
 }
