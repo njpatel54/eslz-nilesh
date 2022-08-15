@@ -209,7 +209,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
     authorizationRules: authorizationRules
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
-    diagnosticWorkspaceId: loga.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId    
   }
 }
 

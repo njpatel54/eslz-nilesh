@@ -5,7 +5,7 @@
         "hubNetworkSecurityGroups": {
             "value": [
                 {
-                    "name": "nsg-css-prod-usva-abh",
+                    "name": "nsg-ccs-prod-usva-abh",
                     "securityRules": [
                         {
                             "name": "AllowHttpsInbound",
@@ -458,11 +458,11 @@
         "firewallPolicyRuleCollectionGroups": {
             "value": [
                 {
-                    "name": "afwrcg-css-prod-usva-0001",
+                    "name": "afwrcg-ccs-prod-usva-0001",
                     "priority": 5000,
                     "ruleCollections": [
                         {
-                            "name": "afwrc-css-prod-usva-0001",
+                            "name": "afwrc-ccs-prod-usva-0001",
                             "priority": 5555,
                             "action": {
                                 "type": "Allow"
@@ -512,7 +512,7 @@
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                         },
                         {
-                            "name": "afwrc-css-prod-usva-0002",
+                            "name": "afwrc-ccs-prod-usva-0002",
                             "priority": 6666,
                             "action": {
                                 "type": "Allow"
