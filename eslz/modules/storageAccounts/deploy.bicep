@@ -288,6 +288,26 @@ module storageAccount_blobServices 'blobServices/deploy.bicep' = if (!empty(blob
     deleteRetentionPolicy: contains(blobServices, 'deleteRetentionPolicy') ? blobServices.deleteRetentionPolicy : true
     deleteRetentionPolicyDays: contains(blobServices, 'deleteRetentionPolicyDays') ? blobServices.deleteRetentionPolicyDays : 7
     diagnosticLogsRetentionInDays: contains(blobServices, 'diagnosticLogsRetentionInDays') ? blobServices.diagnosticLogsRetentionInDays : 365
+    diagnosticStorageAccountId: !empty(diagnosticStorageAccountId) ? diagnosticStorageAccountId : ''
+    diagnosticWorkspaceId: !empty(diagnosticWorkspaceId) ? diagnosticWorkspaceId : ''
+    diagnosticEventHubAuthorizationRuleId: !empty(diagnosticEventHubAuthorizationRuleId) ? diagnosticEventHubAuthorizationRuleId : ''
+    diagnosticEventHubName: !empty(diagnosticEventHubName) ? diagnosticEventHubName : ''
+    diagnosticLogCategoriesToEnable: contains(blobServices, 'diagnosticLogCategoriesToEnable') ? blobServices.diagnosticLogCategoriesToEnable : []
+    diagnosticMetricsToEnable: contains(blobServices, 'diagnosticMetricsToEnable') ? blobServices.diagnosticMetricsToEnable : []
+  }
+}
+
+/*
+// Containers
+module storageAccount_blobServices 'blobServices/deploy.bicep' = if (!empty(blobServices)) {
+  name: '${uniqueString(deployment().name, location)}-Storage-BlobServices'
+  params: {
+    storageAccountName: storageAccount.name
+    containers: contains(blobServices, 'containers') ? blobServices.containers : []
+    automaticSnapshotPolicyEnabled: contains(blobServices, 'automaticSnapshotPolicyEnabled') ? blobServices.automaticSnapshotPolicyEnabled : false
+    deleteRetentionPolicy: contains(blobServices, 'deleteRetentionPolicy') ? blobServices.deleteRetentionPolicy : true
+    deleteRetentionPolicyDays: contains(blobServices, 'deleteRetentionPolicyDays') ? blobServices.deleteRetentionPolicyDays : 7
+    diagnosticLogsRetentionInDays: contains(blobServices, 'diagnosticLogsRetentionInDays') ? blobServices.diagnosticLogsRetentionInDays : 365
     diagnosticStorageAccountId: contains(blobServices, 'diagnosticStorageAccountId') ? blobServices.diagnosticStorageAccountId : ''
     diagnosticEventHubAuthorizationRuleId: contains(blobServices, 'diagnosticEventHubAuthorizationRuleId') ? blobServices.diagnosticEventHubAuthorizationRuleId : ''
     diagnosticEventHubName: contains(blobServices, 'diagnosticEventHubName') ? blobServices.diagnosticEventHubName : ''
@@ -297,7 +317,7 @@ module storageAccount_blobServices 'blobServices/deploy.bicep' = if (!empty(blob
     
   }
 }
-
+*/
 // File Shares
 module storageAccount_fileServices 'fileServices/deploy.bicep' = if (!empty(fileServices)) {
   name: '${uniqueString(deployment().name, location)}-Storage-FileServices'

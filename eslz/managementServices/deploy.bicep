@@ -131,6 +131,9 @@ param kvRoleAssignments array
 @description('Required. Storage Account SKU.')
 param storageaccount_sku string
 
+@description('Optional. Blob service and containers to deploy')
+param blobServices object
+
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
 
@@ -199,6 +202,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     location: location
     storageAccountName: stgAcctName
     storageSKU: storageaccount_sku
+    blobServices: blobServices
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
     publicNetworkAccess: 'Disabled'

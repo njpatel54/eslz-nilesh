@@ -79,6 +79,11 @@
     "storageaccount_sku": {
       "value": "Standard_LRS"
     },
+    "blobServices": {
+      "value": {
+          "containers": []
+      }
+  },
     "authorizationRules": {
       "value": [
         {
