@@ -50,16 +50,16 @@ param diagnosticWorkspaceId string = ''
 module akv '../../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(subscriptionId, wlRgName)
-    params: {
-      name: akvName
-      location: location
-      tags: combinedTags
-      vaultSku: 'premium'
-      publicNetworkAccess: publicNetworkAccess
-      networkAcls: networkAcls
-      diagnosticSettingsName: diagSettingName
-      diagnosticWorkspaceId: diagnosticWorkspaceId
-    }
+  params: {
+    name: akvName
+    location: location
+    tags: combinedTags
+    vaultSku: 'premium'
+    publicNetworkAccess: publicNetworkAccess
+    networkAcls: networkAcls
+    diagnosticSettingsName: diagSettingName
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+  }
 }
 
 // 2. Create Private Endpoint for Key Vault
