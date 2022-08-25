@@ -3,8 +3,7 @@ targetScope = 'subscription'
 @description('Optional. Name of the ActivityLog diagnostic settings.')
 @minLength(1)
 @maxLength(260)
-param name string = '${uniqueString(subscription().displayName)}-ActivityLog'
-
+param name string = '${subscription().displayName}-ActivityLog'
 /*
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)
