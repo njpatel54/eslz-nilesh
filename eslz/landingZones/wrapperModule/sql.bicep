@@ -113,6 +113,9 @@ module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
 module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database in databases: {
   name: 'sqldb-${take(uniqueString(deployment().name, location), 4)}-${database.name}'
   scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    sqlPrimaryServer
+  ]
   params: {
     name: database.name
     serverName: sqlPrimaryServerName
@@ -141,6 +144,11 @@ module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database 
 resource symbolicname 'Microsoft.Sql/servers/failoverGroups@2022-02-01-preview' = {
   name: '${sqlPrimaryServerName}/${sqlFailOverGroupName}'
   tags: combinedTags
+  dependsOn: [
+    sqlPrimaryServer
+    sqlSecondaryServer
+    sqldb
+  ]
   properties: {
     databases: [for database in params.parameters.databases.value: resourceId(subscriptionId, wlRgName, 'Microsoft.Sql/servers/databases', sqlPrimaryServerName, database.name)]
     partnerServers: [
