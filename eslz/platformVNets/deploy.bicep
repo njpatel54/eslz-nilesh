@@ -188,6 +188,10 @@ param enrollmentID string
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
 
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
+
 @description('Required. Automation Account subresource IDs (groupId).')
 var aaGroupIds = [
   'Webhook'
@@ -477,8 +481,6 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    hubVnet
-    spokeVnet
     priDNSZones
   ]
   params: {
@@ -509,8 +511,6 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    hubVnet
-    spokeVnet
     priDNSZones
   ]
   params: {
@@ -567,8 +567,6 @@ module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'amplsPe-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
-    hubVnet
-    spokeVnet
     priDNSZones
   ]
   params: {
@@ -592,6 +590,35 @@ module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
+// 20. Retrieve an existing Key Vault resource
+resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: akvName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 21. Create Private Endpoint for Key Vault
+module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    priDNSZones
+  ]
+  params: {
+    name: '${akvName}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: akv.id
+    groupIds: [
+      'vault'
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
+      ]
+    }
+  }
+}
 
 // Start - Outputs to supress warnings - "unused parameters"
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId

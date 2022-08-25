@@ -244,9 +244,6 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    siem_rg
-    loga
-    sa
     eh
   ]
   params:{
@@ -261,31 +258,12 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   }
 }
 
-// 7. Configure Diagnostics Settings for Subscriptions
-module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'diagSettings-${subscription.subscriptionId}'
-  scope: subscription(subscription.subscriptionId)
-  dependsOn: [
-    siem_rg
-    loga
-    sa
-    eh
-  ]
-  params:{
-    location: location
-    diagnosticStorageAccountId: sa.outputs.resourceId
-    diagnosticWorkspaceId: loga.outputs.resourceId
-    //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
-    //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
-  }
-}]
-
-// 8. Create Azure Key Vault
+// 7. Create Azure Key Vault
 module akv '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    sa
+    eh
   ]
     params: {
       name: akvName
@@ -300,6 +278,24 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
       //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
     }
 }
+
+// 8. Configure Diagnostics Settings for Subscriptions
+module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
+  name: 'diagSettings-${subscription.subscriptionId}'
+  scope: subscription(subscription.subscriptionId)
+  dependsOn: [
+    eh
+  ]
+  params:{
+    location: location
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
+    //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+  }
+}]
+
+
 
 @description('Output - Name of Event Hub')
 output ehnsAuthorizationId string = resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
