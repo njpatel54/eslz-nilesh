@@ -53,7 +53,8 @@ jobs:
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
-                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }}
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }} \
+                         enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}
 
   preview:
     runs-on: ubuntu-latest
