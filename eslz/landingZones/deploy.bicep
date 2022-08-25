@@ -167,6 +167,12 @@ param connsubid string
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
 
+@description('Required. Subscription ID of Management Subscription.')
+param mgmtsubid string
+
+@description('Required. SIEM Resource Group Name.')
+param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
 // End - 'virtualNetwork' Module Parameters
@@ -198,7 +204,7 @@ param stgGroupIds array
 // Start - 'akv' Module Parameters
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
-param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
+param lzAkvName string = toLower(take('kv-${projowner}-${opscope}-${region}-${suffix}', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 @allowed([
@@ -285,7 +291,15 @@ param sqlAdministratorLogin string = ''
 @secure()
 param sqlAdministratorLoginPassword string = ''
 
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
+// Retrieve exisiting Key Vault (From Management Subscription)
+resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: akvName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
 
 /*
 // 1. Create the Subscription
@@ -324,8 +338,8 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   params:{
     name: diagSettingName
     location: location
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticStorageAccountId: diagnosticStorageAccountId
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
   }
@@ -345,8 +359,8 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
 }
 
 // 5. Create Log Analytics Workspace
-module loga 'wrapperModule/logAnalytics.bicep' = {
-  name: 'mod-loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
+module lzLoga 'wrapperModule/logAnalytics.bicep' = {
+  name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     rgs
@@ -371,7 +385,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
-    loga
+    lzLoga
   ]
   params: {
     vnetName: vnetName
@@ -386,18 +400,18 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
     privateDnsZones: privateDnsZones
-    diagSettingName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    localDiagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    //diagSettingName: diagSettingName
+    //diagnosticStorageAccountId: diagnosticStorageAccountId
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubName: diagnosticEventHubName
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
   }
 }
 
 // 7. Create Storage Account
-module sa 'wrapperModule/storage.bicep' = {
-  name: 'mod-sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
+module lzSa 'wrapperModule/storage.bicep' = {
+  name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzVnet
@@ -415,23 +429,24 @@ module sa 'wrapperModule/storage.bicep' = {
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
-    diagSettingName: diagSettingName
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    localDiagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    //diagSettingName: diagSettingName
+    //diagnosticStorageAccountId: diagnosticStorageAccountId
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubName: diagnosticEventHubName
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
   }
 }
 
 // 8. Create Azure Key Vault
-module akv 'wrapperModule/keyVault.bicep' = {
-  name: 'mod-akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+module lzAkv 'wrapperModule/keyVault.bicep' = {
+  name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzVnet
   ]
   params: {
-    akvName: akvName
+    akvName: lzAkvName
     location: location
     combinedTags: combinedTags
     wlRgName: wlRgName
@@ -443,18 +458,18 @@ module akv 'wrapperModule/keyVault.bicep' = {
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
-    diagSettingName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    localDiagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    //diagSettingName: diagSettingName
+    //diagnosticStorageAccountId: diagnosticStorageAccountId
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubName: diagnosticEventHubName
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
   }
 }
 
 // 9. Create SQL Server
-module sql 'wrapperModule/sql.bicep' = {
-  name: 'mod-sql-${take(uniqueString(deployment().name, location), 4)}'
+module lzSql 'wrapperModule/sql.bicep' = {
+  name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzVnet
@@ -466,13 +481,17 @@ module sql 'wrapperModule/sql.bicep' = {
     sqlSecondaryServerName: sqlSecondaryServerName
     subscriptionId: subscriptionId
     wlRgName: wlRgName
-    administratorLogin: akvtest.getSecret(sqlAdministratorLogin)
-    administratorLoginPassword: akvtest.getSecret(sqlAdministratorLoginPassword) 
+    administratorLogin: akv.getSecret(sqlAdministratorLogin)
+    administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword) 
     administrators: administrators
     databases: databases
     sqlFailOverGroupName: sqlFailOverGroupName
-    diagSettingName: diagSettingName
-    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
+    localDiagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    //diagSettingName: diagSettingName
+    //diagnosticStorageAccountId: diagnosticStorageAccountId
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubName: diagnosticEventHubName
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
   }
 }
 
@@ -483,10 +502,10 @@ output rgNames array = rgs.outputs.rgNames
 output rgResoruceIds array = rgs.outputs.rgResoruceIds
 
 @description('Output - Log Analytics Workspace "name"')
-output logaName string = loga.outputs.logaName
+output logaName string = lzLoga.outputs.logaName
 
 @description('Output - Log Analytics Workspace "resoruceId"')
-output logaResoruceId string = loga.outputs.logaResoruceId
+output logaResoruceId string = lzLoga.outputs.logaResoruceId
 
 @description('Output - Virtual Network "name"')
 output vNetName string = lzVnet.outputs.vNetName
@@ -507,19 +526,19 @@ output nsgsNames array = lzVnet.outputs.nsgsNames
 output nsgsResourceIds array = lzVnet.outputs.nsgsResourceIds
 
 @description('Output - Storage Account "name"')
-output saName string = sa.outputs.saName
+output saName string = lzSa.outputs.saName
 
 @description('Output - Storage Account "resoruceId"')
-output saResoruceId string = sa.outputs.saResoruceId
+output saResoruceId string = lzSa.outputs.saResoruceId
 
 @description('Output - Log Analytics Workspace "name"')
-output akvName string = akv.outputs.akvName
+output akvName string = lzAkv.outputs.akvName
 
 @description('Output - Log Analytics Workspace "resoruceId"')
-output akvResoruceId string = akv.outputs.akvResoruceId
+output akvResoruceId string = lzAkv.outputs.akvResoruceId
 
 @description('Output - Log Analytics Workspace "resoruceId"')
-output akvUri string = akv.outputs.akvUri
+output akvUri string = lzAkv.outputs.akvUri
 
 
 /*
