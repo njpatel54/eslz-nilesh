@@ -1,6 +1,6 @@
 {
     "properties": {
-      "displayName": "Deploy Diagnostic Settings for Key Vault to Storage Account",
+      "displayName": "Deploy Diagnostic Settings for Key Vault to a Storage Account",
       "mode": "Indexed",
       "description": "Deploys the diagnostic settings for Key Vault to stream to Storage Account when any Key Vault which is missing this diagnostic settings is created or updated.",
       "metadata": {

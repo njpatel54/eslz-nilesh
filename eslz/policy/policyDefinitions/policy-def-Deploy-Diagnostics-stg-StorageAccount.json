@@ -1,6 +1,6 @@
 {
   "properties": {
-    "displayName": "Configure diagnostic settings for storage accounts to Storage Account",
+    "displayName": "Deploys diagnostic settings for storage accounts to a Storage Account",
     "mode": "Indexed",
     "description": "Deploys the diagnostic settings for storage accounts to stream resource logs to a Storage Account when any storage account which is missing this diagnostic settings is created or updated.",
     "metadata": {

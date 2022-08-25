@@ -1,6 +1,6 @@
 {
     "properties": {
-      "displayName": "Deploy Diagnostic Settings for Service Bus to Storage Account",
+      "displayName": "Deploy Diagnostic Settings for Service Bus to a Storage Account",
       "mode": "Indexed",
       "description": "Deploys the diagnostic settings for Service Bus to stream to Storage Account when any Service Bus which is missing this diagnostic settings is created or updated.",
       "metadata": {

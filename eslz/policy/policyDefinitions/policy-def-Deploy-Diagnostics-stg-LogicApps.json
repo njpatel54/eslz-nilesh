@@ -1,6 +1,6 @@
 {
   "properties": {
-    "displayName": "Deploy Diagnostic Settings for Logic Apps to Storage Account",
+    "displayName": "Deploy Diagnostic Settings for Logic Apps to a Storage Account",
     "mode": "Indexed",
     "description": "Deploys the diagnostic settings for Logic Apps to stream to Storage Account when any Logic Apps which is missing this diagnostic settings is created or updated.",
     "metadata": {
