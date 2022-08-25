@@ -292,8 +292,6 @@ module storageAccount_blobServices 'blobServices/deploy.bicep' = if (!empty(blob
     diagnosticWorkspaceId: !empty(diagnosticWorkspaceId) ? diagnosticWorkspaceId : ''
     diagnosticEventHubAuthorizationRuleId: !empty(diagnosticEventHubAuthorizationRuleId) ? diagnosticEventHubAuthorizationRuleId : ''
     diagnosticEventHubName: !empty(diagnosticEventHubName) ? diagnosticEventHubName : ''
-    diagnosticLogCategoriesToEnable: contains(blobServices, 'diagnosticLogCategoriesToEnable') ? blobServices.diagnosticLogCategoriesToEnable : []
-    diagnosticMetricsToEnable: contains(blobServices, 'diagnosticMetricsToEnable') ? blobServices.diagnosticMetricsToEnable : []
   }
 }
 
