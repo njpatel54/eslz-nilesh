@@ -214,7 +214,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
   name: 'eh-${take(uniqueString(deployment().name, location), 4)}-${eventhubNamespaceName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    loga
+    sa
   ]
   params: {
     location: location
@@ -275,6 +275,9 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
 module akv '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    sa
+  ]
     params: {
       name: akvName
       location: location
