@@ -125,7 +125,7 @@ param diagnosticMetricsToEnable array = [
 ]
 
 @description('Optional. The name of the diagnostic setting, if deployed.')
-param diagnosticSettingsName string = '${name}-diagnosticSettings'
+param diagnosticSettingsName string
 
 // =========== //
 // Variables   //

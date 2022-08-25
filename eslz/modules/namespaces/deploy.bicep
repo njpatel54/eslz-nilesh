@@ -123,7 +123,7 @@ var name_var = empty(eventhubNamespaceName) ? uniqueEventHubNamespace : eventhub
 var maximumThroughputUnits_var = !isAutoInflateEnabled ? 0 : maximumThroughputUnits
 
 @description('Optional. The name of the diagnostic setting, if deployed.')
-param diagnosticSettingsName string = '${eventhubNamespaceName}-diagnosticSettings'
+param diagnosticSettingsName string
 
 var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
   category: category
