@@ -253,9 +253,6 @@ param roleAssignments array = []
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
-@description('Optional. Enable telemetry via the Customer Usage Attribution ID (GUID).')
-param enableDefaultTelemetry bool = true
-
 @description('Generated. Do not provide a value! This date value is used to generate a registration token.')
 param baseTime string = utcNow('u')
 
@@ -334,20 +331,6 @@ var identity = identityType != 'None' ? {
   type: identityType
   userAssignedIdentities: !empty(userAssignedIdentities) ? userAssignedIdentities : null
 } : null
-
-var enableReferencedModulesTelemetry = false
-
-resource defaultTelemetry 'Microsoft.Resources/deployments@2021-04-01' = if (enableDefaultTelemetry) {
-  name: 'pid-47ed15a6-730a-4827-bcb4-0fd963ffbd82-${uniqueString(deployment().name, location)}'
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
-}
 
 module vm_nic '.bicep/nested_networkInterface.bicep' = [for (nicConfiguration, index) in nicConfigurations: {
   name: '${uniqueString(deployment().name, location)}-VM-Nic-${index}'
@@ -484,6 +467,7 @@ module vm_domainJoinExtension 'extensions/deploy.bicep' = if (extensionDomainJoi
   name: '${uniqueString(deployment().name, location)}-VM-DomainJoin'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'DomainJoin'
     publisher: 'Microsoft.Compute'
     type: 'JsonADDomainExtension'
@@ -494,7 +478,6 @@ module vm_domainJoinExtension 'extensions/deploy.bicep' = if (extensionDomainJoi
     protectedSettings: {
       Password: extensionDomainJoinPassword
     }
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -502,6 +485,7 @@ module vm_microsoftAntiMalwareExtension 'extensions/deploy.bicep' = if (extensio
   name: '${uniqueString(deployment().name, location)}-VM-MicrosoftAntiMalware'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'MicrosoftAntiMalware'
     publisher: 'Microsoft.Azure.Security'
     type: 'IaaSAntimalware'
@@ -509,7 +493,6 @@ module vm_microsoftAntiMalwareExtension 'extensions/deploy.bicep' = if (extensio
     autoUpgradeMinorVersion: contains(extensionAntiMalwareConfig, 'autoUpgradeMinorVersion') ? extensionAntiMalwareConfig.autoUpgradeMinorVersion : true
     enableAutomaticUpgrade: contains(extensionAntiMalwareConfig, 'enableAutomaticUpgrade') ? extensionAntiMalwareConfig.enableAutomaticUpgrade : false
     settings: extensionAntiMalwareConfig.settings
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -522,6 +505,7 @@ module vm_microsoftMonitoringAgentExtension 'extensions/deploy.bicep' = if (exte
   name: '${uniqueString(deployment().name, location)}-VM-MicrosoftMonitoringAgent'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'MicrosoftMonitoringAgent'
     publisher: 'Microsoft.EnterpriseCloud.Monitoring'
     type: osType == 'Windows' ? 'MicrosoftMonitoringAgent' : 'OmsAgentForLinux'
@@ -534,7 +518,6 @@ module vm_microsoftMonitoringAgentExtension 'extensions/deploy.bicep' = if (exte
     protectedSettings: {
       workspaceKey: !empty(monitoringWorkspaceId) ? vm_logAnalyticsWorkspace.listKeys().primarySharedKey : ''
     }
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -542,13 +525,13 @@ module vm_dependencyAgentExtension 'extensions/deploy.bicep' = if (extensionDepe
   name: '${uniqueString(deployment().name, location)}-VM-DependencyAgent'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'DependencyAgent'
     publisher: 'Microsoft.Azure.Monitoring.DependencyAgent'
     type: osType == 'Windows' ? 'DependencyAgentWindows' : 'DependencyAgentLinux'
     typeHandlerVersion: contains(extensionDependencyAgentConfig, 'typeHandlerVersion') ? extensionDependencyAgentConfig.typeHandlerVersion : '9.5'
     autoUpgradeMinorVersion: contains(extensionDependencyAgentConfig, 'autoUpgradeMinorVersion') ? extensionDependencyAgentConfig.autoUpgradeMinorVersion : true
     enableAutomaticUpgrade: contains(extensionDependencyAgentConfig, 'enableAutomaticUpgrade') ? extensionDependencyAgentConfig.enableAutomaticUpgrade : true
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -556,13 +539,13 @@ module vm_networkWatcherAgentExtension 'extensions/deploy.bicep' = if (extension
   name: '${uniqueString(deployment().name, location)}-VM-NetworkWatcherAgent'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'NetworkWatcherAgent'
     publisher: 'Microsoft.Azure.NetworkWatcher'
     type: osType == 'Windows' ? 'NetworkWatcherAgentWindows' : 'NetworkWatcherAgentLinux'
     typeHandlerVersion: contains(extensionNetworkWatcherAgentConfig, 'typeHandlerVersion') ? extensionNetworkWatcherAgentConfig.typeHandlerVersion : '1.4'
     autoUpgradeMinorVersion: contains(extensionNetworkWatcherAgentConfig, 'autoUpgradeMinorVersion') ? extensionNetworkWatcherAgentConfig.autoUpgradeMinorVersion : true
     enableAutomaticUpgrade: contains(extensionNetworkWatcherAgentConfig, 'enableAutomaticUpgrade') ? extensionNetworkWatcherAgentConfig.enableAutomaticUpgrade : false
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -570,6 +553,7 @@ module vm_desiredStateConfigurationExtension 'extensions/deploy.bicep' = if (ext
   name: '${uniqueString(deployment().name, location)}-VM-DesiredStateConfiguration'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'DesiredStateConfiguration'
     publisher: 'Microsoft.Powershell'
     type: 'DSC'
@@ -578,7 +562,6 @@ module vm_desiredStateConfigurationExtension 'extensions/deploy.bicep' = if (ext
     enableAutomaticUpgrade: contains(extensionDSCConfig, 'enableAutomaticUpgrade') ? extensionDSCConfig.enableAutomaticUpgrade : false
     settings: contains(extensionDSCConfig, 'settings') ? extensionDSCConfig.settings : {}
     protectedSettings: contains(extensionDSCConfig, 'protectedSettings') ? extensionDSCConfig.protectedSettings : {}
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
 }
 
@@ -586,6 +569,7 @@ module vm_customScriptExtension 'extensions/deploy.bicep' = if (extensionCustomS
   name: '${uniqueString(deployment().name, location)}-VM-CustomScriptExtension'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'CustomScriptExtension'
     publisher: osType == 'Windows' ? 'Microsoft.Compute' : 'Microsoft.Azure.Extensions'
     type: osType == 'Windows' ? 'CustomScriptExtension' : 'CustomScript'
@@ -596,7 +580,6 @@ module vm_customScriptExtension 'extensions/deploy.bicep' = if (extensionCustomS
       fileUris: [for fileData in extensionCustomScriptConfig.fileData: contains(fileData, 'storageAccountId') ? '${fileData.uri}?${listAccountSas(fileData.storageAccountId, '2019-04-01', accountSasProperties).accountSasToken}' : fileData.uri]
     }
     protectedSettings: extensionCustomScriptProtectedSetting
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
   dependsOn: [
     vm_desiredStateConfigurationExtension
@@ -607,6 +590,7 @@ module vm_diskEncryptionExtension 'extensions/deploy.bicep' = if (extensionDiskE
   name: '${uniqueString(deployment().name, location)}-VM-DiskEncryption'
   params: {
     virtualMachineName: vm.name
+    location: location
     name: 'DiskEncryption'
     publisher: 'Microsoft.Azure.Security'
     type: osType == 'Windows' ? 'AzureDiskEncryption' : 'AzureDiskEncryptionForLinux'
@@ -615,7 +599,6 @@ module vm_diskEncryptionExtension 'extensions/deploy.bicep' = if (extensionDiskE
     enableAutomaticUpgrade: contains(extensionDiskEncryptionConfig, 'enableAutomaticUpgrade') ? extensionDiskEncryptionConfig.enableAutomaticUpgrade : false
     forceUpdateTag: contains(extensionDiskEncryptionConfig, 'forceUpdateTag') ? extensionDiskEncryptionConfig.forceUpdateTag : '1.0'
     settings: extensionDiskEncryptionConfig.settings
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
   dependsOn: [
     vm_customScriptExtension
@@ -623,16 +606,16 @@ module vm_diskEncryptionExtension 'extensions/deploy.bicep' = if (extensionDiskE
   ]
 }
 
-module vm_backup '../../Microsoft.RecoveryServices/vaults/protectionContainers/protectedItems/deploy.bicep' = if (!empty(backupVaultName)) {
+module vm_backup '../../recoeryServices/vaults/protectionContainers/protectedItems/deploy.bicep' = if (!empty(backupVaultName)) {
   name: '${uniqueString(deployment().name, location)}-VM-Backup'
   params: {
     name: 'vm;iaasvmcontainerv2;${resourceGroup().name};${vm.name}'
+    location: location
     policyId: az.resourceId('Microsoft.RecoveryServices/vaults/backupPolicies', backupVaultName, backupPolicyName)
     protectedItemType: 'Microsoft.Compute/virtualMachines'
     protectionContainerName: 'iaasvmcontainer;iaasvmcontainerv2;${resourceGroup().name};${vm.name}'
     recoveryVaultName: backupVaultName
     sourceResourceId: vm.id
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
   }
   scope: az.resourceGroup(backupVaultResourceGroup)
   dependsOn: [

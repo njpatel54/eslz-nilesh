@@ -1,0 +1,1680 @@
+{
+  "properties": {
+    "description": "This policy set deploys the configurations of application Azure resources to forward diagnostic logs and metrics to an Azure Storage Account. See the list of policies of the services that are included ",
+    "displayName": "Deploy Diagnostic Settings for Azure Services to send logs to Azure Storage Account",
+    "parameters": {
+      "storageAccountId": {
+        "type": "String",
+        "metadata": {
+          "displayName": "storageAccountId",
+          "description": "The Storage Account ID for for Azure Diagnostics",
+          "strongType": "Microsoft.Storage/StorageAccounts"
+        }
+      },
+      "profileName": {
+        "type": "String",
+        "defaultValue": "setbypolicy",
+        "metadata": {
+          "displayName": "Profile name",
+          "description": "The diagnostic settings profile name"
+        }
+      },
+      "AutomationstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Automation to Storage Account",
+          "description": "Deploys the diagnostic settings for Automation to stream to a Storage Account when any Automation which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "ACIstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Container Instances to Storage Account",
+          "description": "Deploys the diagnostic settings for Container Instances to stream to a Storage Account when any ACR which is missing this diagnostic settings is created or updated. The Policy willset the diagnostic with all metrics enabled."
+        }
+      },
+      "ACRstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Container Registry to Storage Account",
+          "description": "Deploys the diagnostic settings for Container Registry to stream to a Storage Account when any ACR which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics  enabled."
+        }
+      },
+      "AnalysisServicestorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Analysis Services to Storage Account",
+          "description": "Deploys the diagnostic settings for Analysis Services to stream to a Storage Account when any Analysis Services which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "APIforFHIRstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Azure API for FHIR to Storage Account",
+          "description": "Deploys the diagnostic settings for Azure API for FHIR to stream to a Storage Account when any Azure API for FHIR which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "APIMgmtstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for API Management to Storage Account",
+          "description": "Deploys the diagnostic settings for API Management to stream to a Storage Account when any API Management which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "ApplicationGatewaystorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Application Gateway to Storage Account",
+          "description": "Deploys the diagnostic settings for Application Gateway to stream to a Storage Account when any Application Gateway which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "BastionstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Azure Bastion to Storage Account",
+          "description": "Deploys the diagnostic settings for Azure Bastion to stream to a Storage Account when any Bastion which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "BatchstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Batch to Storage Account",
+          "description": "Deploys the diagnostic settings for Batch to stream to a Storage Account when any Batch which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "CDNEndpointsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for CDN Endpoint to Storage Account",
+          "description": "Deploys the diagnostic settings for CDN Endpoint to stream to a Storage Account when any CDN Endpoint which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "CognitiveServicesstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Cognitive Services to Storage Account",
+          "description": "Deploys the diagnostic settings for Cognitive Services to stream to a Storage Account when any Cognitive Services which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "CosmosstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Cosmos DB to Storage Account",
+          "description": "Deploys the diagnostic settings for Cosmos DB to stream to a Storage Account when any Cosmos DB which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "DatabricksstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Databricks to Storage Account",
+          "description": "Deploys the diagnostic settings for Databricks to stream to a Storage Account when any Databricks which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "DataExplorerClusterstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Azure Data Explorer Cluster to Storage Account",
+          "description": "Deploys the diagnostic settings for Azure Data Explorer Cluster to stream to a Storage Account when any Azure Data Explorer Cluster which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "DataFactorystorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Data Factory to Storage Account",
+          "description": "Deploys the diagnostic settings for Data Factory to stream to a Storage Account when any Data Factory which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "DataLakeAnalyticsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Data Lake Analytics to Storage Account",
+          "description": "Deploys the diagnostic settings for Data Lake Analytics to stream to a Storage Account when any Data Lake Analytics which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "EventGridSubstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Event Grid subscriptions to Storage Account",
+          "description": "Deploys the diagnostic settings for Event Grid subscriptions to stream to a Storage Account when any Event Grid subscriptions which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "EventSystemTopicstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Event Grid System Topic to Storage Account",
+          "description": "Deploys the diagnostic settings for Event Grid System Topic to stream to a Storage Account when any Event Grid System Topic which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "EventGridTopicstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Event Grid Topic to Storage Account",
+          "description": "Deploys the diagnostic settings for Event Grid Topic to stream to a Storage Account when any Event Grid Topic which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "EventHubstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Event Hubs to Storage Account",
+          "description": "Deploys the diagnostic settings for Event Hubs to stream to a Storage Account when any Event Hubs which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "ExpressRoutestorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for ExpressRoute to Storage Account",
+          "description": "Deploys the diagnostic settings for ExpressRoute to stream to a Storage Account when any ExpressRoute which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "FirewallstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Firewall to Storage Account",
+          "description": "Deploys the diagnostic settings for Firewall to stream to a Storage Account when any Firewall which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "FrontDoorstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Front Door to Storage Account",
+          "description": "Deploys the diagnostic settings for Front Door to stream to a Storage Account when any Front Door which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "FunctionAppstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Azure Function App to Storage Account",
+          "description": "Deploys the diagnostic settings for Azure Function App to stream to a Storage Account when any function app which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "HDInsightstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for HDInsight to Storage Account",
+          "description": "Deploys the diagnostic settings for HDInsight to stream to a Storage Account when any HDInsight which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "IotHubstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for IoT Hub to Storage Account",
+          "description": "Deploys the diagnostic settings for IoT Hub to stream to a Storage Account when any IoT Hub which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "KeyVaultstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Key Vault to Storage Account",
+          "description": "Deploys the diagnostic settings for Key Vault to stream to a Storage Account when any Key Vault which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "AKSstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Kubernetes Service to Storage Account",
+          "description": "Deploys the diagnostic settings for Kubernetes Service to stream to a Storage Account when any Kubernetes Service which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled."
+        }
+      },
+      "LoadBalancerstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Load Balancer to Storage Account",
+          "description": "Deploys the diagnostic settings for Load Balancer to stream to a Storage Account when any Load Balancer which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "LogicAppsWFstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Logic Apps Workflows to Storage Account",
+          "description": "Deploys the diagnostic settings for Logic Apps Workflows to stream to a Storage Account when any Logic Apps Workflows which are missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "LogicAppsISEstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Logic Apps integration service environment to Storage Account",
+          "description": "Deploys the diagnostic settings for Logic Apps integration service environment to stream to a Storage Account when any Logic Apps integration service environment which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "MariaDBstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for MariaDB to Storage Account",
+          "description": "Deploys the diagnostic settings for MariaDB to stream to a Storage Account when any MariaDB  which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "MediaServicestorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Azure Media Service to Storage Account",
+          "description": "Deploys the diagnostic settings for Azure Media Service to stream to a Storage Account when any Azure Media Service which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "MlWorkspacestorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Machine Learning workspace to Storage Account",
+          "description": "Deploys the diagnostic settings for Machine Learning workspace to stream to a Storage Account when any Machine Learning workspace which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "MySQLstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Database for MySQL to Storage Account",
+          "description": "Deploys the diagnostic settings for Database for MySQL to stream to a Storage Account when any Database for MySQL which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "NetworkSecurityGroupsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Network Security Groups to Storage Account",
+          "description": "Deploys the diagnostic settings for Network Security Groups to stream to a Storage Account when any Network Security Groups which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "NetworkNICstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Network Interfaces to Storage Account",
+          "description": "Deploys the diagnostic settings for Network Interfaces to stream to a Storage Account when any Network Interfaces which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "PostgreSQLstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Database for PostgreSQL to Storage Account",
+          "description": "Deploys the diagnostic settings for Database for PostgreSQL to stream to a Storage Account when any Database for PostgreSQL which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "PowerBIEmbeddedstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Power BI Embedded to Storage Account",
+          "description": "Deploys the diagnostic settings for Power BI Embedded to stream to a Storage Account when any Power BI Embedded which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "NetworkPublicIPNicstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Public IP addresses to Storage Account",
+          "description": "Deploys the diagnostic settings for Public IP addresses to stream to a Storage Account when any Public IP addresses which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "RedisCachestorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Redis Cache to Storage Account",
+          "description": "Deploys the diagnostic settings for Redis Cache to stream to a Storage Account when any Redis Cache which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "RelaystorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Relay to Storage Account",
+          "description": "Deploys the diagnostic settings for Relay to stream to a Storage Account when any Relay which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "SearchServicesstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Search Services to Storage Account",
+          "description": "Deploys the diagnostic settings for Search Services to stream to a Storage Account when any Search Services which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "ServiceBusstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Service Bus namespaces  to Storage Account",
+          "description": "Deploys the diagnostic settings for ServiceBus to stream to a Storage Account when any ServiceBus which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "SignalRstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for SignalR to Storage Account",
+          "description": "Deploys the diagnostic settings for SignalR to stream to a Storage Account when any SignalR which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "SQLDBsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for SQL Databases  to Storage Account",
+          "description": "Deploys the diagnostic settings for SQL Databases to stream to a Storage Account when any SQL Databases  which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "SQLElasticPoolsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for SQL Elastic Pools to Storage Account",
+          "description": "Deploys the diagnostic settings for SQL Elastic Pools to stream to a Storage Account when any SQL Elastic Pools which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "SQLMstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for SQL Managed Instances to Storage Account",
+          "description": "Deploys the diagnostic settings for SQL Managed Instances to stream to a Storage Account when any SQL Managed Instances which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },      
+      "StorageAccountsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Storage Accounts to Storage Account",
+          "description": "Deploys the diagnostic settings for Storage Accounts to stream to a Storage Account when any storage account which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "StreamAnalyticsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Stream Analytics to Storage Account",
+          "description": "Deploys the diagnostic settings for Stream Analytics to stream to a Storage Account when any Stream Analytics which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "TimeSeriesInsightsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Time Series Insights to Storage Account",
+          "description": "Deploys the diagnostic settings for Time Series Insights to stream to a Storage Account when any Time Series Insights which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "TrafficManagerstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Traffic Manager to Storage Account",
+          "description": "Deploys the diagnostic settings for Traffic Manager to stream to a Storage Account when any Traffic Manager which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "VirtualNetworkstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Virtual Network to Storage Account",
+          "description": "Deploys the diagnostic settings for Virtual Network to stream to a Storage Account when any Virtual Network which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "VirtualMachinesstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Virtual Machines to Storage Account",
+          "description": "Deploys the diagnostic settings for Virtual Machines to stream to a Storage Account when any Virtual Machines which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "VMSSstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Virtual Machine Scale Sets to Storage Account",
+          "description": "Deploys the diagnostic settings for Virtual Machine Scale Sets  to stream to a Storage Account when any Virtual Machine Scale Sets  which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "VNetGWstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for VPN Gateway to Storage Account",
+          "description": "Deploys the diagnostic settings for VPN Gateway to stream to a Storage Account when any VPN Gateway which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled."
+        }
+      },
+      "AppServicestorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for App Service Plan to Storage Account",
+          "description": "Deploys the diagnostic settings for App Service Plan to stream to a Storage Account when any App Service Plan which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "AppServiceWebappstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for App Service to Storage Account",
+          "description": "Deploys the diagnostic settings for Web App to stream to a Storage Account when any Web App which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "WVDAppGroupsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for AVD Application Groups to Storage Account",
+          "description": "Deploys the diagnostic settings for AVD Application groups to stream to a Storage Account when any application groups which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "WVDHostPoolsstorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for AVD Host pools to Storage Account",
+          "description": "Deploys the diagnostic settings for AVD Host pools to stream to a Storage Account when any host pool which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "WVDWorkspacestorageAccountIdEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for AVD Workspace to Storage Account",
+          "description": "Deploys the diagnostic settings for AVD Workspace to stream to a Storage Account when any Workspace which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      }
+    },
+    "policyDefinitionGroups": null,
+    "metadata": {
+      "version": "1.1.0",
+      "category": "Monitoring"
+    },
+    "PolicyDefinitions": [      
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-AA-StgAcct",
+        "policyDefinitionReferenceId": "AutomationDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('AutomationstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ACI-StgAcct",
+        "policyDefinitionReferenceId": "ACIDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('ACIstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ACR-StgAcct",
+        "policyDefinitionReferenceId": "ACRDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('ACRstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AnalysisService-StgAcct",
+        "policyDefinitionReferenceId": "AnalysisServiceDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('AnalysisServicestorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ApiForFHIR-StgAcct",
+        "policyDefinitionReferenceId": "APIforFHIRDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('APIforFHIRstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-APIMgmt-StgAcct",
+        "policyDefinitionReferenceId": "APIMgmtDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('APIMgmtstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AppGateway-StgAcct",
+        "policyDefinitionReferenceId": "ApplicationGatewayDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('ApplicationGatewaystorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Bastion-StgAcct",
+        "policyDefinitionReferenceId": "BastionDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('BastionstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Batch-StgAcct",
+        "policyDefinitionReferenceId": "BatchDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('BatchstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-CDNEndpoints-StgAcct",
+        "policyDefinitionReferenceId": "CDNEndpointsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('CDNEndpointsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-CognitiveServices-StgAcct",
+        "policyDefinitionReferenceId": "CognitiveServicesDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('CognitiveServicesstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-CosmosDB-StgAcct",
+        "policyDefinitionReferenceId": "CosmosDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('CosmosstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Databricks-StgAcct",
+        "policyDefinitionReferenceId": "DatabricksDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('DatabricksstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-DataExplorerCluster-StgAcct",
+        "policyDefinitionReferenceId": "DataExplorerClusterDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('DataExplorerClusterstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-DataFactory-StgAcct",
+        "policyDefinitionReferenceId": "DataFactoryDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('DataFactorystorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-DLAnalytics-StgAcct",
+        "policyDefinitionReferenceId": "DataLakeAnalyticsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('DataLakeAnalyticsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-EventGridSub-StgAcct",
+        "policyDefinitionReferenceId": "EventGridSubDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('EventGridSubstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-EventGridSystemTopic-StgAcct",
+        "policyDefinitionReferenceId": "EventSystemTopicDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('EventSystemTopicstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-EventGridTopic-StgAcct",
+        "policyDefinitionReferenceId": "EventGridTopicDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('EventGridTopicstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-EventHub-StgAcct",
+        "policyDefinitionReferenceId": "EventHubDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('EventHubstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-ExpressRoute-StgAcct",
+        "policyDefinitionReferenceId": "ExpressRouteDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('ExpressRoutestorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Firewall-StgAcct",
+        "policyDefinitionReferenceId": "FirewallDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('FirewallstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-FrontDoor-StgAcct",
+        "policyDefinitionReferenceId": "FrontDoorDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('FrontDoorstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Function-StgAcct",
+        "policyDefinitionReferenceId": "FunctionAppDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('FunctionAppstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-HDInsight-StgAcct",
+        "policyDefinitionReferenceId": "HDInsightDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('HDInsightstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-iotHub-StgAcct",
+        "policyDefinitionReferenceId": "IotHubDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('IotHubstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },      
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-KeyVault-StgAcct",
+        "policyDefinitionReferenceId": "KeyVaultDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('KeyVaultstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },      
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AKS-StgAcct",
+        "policyDefinitionReferenceId": "AKSDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('AKSstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LoadBalancer-StgAcct",
+        "policyDefinitionReferenceId": "LoadBalancerDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('LoadBalancerstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LogicAppsWF-StgAcct",
+        "policyDefinitionReferenceId": "LogicAppsWFDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('LogicAppsWFstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LogicAppsISE-StgAcct",
+        "policyDefinitionReferenceId": "LogicAppsISEDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('LogicAppsISEstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MariaDB-StgAcct",
+        "policyDefinitionReferenceId": "MariaDBDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('MariaDBstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MediaService-StgAcct",
+        "policyDefinitionReferenceId": "MediaServiceDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('MediaServicestorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MlWorkspace-StgAcct",
+        "policyDefinitionReferenceId": "MlWorkspaceDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('MlWorkspacestorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-MySQL-StgAcct",
+        "policyDefinitionReferenceId": "MySQLDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('MySQLstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-NetworkSecurityGroups-StgAcct",
+        "policyDefinitionReferenceId": "NetworkSecurityGroupsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('NetworkSecurityGroupsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-NIC-StgAcct",
+        "policyDefinitionReferenceId": "NetworkNICDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('NetworkNICstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-PostgreSQL-StgAcct",
+        "policyDefinitionReferenceId": "PostgreSQLDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('PostgreSQLstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diag-PowerBIEmbedded-StgAcct",
+        "policyDefinitionReferenceId": "PowerBIEmbeddedDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('PowerBIEmbeddedstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-PublicIP-StgAcct",
+        "policyDefinitionReferenceId": "PublicIPDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('NetworkPublicIPNicstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RedisCache-StgAcct",
+        "policyDefinitionReferenceId": "RedisCacheDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('RedisCachestorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Relay-StgAcct",
+        "policyDefinitionReferenceId": "RelayDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('RelaystorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SearchServices-StgAcct",
+        "policyDefinitionReferenceId": "SearchServicesDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('SearchServicesstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ServiceBus-StgAcct",
+        "policyDefinitionReferenceId": "ServiceBusDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('ServiceBusstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SignalR-StgAcct",
+        "policyDefinitionReferenceId": "SignalRDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('SignalRstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs-StgAcct",
+        "policyDefinitionReferenceId": "SQLDBsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('SQLDBsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLElasticPools-StgAcct",
+        "policyDefinitionReferenceId": "SQLElasticPoolsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('SQLElasticPoolsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLMI-StgAcct",
+        "policyDefinitionReferenceId": "SQLMDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('SQLMstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-StorageAccounts-StgAcct",
+        "policyDefinitionReferenceId": "StorageAccountsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('StorageAccountsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-StreamAnalytics-StgAcct",
+        "policyDefinitionReferenceId": "StreamAnalyticsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('StreamAnalyticsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-TimeSeriesInsights-StgAcct",
+        "policyDefinitionReferenceId": "TimeSeriesInsightsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('TimeSeriesInsightsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-TrafficManager-StgAcct",
+        "policyDefinitionReferenceId": "TrafficManagerDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('TrafficManagerstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VirtualNetwork-StgAcct",
+        "policyDefinitionReferenceId": "VirtualNetworkDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('VirtualNetworkstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VM-StgAcct",
+        "policyDefinitionReferenceId": "VirtualMachinesDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('VirtualMachinesstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VMSS-StgAcct",
+        "policyDefinitionReferenceId": "VMSSDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('VMSSstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-VNetGW-StgAcct",
+        "policyDefinitionReferenceId": "VNetGWDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('VNetGWstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WebServerFarm-StgAcct",
+        "policyDefinitionReferenceId": "AppServiceDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('AppServicestorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Website-StgAcct",
+        "policyDefinitionReferenceId": "AppServiceWebappDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('AppServiceWebappstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WVDAppGroup-StgAcct",
+        "policyDefinitionReferenceId": "WVDAppGroupDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('WVDAppGroupsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WVDHostPools-StgAcct",
+        "policyDefinitionReferenceId": "WVDHostPoolsDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('WVDHostPoolsstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WVDWorkspace-StgAcct",
+        "policyDefinitionReferenceId": "WVDWorkspaceDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('WVDWorkspacestorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Deploy-Diagnostics-StorageAcct"
+}

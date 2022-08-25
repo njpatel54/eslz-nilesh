@@ -31,7 +31,7 @@ param nicDiagnosticSettingsName string = '${virtualMachineName}-diagnosticSettin
 
 var enableReferencedModulesTelemetry = false
 
-module networkInterface_publicIPAddresses '../../../Microsoft.Network/publicIPAddresses/deploy.bicep' = [for (ipConfiguration, index) in ipConfigurations: if (contains(ipConfiguration, 'pipconfiguration')) {
+module networkInterface_publicIPAddresses '../../../network/publicIPAddresses/deploy.bicep' = [for (ipConfiguration, index) in ipConfigurations: if (contains(ipConfiguration, 'pipconfiguration')) {
   name: '${deployment().name}-publicIP-${index}'
   params: {
     name: '${virtualMachineName}${ipConfiguration.pipconfiguration.publicIpNameSuffix}'
@@ -43,7 +43,6 @@ module networkInterface_publicIPAddresses '../../../Microsoft.Network/publicIPAd
     diagnosticSettingsName: pipDiagnosticSettingsName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
     location: location
     lock: lock
     publicIPAddressVersion: contains(ipConfiguration, 'publicIPAddressVersion') ? ipConfiguration.publicIPAddressVersion : 'IPv4'
@@ -57,7 +56,7 @@ module networkInterface_publicIPAddresses '../../../Microsoft.Network/publicIPAd
   }
 }]
 
-module networkInterface '../../../Microsoft.Network/networkInterfaces/deploy.bicep' = {
+module networkInterface '../../../network/networkInterfaces/deploy.bicep' = {
   name: '${deployment().name}-NetworkInterface'
   params: {
     name: networkInterfaceName

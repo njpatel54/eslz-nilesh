@@ -268,8 +268,8 @@ param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv1'
 @description('Required. Azure SQL Server Name (Secondary)')
 param sqlSecondaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv2'
 
-@description('Required. Azure SQL Database Name')
-param sqlDbName string = 'sqldb-${projowner}-${opscope}-${region}-${suffix}'
+@description('Conditional. Azure SQL Fail Over Group Name.')
+param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
 
 @description('Conditional. The Azure Active Directory (AAD) administrator authentication. Required if no `administratorLogin` & `administratorLoginPassword` is provided.')
 param administrators object = {}
@@ -284,9 +284,6 @@ param sqlAdministratorLogin string = ''
 @description('Conditional. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
 param sqlAdministratorLoginPassword string = ''
-
-@description('Conditional. Azure SQL Fail Over Group Name.')
-param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
 
 
 
@@ -451,6 +448,30 @@ module akv 'wrapperModule/keyVault.bicep' = {
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubName: diagnosticEventHubName
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
+  }
+}
+
+// 9. Create SQL Server
+module sql 'wrapperModule/sql.bicep' = {
+  name: 'mod-sql-${take(uniqueString(deployment().name, location), 4)}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    lzVnet
+  ]
+  params: {
+    location: location
+    combinedTags: combinedTags
+    sqlPrimaryServerName: sqlPrimaryServerName
+    sqlSecondaryServerName: sqlSecondaryServerName
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName
+    administratorLogin: akvtest.getSecret(sqlAdministratorLogin)
+    administratorLoginPassword: akvtest.getSecret(sqlAdministratorLoginPassword) 
+    administrators: administrators
+    databases: databases
+    sqlFailOverGroupName: sqlFailOverGroupName
+    diagSettingName: diagSettingName
     localDiagnosticWorkspaceId: loga.outputs.logaResoruceId
   }
 }

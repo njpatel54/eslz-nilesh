@@ -440,7 +440,7 @@ module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
 }
 
 // 17. Create Azure SQL Database
-module sqldb '../../modules//sql/servers//databases/deploy.bicep' = [for database in databases: {
+module sqldb '../../modules//sql/servers/databases/deploy.bicep' = [for database in databases: {
   name: 'sqldb-${take(uniqueString(deployment().name, location), 4)}-${database.name}'
   scope: resourceGroup(subscriptionId, lzRgName)
   params: {
