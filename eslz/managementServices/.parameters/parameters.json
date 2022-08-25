@@ -126,6 +126,17 @@
     "diagSettingName": {
       "value": "logging-diagSetting-centralized"
     },
+    "kvRoleAssignments": {
+      "value": [
+        {
+          "principalType": "ServicePrincipal",
+          "principalIds": [
+            "d468a2a7-ff2d-44bd-b4cc-02035c3b5482"
+          ],
+          "roleDefinitionIdOrName": "Key Vault Administrator"
+        }
+      ]
+    },
     "projowner": {
       "value": "ccs"
     },

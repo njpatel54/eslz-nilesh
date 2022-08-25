@@ -127,8 +127,8 @@ param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem',
 ])
 param publicNetworkAccess string = 'Disabled'
 
-@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
-param networkAcls object
+@description('Optional. Key Vault Role Assignment array.')
+param kvRoleAssignments array
 
 // From Parameters Files
 @description('Required. Storage Account SKU.')
@@ -284,7 +284,7 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
       tags: ccsCombinedTags
       vaultSku: 'premium'
       publicNetworkAccess: publicNetworkAccess
-      networkAcls: networkAcls
+      roleAssignments: kvRoleAssignments
       diagnosticSettingsName: diagSettingName
       diagnosticStorageAccountId: sa.outputs.resourceId
       diagnosticWorkspaceId: loga.outputs.resourceId
