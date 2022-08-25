@@ -14,7 +14,7 @@
                             "value": "DeployIfNotExists"
                         },
                         "storageAccountResourceId": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-siem/providers/Microsoft.Storage/storageAccounts/stccsprodusva3o3x"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourceGroups/rg-ccs-prod-usva-siem/providers/Microsoft.Storage/storageAccounts/stccsprod1111usvalogs"
                         }
                     },
                     "nonComplianceMessage": "NSG must be configured for Flow Logs and traffic analytics to a storageaccountid with a specfied retention period.",                    

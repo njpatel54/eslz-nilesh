@@ -236,7 +236,7 @@ resource diagSettingsLocal 'Microsoft.Insights/diagnosticsettings@2021-05-01-pre
     eventHubAuthorizationRuleId: !empty(localDiagnosticEventHubAuthorizationRuleId) ? localDiagnosticEventHubAuthorizationRuleId : null
     eventHubName: !empty(localDiagnosticEventHubName) ? localDiagnosticEventHubName : null
     metrics: diagnosticsMetrics
-    //logs: diagnosticsLogs
+    logs: diagnosticsLogs
   }
   scope: keyVault
 }
