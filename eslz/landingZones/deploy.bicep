@@ -540,6 +540,20 @@ output akvResoruceId string = lzAkv.outputs.akvResoruceId
 @description('Output - Log Analytics Workspace "resoruceId"')
 output akvUri string = lzAkv.outputs.akvUri
 
+// Start - Outputs to supress warnings - "unused parameters"
+output diagSettingName string = diagSettingName
+output diagnosticStorageAccountId string = diagnosticStorageAccountId
+output diagnosticWorkspaceId string = diagnosticWorkspaceId
+output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
+output diagnosticEventHubName string = diagnosticEventHubName
+output billingAccount string = billingAccount
+output enrollmentAccount string = enrollmentAccount
+output subscriptionAlias string = subscriptionAlias
+output subscriptionDisplayName string = subscriptionDisplayName
+output subscriptionWorkload string = subscriptionWorkload
+output managementGroupId string = managementGroupId
+output subscriptionOwnerId string = subscriptionOwnerId
+// End - Outputs to supress warnings - "unused parameters"
 
 /*
 // 2. Deploy Landing Zone using Wraper Module
