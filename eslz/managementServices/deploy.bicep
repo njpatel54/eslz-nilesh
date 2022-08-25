@@ -122,7 +122,7 @@ param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem',
   'Enabled'
   'Disabled'
 ])
-param publicNetworkAccess string = 'Disabled'
+param publicNetworkAccess string = 'Enabled'
 
 @description('Optional. Key Vault Role Assignment array.')
 param kvRoleAssignments array
