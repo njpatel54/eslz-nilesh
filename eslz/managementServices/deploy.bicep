@@ -134,6 +134,15 @@ param storageaccount_sku string
 @description('Optional. Blob service and containers to deploy')
 param blobServices object
 
+@description('Optional. File service and shares to deploy')
+param fileServices object
+
+@description('Optional. Queue service and queues to create.')
+param queueServices object
+
+@description('Optional. Table service and tables to create.')
+param tableServices object
+
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
 
@@ -203,6 +212,9 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     storageAccountName: stgAcctName
     storageSKU: storageaccount_sku
     blobServices: blobServices
+    fileServices: fileServices
+    queueServices: queueServices
+    tableServices: tableServices
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
     publicNetworkAccess: 'Disabled'
