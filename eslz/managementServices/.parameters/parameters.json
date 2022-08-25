@@ -90,6 +90,36 @@
         ]
       }
     },
+    "fileServices": {
+      "value": {
+        "shares": [
+          {
+            "name": "testfileshare",
+            "shareQuota": "5120",
+            "roleAssignments": []
+          }
+        ]
+      }
+    },
+    "tableServices": {
+      "value": {
+        "tables": [
+          "table1",
+          "table2"
+        ]
+      }
+    },
+    "queueServices": {
+      "value": {
+        "queues": [
+          {
+            "name": "queue1",
+            "metadata": {},
+            "roleAssignments": []
+          }
+        ]
+      }
+    },
     "authorizationRules": {
       "value": [
         {
