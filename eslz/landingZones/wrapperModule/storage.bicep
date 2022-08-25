@@ -31,34 +31,11 @@ param connsubid string
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string
 
-@description('Optional. Resource ID of the diagnostic log analytics workspace - Local.')
-param localDiagnosticWorkspaceId string = ''
-
-/*
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string = ''
 
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
-
-@description('Optional. Resource ID of the diagnostic storage account.')
-param diagnosticStorageAccountId string = ''
-
-@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to.')
-param diagnosticEventHubAuthorizationRuleId string = ''
-
-@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
-param diagnosticEventHubName string = ''
-
-@description('Optional. Resource ID of the diagnostic storage account - Local.')
-param localDiagnosticStorageAccountId string = ''
-
-@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to - Local.')
-param localDiagnosticEventHubAuthorizationRuleId string = ''
-
-@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category - Local.')
-param localDiagnosticEventHubName string = ''
-*/
 
 @description('Required. Storage Account Subresource(s) (aka "groupIds").')
 param stgGroupIds array
@@ -88,11 +65,8 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
     tags: combinedTags
     storageSKU: storageaccount_sku
     publicNetworkAccess: 'Disabled'
-    //diagnosticSettingsName: diagSettingName
-    //diagnosticWorkspaceId: diagnosticWorkspaceId
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName
-    localDiagnosticWorkspaceId: localDiagnosticWorkspaceId
+    diagnosticSettingsName: diagSettingName
+    diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }
 

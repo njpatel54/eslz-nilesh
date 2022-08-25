@@ -209,36 +209,6 @@ resource storageAccount_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
   scope: storageAccount
 }
 
-// Start - Second Diagnostic Settings for the resource
-@description('Optional. The name of the diagnostic setting, if deployed.')
-param localDdiagnosticSettingsName string = 'logging-diagSetting-local'
-
-@description('Optional. Resource ID of the diagnostic storage account - Local.')
-param localDiagnosticStorageAccountId string = ''
-
-@description('Optional. Resource ID of the diagnostic log analytics workspace - Local.')
-param localDiagnosticWorkspaceId string = ''
-
-@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to - Local.')
-param localDiagnosticEventHubAuthorizationRuleId string = ''
-
-@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category - Local.')
-param localDiagnosticEventHubName string = ''
-
-resource diagSettingsLocal 'Microsoft.Insights/diagnosticsettings@2021-05-01-preview' = if (!empty(localDiagnosticStorageAccountId) || !empty(localDiagnosticWorkspaceId) || !empty(localDiagnosticEventHubAuthorizationRuleId) || !empty(localDiagnosticEventHubName)) {
-  name: localDdiagnosticSettingsName
-  properties: {
-    storageAccountId: !empty(localDiagnosticStorageAccountId) ? localDiagnosticStorageAccountId : null
-    workspaceId: !empty(localDiagnosticWorkspaceId) ? localDiagnosticWorkspaceId : null
-    eventHubAuthorizationRuleId: !empty(localDiagnosticEventHubAuthorizationRuleId) ? localDiagnosticEventHubAuthorizationRuleId : null
-    eventHubName: !empty(localDiagnosticEventHubName) ? localDiagnosticEventHubName : null
-    metrics: diagnosticsMetrics
-    //logs: diagnosticsLogs
-  }
-  scope: storageAccount
-}
-// End - Second Diagnostic Settings for the resource
-
 resource storageAccount_lock 'Microsoft.Authorization/locks@2017-04-01' = if (lock != 'NotSpecified') {
   name: '${storageAccount.name}-${lock}-lock'
   properties: {
