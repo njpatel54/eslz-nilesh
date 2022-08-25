@@ -20,8 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/policy/customPolicyDefinition.bicep
+
+    - uses: Azure/cli@v1
+      name: 'Lint and Build Bicep'
+      with:
+        inlineScript: |
+          az bicep build --file ./eslz/policy/customPolicyDefinition.bicep
+          az bicep build --file ./eslz/policy/customPolicyDiagLaw.bicep
+          az bicep build --file ./eslz/policy/customPolicyDiagStgAcct.bicep
 
   validate: 
     runs-on: ubuntu-latest
@@ -48,6 +54,20 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/policy/customPolicyDefinition.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg validate \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagLaw.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg validate \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagStgAcct.bicep \
               --parameters location=${{ secrets.AZURE_LOCATION }} \
                            targetMgId=${{ secrets.AZURE_MG_TOP }}
 
@@ -78,6 +98,20 @@ jobs:
               --template-file ./eslz/policy/customPolicyDefinition.bicep \
               --parameters location=${{ secrets.AZURE_LOCATION }} \
                            targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg what-if \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagLaw.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg what-if \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagStgAcct.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -105,5 +139,19 @@ jobs:
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
               --template-file ./eslz/policy/customPolicyDefinition.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagLaw.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagStgAcct.bicep \
               --parameters location=${{ secrets.AZURE_LOCATION }} \
                            targetMgId=${{ secrets.AZURE_MG_TOP }}
