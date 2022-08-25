@@ -48,3 +48,5 @@ output name string = policySetDefinition.name
 
 @sys.description('Policy Set Definition resource ID.')
 output resourceId string = extensionResourceId(tenantResourceId('Microsoft.Management/managementGroups', managementGroupId), 'Microsoft.Authorization/policySetDefinitions', policySetDefinition.name)
+
+output location string = location
