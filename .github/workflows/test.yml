@@ -39,6 +39,20 @@ jobs:
               --name 'Platform-Policy-Definitions' \
               --location ${{ secrets.AZURE_LOCATION }} \
               --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-              --template-file ./eslz/test/customPolicyDefinition.bicep \
+              --template-file ./eslz/testPolicy/customPolicyDefinition.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/testPolicy/customPolicyDiagLaw.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/testPolicy/customPolicyDiagStgAcct.bicep \
               --parameters location=${{ secrets.AZURE_LOCATION }} \
                            targetMgId=${{ secrets.AZURE_MG_TOP }}
