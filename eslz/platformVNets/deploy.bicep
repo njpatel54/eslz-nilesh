@@ -604,7 +604,7 @@ module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
     priDNSZones
   ]
   params: {
-    name: '${akvName}-pe'
+    name: '${akvName}-vault-pe'
     location: location
     tags: ccsCombinedTags
     serviceResourceId: akv.id
