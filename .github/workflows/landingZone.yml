@@ -36,7 +36,7 @@ jobs:
       with:
         inlineScript: |
           az deployment mg create \
-            --name 'Platform-Policy-Definitions' \
+            --name 'Landing-Zone-Deployment' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/landingZones/deploy.bicep \
