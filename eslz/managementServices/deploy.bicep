@@ -115,6 +115,21 @@ param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
 
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
+
+@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
+@allowed([
+  ''
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccess string = 'Disabled'
+
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param networkAcls object
+
 // From Parameters Files
 @description('Required. Storage Account SKU.')
 param storageaccount_sku string
@@ -256,6 +271,25 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+// 8. Create Azure Key Vault
+module akv '../modules/keyVault/vaults/deploy.bicep' = {
+  name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+    params: {
+      name: akvName
+      location: location
+      tags: ccsCombinedTags
+      vaultSku: 'premium'
+      publicNetworkAccess: publicNetworkAccess
+      networkAcls: networkAcls
+      diagnosticSettingsName: diagSettingName
+      diagnosticStorageAccountId: sa.outputs.resourceId
+      diagnosticWorkspaceId: loga.outputs.resourceId
+      //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
+      //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+    }
+}
+
 @description('Output - Name of Event Hub')
 output ehnsAuthorizationId string = resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
 
@@ -291,6 +325,15 @@ output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {
   subscriptionId: subDiagSettings[i].outputs.resourceId
   diagnosticSettingsName: subDiagSettings[i].outputs.name
 }]
+
+@description('Output - Log Analytics Workspace "name"')
+output akvName string = akv.outputs.name
+
+@description('Output - Log Analytics Workspace "resoruceId"')
+output akvResoruceId string = akv.outputs.resourceId
+
+@description('Output - Log Analytics Workspace "resoruceId"')
+output akvUri string = akv.outputs.uri
 
 // Start - Outputs to supress warnings - "unused parameters"
 output onboardmg string = onboardmg

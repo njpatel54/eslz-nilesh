@@ -126,6 +126,14 @@
     "diagSettingName": {
       "value": "logging-diagSetting-centralized"
     },
+    "networkAcls": {
+      "value": {
+        "bypass": "AzureServices",
+        "defaultAction": "Deny",
+        "ipRules": [],
+        "virtualNetworkRules": []
+      }
+    },
     "projowner": {
       "value": "ccs"
     },
