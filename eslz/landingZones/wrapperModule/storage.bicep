@@ -31,16 +31,16 @@ param connsubid string
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string
 
+@description('Optional. Resource ID of the diagnostic log analytics workspace - Local.')
+param localDiagnosticWorkspaceId string = ''
+
+/*
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string = ''
 
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
-@description('Optional. Resource ID of the diagnostic log analytics workspace - Local.')
-param localDiagnosticWorkspaceId string = ''
-
-/*
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
 
