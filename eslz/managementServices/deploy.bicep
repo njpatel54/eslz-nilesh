@@ -1,8 +1,5 @@
 targetScope = 'tenant'
 
-@description('Required. Name for the Diagnostics Setting Configuration.')
-param diagSettingName string
-
 @description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for Azure Sentinel.')
 param logaSentinelGallerySolution array = []
 
@@ -202,7 +199,6 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     location: location
     storageAccountName: stgAcctName
     storageSKU: storageaccount_sku
-    diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
     publicNetworkAccess: 'Disabled'
@@ -222,7 +218,6 @@ module eh '../modules/namespaces/deploy.bicep' = {
     eventhubNamespaceName: eventhubNamespaceName
     eventHubs: eventHubs
     authorizationRules: authorizationRules
-    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId    
   }
@@ -243,7 +238,6 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
     location: location
     tags: ccsCombinedTags
     linkedWorkspaceResourceId: loga.outputs.resourceId
-    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
@@ -262,7 +256,6 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
     eh
   ]
   params:{
-    name: diagSettingName
     location: location
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
@@ -285,7 +278,6 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
       vaultSku: 'premium'
       publicNetworkAccess: publicNetworkAccess
       roleAssignments: kvRoleAssignments
-      diagnosticSettingsName: diagSettingName
       diagnosticStorageAccountId: sa.outputs.resourceId
       diagnosticWorkspaceId: loga.outputs.resourceId
       //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
