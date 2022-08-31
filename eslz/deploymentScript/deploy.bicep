@@ -14,7 +14,7 @@ param utcValue string = utcNow()
 param suffix string = 'lz01'
 param lzPEGrpName string = '${suffix} Private Endpoint Creators'
 param lzPEGrpMailNickName string = '${suffix}PrivateEndpointCreators'
-
+param parentGrpName string = 'Private Endpoint Creators'
 
 // Upload artifacts to storage account as a blob using Az Cli
 resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
@@ -40,7 +40,7 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
         value: loadTextContent('../start.ps1')
       }
     ]*/
-    scriptContent: 'az ad group create --display-name ${lzPEGrpName} --mail-nickname ${lzPEGrpMailNickName} && az ad group member add --group ${lzPEGrpName} --member-id $(az ad signed-in-user show --query "{ID:id}" -o tsv) && az ad group member add --group "Private Endpoint Creators" --member-id $(az ad group list --display-name ${lzPEGrpName} --query "[].{ID:id}" -o tsv)'
+    scriptContent: 'az ad group create --display-name ${lzPEGrpName} --mail-nickname ${lzPEGrpMailNickName} && az ad group member add --group ${lzPEGrpName} --member-id $(az ad signed-in-user show --query "{ID:id}" -o tsv) && az ad group member add --group ${parentGrpName} --member-id $(az ad group list --display-name ${lzPEGrpName} --query "[].{ID:id}" -o tsv)'
   }
 }
 
