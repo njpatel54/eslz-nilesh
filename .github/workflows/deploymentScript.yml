@@ -37,7 +37,6 @@ jobs:
         inlineScript: |
             az deployment group create \
               --name 'Test-Deployment-Scripts' \
-              --location ${{ secrets.AZURE_LOCATION }} \
               --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
               --resource-group "rg-ccs-prod-usva-siem" \
               --template-file ./eslz/deploymentScript/deploy.bicep
