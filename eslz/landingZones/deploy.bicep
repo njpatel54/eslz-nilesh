@@ -497,6 +497,11 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
     subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     rpcRgName: rpcRgName
+    vnetRgName: vnetRgName
+    vnetName: vnetName
+    mgmtSubnetName: mgmtSubnetName
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }

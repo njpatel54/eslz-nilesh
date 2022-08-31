@@ -16,7 +16,7 @@ param resourceGroups array
 param rgRoleAssignments array = []
 
 // 1. Create Resoruce Groups
-module rg '../../modules/resourceGroups/deploy.bicep' = [for (resourceGroup, index) in resourceGroups: {
+module rg '../../modules/resources/resourceGroups/deploy.bicep' = [for (resourceGroup, index) in resourceGroups: {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroup}'
   scope: subscription(subscriptionId)
   params: {

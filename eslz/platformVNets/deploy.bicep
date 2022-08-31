@@ -216,7 +216,7 @@ param ingestionAccessMode string = 'PrivateOnly'
 param queryAccessMode string = 'PrivateOnly'
 
 // 1. Create Hub Resoruce Group
-module hubRg '../modules/resourceGroups/deploy.bicep' = {
+module hubRg '../modules/resources/resourceGroups/deploy.bicep' = {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {
@@ -288,7 +288,7 @@ module attachNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets
 }
 
 // 5. Create Spoke Resoruce Group(s)
-module spokeRg '../modules/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
+module spokeRg '../modules/resources/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(vNet.subscriptionId)
   params: {
@@ -440,7 +440,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
 }
 
 // 12. Create Resource Group for Private DNS Zones
-module priDNSZonesRg '../modules/resourceGroups/deploy.bicep' = {
+module priDNSZonesRg '../modules/resources/resourceGroups/deploy.bicep' = {
   name: 'priDNSZonesRg-${take(uniqueString(deployment().name, location), 4)}-${priDNSZonesRgName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {

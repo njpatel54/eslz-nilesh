@@ -156,7 +156,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 param diagnosticEventHubName string = ''
 
 // 1. Create Resoruce Group
-module siem_rg '../modules/resourceGroups/deploy.bicep'= {
+module siem_rg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${siemRgName}'
   scope: subscription(mgmtsubid)
   params: {

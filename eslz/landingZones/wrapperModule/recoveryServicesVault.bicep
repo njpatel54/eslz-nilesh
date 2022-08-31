@@ -15,6 +15,21 @@ param combinedTags object
 @description('Required. Name of the Azure Recovery Service Vault.')
 param name string
 
+@description('Required. Name of the resourceGroup, where networking components will be.')
+param vnetRgName string
+
+@description('Required. Virtual Network name in Landing Zone Subscription.')
+param vnetName string
+
+@description('Required. Subnet name to be used for Private Endpoint.')
+param mgmtSubnetName string
+
+@description('Required. Subscription ID of Connectivity Subscription')
+param connsubid string
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string
+
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string = ''
 
@@ -27,6 +42,82 @@ param suffix string
 @description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
 param rpcRgName string
 
+
+var varAzBackupGeoCodes = {
+  australiacentral: 'acl'
+  australiacentral2: 'acl2'
+  australiaeast: 'ae'
+  australiasoutheast: 'ase'
+  brazilsouth: 'brs'
+  brazilsoutheast: 'bse'
+  centraluseuap: 'ccy'
+  canadacentral: 'cnc'
+  canadaeast: 'cne'
+  centralus: 'cus'
+  eastasia: 'ea'
+  eastus2euap: 'ecy'
+  eastus: 'eus'
+  eastus2: 'eus2'
+  francecentral: 'frc'
+  francesouth: 'frs'
+  germanynorth: 'gn'
+  germanywestcentral: 'gwc'
+  centralindia: 'inc'
+  southindia: 'ins'
+  westindia: 'inw'
+  japaneast: 'jpe'
+  japanwest: 'jpw'
+  jioindiacentral: 'jic'
+  jioindiawest: 'jiw'
+  koreacentral: 'krc'
+  koreasouth: 'krs'
+  northcentralus: 'ncus'
+  northeurope: 'ne'
+  norwayeast: 'nwe'
+  norwaywest: 'nww'
+  qatarcentral: 'qac'
+  southafricanorth: 'san'
+  southafricawest: 'saw'
+  southcentralus: 'scus'
+  swedencentral: 'sdc'
+  swedensouth: 'sds'
+  southeastasia: 'sea'
+  switzerlandnorth: 'szn'
+  switzerlandwest: 'szw'
+  uaecentral: 'uac'
+  uaenorth: 'uan'
+  uksouth: 'uks'
+  ukwest: 'ukw'
+  westcentralus: 'wcus'
+  westeurope: 'we'
+  westus: 'wus'
+  westus2: 'wus2'
+  westus3: 'wus3'
+  usdodcentral: 'udc'
+  usdodeast: 'ude'
+  usgovarizona: 'uga'
+  usgoviowa: 'ugi'
+  usgovtexas: 'ugt'
+  usgovvirginia: 'ugv'
+  usnateast: 'exe'
+  usnatwest: 'exw'
+  usseceast: 'rxe'
+  ussecwest: 'rxw'
+  chinanorth: 'bjb'
+  chinanorth2: 'bjb2'
+  chinanorth3: 'bjb3'
+  chinaeast: 'sha'
+  chinaeast2: 'sha2'
+  chinaeast3: 'sha3'
+  germanycentral: 'gec'
+  germanynortheast: 'gne'
+}
+
+// If region entered in parLocation and matches a lookup to varAzBackupGeoCodes then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in parPrivateDnsZones. If not just return parPrivateDnsZones
+var privatelinkBackup = replace('privatelink.<geoCode>.backup.windowsazure.us', '<geoCode>', '${varAzBackupGeoCodes[toLower(location)]}')
+
+
+// 1. Create Recovery Services Vault
 module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -34,6 +125,7 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
     name: name
     location: location
     tags: combinedTags
+    systemAssignedIdentity: true
     backupPolicies: [
       {
         name: '${suffix}vmBackupPolicy'
@@ -254,3 +346,34 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
     diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }
+
+// 2. Create Private Endpoint for Recovery Services Vault
+module rsvPe '../../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'rsvPe-${take(uniqueString(deployment().name, location), 4)}-${name}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    rsv
+  ]
+  params: {
+    name: '${name}-AzureBackup-pe'
+    location: location
+    tags: combinedTags
+    serviceResourceId: rsv.outputs.resourceId
+    groupIds: [
+      'AzureBackup'
+    ]
+    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, mgmtSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', privatelinkBackup)
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.queue.core.usgovcloudapi.net')
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+
+
+
+
