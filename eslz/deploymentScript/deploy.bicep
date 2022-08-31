@@ -3,47 +3,18 @@ param location string
 //param deployQueue bool = false
 //param deployTable bool = false
 //param deployFile bool = false
-param entityName string = 'data'
+//param entityName string = 'data'
 //param prodStgAcctPrefix string = 'prodstg'
 //param random string = take(newGuid(), 4)
-param filename string = 'start.ps1'
+//param filename string = 'start.ps1'
 param utcValue string = utcNow()
 
-@description('Required. Project Owner (projowner) parameter.')
-@allowed([
-  'ccs'
-  'proj'
-])
-param projowner string = 'ccs'
 
-@description('Required. Operational Scope (opscope) parameter.')
-@allowed([
-  'prod'
-  'dev'
-  'qa'
-  'stage'
-  'test'
-  'sand'
-])
-param opscope string = 'prod'
-
-@description('Required. Region (region) parameter.')
-@allowed([
-  'usva'
-  'ustx'
-  'usaz'
-])
-param region string = 'usva'
 
 param suffix string = 'lz01'
 param lzPEGrpName string = '${suffix} Private Endpoint Creators'
 param lzPEGrpMailNickName string = '${suffix}PrivateEndpointCreators'
 
-@description('Required. Subscription ID of Management Subscription.')
-param mgmtsubid string
-
-@description('Required. SIEM Resource Group Name.')
-param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
 // Upload artifacts to storage account as a blob using Az Cli
 resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
@@ -85,6 +56,40 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
 
 
 /*
+param location string
+
+@description('Required. Subscription ID of Management Subscription.')
+param mgmtsubid string
+
+@description('Required. SIEM Resource Group Name.')
+param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Project Owner (projowner) parameter.')
+@allowed([
+  'ccs'
+  'proj'
+])
+param projowner string = 'ccs'
+
+@description('Required. Operational Scope (opscope) parameter.')
+@allowed([
+  'prod'
+  'dev'
+  'qa'
+  'stage'
+  'test'
+  'sand'
+])
+param opscope string = 'prod'
+
+@description('Required. Region (region) parameter.')
+@allowed([
+  'usva'
+  'ustx'
+  'usaz'
+])
+param region string = 'usva'
+
 // SAS to download blobs in account
 // signedServices - https://docs.microsoft.com/en-us/rest/api/storagerp/storage-accounts/list-account-sas#services
 // signedPermission - https://docs.microsoft.com/en-us/rest/api/storagerp/storage-accounts/list-account-sas#permissions

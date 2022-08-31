@@ -39,4 +39,5 @@ jobs:
               --name 'Test-Deployment-Scripts' \
               --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
               --resource-group "rg-ccs-prod-usva-siem" \
-              --template-file ./eslz/deploymentScript/deploy.bicep
+              --template-file ./eslz/deploymentScript/deploy.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }}
