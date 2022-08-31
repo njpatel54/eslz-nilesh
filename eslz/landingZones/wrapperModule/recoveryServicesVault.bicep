@@ -347,6 +347,9 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
+
+
+
 // 2. Create Private Endpoint for Recovery Services Vault
 module rsvPe '../../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPe-${take(uniqueString(deployment().name, location), 4)}-${name}'

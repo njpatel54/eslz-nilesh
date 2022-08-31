@@ -1,0 +1,43 @@
+name: test deployment script
+
+on:
+  #push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/test.yml
+      
+  # pull_request:
+  #  branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    #needs: [preview]
+    environment: Production
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Test - Deployment Scripts'
+      with:
+        inlineScript: |
+            az deployment group create \
+              --name 'Test-Deployment-Scripts' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+              --resource-group "rg-ccs-prod-usva-siem" \
+              --template-file ./eslz/deploymentScript/deploy.bicep
