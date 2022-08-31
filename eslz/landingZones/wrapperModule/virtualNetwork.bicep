@@ -1,3 +1,5 @@
+targetScope = 'managementGroup'
+
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
@@ -50,7 +52,7 @@ var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 // 1. Create Virtual Network
 module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
-  //scope: resourceGroup(subscriptionId, vnetRgName)
+  scope: resourceGroup(subscriptionId, vnetRgName)
   params: {
     name: vnetName
     location: location
@@ -67,10 +69,10 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
 // 2. Create Network Security Group(s)
 module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
   name: 'nsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
     lzVnet
   ]
-  //scope: resourceGroup(subscriptionId, vnetRgName)
   params: {
     name: nsg.name
     location: location
@@ -86,7 +88,7 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 @batchSize(1)
 module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
   name: 'attachNsgToSubnets-${subnet.name}'
-  //scope: resourceGroup(subscriptionId, vnetRgName)
+  scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
     lzVnet
     nsgs
@@ -98,7 +100,7 @@ module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.
     serviceEndpoints: subnet.serviceEndpoints
     privateEndpointNetworkPolicies: subnet.privateEndpointNetworkPolicies
     privateLinkServiceNetworkPolicies: subnet.privateLinkServiceNetworkPolicies
-    networkSecurityGroupId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)    
+    networkSecurityGroupId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)
   }
 }]
 

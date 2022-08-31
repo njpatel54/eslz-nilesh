@@ -257,6 +257,44 @@
         }
       ]
     },
+    "virtualMachines": {
+      "value": [
+        {
+          "osType": "Windows",
+          "licenseType": "",
+          "availabilityZone": 0,
+          "operatingSystem": "Server2019",
+          "virtualMachineSize": "Standard_DS2_v2",
+          "vmAdmin": "vmAdmin",
+          "vmAdminPassword": "vmAdminPassword",
+          "dataDisks": [
+            {
+              "diskSizeGB": 64
+            },
+            {
+              "diskSizeGB": 32
+            }
+          ]
+        },
+        {
+          "osType": "Linux",
+          "licenseType": "",
+          "availabilityZone": 1,
+          "operatingSystem": "UbuntuServer1904",
+          "virtualMachineSize": "Standard_DS2_v2",
+          "vmAdmin": "vmAdmin",
+          "vmAdminPassword": "vmAdminPassword",
+          "dataDisks": [
+            {
+              "diskSizeGB": 64
+            },
+            {
+              "diskSizeGB": 32
+            }
+          ]
+        }
+      ]
+    },
     "projowner": {
       "value": "ccs"
     },

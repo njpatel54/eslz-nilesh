@@ -29,8 +29,6 @@ param pipDiagnosticSettingsName string = '${virtualMachineName}-diagnosticSettin
 @description('Optional. The name of the NIC diagnostic setting, if deployed.')
 param nicDiagnosticSettingsName string = '${virtualMachineName}-diagnosticSettings'
 
-var enableReferencedModulesTelemetry = false
-
 module networkInterface_publicIPAddresses '../../../network/publicIPAddresses/deploy.bicep' = [for (ipConfiguration, index) in ipConfigurations: if (contains(ipConfiguration, 'pipconfiguration')) {
   name: '${deployment().name}-publicIP-${index}'
   params: {
@@ -86,7 +84,6 @@ module networkInterface '../../../network/networkInterfaces/deploy.bicep' = {
     diagnosticWorkspaceId: diagnosticWorkspaceId
     dnsServers: !empty(dnsServers) ? dnsServers : []
     enableAcceleratedNetworking: enableAcceleratedNetworking
-    enableDefaultTelemetry: enableReferencedModulesTelemetry
     enableIPForwarding: enableIPForwarding
     lock: lock
     networkSecurityGroupResourceId: !empty(networkSecurityGroupResourceId) ? networkSecurityGroupResourceId : ''

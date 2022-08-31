@@ -1,4 +1,4 @@
-targetScope = 'subscription'
+targetScope = 'managementGroup'
 
 @description('subscriptionId for the deployment')
 param subscriptionId string
@@ -16,7 +16,7 @@ param resourceGroups array
 param rgRoleAssignments array = []
 
 // 1. Create Resoruce Groups
-module rg '../../modules/resourceGroups/deploy.bicep'= [ for (resourceGroup, index) in resourceGroups :{
+module rg '../../modules/resourceGroups/deploy.bicep' = [for (resourceGroup, index) in resourceGroups: {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${resourceGroup}'
   scope: subscription(subscriptionId)
   params: {
@@ -27,9 +27,9 @@ module rg '../../modules/resourceGroups/deploy.bicep'= [ for (resourceGroup, ind
 }]
 
 // 2. Create Role Assignments for Resoruce Group
-module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [ for (roleAssignment, index) in rgRoleAssignments :{
+module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = [for (roleAssignment, index) in rgRoleAssignments: {
   name: 'rgRbac-${roleAssignment.resourceGroupName}-${index}'
-  scope: resourceGroup(roleAssignment.subscriptionId, roleAssignment.resourceGroupName)
+  scope: resourceGroup(subscriptionId, roleAssignment.resourceGroupName)
   dependsOn: [
     rg
   ]
@@ -44,11 +44,11 @@ module rgRbac '../../modules/authorization/roleAssignments/resourceGroup/deploy.
 }]
 
 @description('Output - Resource Group "name" Array')
-output rgNames array = [ for (resourceGroup, index) in resourceGroups :{
+output rgNames array = [for (resourceGroup, index) in resourceGroups: {
   resourceId: rg[index].outputs.resourceId
 }]
 
 @description('Output - Resource Group "resoruceId" Array')
-output rgResoruceIds array = [ for (resourceGroup, index) in resourceGroups :{
+output rgResoruceIds array = [for (resourceGroup, index) in resourceGroups: {
   resourceId: rg[index].outputs.resourceId
 }]

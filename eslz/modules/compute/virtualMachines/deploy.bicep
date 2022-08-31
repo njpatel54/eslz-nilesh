@@ -75,6 +75,8 @@ param dedicatedHostId string = ''
 @allowed([
   'Windows_Client'
   'Windows_Server'
+  'RHEL_BYOS'
+  'SLES_BYOS'
   ''
 ])
 param licenseType string = ''
@@ -606,7 +608,7 @@ module vm_diskEncryptionExtension 'extensions/deploy.bicep' = if (extensionDiskE
   ]
 }
 
-module vm_backup '../../recoeryServices/vaults/protectionContainers/protectedItems/deploy.bicep' = if (!empty(backupVaultName)) {
+module vm_backup '../../recoveryServices/vaults/protectionContainers/protectedItems/deploy.bicep' = if (!empty(backupVaultName)) {
   name: '${uniqueString(deployment().name, location)}-VM-Backup'
   params: {
     name: 'vm;iaasvmcontainerv2;${resourceGroup().name};${vm.name}'

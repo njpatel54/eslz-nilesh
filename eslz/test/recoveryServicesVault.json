@@ -1,0 +1,275 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaults_Test_RSV_name": {
+            "defaultValue": "Test-RSV",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.RecoveryServices/vaults",
+            "apiVersion": "2022-04-01",
+            "name": "[parameters('vaults_Test_RSV_name')]",
+            "location": "usgovvirginia",
+            "sku": {
+                "name": "RS0",
+                "tier": "Standard"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('vaults_Test_RSV_name'), '/AzureFileSharePolicy')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_Test_RSV_name'))]"
+            ],
+            "properties": {
+                "backupManagementType": "AzureStorage",
+                "schedulePolicy": {
+                    "schedulePolicyType": "SimpleSchedulePolicy",
+                    "scheduleRunFrequency": "Daily",
+                    "scheduleRunTimes": [
+                        "2022-08-30T01:00:00Z"
+                    ],
+                    "scheduleWeeklyFrequency": 0
+                },
+                "retentionPolicy": {
+                    "retentionPolicyType": "LongTermRetentionPolicy",
+                    "dailySchedule": {
+                        "retentionTimes": [
+                            "2022-08-30T01:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 30,
+                            "durationType": "Days"
+                        }
+                    },
+                    "weeklySchedule": {
+                        "daysOfTheWeek": [
+                            "Sunday"
+                        ],
+                        "retentionTimes": [
+                            "2022-08-30T01:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 12,
+                            "durationType": "Weeks"
+                        }
+                    },
+                    "monthlySchedule": {
+                        "retentionScheduleFormatType": "Weekly",
+                        "retentionScheduleWeekly": {
+                            "daysOfTheWeek": [
+                                "Sunday"
+                            ],
+                            "weeksOfTheMonth": [
+                                "First"
+                            ]
+                        },
+                        "retentionTimes": [
+                            "2022-08-30T01:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 60,
+                            "durationType": "Months"
+                        }
+                    },
+                    "yearlySchedule": {
+                        "retentionScheduleFormatType": "Weekly",
+                        "monthsOfYear": [
+                            "January"
+                        ],
+                        "retentionScheduleWeekly": {
+                            "daysOfTheWeek": [
+                                "Sunday"
+                            ],
+                            "weeksOfTheMonth": [
+                                "First"
+                            ]
+                        },
+                        "retentionTimes": [
+                            "2022-08-30T01:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 10,
+                            "durationType": "Years"
+                        }
+                    }
+                },
+                "timeZone": "Eastern Standard Time",
+                "protectedItemsCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('vaults_Test_RSV_name'), '/DefaultPolicy')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_Test_RSV_name'))]"
+            ],
+            "properties": {
+                "backupManagementType": "AzureIaasVM",
+                "instantRPDetails": {},
+                "schedulePolicy": {
+                    "schedulePolicyType": "SimpleSchedulePolicy",
+                    "scheduleRunFrequency": "Daily",
+                    "scheduleRunTimes": [
+                        "2022-08-30T10:30:00Z"
+                    ],
+                    "scheduleWeeklyFrequency": 0
+                },
+                "retentionPolicy": {
+                    "retentionPolicyType": "LongTermRetentionPolicy",
+                    "dailySchedule": {
+                        "retentionTimes": [
+                            "2022-08-30T10:30:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 30,
+                            "durationType": "Days"
+                        }
+                    },
+                    "weeklySchedule": {
+                        "daysOfTheWeek": [
+                            "Sunday"
+                        ],
+                        "retentionTimes": [
+                            "2022-08-30T10:30:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 12,
+                            "durationType": "Weeks"
+                        }
+                    },
+                    "monthlySchedule": {
+                        "retentionScheduleFormatType": "Weekly",
+                        "retentionScheduleWeekly": {
+                            "daysOfTheWeek": [
+                                "Sunday"
+                            ],
+                            "weeksOfTheMonth": [
+                                "First"
+                            ]
+                        },
+                        "retentionTimes": [
+                            "2022-08-30T10:30:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 60,
+                            "durationType": "Months"
+                        }
+                    },
+                    "yearlySchedule": {
+                        "retentionScheduleFormatType": "Weekly",
+                        "monthsOfYear": [
+                            "January"
+                        ],
+                        "retentionScheduleWeekly": {
+                            "daysOfTheWeek": [
+                                "Sunday"
+                            ],
+                            "weeksOfTheMonth": [
+                                "First"
+                            ]
+                        },
+                        "retentionTimes": [
+                            "2022-08-30T10:30:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 10,
+                            "durationType": "Years"
+                        }
+                    }
+                },
+                "instantRpRetentionRangeInDays": 2,
+                "timeZone": "UTC",
+                "protectedItemsCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('vaults_Test_RSV_name'), '/HourlyLogBackup')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_Test_RSV_name'))]"
+            ],
+            "properties": {
+                "backupManagementType": "AzureWorkload",
+                "workLoadType": "SQLDataBase",
+                "settings": {
+                    "timeZone": "UTC",
+                    "issqlcompression": false,
+                    "isCompression": false
+                },
+                "subProtectionPolicy": [
+                    {
+                        "policyType": "Full",
+                        "schedulePolicy": {
+                            "schedulePolicyType": "SimpleSchedulePolicy",
+                            "scheduleRunFrequency": "Daily",
+                            "scheduleRunTimes": [
+                                "2022-02-18T10:30:00Z"
+                            ],
+                            "scheduleWeeklyFrequency": 0
+                        },
+                        "retentionPolicy": {
+                            "retentionPolicyType": "LongTermRetentionPolicy",
+                            "dailySchedule": {
+                                "retentionTimes": [
+                                    "2022-02-18T10:30:00Z"
+                                ],
+                                "retentionDuration": {
+                                    "count": 30,
+                                    "durationType": "Days"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "policyType": "Log",
+                        "schedulePolicy": {
+                            "schedulePolicyType": "LogSchedulePolicy",
+                            "scheduleFrequencyInMins": 60
+                        },
+                        "retentionPolicy": {
+                            "retentionPolicyType": "SimpleRetentionPolicy",
+                            "retentionDuration": {
+                                "count": 30,
+                                "durationType": "Days"
+                            }
+                        }
+                    }
+                ],
+                "protectedItemsCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/replicationAlertSettings",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('vaults_Test_RSV_name'), '/defaultAlertSetting')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_Test_RSV_name'))]"
+            ],
+            "properties": {
+                "sendToOwners": "DoNotSend",
+                "customEmailAddresses": []
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/replicationVaultSettings",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('vaults_Test_RSV_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_Test_RSV_name'))]"
+            ],
+            "properties": {}
+        }
+    ]
+}

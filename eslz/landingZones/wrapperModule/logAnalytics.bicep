@@ -1,3 +1,5 @@
+targetScope = 'managementGroup'
+
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
@@ -9,7 +11,6 @@ param combinedTags object
 
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string
-
 
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
@@ -44,7 +45,7 @@ param amplsName string
 module loga '../../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(subscriptionId, wlRgName)
-  params:{
+  params: {
     name: logsLawName
     location: location
     tags: combinedTags
@@ -53,7 +54,7 @@ module loga '../../modules/operationalInsights/workspaces/deploy.bicep' = {
     publicNetworkAccessForQuery: publicNetworkAccessForQuery
   }
 }
-
+/*
 // 2. Add Log Analytics Workspace to Azure Monitor Private Link Scope (AMPLS)
 module amplssr '../../modules//insights//privateLinkScopes/scopedResources/deploy.bicep' = {
   name: 'amplssr-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
@@ -67,9 +68,15 @@ module amplssr '../../modules//insights//privateLinkScopes/scopedResources/deplo
     privateLinkScopeName: amplsName
   }
 }
-
+*/
 @description('Output - Log Analytics Workspace "name"')
 output logaName string = loga.outputs.name
 
 @description('Output - Log Analytics Workspace "resoruceId"')
 output logaResoruceId string = loga.outputs.resourceId
+
+// Start - Outputs to supress warnings - "unused parameters"
+output connsubid string = connsubid
+output vnetRgName string = vnetRgName
+output amplsName string = amplsName
+// End - Outputs to supress warnings - "unused parameters"

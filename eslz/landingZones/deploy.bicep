@@ -1,40 +1,35 @@
-
-
-
 // Module - Subscriptions (Landing Zones and IRADs) 
 
-  //Create Subscription(s)
-	//Move Subscriptions to appropriate MG
-	//Configure Diagnostic Settings for Subscriptions & MGs
-	//Configure Tags
-  //Configure Role Assignments
-  //Configure Policy Assignments
-
+//Create Subscription(s)
+//Move Subscriptions to appropriate MG
+//Configure Diagnostic Settings for Subscriptions & MGs
+//Configure Tags
+//Configure Role Assignments
+//Configure Policy Assignments
 
 // Module - Virtual Networks & Peering
 
-  //Resoruce Group for Virtual Network
-  //Network Security Group - (To be linked to Subnets)
-  //Create Landing Zone VNet(s)
-	//DDOS Protection Plan (optional)
-	//Create VNet Peering with Connectivity Subscription
-	//Configure Diagnostic Settins for VNets
-	//Route Table
-  //Configure Tags
-  //Configure Role Assignments
-	
+//Resoruce Group for Virtual Network
+//Network Security Group - (To be linked to Subnets)
+//Create Landing Zone VNet(s)
+//DDOS Protection Plan (optional)
+//Create VNet Peering with Connectivity Subscription
+//Configure Diagnostic Settins for VNets
+//Route Table
+//Configure Tags
+//Configure Role Assignments
+
 // Module - Azure Resources/Workloads
 
-  //Resoruce Group for Azure Resources/Workloads
-  //Create required resources for Landing Zone
-    //Key Vault
-    //Storage Account
-    //Log Analytics Workspace - for their workload/app related logs
-    //Virtual Machines
-    //Recovery Services Vault	
+//Resoruce Group for Azure Resources/Workloads
+//Create required resources for Landing Zone
+//Key Vault
+//Storage Account
+//Log Analytics Workspace - for their workload/app related logs
+//Virtual Machines
+//Recovery Services Vault	
 
-
-targetScope =  'managementGroup'
+targetScope = 'managementGroup'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // "billingScope" -	Billing scope of the subscription.                                                                                              //
@@ -87,6 +82,10 @@ param opscope string
   'usaz'
 ])
 param region string
+
+@description('Name of the virtual machine to be created')
+@maxLength(15)
+param virtualMachineNamePrefix string = 'vm-${projowner}-${opscope}-0'
 
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string
@@ -193,7 +192,6 @@ param publicNetworkAccess string = 'Disabled'
 param networkAcls object
 // End - 'akv' Module Parameters
 
-
 @description('Required. BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -208,8 +206,8 @@ param subscriptionDisplayName string
 
 @description('Required. Workload type for the subscription')
 @allowed([
-    'Production'
-    'DevTest'
+  'Production'
+  'DevTest'
 ])
 param subscriptionWorkload string
 
@@ -218,7 +216,6 @@ param managementGroupId string
 
 @description('Required. Subscription Owner Id for the subscription')
 param subscriptionOwnerId string
-
 
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
 param logsLawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
@@ -266,6 +263,32 @@ param sqlAdministratorLogin string = ''
 @secure()
 param sqlAdministratorLoginPassword string = ''
 
+@description('Optional. The array of Virtual Machines.')
+param virtualMachines array 
+
+@description('Required. The administrator login for the Virtual Machine.')
+@secure()
+param vmAdmin string = ''
+
+@description('Required. The administrator login password for the Virtual Machine.')
+@secure()
+param vmAdminPassword string = ''
+
+@description('Virtual Machine Size')
+param virtualMachineSize string = 'Standard_DS2_v2'
+
+@description('Required. Load content from json file to iterate over any array in the parameters file')
+var params = json(loadTextContent('.parameters/parameters.json'))
+
+@description('Required. Iterate over each "subnets" and build variable to store "lzVMsSubnetName".')
+var lzVMsSubnetName = params.parameters.subnets.value[2].name
+
+@description('Required. Name of the Azure Recovery Service Vault.')
+param vaultName  string = 'rsv-${projowner}-${opscope}-${region}-${suffix}'
+
+@description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
+param rpcRgName string = 'rg-${projowner}-${opscope}-${region}-rpc'
+
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
@@ -276,11 +299,12 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-/*
-// 1. Create the Subscription
-module sub '../modules/subscription/alias/deploy.bicep' = {
+// 1. Create Subscription
+module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
+    location: location
+    combinedTags: combinedTags
     billingAccount: billingAccount
     enrollmentAccount: enrollmentAccount
     subscriptionAlias: subscriptionAlias
@@ -290,50 +314,22 @@ module sub '../modules/subscription/alias/deploy.bicep' = {
     subscriptionOwnerId: subscriptionOwnerId
   }
 }
-*/
 
-// 2. Create Role Assignments for Subscription
-module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
-  name: 'mod-subRbac-${take(uniqueString(deployment().name, location), 4)}-${index}'
-  scope: subscription(subscriptionId)
-  params: {
-    location: location
-    description: contains(roleAssignment, 'description') ? roleAssignment.description : ''
-    principalIds: roleAssignment.principalIds
-    principalType: contains(roleAssignment, 'principalType') ? roleAssignment.principalType : ''
-    roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    subscriptionId: subscriptionId
-  }
-}]
-
-// 3. Configure Diagnostics Settings for Subscriptions
-module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = {
-  name: 'mod-subDiagSettings-${subscriptionId}'
-  scope: subscription(subscriptionId)
-  params:{
-    name: diagSettingName
-    location: location
-    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
-  }
-}
-
-// 4. Create Resoruce Groups
+// 2. Create Resoruce Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
-  scope: subscription(subscriptionId)
   params: {
     location: location
     combinedTags: combinedTags
     resourceGroups: resourceGroups
     rgRoleAssignments: rgRoleAssignments
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
   }
 }
 
-// 5. Create Log Analytics Workspace
+// 3. Create Log Analytics Workspace
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
-  scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     rgs
   ]
@@ -341,7 +337,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
     logsLawName: logsLawName
     location: location
     combinedTags: combinedTags
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     logaGallerySolutions: logaGallerySolutions
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
@@ -352,10 +348,24 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   }
 }
 
-// 6. Create Virtual Network
+// 4. Configure Subscription
+module subConfig 'wrapperModule/subconfig.bicep' = {
+  name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  dependsOn: [
+    lzLoga
+  ]
+  params: {
+    location: location
+    subRoleAssignments: subRoleAssignments
+    subscriptionId: sub.outputs.subscriptionId
+    diagSettingName: diagSettingName
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+  }
+}
+
+// 5. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
-  scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
     lzLoga
   ]
@@ -364,7 +374,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     location: location
     combinedTags: combinedTags
     vnetRgName: vnetRgName
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetAddressPrefixes: vnetAddressPrefixes
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
@@ -377,10 +387,9 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   }
 }
 
-// 7. Create Storage Account
+// 6. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
-  scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzVnet
   ]
@@ -391,7 +400,7 @@ module lzSa 'wrapperModule/storage.bicep' = {
     wlRgName: wlRgName
     storageaccount_sku: storageaccount_sku
     stgGroupIds: stgGroupIds
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
     vnetName: vnetName
     mgmtSubnetName: mgmtSubnetName
@@ -402,10 +411,9 @@ module lzSa 'wrapperModule/storage.bicep' = {
   }
 }
 
-// 8. Create Azure Key Vault
+// 7. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
-  scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzVnet
   ]
@@ -415,8 +423,8 @@ module lzAkv 'wrapperModule/keyVault.bicep' = {
     combinedTags: combinedTags
     wlRgName: wlRgName
     networkAcls: networkAcls
-    publicNetworkAccess: publicNetworkAccess    
-    subscriptionId: subscriptionId
+    publicNetworkAccess: publicNetworkAccess
+    subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
     vnetName: vnetName
     mgmtSubnetName: mgmtSubnetName
@@ -427,10 +435,9 @@ module lzAkv 'wrapperModule/keyVault.bicep' = {
   }
 }
 
-// 9. Create SQL Server
+// 8. Create SQL Server
 module lzSql 'wrapperModule/sql.bicep' = {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzVnet
   ]
@@ -439,10 +446,10 @@ module lzSql 'wrapperModule/sql.bicep' = {
     combinedTags: combinedTags
     sqlPrimaryServerName: sqlPrimaryServerName
     sqlSecondaryServerName: sqlSecondaryServerName
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     administratorLogin: akv.getSecret(sqlAdministratorLogin)
-    administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword) 
+    administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword)
     administrators: administrators
     databases: databases
     sqlFailOverGroupName: sqlFailOverGroupName
@@ -450,6 +457,51 @@ module lzSql 'wrapperModule/sql.bicep' = {
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
+
+// 9. Create Virtual Machine(s)
+module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: {
+  name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
+  dependsOn: [
+    lzVnet
+  ]
+  params: {
+    name: '${virtualMachineNamePrefix}${i + 1}'
+    location: location
+    combinedTags: combinedTags
+    subscriptionId: sub.outputs.subscriptionId
+    wlRgName: wlRgName
+    vmAdmin: akv.getSecret(virtualMachine.vmAdmin)
+    vmAdminPassword: akv.getSecret(virtualMachine.vmAdminPassword)     
+    osType: virtualMachine.osType
+    virtualMachineSize: virtualMachineSize    
+    licenseType: virtualMachine.licenseType
+    availabilityZone: virtualMachine.availabilityZone
+    operatingSystem: virtualMachine.operatingSystem
+    dataDisks: virtualMachine.dataDisks
+    subnetResourceId: resourceId(sub.outputs.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+  }
+}]
+
+// 10. Create Recovery Services Vault
+module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
+  name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
+  dependsOn: [
+    lzVnet
+  ]
+  params: {
+    name: vaultName
+    location: location
+    combinedTags: combinedTags
+    suffix: suffix
+    subscriptionId: sub.outputs.subscriptionId
+    wlRgName: wlRgName
+    rpcRgName: rpcRgName
+    diagSettingName: diagSettingName
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+  }
+}
+
 
 @description('Output - Resource Group "name" Array')
 output rgNames array = rgs.outputs.rgNames

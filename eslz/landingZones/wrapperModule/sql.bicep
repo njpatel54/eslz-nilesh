@@ -1,3 +1,5 @@
+targetScope = 'managementGroup'
+
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
@@ -57,7 +59,7 @@ module sqlPrimaryServer '../../modules/sql/servers/deploy.bicep' = {
     location: primaryLocation
     tags: combinedTags
     administratorLogin: administratorLogin
-    administratorLoginPassword: administratorLoginPassword 
+    administratorLoginPassword: administratorLoginPassword
     administrators: {
       administratorType: administrators.administratorType
       azureADOnlyAuthentication: administrators.azureADOnlyAuthentication
@@ -79,7 +81,7 @@ module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
     location: secondaryLocation
     tags: combinedTags
     administratorLogin: administratorLogin
-    administratorLoginPassword: administratorLoginPassword 
+    administratorLoginPassword: administratorLoginPassword
     administrators: {
       administratorType: administrators.administratorType
       azureADOnlyAuthentication: administrators.azureADOnlyAuthentication
@@ -111,34 +113,26 @@ module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database 
     maxSizeBytes: database.maxSizeBytes
     licenseType: database.licenseType
     diagnosticSettingsName: diagSettingName
-    diagnosticWorkspaceId: diagnosticWorkspaceId  
+    diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }]
 
 // 4. Create Azure SQL Server Failover Group
-resource symbolicname 'Microsoft.Sql/servers/failoverGroups@2022-02-01-preview' = {
-  name: '${sqlPrimaryServerName}/${sqlFailOverGroupName}'
-  tags: combinedTags
+module sqlfailovergrp '../../modules//sql/servers/failoverGroups/deploy.bicep' = {
+  name: 'sqlfailovergrp-${take(uniqueString(deployment().name, location), 4)}-${sqlFailOverGroupName}'
+  scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
-    sqlPrimaryServer
-    sqlSecondaryServer
     sqldb
+    sqlSecondaryServer
   ]
-  properties: {
+  params: {
     databases: [for database in params.parameters.databases.value: resourceId(subscriptionId, wlRgName, 'Microsoft.Sql/servers/databases', sqlPrimaryServerName, database.name)]
     partnerServers: [
       {
         id: sqlSecondaryServer.outputs.resourceId
       }
     ]
-    readWriteEndpoint: {
-      failoverPolicy: 'Automatic'
-      failoverWithDataLossGracePeriodMinutes: 60
-    }
-    readOnlyEndpoint: {
-      failoverPolicy: 'Disabled'
-    }
+    sqlFailOverGroupName: sqlFailOverGroupName
+    sqlPrimaryServerName: sqlPrimaryServerName
   }
 }
-
-
