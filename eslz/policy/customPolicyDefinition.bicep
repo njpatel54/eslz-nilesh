@@ -183,6 +183,10 @@ var customPolicyDefinitions = [
     name: 'Deploy-Windows-DomainJoin'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Windows-DomainJoin.json'))
   }
+  {
+    name: 'Deploy-VM-Backup'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-VM-Backup.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')

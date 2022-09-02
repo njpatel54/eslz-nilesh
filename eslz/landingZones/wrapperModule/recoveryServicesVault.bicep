@@ -42,6 +42,14 @@ param suffix string
 @description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
 param rpcRgName string
 
+@description('Required. Load content from json file to iterate over "rgRoleAssignments".')
+var params = json(loadTextContent('../../roles/.parameters/customRoleAssignments.json'))
+
+@description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Private DNS A Contributor" custom role.')
+var priDNSAContributorRoleDefintionId = params.parameters.rgRoleAssignments.value[0].roleDefinitionIdOrName
+
+@description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Networking Permissions" custom role.')
+var networkingPermsRoleDefintionId = params.parameters.rgRoleAssignments.value[1].roleDefinitionIdOrName
 
 var varAzBackupGeoCodes = {
   australiacentral: 'acl'
@@ -116,7 +124,6 @@ var varAzBackupGeoCodes = {
 // If region entered in parLocation and matches a lookup to varAzBackupGeoCodes then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in parPrivateDnsZones. If not just return parPrivateDnsZones
 var privatelinkBackup = replace('privatelink.<geoCode>.backup.windowsazure.us', '<geoCode>', '${varAzBackupGeoCodes[toLower(location)]}')
 
-
 // 1. Create Recovery Services Vault
 module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${name}'
@@ -132,27 +139,26 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
         type: 'Microsoft.RecoveryServices/vaults/backupPolicies'
         properties: {
           backupManagementType: 'AzureIaasVM'
-          policyType: 'V2'
+          policyType: 'V1'
           instantRPDetails: {
-            azureBackupRGNamePrefix: rpcRgName
+            azureBackupRGNamePrefix: 'rg-ccs-sand-usva-rpc'
           }
           schedulePolicy: {
-            schedulePolicyType: 'SimpleSchedulePolicyV2'
+            schedulePolicyType: 'SimpleSchedulePolicy'
             scheduleRunFrequency: 'Daily'
-            dailySchedule: {
-              scheduleRunTimes: [
-                '2022-08-30T01:00:00Z'
-              ]
-            }
+            scheduleRunTimes: [
+              '2022-09-01T01:00:00Z'
+            ]
+            scheduleWeeklyFrequency: 0
           }
           retentionPolicy: {
             retentionPolicyType: 'LongTermRetentionPolicy'
             dailySchedule: {
               retentionTimes: [
-                '2022-08-30T01:00:00Z'
+                '2022-09-01T01:00:00Z'
               ]
               retentionDuration: {
-                count: 30
+                count: 180
                 durationType: 'Days'
               }
             }
@@ -161,7 +167,7 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
                 'Sunday'
               ]
               retentionTimes: [
-                '2022-08-30T01:00:00Z'
+                '2022-09-01T01:00:00Z'
               ]
               retentionDuration: {
                 count: 12
@@ -179,7 +185,7 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
                 ]
               }
               retentionTimes: [
-                '2022-08-30T01:00:00Z'
+                '2022-09-01T01:00:00Z'
               ]
               retentionDuration: {
                 count: 60
@@ -347,15 +353,75 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Grant permissions to the vault to create required private endpoints                                                                                                     //
+// https://docs.microsoft.com/en-us/azure/backup/private-endpoints#grant-permissions-to-the-vault-to-create-required-private-endpoints                                     //
+//                                                                                                                                                                         //
+// To create the required private endpoints for Azure Backup, the vault (the Managed Identity of the vault) must have permissions to the following resource groups:        //
+//                                                                                                                                                                         //     
+// (1) The "Resource Group" that contains the "target VNet"                                                                                                                //   
+// (2) The "Resource Group" where the "Private Endpoints are to be created"                                                                                                //
+// (3) The "Resource Group" that contains the "Private DNS zones"                                                                                                          //
+//                                                                                                                                                                         //
+// We recommend that you grant the Contributor role for those three resource groups to the vault (managed identity).                                                       //
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// 2. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+module roleAssignmentPriDNSAContributor '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
+  scope: resourceGroup(connsubid, priDNSZonesRgName)
+  dependsOn: [
+    rsv
+  ]
+  params: {
+    roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsv.outputs.systemAssignedPrincipalId
+    ]
+  }
+}
 
+// 3. Create Role Assignment for Recovery Services Vault's System Managed Identity (VNet RG)
+module roleAssignmentNetworkingPerms '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${name}'
+  scope: resourceGroup(subscriptionId, vnetRgName)
+  dependsOn: [
+    rsv
+  ]
+  params: {
+    roleDefinitionIdOrName: networkingPermsRoleDefintionId
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsv.outputs.systemAssignedPrincipalId
+    ]
+  }
+}
 
-// 2. Create Private Endpoint for Recovery Services Vault
+// 4. Create Role Assignment for Recovery Services Vault's System Managed Identity (WL RG)
+module roleAssignmentContributor '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    rsv
+  ]
+  params: {
+    roleDefinitionIdOrName: 'Contributor'
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsv.outputs.systemAssignedPrincipalId
+    ]
+  }
+}
+
+// 5. Create Private Endpoint for Recovery Services Vault
 module rsvPe '../../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPe-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
-    rsv
+    roleAssignmentPriDNSAContributor
+    roleAssignmentNetworkingPerms
+    roleAssignmentContributor
   ]
   params: {
     name: '${name}-AzureBackup-pe'
@@ -375,8 +441,3 @@ module rsvPe '../../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-
-
-
-
-

@@ -1,3 +1,4 @@
+
 param location string
 //param deployBlob bool = true
 //param deployQueue bool = false
@@ -43,12 +44,6 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     scriptContent: 'az ad group create --display-name "${lzPEGrpName}" --mail-nickname "${lzPEGrpMailNickName}" && az ad group member add --group "${lzPEGrpName}" --member-id $(az ad signed-in-user show --query "{ID:id}" -o tsv) && az ad group member add --group "${parentGrpName}" --member-id $(az ad group list --display-name "${lzPEGrpName}" --query "[].{ID:id}" -o tsv)'
   }
 }
-
-
-
-
-
-
 
 
 
@@ -155,3 +150,4 @@ output prodStgaAcctEndpoints object = prodStgaAcct.properties.primaryEndpoints
 output prodBloburi string = '${prodStgaAcct.properties.primaryEndpoints['blob']}${entityName}/${filename}'
 output sasToken string = sasToken
 */
+
