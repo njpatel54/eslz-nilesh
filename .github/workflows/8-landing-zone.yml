@@ -1,11 +1,11 @@
-name: landing zone
+name: 8 - landing zone
 
 on:
   #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/landingZone.yml
+  #   - .github/workflows/8-landing-zone.yml
       
   # pull_request:
   #  branches: [ main ]
@@ -41,6 +41,7 @@ jobs:
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
             --template-file ./eslz/landingZones/deploy.bicep \
             --parameters ./eslz/landingZones/.parameters/parameters.json \
+            --parameters ./eslz/landingZones/.parameters/policy.assignment.parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \

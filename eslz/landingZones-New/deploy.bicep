@@ -169,7 +169,7 @@ param publicNetworkAccess string = 'Disabled'
 @description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
 param networkAcls object
 // End - 'akv' Module Parameters
-
+/*
 @description('Required. BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -194,7 +194,7 @@ param managementGroupId string
 
 @description('Required. Subscription Owner Id for the subscription')
 param subscriptionOwnerId string
-
+*/
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
 param logsLawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
 
@@ -274,29 +274,32 @@ param subPolicyAssignments array = []
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
-// 1. Retrieve exisiting Key Vault (From Management Subscription)
+// Retrieve exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 2. Create Subscription
+@description('Required. Object containging Subscription properties.')
+param subscription object
+
+// 1. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
-  name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionAlias}'
   params: {
     location: location
     combinedTags: combinedTags
-    billingAccount: billingAccount
-    enrollmentAccount: enrollmentAccount
-    subscriptionAlias: subscriptionAlias
-    subscriptionDisplayName: subscriptionDisplayName
-    subscriptionWorkload: subscriptionWorkload
-    managementGroupId: managementGroupId
-    subscriptionOwnerId: subscriptionOwnerId
+    billingAccount: subscription.billingAccount
+    enrollmentAccount: subscription.enrollmentAccount
+    subscriptionAlias: subscription.subscriptionAlias
+    subscriptionDisplayName: subscription.subscriptionDisplayName
+    subscriptionWorkload: subscription.subscriptionWorkload
+    managementGroupId: subscription.managementGroupId
+    subscriptionOwnerId: subscription.subscriptionOwnerId
   }
 }
 
-// 3. Create Resoruce Groups
+// 2. Create Resoruce Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   params: {
@@ -308,7 +311,10 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
   }
 }
 
-// 4. Create Log Analytics Workspace
+@description('Required. Object containging Virtual Network properties.')
+param logAnalyticsWorkspace object
+
+// 3. Create Log Analytics Workspace
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   dependsOn: [
@@ -320,46 +326,49 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
     combinedTags: combinedTags
     subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
-    logaGallerySolutions: logaGallerySolutions
-    publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
-    publicNetworkAccessForQuery: publicNetworkAccessForQuery
+    logaGallerySolutions: logAnalyticsWorkspace.logaGallerySolutions
+    publicNetworkAccessForIngestion: logAnalyticsWorkspace.publicNetworkAccessForIngestion
+    publicNetworkAccessForQuery: logAnalyticsWorkspace.publicNetworkAccessForQuery
     connsubid: connsubid
     vnetRgName: vnetRgName
     amplsName: amplsName
   }
 }
 
-// 5. Configure Subscription
+// 4. Configure Subscription
 module subConfig 'wrapperModule/subconfig.bicep' = {
-  name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionAlias}'
   dependsOn: [
     lzLoga
   ]
   params: {
     location: location
-    subRoleAssignments: subRoleAssignments
+    subRoleAssignments: subscription.subRoleAssignments
     subscriptionId: sub.outputs.subscriptionId
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
 
-// 6. Create Virtual Network
+@description('Required. Object containging Virtual Network properties.')
+param virtualNetwork object
+
+// 5. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
-  name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
+  name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${virtualNetwork.vnetName}'
   dependsOn: [
     lzLoga
   ]
   params: {
-    vnetName: vnetName
+    vnetName: virtualNetwork.vnetName
     location: location
     combinedTags: combinedTags
     vnetRgName: vnetRgName
     subscriptionId: sub.outputs.subscriptionId
-    vnetAddressPrefixes: vnetAddressPrefixes
-    subnets: subnets
-    virtualNetworkPeerings: virtualNetworkPeerings
-    networkSecurityGroups: networkSecurityGroups
+    vnetAddressPrefixes: virtualNetwork.vnetAddressPrefixes
+    subnets: virtualNetwork.subnets
+    virtualNetworkPeerings: virtualNetwork.virtualNetworkPeerings
+    networkSecurityGroups: virtualNetwork.networkSecurityGroups
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
     privateDnsZones: privateDnsZones
@@ -368,7 +377,10 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   }
 }
 
-// 7. Create Storage Account
+@description('Required. Object containging Storage Account properties.')
+param storageAccount object
+
+// 6. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
@@ -379,8 +391,8 @@ module lzSa 'wrapperModule/storage.bicep' = {
     location: location
     combinedTags: combinedTags
     wlRgName: wlRgName
-    storageaccount_sku: storageaccount_sku
-    stgGroupIds: stgGroupIds
+    storageaccount_sku: storageAccount.storageaccount_sku
+    stgGroupIds: storageAccount.stgGroupIds
     subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
     vnetName: vnetName
@@ -392,7 +404,10 @@ module lzSa 'wrapperModule/storage.bicep' = {
   }
 }
 
-// 8. Create Azure Key Vault
+@description('Required. Object containging Key Vault properties.')
+param keyVault object
+
+// 7. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -403,7 +418,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = {
     location: location
     combinedTags: combinedTags
     wlRgName: wlRgName
-    networkAcls: networkAcls
+    networkAcls: keyVault.networkAcls
     publicNetworkAccess: publicNetworkAccess
     subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
@@ -416,7 +431,10 @@ module lzAkv 'wrapperModule/keyVault.bicep' = {
   }
 }
 
-// 9. Create SQL Server(s)
+@description('Required. Object containging SQL Server properties.')
+param sql object
+
+// 8. Create SQL Server
 module lzSql 'wrapperModule/sql.bicep' = {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -429,17 +447,17 @@ module lzSql 'wrapperModule/sql.bicep' = {
     sqlSecondaryServerName: sqlSecondaryServerName
     subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
-    administratorLogin: akv.getSecret(sqlAdministratorLogin)
-    administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword)
-    administrators: administrators
-    databases: databases
+    administratorLogin: akv.getSecret(sql.sqlAdministratorLogin)
+    administratorLoginPassword: akv.getSecret(sql.sqlAdministratorLoginPassword)
+    administrators: sql.administrators
+    databases: sql.databases
     sqlFailOverGroupName: sqlFailOverGroupName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
 
-// 10. Create Virtual Machine(s)
+// 9. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   dependsOn: [
@@ -464,7 +482,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
   }
 }]
 
-// 11. Create Recovery Services Vault
+// 10. Create Recovery Services Vault
 module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
@@ -488,7 +506,7 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-// 12. Create Policy Assignment
+// 11. Create Policy Assignment
 module policyAssignment 'wrapperModule/policyAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -546,6 +564,7 @@ output akvResoruceId string = lzAkv.outputs.akvResoruceId
 @description('Output - Log Analytics Workspace "resoruceId"')
 output akvUri string = lzAkv.outputs.akvUri
 
+/*
 // Start - Outputs to supress warnings - "unused parameters"
 output billingAccount string = billingAccount
 output enrollmentAccount string = enrollmentAccount
@@ -555,3 +574,4 @@ output subscriptionWorkload string = subscriptionWorkload
 output managementGroupId string = managementGroupId
 output subscriptionOwnerId string = subscriptionOwnerId
 // End - Outputs to supress warnings - "unused parameters"
+*/
