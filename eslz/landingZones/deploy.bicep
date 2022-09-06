@@ -87,10 +87,14 @@ param wlRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
 @description('Required. Name of the resourceGroup, where networking components will be.')
 param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
 
+@description('Required. Name of the resourceGroup, where centralized management components will be.')
+param mgmtRgName string = 'rg-${projowner}-${opscope}-${region}-mgmt'
+
 @description('Contains the array of resourceGroup names.')
 param resourceGroups array = [
   wlRgName
   vnetRgName
+  mgmtRgName
 ]
 
 @description('Required. Array of role assignment objects to assign RBAC roles at Resource Groups.')
@@ -476,7 +480,7 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
     combinedTags: combinedTags
     suffix: suffix
     subscriptionId: sub.outputs.subscriptionId
-    wlRgName: wlRgName
+    mgmtRgName: mgmtRgName
     rpcRgName: rpcRgName
     vnetRgName: vnetRgName
     vnetName: vnetName

@@ -3,8 +3,8 @@ targetScope = 'managementGroup'
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
-@description('Required. Name of the resourceGroup, where application workload will be deployed.')
-param wlRgName string
+@description('Required. Name of the resourceGroup, where centralized management components will be.')
+param mgmtRgName string
 
 @description('Location for the deployments and the resources')
 param location string
@@ -127,7 +127,7 @@ var privatelinkBackup = replace('privatelink.<geoCode>.backup.windowsazure.us', 
 // 1. Create Recovery Services Vault
 module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${name}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  scope: resourceGroup(subscriptionId, mgmtRgName)
   params: {
     name: name
     location: location
@@ -401,7 +401,7 @@ module roleAssignmentNetworkingPerms '../../modules//authorization//roleAssignme
 // 4. Create Role Assignment for Recovery Services Vault's System Managed Identity (WL RG)
 module roleAssignmentContributor '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  scope: resourceGroup(subscriptionId, mgmtRgName)
   dependsOn: [
     rsv
   ]
@@ -417,7 +417,7 @@ module roleAssignmentContributor '../../modules//authorization//roleAssignments/
 // 5. Create Private Endpoint for Recovery Services Vault
 module rsvPe '../../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPe-${take(uniqueString(deployment().name, location), 4)}-${name}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  scope: resourceGroup(subscriptionId, mgmtRgName)
   dependsOn: [
     roleAssignmentPriDNSAContributor
     roleAssignmentNetworkingPerms
