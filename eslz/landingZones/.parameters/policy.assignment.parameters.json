@@ -25,7 +25,7 @@
                             ]
                         },
                         "backupPolicyId": {
-                            "value": "/subscriptions/15c21ed5-786a-4ea6-bc45-fbc619f63fd0/resourcegroups/rg-ccs-sand-usva-wl01/providers/microsoft.recoveryservices/vaults/rsv-ccs-sand-usva-lz01/backuppolicies/lz01vmbackuppolicy"
+                            "value": "/subscriptions/15c21ed5-786a-4ea6-bc45-fbc619f63fd0/resourcegroups/rg-ccs-sand-usva-mgmt/providers/microsoft.recoveryservices/vaults/rsv-ccs-sand-usva-lz01/backuppolicies/lz01vmbackuppolicy"
                         }
                     },
                     "nonComplianceMessage": "Virutal Machines must be backed up to Recovery Services Vault in the same location.",                    

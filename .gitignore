@@ -5,10 +5,8 @@
 
 # Files/Folders - ESLZ-Nilesh Repo
 .github/workflows/info/*
-landingZones-New/
-test/
-testpolicy/
-deploymentScript/
+eslz/landingZones-New/
+eslz/deploymentScript/
 
 # User-specific files
 *.suo
