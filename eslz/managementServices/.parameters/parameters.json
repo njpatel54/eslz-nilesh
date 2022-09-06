@@ -175,6 +175,9 @@
         }
       ]
     },
+    "diagSettingName": {
+      "value": "logging-diagSetting-centralized"
+    },
     "projowner": {
       "value": "ccs"
     },

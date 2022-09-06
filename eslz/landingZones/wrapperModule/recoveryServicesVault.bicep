@@ -141,7 +141,7 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
           backupManagementType: 'AzureIaasVM'
           policyType: 'V1'
           instantRPDetails: {
-            azureBackupRGNamePrefix: 'rg-ccs-sand-usva-rpc'
+            azureBackupRGNamePrefix: rpcRgName
           }
           schedulePolicy: {
             schedulePolicyType: 'SimpleSchedulePolicy'
@@ -398,7 +398,7 @@ module roleAssignmentNetworkingPerms '../../modules//authorization//roleAssignme
   }
 }
 
-// 4. Create Role Assignment for Recovery Services Vault's System Managed Identity (WL RG)
+// 4. Create Role Assignment for Recovery Services Vault's System Managed Identity (MGMT RG)
 module roleAssignmentContributor '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, mgmtRgName)

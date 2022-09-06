@@ -52,6 +52,7 @@ jobs:
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ AZURE_SSVCSUBSCRIPTIONID }} \
                          tenantid=${{ secrets.AZURE_TENANTID }} \
                          enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}
 
@@ -83,6 +84,7 @@ jobs:
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ AZURE_SSVCSUBSCRIPTIONID }} \
                          tenantid=${{ secrets.AZURE_TENANTID }} \
                          enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}
 
@@ -115,5 +117,6 @@ jobs:
             --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ AZURE_SSVCSUBSCRIPTIONID }} \
                          tenantid=${{ secrets.AZURE_TENANTID }} \
                          enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}

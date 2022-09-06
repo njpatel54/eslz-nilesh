@@ -21,6 +21,9 @@ param eventHubs array = []
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
+@description('Required. Subscription ID of Shared Services Subscription.')
+param ssvcsubid string
+
 @description('Required. Default Management Group where newly created Subscription will be added to.')
 param onboardmg string
 
@@ -97,6 +100,9 @@ param enrollmentID string
 @description('Required. SIEM Resource Group Name.')
 param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
+@description('Required. Name of the resourceGroup, where centralized management components will be.')
+param mgmtRgName string = 'rg-${projowner}-${opscope}-${region}-mgmt'
+
 @description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
 param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
 
@@ -143,6 +149,9 @@ param queueServices object
 @description('Optional. Table service and tables to create.')
 param tableServices object
 
+@description('Required. Name for the Diagnostics Setting Configuration.')
+param diagSettingName string
+
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
 
@@ -155,12 +164,47 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 @description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
 param diagnosticEventHubName string = ''
 
-// 1. Create Resoruce Group
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param mgmtSuffix string = 'mgmt'
+
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param ssvcSuffix string = 'ssvc'
+
+@description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
+param rpcRgName string
+
+@description('Required. Name of the Azure Recovery Service Vault in Management Subscription.')
+param mgmtVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${mgmtSuffix}'
+
+@description('Required. Name of the Azure Recovery Service Vault in Shared Services Subscription.')
+param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffix}'
+
+// 1. Create Resoruce Groups
 module siem_rg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${siemRgName}'
   scope: subscription(mgmtsubid)
   params: {
     name: siemRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}
+
+module mgmt_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
+  scope: subscription(mgmtsubid)
+  params: {
+    name: mgmtRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}
+
+module ssvc_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
+  scope: subscription(ssvcsubid)
+  params: {
+    name: mgmtRgName
     location: location
     tags: ccsCombinedTags
   }
@@ -215,6 +259,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     fileServices: fileServices
     queueServices: queueServices
     tableServices: tableServices
+    diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
     publicNetworkAccess: 'Disabled'
@@ -234,6 +279,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
     eventhubNamespaceName: eventhubNamespaceName
     eventHubs: eventHubs
     authorizationRules: authorizationRules
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId    
   }
@@ -251,6 +297,7 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
     location: location
     tags: ccsCombinedTags
     linkedWorkspaceResourceId: loga.outputs.resourceId
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
@@ -272,6 +319,7 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
       vaultSku: 'premium'
       publicNetworkAccess: publicNetworkAccess
       roleAssignments: kvRoleAssignments
+      diagnosticSettingsName: diagSettingName
       diagnosticStorageAccountId: sa.outputs.resourceId
       diagnosticWorkspaceId: loga.outputs.resourceId
       //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
@@ -281,7 +329,7 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
 
 // 8. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'diagSettings-${subscription.subscriptionId}'
+  name: diagSettingName
   scope: subscription(subscription.subscriptionId)
   dependsOn: [
     eh
@@ -295,7 +343,471 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+// 9. Create Recovery Services Vault (Management Subscription)
+module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
+  name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  dependsOn: [
+    eh
+  ]
+  params: {
+    name: mgmtVaultName
+    location: location
+    tags: ccsCombinedTags
+    systemAssignedIdentity: true
+    backupPolicies: [
+      {
+        name: '${mgmtSuffix}vmBackupPolicy'
+        type: 'Microsoft.RecoveryServices/vaults/backupPolicies'
+        properties: {
+          backupManagementType: 'AzureIaasVM'
+          policyType: 'V1'
+          instantRPDetails: {
+            azureBackupRGNamePrefix: rpcRgName
+          }
+          schedulePolicy: {
+            schedulePolicyType: 'SimpleSchedulePolicy'
+            scheduleRunFrequency: 'Daily'
+            scheduleRunTimes: [
+              '2022-09-01T01:00:00Z'
+            ]
+            scheduleWeeklyFrequency: 0
+          }
+          retentionPolicy: {
+            retentionPolicyType: 'LongTermRetentionPolicy'
+            dailySchedule: {
+              retentionTimes: [
+                '2022-09-01T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 180
+                durationType: 'Days'
+              }
+            }
+            weeklySchedule: {
+              daysOfTheWeek: [
+                'Sunday'
+              ]
+              retentionTimes: [
+                '2022-09-01T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 12
+                durationType: 'Weeks'
+              }
+            }
+            monthlySchedule: {
+              retentionScheduleFormatType: 'Weekly'
+              retentionScheduleWeekly: {
+                daysOfTheWeek: [
+                  'Sunday'
+                ]
+                weeksOfTheMonth: [
+                  'First'
+                ]
+              }
+              retentionTimes: [
+                '2022-09-01T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 60
+                durationType: 'Months'
+              }
+            }
+          }
+          instantRpRetentionRangeInDays: 2
+          timeZone: 'Eastern Standard Time'
+          protectedItemsCount: 0
+        }
+      }
+      {
+        name: '${mgmtSuffix}sqlBackupPolicy'
+        type: 'Microsoft.RecoveryServices/vaults/backupPolicies'
+        properties: {
+          backupManagementType: 'AzureWorkload'
+          workLoadType: 'SQLDataBase'
+          settings: {
+            timeZone: 'Eastern Standard Time'
+            issqlcompression: true
+            isCompression: true
+          }
+          subProtectionPolicy: [
+            {
+              policyType: 'Full'
+              schedulePolicy: {
+                schedulePolicyType: 'SimpleSchedulePolicy'
+                scheduleRunFrequency: 'Weekly'
+                scheduleRunDays: [
+                  'Sunday'
+                ]
+                scheduleRunTimes: [
+                  '2022-08-30T01:00:00Z'
+                ]
+                scheduleWeeklyFrequency: 0
+              }
+              retentionPolicy: {
+                retentionPolicyType: 'LongTermRetentionPolicy'
+                weeklySchedule: {
+                  daysOfTheWeek: [
+                    'Sunday'
+                  ]
+                  retentionTimes: [
+                    '2022-08-30T01:00:00Z'
+                  ]
+                  retentionDuration: {
+                    count: 104
+                    durationType: 'Weeks'
+                  }
+                }
+                monthlySchedule: {
+                  retentionScheduleFormatType: 'Weekly'
+                  retentionScheduleWeekly: {
+                    daysOfTheWeek: [
+                      'Sunday'
+                    ]
+                    weeksOfTheMonth: [
+                      'First'
+                    ]
+                  }
+                  retentionTimes: [
+                    '2022-08-30T01:00:00Z'
+                  ]
+                  retentionDuration: {
+                    count: 60
+                    durationType: 'Months'
+                  }
+                }
+                yearlySchedule: {
+                  retentionScheduleFormatType: 'Weekly'
+                  monthsOfYear: [
+                    'January'
+                  ]
+                  retentionScheduleWeekly: {
+                    daysOfTheWeek: [
+                      'Sunday'
+                    ]
+                    weeksOfTheMonth: [
+                      'First'
+                    ]
+                  }
+                  retentionTimes: [
+                    '2022-08-30T01:00:00Z'
+                  ]
+                  retentionDuration: {
+                    count: 10
+                    durationType: 'Years'
+                  }
+                }
+              }
+            }
+            {
+              policyType: 'Differential'
+              schedulePolicy: {
+                schedulePolicyType: 'SimpleSchedulePolicy'
+                scheduleRunFrequency: 'Weekly'
+                scheduleRunDays: [
+                  'Monday'
+                ]
+                scheduleRunTimes: [
+                  '2022-08-30T01:00:00Z'
+                ]
+                scheduleWeeklyFrequency: 0
+              }
+              retentionPolicy: {
+                retentionPolicyType: 'SimpleRetentionPolicy'
+                retentionDuration: {
+                  count: 30
+                  durationType: 'Days'
+                }
+              }
+            }
+            {
+              policyType: 'Log'
+              schedulePolicy: {
+                schedulePolicyType: 'LogSchedulePolicy'
+                scheduleFrequencyInMins: 120
+              }
+              retentionPolicy: {
+                retentionPolicyType: 'SimpleRetentionPolicy'
+                retentionDuration: {
+                  count: 15
+                  durationType: 'Days'
+                }
+              }
+            }
+          ]
+          protectedItemsCount: 0
+        }
+      }
+      {
+        name: '${mgmtSuffix}fileShareBackupPolicy'
+        type: 'Microsoft.RecoveryServices/vaults/backupPolicies'
+        properties: {
+          backupManagementType: 'AzureStorage'
+          workloadType: 'AzureFileShare'
+          schedulePolicy: {
+            schedulePolicyType: 'SimpleSchedulePolicy'
+            scheduleRunFrequency: 'Daily'
+            scheduleRunTimes: [
+              '2022-08-30T01:00:00Z'
+            ]
+            scheduleWeeklyFrequency: 0
+          }
+          retentionPolicy: {
+            retentionPolicyType: 'LongTermRetentionPolicy'
+            dailySchedule: {
+              retentionTimes: [
+                '2022-08-30T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 30
+                durationType: 'Days'
+              }
+            }
+          }
+          timeZone: 'Eastern Standard Time'
+          protectedItemsCount: 0
+        }
+      }
+    ]
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+  }
+}
 
+// 10. Create Recovery Services Vault (Shared Services Subscription)
+module rsv_ssvc '../modules/recoveryServices/vaults/deploy.bicep' = {
+  name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    eh
+  ]
+  params: {
+    name: ssvcVaultName
+    location: location
+    tags: ccsCombinedTags
+    systemAssignedIdentity: true
+    backupPolicies: [
+      {
+        name: '${ssvcSuffix}vmBackupPolicy'
+        type: 'Microsoft.RecoveryServices/vaults/backupPolicies'
+        properties: {
+          backupManagementType: 'AzureIaasVM'
+          policyType: 'V1'
+          instantRPDetails: {
+            azureBackupRGNamePrefix: rpcRgName
+          }
+          schedulePolicy: {
+            schedulePolicyType: 'SimpleSchedulePolicy'
+            scheduleRunFrequency: 'Daily'
+            scheduleRunTimes: [
+              '2022-09-01T01:00:00Z'
+            ]
+            scheduleWeeklyFrequency: 0
+          }
+          retentionPolicy: {
+            retentionPolicyType: 'LongTermRetentionPolicy'
+            dailySchedule: {
+              retentionTimes: [
+                '2022-09-01T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 180
+                durationType: 'Days'
+              }
+            }
+            weeklySchedule: {
+              daysOfTheWeek: [
+                'Sunday'
+              ]
+              retentionTimes: [
+                '2022-09-01T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 12
+                durationType: 'Weeks'
+              }
+            }
+            monthlySchedule: {
+              retentionScheduleFormatType: 'Weekly'
+              retentionScheduleWeekly: {
+                daysOfTheWeek: [
+                  'Sunday'
+                ]
+                weeksOfTheMonth: [
+                  'First'
+                ]
+              }
+              retentionTimes: [
+                '2022-09-01T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 60
+                durationType: 'Months'
+              }
+            }
+          }
+          instantRpRetentionRangeInDays: 2
+          timeZone: 'Eastern Standard Time'
+          protectedItemsCount: 0
+        }
+      }
+      {
+        name: '${ssvcSuffix}sqlBackupPolicy'
+        type: 'Microsoft.RecoveryServices/vaults/backupPolicies'
+        properties: {
+          backupManagementType: 'AzureWorkload'
+          workLoadType: 'SQLDataBase'
+          settings: {
+            timeZone: 'Eastern Standard Time'
+            issqlcompression: true
+            isCompression: true
+          }
+          subProtectionPolicy: [
+            {
+              policyType: 'Full'
+              schedulePolicy: {
+                schedulePolicyType: 'SimpleSchedulePolicy'
+                scheduleRunFrequency: 'Weekly'
+                scheduleRunDays: [
+                  'Sunday'
+                ]
+                scheduleRunTimes: [
+                  '2022-08-30T01:00:00Z'
+                ]
+                scheduleWeeklyFrequency: 0
+              }
+              retentionPolicy: {
+                retentionPolicyType: 'LongTermRetentionPolicy'
+                weeklySchedule: {
+                  daysOfTheWeek: [
+                    'Sunday'
+                  ]
+                  retentionTimes: [
+                    '2022-08-30T01:00:00Z'
+                  ]
+                  retentionDuration: {
+                    count: 104
+                    durationType: 'Weeks'
+                  }
+                }
+                monthlySchedule: {
+                  retentionScheduleFormatType: 'Weekly'
+                  retentionScheduleWeekly: {
+                    daysOfTheWeek: [
+                      'Sunday'
+                    ]
+                    weeksOfTheMonth: [
+                      'First'
+                    ]
+                  }
+                  retentionTimes: [
+                    '2022-08-30T01:00:00Z'
+                  ]
+                  retentionDuration: {
+                    count: 60
+                    durationType: 'Months'
+                  }
+                }
+                yearlySchedule: {
+                  retentionScheduleFormatType: 'Weekly'
+                  monthsOfYear: [
+                    'January'
+                  ]
+                  retentionScheduleWeekly: {
+                    daysOfTheWeek: [
+                      'Sunday'
+                    ]
+                    weeksOfTheMonth: [
+                      'First'
+                    ]
+                  }
+                  retentionTimes: [
+                    '2022-08-30T01:00:00Z'
+                  ]
+                  retentionDuration: {
+                    count: 10
+                    durationType: 'Years'
+                  }
+                }
+              }
+            }
+            {
+              policyType: 'Differential'
+              schedulePolicy: {
+                schedulePolicyType: 'SimpleSchedulePolicy'
+                scheduleRunFrequency: 'Weekly'
+                scheduleRunDays: [
+                  'Monday'
+                ]
+                scheduleRunTimes: [
+                  '2022-08-30T01:00:00Z'
+                ]
+                scheduleWeeklyFrequency: 0
+              }
+              retentionPolicy: {
+                retentionPolicyType: 'SimpleRetentionPolicy'
+                retentionDuration: {
+                  count: 30
+                  durationType: 'Days'
+                }
+              }
+            }
+            {
+              policyType: 'Log'
+              schedulePolicy: {
+                schedulePolicyType: 'LogSchedulePolicy'
+                scheduleFrequencyInMins: 120
+              }
+              retentionPolicy: {
+                retentionPolicyType: 'SimpleRetentionPolicy'
+                retentionDuration: {
+                  count: 15
+                  durationType: 'Days'
+                }
+              }
+            }
+          ]
+          protectedItemsCount: 0
+        }
+      }
+      {
+        name: '${ssvcSuffix}fileShareBackupPolicy'
+        type: 'Microsoft.RecoveryServices/vaults/backupPolicies'
+        properties: {
+          backupManagementType: 'AzureStorage'
+          workloadType: 'AzureFileShare'
+          schedulePolicy: {
+            schedulePolicyType: 'SimpleSchedulePolicy'
+            scheduleRunFrequency: 'Daily'
+            scheduleRunTimes: [
+              '2022-08-30T01:00:00Z'
+            ]
+            scheduleWeeklyFrequency: 0
+          }
+          retentionPolicy: {
+            retentionPolicyType: 'LongTermRetentionPolicy'
+            dailySchedule: {
+              retentionTimes: [
+                '2022-08-30T01:00:00Z'
+              ]
+              retentionDuration: {
+                count: 30
+                durationType: 'Days'
+              }
+            }
+          }
+          timeZone: 'Eastern Standard Time'
+          protectedItemsCount: 0
+        }
+      }
+    ]
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+  }
+}
 
 @description('Output - Name of Event Hub')
 output ehnsAuthorizationId string = resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')

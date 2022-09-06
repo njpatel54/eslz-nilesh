@@ -26,6 +26,18 @@
     "suffix": {
       "value": "lz01"
     },
+    "lzSqlDeploy": {
+      "value": true
+    },
+    "lzVmsDeploy": {
+      "value": true
+    },
+    "lzSaDeploy": {
+      "value": true
+    },
+    "lzAkvDeploy": {
+      "value": true
+    },
     "subRoleAssignments": {
       "value": [
         {
@@ -39,6 +51,20 @@
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
           "principalIds": [
             "c4beea9a-5d9d-438c-ba60-66d6238fc3d4"
+          ]
+        },
+        {
+          "description": "Backup Operator",
+          "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/00c29273-979b-4161-815c-10b084fb9324",
+          "principalIds": [
+            "9ef4fb72-34e1-4e98-8a30-104617aabb9c"
+          ]
+        },
+        {
+          "description": "Backup Contributor",
+          "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b",
+          "principalIds": [
+            "d7f417ae-0e94-4c0b-b526-a604853fa315"
           ]
         }
       ]

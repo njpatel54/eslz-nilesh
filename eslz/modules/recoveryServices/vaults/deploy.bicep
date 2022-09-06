@@ -286,3 +286,5 @@ output systemAssignedPrincipalId string = systemAssignedIdentity && contains(rsv
 
 @description('The location the resource was deployed into.')
 output location string = rsv.location
+
+output diagnosticsMetrics array = diagnosticsMetrics

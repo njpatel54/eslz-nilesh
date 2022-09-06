@@ -1,10 +1,5 @@
 // Module - Subscriptions (Landing Zones and IRADs) 
 
-//Configure Role Assignments
-//Configure Policy Assignments
-
-// Module - Virtual Networks & Peering
-
 //Route Table
 
 targetScope = 'managementGroup'
@@ -21,6 +16,18 @@ param location string
 
 @description('subscriptionId for the deployment')
 param subscriptionId string = 'df3b1809-17d0-47a0-9241-d2724780bdac'
+
+@description('Required. To deploy "lzSql" module or not')
+param lzSqlDeploy bool
+
+@description('Required. To deploy "lzVms" module or not')
+param lzVmsDeploy bool
+
+@description('Required. To deploy "lzSa" module or not')
+param lzSaDeploy bool
+
+@description('Required. To deploy "lzAkv" module or not')
+param lzAkvDeploy bool
 
 @description('Required. utcfullvalue to be used in Tags.')
 param utcfullvalue string = utcNow('F')
@@ -248,14 +255,6 @@ param sqlAdministratorLoginPassword string = ''
 @description('Optional. The array of Virtual Machines.')
 param virtualMachines array 
 
-@description('Required. The administrator login for the Virtual Machine.')
-@secure()
-param vmAdmin string = ''
-
-@description('Required. The administrator login password for the Virtual Machine.')
-@secure()
-param vmAdminPassword string = ''
-
 @description('Virtual Machine Size')
 param virtualMachineSize string = 'Standard_DS2_v2'
 
@@ -373,7 +372,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
 }
 
 // 7. Create Storage Account
-module lzSa 'wrapperModule/storage.bicep' = {
+module lzSa 'wrapperModule/storage.bicep' = if(lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
     lzVnet
@@ -397,7 +396,7 @@ module lzSa 'wrapperModule/storage.bicep' = {
 }
 
 // 8. Create Azure Key Vault
-module lzAkv 'wrapperModule/keyVault.bicep' = {
+module lzAkv 'wrapperModule/keyVault.bicep' = if(lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
     lzVnet
@@ -421,7 +420,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = {
 }
 
 // 9. Create SQL Server(s)
-module lzSql 'wrapperModule/sql.bicep' = {
+module lzSql 'wrapperModule/sql.bicep' = if(lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
     lzVnet
@@ -444,7 +443,7 @@ module lzSql 'wrapperModule/sql.bicep' = {
 }
 
 // 10. Create Virtual Machine(s)
-module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: {
+module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: if(lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   dependsOn: [
     lzVnet
@@ -558,4 +557,15 @@ output subscriptionDisplayName string = subscriptionDisplayName
 output subscriptionWorkload string = subscriptionWorkload
 output managementGroupId string = managementGroupId
 output subscriptionOwnerId string = subscriptionOwnerId
+output subscriptionId string = subscriptionId
 // End - Outputs to supress warnings - "unused parameters"
+
+/*
+@description('Required. The administrator login for the Virtual Machine.')
+@secure()
+param vmAdmin string = ''
+
+@description('Required. The administrator login password for the Virtual Machine.')
+@secure()
+param vmAdminPassword string = ''
+*/

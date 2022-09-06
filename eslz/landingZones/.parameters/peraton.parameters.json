@@ -26,6 +26,18 @@
     "suffix": {
       "value": "lz01"
     },
+    "lzSqlDeploy": {
+      "value": true
+    },
+    "lzVmsDeploy": {
+      "value": true
+    },
+    "lzSaDeploy": {
+      "value": true
+    },
+    "lzAkvDeploy": {
+      "value": true
+    },
     "subRoleAssignments": {
       "value": [
         {
@@ -40,6 +52,20 @@
           "principalIds": [
             "a0f0a098-710c-4470-a3ba-4ad51a7c54b6"
           ]
+        },
+        {
+          "description": "Backup Operator",
+          "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/00c29273-979b-4161-815c-10b084fb9324",
+          "principalIds": [
+            "b7e9dd64-e9ad-463d-8776-a9e82049801e"
+          ]
+        },
+        {
+          "description": "Backup Contributor",
+          "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b",
+          "principalIds": [
+            "b6e139b9-5aec-4a36-a524-d4688adffdbd"
+          ]
         }
       ]
     },
@@ -47,11 +73,11 @@
       "value": [
         {
           "subscriptionId": "",
-          "resourceGroupName": "rg-ccs-sand-usva-vnet",
+          "resourceGroupName": "rg-ccs-prod-usva-vnet",
           "description": "Deploy Private Endpoint - Networking Permissions",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
           "principalIds": [
-            "3a6b82df-192b-45a3-bf38-c104875dd9fd"
+            "5da6724f-843a-4f0b-89b6-2a530c758ff7"
           ]
         }
       ]
