@@ -171,7 +171,7 @@ param mgmtSuffix string = 'mgmt'
 param ssvcSuffix string = 'ssvc'
 
 @description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
-param rpcRgName string
+param rpcRgName string = 'rg-${projowner}-${opscope}-${region}-rpc'
 
 @description('Required. Name of the Azure Recovery Service Vault in Management Subscription.')
 param mgmtVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${mgmtSuffix}'
