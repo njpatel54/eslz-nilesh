@@ -201,23 +201,6 @@ var aaGroupIds = [
   'DSCAndHybridWorker'
 ]
 
-@description('Required. Azure Monitor Private Link Scope Name.')
-param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
-
-@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
-@allowed([
-  'Open'
-  'PrivateOnly'
-])
-param ingestionAccessMode string = 'PrivateOnly'
-
-@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
-@allowed([
-  'Open'
-  'PrivateOnly'
-])
-param queryAccessMode string = 'PrivateOnly'
-
 // 1. Create Hub Resoruce Group
 module hubRg '../modules/resources/resourceGroups/deploy.bicep' = {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
@@ -539,6 +522,62 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
   }
 }]
 
+// 18. Retrieve an existing Key Vault resource
+resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: akvName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 19. Create Private Endpoint for Key Vault
+module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    priDNSZones
+  ]
+  params: {
+    name: '${akvName}-vault-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: akv.id
+    groupIds: [
+      'vault'
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+// Start - Outputs to supress warnings - "unused parameters"
+output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
+output diagnosticEventHubName string = diagnosticEventHubName
+output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
+output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
+// End - Outputs to supress warnings - "unused parameters"
+
+
+/*
+@description('Required. Azure Monitor Private Link Scope Name.')
+param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
+
+@description('Optional. Specifies the default access mode of ingestion through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param ingestionAccessMode string = 'PrivateOnly'
+
+@description('Optional. Specifies the default access mode of queries through associated private endpoints in scope. If not specified default value is "Open".')
+@allowed([
+  'Open'
+  'PrivateOnly'
+])
+param queryAccessMode string = 'PrivateOnly'
+
 // 18. Create Azure Monitor Private Link Scope
 // An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
@@ -597,43 +636,4 @@ module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
       ]
     }
   }
-}
-
-// 20. Retrieve an existing Key Vault resource
-resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
-  name: akvName
-  scope: resourceGroup(mgmtsubid, siemRgName)
-}
-
-// 21. Create Private Endpoint for Key Vault
-module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
-  scope: resourceGroup(mgmtsubid, siemRgName)
-  dependsOn: [
-    priDNSZones
-  ]
-  params: {
-    name: '${akvName}-vault-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: akv.id
-    groupIds: [
-      'vault'
-    ]
-    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
-      ]
-    }
-  }
-}
-
-// Start - Outputs to supress warnings - "unused parameters"
-output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
-output diagnosticEventHubName string = diagnosticEventHubName
-output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
-output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
-// End - Outputs to supress warnings - "unused parameters"
-
-
+}*/
