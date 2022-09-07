@@ -329,12 +329,13 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
 
 // 8. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
-  name: diagSettingName
+  name: 'subDiagSettings-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
   dependsOn: [
     eh
   ]
   params:{
+    name: diagSettingName
     location: location
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
