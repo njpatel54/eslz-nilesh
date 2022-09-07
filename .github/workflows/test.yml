@@ -1,11 +1,11 @@
-name: test policy def
+name: test - landing zone
 
 on:
   #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/test.yml
+  #   - .github/workflows/8-landing-zone.yml
       
   # pull_request:
   #  branches: [ main ]
@@ -32,27 +32,18 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Test - Policy Def'
+      name: 'Deploy - Landing Zone'
       with:
         inlineScript: |
-            az deployment mg create \
-              --name 'Platform-Policy-Definitions' \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-              --template-file ./eslz/testPolicy/customPolicyDefinition.bicep \
-              --parameters location=${{ secrets.AZURE_LOCATION }} \
-                           targetMgId=${{ secrets.AZURE_MG_TOP }}
-            az deployment mg create \
-              --name 'Platform-Policy-Definitions' \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-              --template-file ./eslz/testPolicy/customPolicyDiagLaw.bicep \
-              --parameters location=${{ secrets.AZURE_LOCATION }} \
-                           targetMgId=${{ secrets.AZURE_MG_TOP }}
-            az deployment mg create \
-              --name 'Platform-Policy-Definitions' \
-              --location ${{ secrets.AZURE_LOCATION }} \
-              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-              --template-file ./eslz/testPolicy/customPolicyDiagStgAcct.bicep \
-              --parameters location=${{ secrets.AZURE_LOCATION }} \
-                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+          az deployment mg create \
+            --name 'Landing-Zone-Deployment' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+            --template-file ./eslz/landingZones/test.deploy.bicep \
+            --parameters ./eslz/landingZones/.parameters/parameters.json \
+            --parameters ./eslz/landingZones/.parameters/policy.assignment.parameters.json \
+            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         subscriptionId=${{ secrets.AZURE_LZ01SUBSCRIPTIONID }}
