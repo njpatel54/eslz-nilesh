@@ -13,7 +13,7 @@
       },
       "profileName": {
         "type": "String",
-        "defaultValue": "setbypolicy",
+        "defaultValue": "logging-diagSetting-centralized",
         "metadata": {
           "displayName": "Profile name",
           "description": "The diagnostic settings profile name"
