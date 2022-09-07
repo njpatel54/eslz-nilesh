@@ -578,7 +578,7 @@ param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
 param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
 
-// 18. Create Azure Monitor Private Link Scope
+// 20. Create Azure Monitor Private Link Scope
 // An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).
 module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   name: 'ampls-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
@@ -610,7 +610,7 @@ module ampls '../modules/insights/privateLinkScopes/deploy.bicep' = {
   }
 }
 
-// 19. Create Private Endpoint for Azure Monitor Private Link Scope
+// 21. Create Private Endpoint for Azure Monitor Private Link Scope
 module amplsPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'amplsPe-${take(uniqueString(deployment().name, location), 4)}-${amplsName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
