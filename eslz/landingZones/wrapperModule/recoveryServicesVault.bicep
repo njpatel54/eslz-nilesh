@@ -43,13 +43,13 @@ param suffix string
 param rpcRgName string
 
 @description('Required. Load content from json file to iterate over "rgRoleAssignments".')
-var params = json(loadTextContent('../../roles/.parameters/customRoleAssignments.json'))
+var paramsRoles = json(loadTextContent('../../roles/.parameters/customRoleAssignments.json'))
 
 @description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Private DNS A Contributor" custom role.')
-var priDNSAContributorRoleDefintionId = params.parameters.rgRoleAssignments.value[0].roleDefinitionIdOrName
+var priDNSAContributorRoleDefintionId = paramsRoles.parameters.rgRoleAssignments.value[0].roleDefinitionIdOrName
 
 @description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Networking Permissions" custom role.')
-var networkingPermsRoleDefintionId = params.parameters.rgRoleAssignments.value[1].roleDefinitionIdOrName
+var networkingPermsRoleDefintionId = paramsRoles.parameters.rgRoleAssignments.value[1].roleDefinitionIdOrName
 
 var varAzBackupGeoCodes = {
   australiacentral: 'acl'
@@ -367,7 +367,7 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 2. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
-module roleAssignmentPriDNSAContributor '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentPriDNSAContributor '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
   dependsOn: [
@@ -383,7 +383,7 @@ module roleAssignmentPriDNSAContributor '../../modules//authorization//roleAssig
 }
 
 // 3. Create Role Assignment for Recovery Services Vault's System Managed Identity (VNet RG)
-module roleAssignmentNetworkingPerms '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentNetworkingPerms '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
@@ -399,7 +399,7 @@ module roleAssignmentNetworkingPerms '../../modules//authorization//roleAssignme
 }
 
 // 4. Create Role Assignment for Recovery Services Vault's System Managed Identity (MGMT RG)
-module roleAssignmentContributor '../../modules//authorization//roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentContributor '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, mgmtRgName)
   dependsOn: [
