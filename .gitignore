@@ -7,6 +7,7 @@
 .github/workflows/info/*
 eslz/landingZones-New/
 eslz/deploymentScript/
+eslz/landingZones/.parameters/peraton.parameters.json
 
 # User-specific files
 *.suo
