@@ -187,6 +187,10 @@ var customPolicyDefinitions = [
     name: 'Deploy-VM-Backup'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-VM-Backup.json'))
   }
+  {
+    name: 'Deploy-AzureActivity'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-AzureActivity.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')
