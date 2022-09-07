@@ -63,14 +63,14 @@ module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscripti
     mg
   ]
   params: {
-      subscriptionId: subscription.subscriptionId
-      managementGroupName:  subscription.managementGroupName
+    subscriptionId: subscription.subscriptionId
+    managementGroupName:  subscription.managementGroupName
   }
 }]
 
 // 4. Create Role Assignments for Subscriptions
 module subRbac '../modules/authorization/roleAssignments/subscription/deploy.bicep' = [ for (roleAssignment, index) in subRoleAssignments :{
-  name: 'subRbac-${take(uniqueString(deployment().name, location), 4)}-${roleAssignment.subscriptionId}-${index}'
+  name: 'subRbac-${roleAssignment.subscriptionId}-${index}'
   scope: subscription(roleAssignment.subscriptionId)
   dependsOn: [
     mg
