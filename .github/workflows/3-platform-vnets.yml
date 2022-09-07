@@ -50,6 +50,7 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -85,6 +86,7 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
@@ -121,6 +123,7 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
