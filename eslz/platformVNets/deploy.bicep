@@ -21,6 +21,9 @@ param spokeVnets array = []
 @description('Optional. Virtual Network Peerings configurations')
 param hubVnetVirtualNetworkPeerings array = []
 
+@description('Required. Name for the Diagnostics Setting Configuration.')
+param diagSettingName string
+
 @description('Optional. Resource ID of the diagnostic storage account.')
 param diagnosticStorageAccountId string = ''
 
@@ -238,7 +241,8 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
     location: location
     tags: ccsCombinedTags
     securityRules: nsg.securityRules
-    roleAssignments: nsg.roleAssignments
+    roleAssignments: nsg.roleAssignments    
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
@@ -261,6 +265,7 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
     subnets: hubVnetSubnets
     virtualNetworkPeerings: hubVnetVirtualNetworkPeerings
     subscriptionId: hubVnetSubscriptionId
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
@@ -314,6 +319,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     subscriptionId: vNet.subscriptionId
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
@@ -335,6 +341,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     publicIPAllocationMethod: publicIPAllocationMethod
     skuName: publicIPSkuName
     zones: publicIPzones
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
@@ -357,7 +364,6 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
     insightsIsEnabled: true
     tier: firewallPolicyTier
     ruleCollectionGroups: firewallPolicyRuleCollectionGroups
-
   }
 }
 
@@ -386,6 +392,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     ]
     firewallPolicyId: afwp.outputs.resourceId
     roleAssignments: firewallRoleAssignments
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
@@ -407,6 +414,7 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
     publicIPAllocationMethod: publicIPAllocationMethod
     skuName: publicIPSkuName
     zones: publicIPzones
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
@@ -432,6 +440,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     skuType: bastionHostSkuType
     scaleUnits: bastionHostScaleUnits
     roleAssignments: bastionHostRoleAssignments
+    diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
