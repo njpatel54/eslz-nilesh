@@ -178,7 +178,7 @@
                     "name": "Deploy-Res-Diag-Sentinel",
                     "description": "Ensures that Azure resources are configured to forward diagnostic logs and metrics to an Azure Log Analytics workspace configured for Sentinel.",
                     "displayName": "Deploy-Resource-Diag-Sentinel",
-                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LogAnalytics-Sentinel",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deploy-Diagnostics-LogAnalytics-Sentinel",
                     "parameters": {
                         "effect": {
                             "value": "DeployIfNotExists"
