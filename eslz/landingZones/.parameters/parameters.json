@@ -240,10 +240,10 @@
       ]
     },
     "publicNetworkAccessForIngestion": {
-      "value": "Disabled"
+      "value": "Enabled"
     },
     "publicNetworkAccessForQuery": {
-      "value": "Disabled"
+      "value": "Enabled"
     },
     "networkAcls": {
       "value": {

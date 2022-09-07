@@ -176,12 +176,6 @@ param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
 @description('Required. SIEM Resource Group Name.')
 param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
-@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
-param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
-
-@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
-param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
-
 @description('Required. Automation Account Name.')
 param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 
@@ -577,6 +571,12 @@ param ingestionAccessMode string = 'PrivateOnly'
   'PrivateOnly'
 ])
 param queryAccessMode string = 'PrivateOnly'
+
+@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
+param sentinelLawName string = 'log-${projowner}-${opscope}-${region}-siem'
+
+@description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
+param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
 
 // 18. Create Azure Monitor Private Link Scope
 // An Azure Monitor Private Link connects a private endpoint to a set of Azure Monitor resources (Log Analytics Workspace, App Insights, Data Collection Endpoints) through an Azure Monitor Private Link Scope (AMPLS).

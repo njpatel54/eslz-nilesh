@@ -71,10 +71,10 @@
       ]
     },
     "publicNetworkAccessForIngestion": {
-      "value": "Disabled"
+      "value": "Enabled"
     },
     "publicNetworkAccessForQuery": {
-      "value": "Disabled"
+      "value": "Enabled"
     },
     "storageaccount_sku": {
       "value": "Standard_LRS"
