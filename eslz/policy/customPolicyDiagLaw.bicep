@@ -542,7 +542,7 @@ var customPolicySetDefinitions = [
   }
   {
     name: 'Deploy-Diagnostics-LogAnalytics-Sentinel'
-    setDefinition: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.json'))
+    setDefinition: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics-Sentinel.json'))
     setChildDefinitions: [
       {
         definitionReferenceId: 'AzureActivityDeployDiagnosticLogDeployLogAnalytics'
