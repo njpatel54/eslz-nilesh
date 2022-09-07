@@ -210,7 +210,7 @@ var customPolicyDefinitions = [
   {
     name: 'Deploy-Diagnostics-WVDWorkspace'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-WVDWorkspace.json'))
-  }  
+  }
   {
     name: 'Deploy-Diagnostics-AzureActivity'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-AzureActivity.json'))
@@ -539,7 +539,28 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).WVDWorkspaceDeployDiagnosticLogDeployLogAnalytics.parameters
       }
     ]
-  } 
+  }
+  {
+    name: 'Deploy-Diagnostics-LogAnalytics-Sentinel'
+    setDefinition: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.json'))
+    setChildDefinitions: [
+      {
+        definitionReferenceId: 'AzureActivityDeployDiagnosticLogDeployLogAnalytics'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AzureActivity'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics-Sentinel.parameters.json')).AzureActivityDeployDiagnosticLogDeployLogAnalytics.parameters
+      }
+      {
+        definitionReferenceId: 'FirewallDeployDiagnosticLogDeployLogAnalytics'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Firewall'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics-Sentinel.parameters.json')).FirewallDeployDiagnosticLogDeployLogAnalytics.parameters
+      }
+      {
+        definitionReferenceId: 'KeyVaultDeployDiagnosticLogDeployLogAnalytics'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/bef3f64c-5290-43b7-85b0-9b254eef4c47'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics-Sentinel.parameters.json')).KeyVaultDeployDiagnosticLogDeployLogAnalytics.parameters
+      }
+    ]
+  }
 ]
 
 // 1 - Create Custom Policy Defintions
@@ -578,7 +599,6 @@ module policySetDefinitions '../modules/authorization/policySetDefinitions/manag
     //policyDefinitionGroups: policySet.setDefinition.properties.policyDefinitionGroups
   }
 }]
-
 
 // Start - Outputs to supress warnings - "unused parameters"
 output location string = location

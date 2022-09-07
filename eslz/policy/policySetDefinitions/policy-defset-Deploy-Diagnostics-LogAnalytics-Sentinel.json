@@ -1,0 +1,113 @@
+{
+  "properties": {
+    "description": "This policy set deploys the configurations of application Azure resources to forward diagnostic logs and metrics to an Azure Log Analytics workspace. See the list of policies of the services that are included ",
+    "displayName": "Deploy Diagnostic Settings for Azure Services to send logs to Azure Log Analytics Workspace",
+    "parameters": {
+      "logAnalytics": {
+        "metadata": {
+          "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+          "displayName": "Log Analytics workspace",
+          "strongType": "omsWorkspace"
+        },
+        "type": "String"
+      },
+      "profileName": {
+        "type": "String",
+        "defaultValue": "logging-diagSetting-sentinel",
+        "metadata": {
+          "displayName": "Profile name",
+          "description": "The diagnostic settings profile name"
+        }
+      },
+      "AzureActivityLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Key Vault to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for Key Vault to stream to a Log Analytics workspace when any Key Vault which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "FirewallLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Firewall to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for Firewall to stream to a Log Analytics workspace when any Firewall which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "KeyVaultLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Key Vault to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for Key Vault to stream to a Log Analytics workspace when any Key Vault which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      }
+    },
+    "policyDefinitionGroups": null,
+    "metadata": {
+      "version": "1.1.0",
+      "category": "Monitoring"
+    },
+    "PolicyDefinitions": [
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AzureActivity",
+        "policyDefinitionReferenceId": "AzureActivityDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('AzureActivityLogAnalyticsEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-Firewall",
+        "policyDefinitionReferenceId": "FirewallDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('FirewallLogAnalyticsEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/bef3f64c-5290-43b7-85b0-9b254eef4c47",
+        "policyDefinitionReferenceId": "KeyVaultDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('KeyVaultLogAnalyticsEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Deploy-Diagnostics-LogAnalytics-Sentinel"
+}

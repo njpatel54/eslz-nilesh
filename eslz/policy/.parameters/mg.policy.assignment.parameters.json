@@ -175,10 +175,10 @@
                     "managementGroupId": "mg-A2g"
                 },
                 {
-                    "name": "Deploy-Diagnostics-AzureActivity",
-                    "description": "Deploys the diagnostic settings for Azure Activity to stream subscriptions audit logs to a Log Analytics workspace to monitor subscription-level events",
-                    "displayName": "Deploy Diagnostic Settings for Activity Log to Log Analytics workspace",
-                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AzureActivity",
+                    "name": "Deploy-Resource-Diag-Sentinel",
+                    "description": "Ensures that Azure resources are configured to forward diagnostic logs and metrics to an Azure Log Analytics workspace configured for Sentinel.",
+                    "displayName": "Deploy-Resource-Diag-Sentinel",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LogAnalytics-Sentinel",
                     "parameters": {
                         "effect": {
                             "value": "DeployIfNotExists"
@@ -190,7 +190,7 @@
                             "value": "logging-diagSetting-sentinel"
                         }
                     },
-                    "nonComplianceMessage": "Activity Logs must be sent to Log Ananlytics Workspace.",
+                    "nonComplianceMessage": "Azure resources must be configured to forward diagnostics logs and metrics to Azure Log Analytics workspace configured for Sentinel.",
                     "enforcementMode": "Default",
                     "metadata": {},
                     "scope": null,

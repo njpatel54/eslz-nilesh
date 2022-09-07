@@ -1,0 +1,43 @@
+{
+  "AzureActivityDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('AzureActivityLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "FirewallDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('FirewallLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "KeyVaultDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('KeyVaultLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  }
+}
+
+
