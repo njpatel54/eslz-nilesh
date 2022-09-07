@@ -185,7 +185,13 @@
                     "enforcementMode": "Default",
                     "metadata": {},                    
                     "scope": null,
-                    "notScopes": [],
+                    "notScopes": [
+                        "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
+                        "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553",
+                        "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da",
+                        "/subscriptions/c295836f-4cd3-468a-b958-cf85ae7c6d23",
+                        "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b"
+                    ],
                     "location": "usgovvirginia",
                     "identity": "SystemAssigned",                                        
                     "roleDefinitionIds": [
