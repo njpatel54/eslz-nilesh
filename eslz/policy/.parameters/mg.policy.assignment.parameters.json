@@ -53,32 +53,6 @@
                     ],
                     "managementGroupId": "mg-A2g"
                 },
-                {                    
-                    "name": "Deploy-AzActivity-Log",
-                    "description": "Ensures that Activity Log Diagnostics settings are set to push logs into Log Analytics workspace.",
-                    "displayName": "Deploy Diagnostic Settings for Activity Log to Log Analytics workspace",
-                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f",
-                    "parameters": {
-                        "effect": {
-                            "value": "DeployIfNotExists"
-                        },
-                        "logAnalytics": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
-                        }
-                    },
-                    "nonComplianceMessage": "Activity Logs must be sent to Log Ananlytics Workspace.",                    
-                    "enforcementMode": "Default",
-                    "metadata": {},                    
-                    "scope": null,
-                    "notScopes": [],
-                    "location": "usgovvirginia",
-                    "identity": "SystemAssigned",                    
-                    "roleDefinitionIds": [
-                        "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-                        "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
-                     ],
-                     "managementGroupId": "mg-A2g"
-                },
                 {
                     "name": "Deploy-ASC-Monitoring",
                     "description": "The Azure Security Benchmark initiative represents the policies and controls implementing security recommendations defined in Azure Security Benchmark v2, see https://aka.ms/azsecbm. This also serves as the Azure Security Center default policy initiative. You can directly assign this initiative, or manage its policies and compliance results within Azure Security Center.",

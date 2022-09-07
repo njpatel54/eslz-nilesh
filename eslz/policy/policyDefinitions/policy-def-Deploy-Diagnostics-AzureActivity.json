@@ -1,7 +1,7 @@
 {
     "properties": {
       "description": "Deploys the diagnostic settings for Azure Activity to stream subscriptions audit logs to a Log Analytics workspace to monitor subscription-level events",
-      "displayName": "Configure Azure Activity logs to stream to specified Log Analytics workspace",
+      "displayName": "Deploy Diagnostic Settings for Activity Log to Log Analytics workspace",
       "mode": "Indexed",
       "parameters": {
         "logAnalytics": {
@@ -173,5 +173,5 @@
         }
       }
     },
-    "name": "Deploy-Diagnostics-AzureActivity-LAW"
+    "name": "Deploy-Diagnostics-AzureActivity"
   }

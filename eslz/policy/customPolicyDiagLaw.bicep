@@ -210,6 +210,10 @@ var customPolicyDefinitions = [
   {
     name: 'Deploy-Diagnostics-WVDWorkspace'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-WVDWorkspace.json'))
+  }  
+  {
+    name: 'Deploy-Diagnostics-AzureActivity'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-AzureActivity.json'))
   }
 ]
 
