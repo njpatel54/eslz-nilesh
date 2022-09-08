@@ -195,6 +195,112 @@ var aaGroupIds = [
   'DSCAndHybridWorker'
 ]
 
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param mgmtSuffix string = 'mgmt'
+
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param ssvcSuffix string = 'ssvc'
+
+@description('Required. Name of the Azure Recovery Service Vault in Management Subscription.')
+param mgmtVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${mgmtSuffix}'
+
+@description('Required. Name of the Azure Recovery Service Vault in Shared Services Subscription.')
+param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffix}'
+
+@description('Required. Subscription ID of Shared Services Subscription.')
+param ssvcsubid string
+
+@description('Required. Virtual Network name in Management Subscription.')
+param ssvcVnetName string = 'vnet-${projowner}-${opscope}-${region}-ssvc'
+
+@description('Required. Name of the resourceGroup, where centralized management components will be.')
+param mgmtRgName string = 'rg-${projowner}-${opscope}-${region}-mgmt'
+
+@description('Required. Load content from json file to iterate over "rgRoleAssignments".')
+var paramsRoles = json(loadTextContent('../roles/.parameters/customRoleAssignments.json'))
+
+@description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Private DNS A Contributor" custom role.')
+var priDNSAContributorRoleDefintionId = paramsRoles.parameters.rgRoleAssignments.value[0].roleDefinitionIdOrName
+
+@description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Networking Permissions" custom role.')
+var networkingPermsRoleDefintionId = paramsRoles.parameters.rgRoleAssignments.value[1].roleDefinitionIdOrName
+
+var varAzBackupGeoCodes = {
+  australiacentral: 'acl'
+  australiacentral2: 'acl2'
+  australiaeast: 'ae'
+  australiasoutheast: 'ase'
+  brazilsouth: 'brs'
+  brazilsoutheast: 'bse'
+  centraluseuap: 'ccy'
+  canadacentral: 'cnc'
+  canadaeast: 'cne'
+  centralus: 'cus'
+  eastasia: 'ea'
+  eastus2euap: 'ecy'
+  eastus: 'eus'
+  eastus2: 'eus2'
+  francecentral: 'frc'
+  francesouth: 'frs'
+  germanynorth: 'gn'
+  germanywestcentral: 'gwc'
+  centralindia: 'inc'
+  southindia: 'ins'
+  westindia: 'inw'
+  japaneast: 'jpe'
+  japanwest: 'jpw'
+  jioindiacentral: 'jic'
+  jioindiawest: 'jiw'
+  koreacentral: 'krc'
+  koreasouth: 'krs'
+  northcentralus: 'ncus'
+  northeurope: 'ne'
+  norwayeast: 'nwe'
+  norwaywest: 'nww'
+  qatarcentral: 'qac'
+  southafricanorth: 'san'
+  southafricawest: 'saw'
+  southcentralus: 'scus'
+  swedencentral: 'sdc'
+  swedensouth: 'sds'
+  southeastasia: 'sea'
+  switzerlandnorth: 'szn'
+  switzerlandwest: 'szw'
+  uaecentral: 'uac'
+  uaenorth: 'uan'
+  uksouth: 'uks'
+  ukwest: 'ukw'
+  westcentralus: 'wcus'
+  westeurope: 'we'
+  westus: 'wus'
+  westus2: 'wus2'
+  westus3: 'wus3'
+  usdodcentral: 'udc'
+  usdodeast: 'ude'
+  usgovarizona: 'uga'
+  usgoviowa: 'ugi'
+  usgovtexas: 'ugt'
+  usgovvirginia: 'ugv'
+  usnateast: 'exe'
+  usnatwest: 'exw'
+  usseceast: 'rxe'
+  ussecwest: 'rxw'
+  chinanorth: 'bjb'
+  chinanorth2: 'bjb2'
+  chinanorth3: 'bjb3'
+  chinaeast: 'sha'
+  chinaeast2: 'sha2'
+  chinaeast3: 'sha3'
+  germanycentral: 'gec'
+  germanynortheast: 'gne'
+}
+
+// If region entered in parLocation and matches a lookup to varAzBackupGeoCodes then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in parPrivateDnsZones. If not just return parPrivateDnsZones
+var privatelinkBackup = replace('privatelink.<geoCode>.backup.windowsazure.us', '<geoCode>', '${varAzBackupGeoCodes[toLower(location)]}')
+
+@description('Required. Subnet name to be used for Private Endpoint.')
+param mgmtSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
+
 // 1. Create Hub Resoruce Group
 module hubRg '../modules/resources/resourceGroups/deploy.bicep' = {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
@@ -546,112 +652,6 @@ module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-@description('Required. Suffix to be used in resource naming with 4 characters.')
-param mgmtSuffix string = 'mgmt'
-
-@description('Required. Suffix to be used in resource naming with 4 characters.')
-param ssvcSuffix string = 'ssvc'
-
-@description('Required. Name of the Azure Recovery Service Vault in Management Subscription.')
-param mgmtVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${mgmtSuffix}'
-
-@description('Required. Name of the Azure Recovery Service Vault in Shared Services Subscription.')
-param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffix}'
-
-@description('Required. Subscription ID of Shared Services Subscription.')
-param ssvcsubid string
-
-@description('Required. Virtual Network name in Management Subscription.')
-param ssvcVnetName string = 'vnet-${projowner}-${opscope}-${region}-ssvc'
-
-@description('Required. Name of the resourceGroup, where centralized management components will be.')
-param mgmtRgName string = 'rg-${projowner}-${opscope}-${region}-mgmt'
-
-@description('Required. Load content from json file to iterate over "rgRoleAssignments".')
-var paramsRoles = json(loadTextContent('../roles/.parameters/customRoleAssignments.json'))
-
-@description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Private DNS A Contributor" custom role.')
-var priDNSAContributorRoleDefintionId = paramsRoles.parameters.rgRoleAssignments.value[0].roleDefinitionIdOrName
-
-@description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Networking Permissions" custom role.')
-var networkingPermsRoleDefintionId = paramsRoles.parameters.rgRoleAssignments.value[1].roleDefinitionIdOrName
-
-var varAzBackupGeoCodes = {
-  australiacentral: 'acl'
-  australiacentral2: 'acl2'
-  australiaeast: 'ae'
-  australiasoutheast: 'ase'
-  brazilsouth: 'brs'
-  brazilsoutheast: 'bse'
-  centraluseuap: 'ccy'
-  canadacentral: 'cnc'
-  canadaeast: 'cne'
-  centralus: 'cus'
-  eastasia: 'ea'
-  eastus2euap: 'ecy'
-  eastus: 'eus'
-  eastus2: 'eus2'
-  francecentral: 'frc'
-  francesouth: 'frs'
-  germanynorth: 'gn'
-  germanywestcentral: 'gwc'
-  centralindia: 'inc'
-  southindia: 'ins'
-  westindia: 'inw'
-  japaneast: 'jpe'
-  japanwest: 'jpw'
-  jioindiacentral: 'jic'
-  jioindiawest: 'jiw'
-  koreacentral: 'krc'
-  koreasouth: 'krs'
-  northcentralus: 'ncus'
-  northeurope: 'ne'
-  norwayeast: 'nwe'
-  norwaywest: 'nww'
-  qatarcentral: 'qac'
-  southafricanorth: 'san'
-  southafricawest: 'saw'
-  southcentralus: 'scus'
-  swedencentral: 'sdc'
-  swedensouth: 'sds'
-  southeastasia: 'sea'
-  switzerlandnorth: 'szn'
-  switzerlandwest: 'szw'
-  uaecentral: 'uac'
-  uaenorth: 'uan'
-  uksouth: 'uks'
-  ukwest: 'ukw'
-  westcentralus: 'wcus'
-  westeurope: 'we'
-  westus: 'wus'
-  westus2: 'wus2'
-  westus3: 'wus3'
-  usdodcentral: 'udc'
-  usdodeast: 'ude'
-  usgovarizona: 'uga'
-  usgoviowa: 'ugi'
-  usgovtexas: 'ugt'
-  usgovvirginia: 'ugv'
-  usnateast: 'exe'
-  usnatwest: 'exw'
-  usseceast: 'rxe'
-  ussecwest: 'rxw'
-  chinanorth: 'bjb'
-  chinanorth2: 'bjb2'
-  chinanorth3: 'bjb3'
-  chinaeast: 'sha'
-  chinaeast2: 'sha2'
-  chinaeast3: 'sha3'
-  germanycentral: 'gec'
-  germanynortheast: 'gne'
-}
-
-// If region entered in parLocation and matches a lookup to varAzBackupGeoCodes then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in parPrivateDnsZones. If not just return parPrivateDnsZones
-var privatelinkBackup = replace('privatelink.<geoCode>.backup.windowsazure.us', '<geoCode>', '${varAzBackupGeoCodes[toLower(location)]}')
-
-@description('Required. Subnet name to be used for Private Endpoint.')
-param mgmtSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
-
 // 20. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
 resource rsv_mgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   name: mgmtVaultName
@@ -740,7 +740,7 @@ resource rsv_ssvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   scope: resourceGroup(ssvcsubid, mgmtRgName)
 }
 
-// 21. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 26. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -756,7 +756,7 @@ module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssig
   }
 }
 
-// 22. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
+// 27. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
 module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, vnetRgName)
@@ -772,7 +772,7 @@ module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignme
   }
 }
 
-// 23. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
+// 28. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
 module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -788,7 +788,7 @@ module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/
   }
 }
 
-// 24. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
+// 29. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
 module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPe_mgmt-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)

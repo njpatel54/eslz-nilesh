@@ -8,6 +8,7 @@
 eslz/landingZones-New/
 eslz/deploymentScript/
 eslz/landingZones/.parameters/peraton.parameters.json
+eslz/scripts/
 
 # User-specific files
 *.suo
