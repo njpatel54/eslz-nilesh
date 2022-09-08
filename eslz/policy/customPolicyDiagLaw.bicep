@@ -108,6 +108,10 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-iotHub.json'))
   }
   {
+    name: 'Deploy-Diagnostics-KeyVault'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-KeyVault.json'))
+  }
+  {
     name: 'Deploy-Diagnostics-LoadBalancer'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-LoadBalancer.json'))
   }
@@ -375,7 +379,7 @@ var customPolicySetDefinitions = [
       }
       {
         definitionReferenceId: 'KeyVaultDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/bef3f64c-5290-43b7-85b0-9b254eef4c47'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-KeyVault'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).KeyVaultDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
@@ -556,7 +560,7 @@ var customPolicySetDefinitions = [
       }
       {
         definitionReferenceId: 'KeyVaultDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/bef3f64c-5290-43b7-85b0-9b254eef4c47'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-KeyVault'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics-Sentinel.parameters.json')).KeyVaultDeployDiagnosticLogDeployLogAnalytics.parameters
       }
     ]

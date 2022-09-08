@@ -1248,7 +1248,7 @@
         }
       },
       {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/bef3f64c-5290-43b7-85b0-9b254eef4c47",
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-KeyVault",
         "policyDefinitionReferenceId": "KeyVaultDeployDiagnosticLogDeployLogAnalytics",
         "parameters": {
           "logAnalytics": {
