@@ -182,9 +182,6 @@
                     "parameters": {
                         "logAnalytics": {
                             "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
-                        },
-                        "profileName": {
-                            "value": "logging-diagSetting-sentinel"
                         }
                     },
                     "nonComplianceMessage": "Azure resources must be configured to forward diagnostics logs and metrics to Azure Log Analytics workspace configured for Sentinel.",
