@@ -106,7 +106,7 @@
                     {
                       "type": "Microsoft.Insights/diagnosticSettings",
                       "apiVersion": "2017-05-01-preview",
-                      "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                      "name": "[parameters('profileName')]",
                       "location": "[parameters('location')]",
                       "dependsOn": [],
                       "properties": {
