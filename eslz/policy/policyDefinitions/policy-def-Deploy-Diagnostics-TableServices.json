@@ -132,7 +132,11 @@
                                             "metrics": [
                                                 {
                                                     "category": "Transaction",
-                                                    "enabled": "[parameters('metricsEnabled')]"
+                                                    "enabled": "[parameters('metricsEnabled')]",
+                                                    "retentionPolicy": {
+                                                      "enabled": false,
+                                                      "days": 0
+                                                    }
                                                 }
                                             ],
                                             "logs": [
