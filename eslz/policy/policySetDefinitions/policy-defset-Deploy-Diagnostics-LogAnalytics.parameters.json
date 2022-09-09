@@ -685,6 +685,9 @@
       },
       "effect": {
         "value": "[[parameters('StorageAccountsLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
       }
     }
   },
@@ -695,6 +698,9 @@
       },
       "effect": {
         "value": "[[parameters('BlobServicesLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
       }
     }
   },
@@ -705,6 +711,9 @@
       },
       "effect": {
         "value": "[[parameters('FileServicesLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
       }
     }
   },
@@ -715,6 +724,9 @@
       },
       "effect": {
         "value": "[[parameters('QueueServicesLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
       }
     }
   },
@@ -725,6 +737,9 @@
       },
       "effect": {
         "value": "[[parameters('TableServicesLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
       }
     }
   },

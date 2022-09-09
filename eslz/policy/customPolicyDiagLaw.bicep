@@ -231,6 +231,26 @@ var customPolicyDefinitions = [
     name: 'Deploy-Diagnostics-RSV'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-RecoveryServicesVault.json'))
   }
+  {
+    name: 'Deploy-Diagnostics-StorageAccounts'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-StorageAccount.json'))
+  }
+  {
+    name: 'Deploy-Diagnostics-BlobServices'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-BlobServices.json'))
+  }
+  {
+    name: 'Deploy-Diagnostics-FileServices'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-FileServices.json'))
+  }
+  {
+    name: 'Deploy-Diagnostics-QueueServices'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-QueueServices.json'))
+  }
+  {
+    name: 'Deploy-Diagnostics-TableServices'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-TableServices.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')
@@ -501,27 +521,27 @@ var customPolicySetDefinitions = [
       }
       {
         definitionReferenceId: 'StorageAccountDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/59759c62-9a22-4cdf-ae64-074495983fef'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-StorageAccounts'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).StorageAccountDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
         definitionReferenceId: 'BlobServicesDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/b4fe1a3b-0715-4c6c-a5ea-ffc33cf823cb'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-BlobServices'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).BlobServicesDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
         definitionReferenceId: 'FileServicesDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/25a70cc8-2bd4-47f1-90b6-1478e4662c96'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-FileServices'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).FileServicesDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
         definitionReferenceId: 'QueueServicesDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/7bd000e3-37c7-4928-9f31-86c4b77c5c45'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-QueueServices'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).QueueServicesDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
         definitionReferenceId: 'TableServicesDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/2fb86bf3-d221-43d1-96d1-2434af34eaa0'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-TableServices'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).TableServicesDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
