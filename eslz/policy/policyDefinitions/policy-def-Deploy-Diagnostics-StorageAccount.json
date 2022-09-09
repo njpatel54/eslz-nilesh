@@ -36,10 +36,10 @@
       },
       "metricsEnabled": {
         "type": "String",
-        "defaultValue": "True",
+        "defaultValue": "true",
         "allowedValues": [
-          "True",
-          "False"
+          "true",
+          "false"
         ],
         "metadata": {
           "displayName": "Enable metrics",
