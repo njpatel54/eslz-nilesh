@@ -255,6 +255,10 @@ var customPolicyDefinitions = [
     name: 'Deploy-Diagnostics-WVDWorkspace-StgAcct'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-stg-WVDWorkspace.json'))
   }
+  {
+    name: 'Deploy-Diagnostics-RSV-StgAcct'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-stg-RecoveryServicesVault.json'))
+  }  
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')
@@ -567,6 +571,11 @@ var customPolicySetDefinitions = [
         definitionReferenceId: 'WVDWorkspaceDeployDiagnosticLogDeployStorageAcct'
         definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-WVDWorkspace-StgAcct'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).WVDWorkspaceDeployDiagnosticLogDeployStorageAcct.parameters
+      }
+      {
+        definitionReferenceId: 'RecoveryVaultDeployDiagnosticLogDeployStorageAcct'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RSV-StgAcct'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).RecoveryVaultDeployDiagnosticLogDeployStorageAcct.parameters
       }
     ]
   } 

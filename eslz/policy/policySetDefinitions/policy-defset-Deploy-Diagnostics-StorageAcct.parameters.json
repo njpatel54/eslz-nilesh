@@ -545,6 +545,19 @@
       }
     }
   },
+  "RecoveryVaultDeployDiagnosticLogDeployStorageAcct": {
+    "parameters": {
+      "storageAccountId": {
+        "value": "[[parameters('storageAccountId')]"
+      },
+      "effect": {
+        "value": "[[parameters('RecoveryVaultLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
   "RedisCacheDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
       "storageAccountId": {

@@ -499,6 +499,18 @@
           "description": "Deploys the diagnostic settings for Public IP addresses to stream to a Storage Account when any Public IP addresses which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
         }
       },
+      "RecoveryVaultLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Recovery Services Vault to Storage Account for resource specific categories.",
+          "description": "Deploy Diagnostic Settings for Recovery Services Vault to stream to a Storage Account for Resource specific categories. If any of the Resource specific categories are not enabled, a new diagnostic setting is created."
+        }
+      },
       "RedisCachestorageAccountIdEffect": {
         "type": "String",
         "defaultValue": "DeployIfNotExists",
@@ -1352,6 +1364,21 @@
           },
           "effect": {
             "value": "[[parameters('NetworkPublicIPNicstorageAccountIdEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RSV-StgAcct",
+        "policyDefinitionReferenceId": "RecoveryVaultDeployDiagnosticLogDeployStorageAcct",
+        "parameters": {
+          "storageAccountId": {
+            "value": "[[parameters('storageAccountId')]"
+          },
+          "effect": {
+            "value": "[[parameters('RecoveryVaultLogAnalyticsEffect')]"
           },
           "profileName": {
             "value": "[[parameters('profileName')]"
