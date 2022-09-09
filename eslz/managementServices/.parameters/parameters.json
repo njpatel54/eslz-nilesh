@@ -8,6 +8,11 @@
           "name": "SecurityInsights",
           "product": "OMSGallery",
           "publisher": "Microsoft"
+        },
+        {
+          "name": "SecurityCenterFree",
+          "product": "OMSGallery/SecurityCenterFree",
+          "publisher": "Microsoft"
         }
       ]
     },

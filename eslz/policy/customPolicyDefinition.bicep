@@ -196,11 +196,6 @@ var customPolicySetDefinitions = [
     setDefinition: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-MDFC-Config.json'))
     setChildDefinitions: [
       {
-        definitionReferenceId: 'ascExport'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/ffb6f416-7bd2-4488-8828-56585fef2be9'
-        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-MDFC-Config.parameters.json')).ascExport.parameters
-      }
-      {
         definitionReferenceId: 'defenderForArm'
         definitionId: '/providers/Microsoft.Authorization/policyDefinitions/b7021b2b-08fd-4dc0-9de7-3c6ece09faf9'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-MDFC-Config.parameters.json')).defenderForArm.parameters

@@ -18,20 +18,6 @@
           "strongType": "omsWorkspace"
         }
       },
-      "ascExportResourceGroupName": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Resource Group name for the export to Log Analytics workspace configuration",
-          "description": "The resource group name where the export to Log Analytics workspace configuration is created. If you enter a name for a resource group that doesn't exist, it'll be created in the subscription. Note that each resource group can only have one export to Log Analytics workspace configured."
-        }
-      },
-      "ascExportResourceGroupLocation": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Resource Group location for the export to Log Analytics workspace configuration",
-          "description": "The location where the resource group and the export to Log Analytics workspace configuration are created."
-        }
-      },
       "enableAscForSql": {
         "type": "String",
         "metadata": {
@@ -140,21 +126,6 @@
         "parameters": {
           "emailSecurityContact": {
             "value": "[[parameters('emailSecurityContact')]"
-          }
-        }
-      },
-      {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/ffb6f416-7bd2-4488-8828-56585fef2be9",
-        "policyDefinitionReferenceId": "ascExport",
-        "parameters": {
-          "resourceGroupName": {
-            "value": "[[parameters('ascExportResourceGroupName')]"
-          },
-          "resourceGroupLocation": {
-            "value": "[[parameters('ascExportResourceGroupLocation')]"
-          },
-          "workspaceResourceId": {
-            "value": "[[parameters('logAnalytics')]"
           }
         }
       }

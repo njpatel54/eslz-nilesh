@@ -1,17 +1,4 @@
 {
-  "ascExport": {
-    "parameters": {
-      "resourceGroupName": {
-        "value": "[[parameters('ascExportResourceGroupName')]"
-      },
-      "resourceGroupLocation": {
-        "value": "[[parameters('ascExportResourceGroupLocation')]"
-      },
-      "workspaceResourceId": {
-        "value": "[[parameters('logAnalytics')]"
-      }
-    }
-  },
   "defenderForArm": {
     "parameters": {
       "effect": {
