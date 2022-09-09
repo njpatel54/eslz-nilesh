@@ -760,7 +760,55 @@
         ],
         "metadata": {
           "displayName": "Deploy Diagnostic Settings for Storage Accounts to Log Analytics workspace",
-          "description": "Deploys the diagnostic settings for Storage Accounts to stream to a Log Analytics workspace when any storage account which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+          "description": "Deploys the diagnostic settings for Storage Accounts to stream to a Log Analytics workspace when any Storage Account which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "BlobServicesLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Blob Services to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for Blob Services to stream resource logs to a Log Analytics workspace when any Blob Service which is missing this diagnostic settings is created or updated."
+        }
+      },
+      "FileServicesLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic settings for File Services to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for File Services to stream resource logs to a Log Analytics workspace when any File Service which is missing this diagnostic settings is created or updated."
+        }
+      },
+      "QueueServicesLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic settings for Queue Services to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for Queue Services to stream resource logs to a Log Analytics workspace when any Queue Service which is missing this diagnostic settings is created or updated."
+        }
+      },
+      "TableServicesLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic settings for Table Services to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for Table Services to stream resource logs to a Log Analytics workspace when any Table Service which is missing this diagnostic settings is created or updated."
         }
       }
     },
@@ -771,7 +819,7 @@
     },
     "PolicyDefinitions": [
       {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/6f8f98a4-f108-47cb-8e98-91a0d85cd474",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/59759c62-9a22-4cdf-ae64-074495983fef",
         "policyDefinitionReferenceId": "StorageAccountDeployDiagnosticLogDeployLogAnalytics",
         "parameters": {
           "logAnalytics": {
@@ -779,6 +827,54 @@
           },
           "effect": {
             "value": "[[parameters('StorageAccountsLogAnalyticsEffect')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/b4fe1a3b-0715-4c6c-a5ea-ffc33cf823cb",
+        "policyDefinitionReferenceId": "BlobServicesDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('BlobServicesLogAnalyticsEffect')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/25a70cc8-2bd4-47f1-90b6-1478e4662c96",
+        "policyDefinitionReferenceId": "FileServicesDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('FileServicesLogAnalyticsEffect')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/7bd000e3-37c7-4928-9f31-86c4b77c5c45",
+        "policyDefinitionReferenceId": "QueueServicesDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('QueueServicesLogAnalyticsEffect')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2fb86bf3-d221-43d1-96d1-2434af34eaa0",
+        "policyDefinitionReferenceId": "TableServicesDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('TableServicesLogAnalyticsEffect')]"
           }
         }
       },

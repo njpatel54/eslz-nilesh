@@ -685,6 +685,46 @@
       }
     }
   },
+  "BlobServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('BlobServicesLogAnalyticsEffect')]"
+      }
+    }
+  },
+  "FileServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('FileServicesLogAnalyticsEffect')]"
+      }
+    }
+  },
+  "QueueServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('QueueServicesLogAnalyticsEffect')]"
+      }
+    }
+  },
+  "TableServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('TableServicesLogAnalyticsEffect')]"
+      }
+    }
+  },
   "StreamAnalyticsDeployDiagnosticLogDeployLogAnalytics": {
     "parameters": {
       "logAnalytics": {
