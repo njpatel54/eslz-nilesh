@@ -251,7 +251,7 @@ var customPolicySetDefinitions = [
       }
       {
         definitionReferenceId: 'AKSDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/6c66c325-74c8-42fd-a286-a74b0e2939d8'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AKS'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).AKSDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
@@ -456,7 +456,7 @@ var customPolicySetDefinitions = [
       }
       {
         definitionReferenceId: 'RecoveryVaultDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/c717fb0c-d118-4c43-ab3d-ece30ac81fb3'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RSV'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).RecoveryVaultDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
@@ -486,7 +486,7 @@ var customPolicySetDefinitions = [
       }
       {
         definitionReferenceId: 'SQLDatabaseDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/b79fa14e-238a-4c2d-b376-442ce508fc84'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).SQLDatabaseDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
