@@ -33,7 +33,7 @@
       "effect": {
         "value": "[[parameters('AKSLogAnalyticsEffect')]"
       },
-      "diagnosticsSettingNameToUse": {
+      "profileName": {
         "value": "[[parameters('profileName')]"
       }
     }
@@ -647,7 +647,7 @@
       "effect": {
         "value": "[[parameters('SQLDBsLogAnalyticsEffect')]"
       },
-      "diagnosticsSettingNameToUse": {
+      "profileName": {
         "value": "[[parameters('profileName')]"
       }
     }
