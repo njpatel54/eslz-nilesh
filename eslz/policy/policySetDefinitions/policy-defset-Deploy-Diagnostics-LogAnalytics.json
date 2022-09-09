@@ -511,6 +511,18 @@
           "description": "Deploys the diagnostic settings for Public IP addresses to stream to a Log Analytics workspace when any Public IP addresses which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
         }
       },
+      "RecoveryVaultLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for Recovery Services Vault to Log Analytics workspace for resource specific categories.",
+          "description": "Deploy Diagnostic Settings for Recovery Services Vault to stream to Log Analytics workspace for Resource specific categories. If any of the Resource specific categories are not enabled, a new diagnostic setting is created."
+        }
+      },
       "RedisCacheLogAnalyticsEffect": {
         "type": "String",
         "defaultValue": "DeployIfNotExists",
@@ -954,7 +966,7 @@
         }
       },
       {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/6c66c325-74c8-42fd-a286-a74b0e2939d8",
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-AKS",
         "policyDefinitionReferenceId": "AKSDeployDiagnosticLogDeployLogAnalytics",
         "parameters": {
           "logAnalytics": {
@@ -963,7 +975,7 @@
           "effect": {
             "value": "[[parameters('AKSLogAnalyticsEffect')]"
           },
-          "diagnosticsSettingNameToUse": {
+          "profileName": {
             "value": "[[parameters('profileName')]"
           }
         }
@@ -1542,11 +1554,14 @@
         }
       },
       {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/c717fb0c-d118-4c43-ab3d-ece30ac81fb3",
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RSV",
         "policyDefinitionReferenceId": "RecoveryVaultDeployDiagnosticLogDeployLogAnalytics",
         "parameters": {
           "logAnalytics": {
             "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('RecoveryVaultLogAnalyticsEffect')]"
           },
           "profileName": {
             "value": "[[parameters('profileName')]"
@@ -1629,7 +1644,7 @@
         }
       },
       {
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/b79fa14e-238a-4c2d-b376-442ce508fc84",
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs",
         "policyDefinitionReferenceId": "SQLDatabaseDeployDiagnosticLogDeployLogAnalytics",
         "parameters": {
           "logAnalytics": {
@@ -1638,7 +1653,7 @@
           "effect": {
             "value": "[[parameters('SQLDBsLogAnalyticsEffect')]"
           },
-          "diagnosticsSettingNameToUse": {
+          "profileName": {
             "value": "[[parameters('profileName')]"
           }
         }

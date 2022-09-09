@@ -566,6 +566,9 @@
       "logAnalytics": {
         "value": "[[parameters('logAnalytics')]"
       },
+      "effect": {
+        "value": "[[parameters('RecoveryVaultLogAnalyticsEffect')]"
+      },
       "profileName": {
         "value": "[[parameters('profileName')]"
       }

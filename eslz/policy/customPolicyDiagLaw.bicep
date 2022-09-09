@@ -219,6 +219,18 @@ var customPolicyDefinitions = [
     name: 'Deploy-Diagnostics-AzureActivity'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-AzureActivity.json'))
   }
+  {
+    name: 'Deploy-Diagnostics-AKS'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-Kubernetes.json'))
+  }
+  {
+    name: 'Deploy-Diagnostics-SQLDBs'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-SQLDatabase.json'))
+  }
+  {
+    name: 'Deploy-Diagnostics-RSV'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Diagnostics-RecoveryServicesVault.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')
