@@ -65,33 +65,33 @@
         },
         "policyRule": {
             "if": {
-              "field": "type",
-              "equals": "Microsoft.Storage/storageAccounts/blobServices"
+                "field": "type",
+                "equals": "Microsoft.Storage/storageAccounts/blobServices"
             },
             "then": {
                 "effect": "[parameters('effect')]",
                 "details": {
-                  "type": "Microsoft.Insights/diagnosticSettings",
-                  "existenceCondition": {
-                    "allOf": [
-                        {
-                            "anyOf": [
-                                {
-                                    "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
-                                    "equals": "True"
-                                },
-                                {
-                                    "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                                    "equals": "True"
-                                }
-                            ]
-                        },
-                        {
-                            "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
-                            "equals": "[parameters('logAnalytics')]"
-                        }
-                    ]
-                },
+                    "type": "Microsoft.Insights/diagnosticSettings",
+                    "existenceCondition": {
+                        "allOf": [
+                            {
+                                "anyOf": [
+                                    {
+                                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                        "equals": "True"
+                                    },
+                                    {
+                                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                        "equals": "True"
+                                    }
+                                ]
+                            },
+                            {
+                                "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                                "equals": "[parameters('logAnalytics')]"
+                            }
+                        ]
+                    },
                     "roleDefinitionIds": [
                         "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
                         "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
@@ -127,7 +127,7 @@
                                     {
                                         "type": "Microsoft.Storage/storageAccounts/blobServices/providers/diagnosticSettings",
                                         "apiVersion": "2017-05-01-preview",
-                                        "name": "[concat(parameters('resourceName'),'/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                        "name": "[concat(parameters('resourceName'),'/', 'Microsoft.Insights/', parameters('profileName'))]",
                                         "location": "[parameters('location')]",
                                         "dependsOn": [],
                                         "properties": {

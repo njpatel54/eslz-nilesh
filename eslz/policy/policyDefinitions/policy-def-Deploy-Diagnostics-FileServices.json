@@ -72,16 +72,19 @@
                 "effect": "[parameters('effect')]",
                 "details": {
                     "type": "Microsoft.Insights/diagnosticSettings",
-                    "name": "[parameters('profileName')]",
                     "existenceCondition": {
                         "allOf": [
                             {
-                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                                "equals": "[parameters('logsEnabled')]"
-                            },
-                            {
-                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
-                                "equals": "[parameters('metricsEnabled')]"
+                                "anyOf": [
+                                    {
+                                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                        "equals": "True"
+                                    },
+                                    {
+                                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                        "equals": "True"
+                                    }
+                                ]
                             },
                             {
                                 "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
@@ -124,7 +127,7 @@
                                     {
                                         "type": "Microsoft.Storage/storageAccounts/fileServices/providers/diagnosticSettings",
                                         "apiVersion": "2021-05-01-preview",
-                                        "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                        "name": "[concat(parameters('resourceName'),'/', 'Microsoft.Insights/', parameters('profileName'))]",
                                         "location": "[parameters('location')]",
                                         "dependsOn": [],
                                         "properties": {
@@ -134,8 +137,8 @@
                                                     "category": "Transaction",
                                                     "enabled": "[parameters('metricsEnabled')]",
                                                     "retentionPolicy": {
-                                                      "enabled": false,
-                                                      "days": 0
+                                                        "days": 0,
+                                                        "enabled": false
                                                     },
                                                     "timeGrain": null
                                                 }
