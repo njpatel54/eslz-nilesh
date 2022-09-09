@@ -1,7 +1,7 @@
 {
     "properties": {
         "description": "Deploys the diagnostic settings for Blob Services to stream resource logs to a Log Analytics workspace when any blob Service which is missing this diagnostic settings is created or updated.",
-        "displayName": "Deploy Diagnostic Ssettings for Blob Services to Log Analytics workspace",
+        "displayName": "Deploy Diagnostic Settings for Blob Services to Log Analytics workspace",
         "mode": "All",
         "parameters": {
             "effect": {
@@ -124,7 +124,7 @@
                                     {
                                         "type": "Microsoft.Storage/storageAccounts/blobServices/providers/diagnosticSettings",
                                         "apiVersion": "2021-05-01-preview",
-                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                        "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
                                         "location": "[parameters('location')]",
                                         "dependsOn": [],
                                         "properties": {
@@ -136,7 +136,8 @@
                                                     "retentionPolicy": {
                                                       "enabled": false,
                                                       "days": 0
-                                                    }
+                                                    },
+                                                    "timeGrain": null
                                                 }
                                             ],
                                             "logs": [

@@ -124,7 +124,7 @@
                                     {
                                         "type": "Microsoft.Storage/storageAccounts/tableServices/providers/diagnosticSettings",
                                         "apiVersion": "2021-05-01-preview",
-                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                        "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
                                         "location": "[parameters('location')]",
                                         "dependsOn": [],
                                         "properties": {
@@ -136,7 +136,8 @@
                                                     "retentionPolicy": {
                                                       "enabled": false,
                                                       "days": 0
-                                                    }
+                                                    },
+                                                    "timeGrain": null
                                                 }
                                             ],
                                             "logs": [
