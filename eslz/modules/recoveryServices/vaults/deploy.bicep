@@ -80,20 +80,12 @@ param tags object = {}
   'AzureSiteRecoveryProtectedDiskDataChurn'
 ])
 param diagnosticLogCategoriesToEnable array = [
-  'AzureBackupReport'
   'CoreAzureBackup'
   'AddonAzureBackupJobs'
   'AddonAzureBackupAlerts'
   'AddonAzureBackupPolicy'
   'AddonAzureBackupStorage'
   'AddonAzureBackupProtectedInstance'
-  'AzureSiteRecoveryJobs'
-  'AzureSiteRecoveryEvents'
-  'AzureSiteRecoveryReplicatedItems'
-  'AzureSiteRecoveryReplicationStats'
-  'AzureSiteRecoveryRecoveryPoints'
-  'AzureSiteRecoveryReplicationDataUploadRate'
-  'AzureSiteRecoveryProtectedDiskDataChurn'
 ]
 
 @description('Optional. The name of metrics that will be streamed.')
@@ -238,6 +230,7 @@ resource rsv_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-0
     eventHubName: !empty(diagnosticEventHubName) ? diagnosticEventHubName : null
     //metrics: diagnosticsMetrics
     logs: diagnosticsLogs
+    logAnalyticsDestinationType: 'Dedicated'   // https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/resource-manager-diagnostic-settings?tabs=bicep#diagnostic-setting-for-recovery-services-vault
   }
   scope: rsv
 }

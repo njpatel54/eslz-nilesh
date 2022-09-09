@@ -349,7 +349,7 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
       }
     ]
     diagnosticSettingsName: diagSettingName
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticWorkspaceId: diagnosticWorkspaceId    
   }
 }
 
