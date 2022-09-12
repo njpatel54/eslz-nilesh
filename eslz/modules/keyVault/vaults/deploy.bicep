@@ -166,7 +166,7 @@ var formattedAccessPolicies = [for accessPolicy in accessPolicies: {
 var secretList = !empty(secrets) ? secrets.secureList : []
 
 
-resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: name
   location: location
   tags: tags

@@ -14,7 +14,7 @@ param vmComputerNamesTransformation string = 'none'
 param vmSize string
 
 @description('Optional. This property can be used by user in the request to enable or disable the Host Encryption for the virtual machine. This will enable the encryption for all the disks including Resource/Temp disk at host itself. For security reasons, it is recommended to set encryptionAtHost to True. Restrictions: Cannot be enabled if Azure Disk Encryption (guest-VM encryption using bitlocker/DM-Crypt) is enabled on your VMs.')
-param encryptionAtHost bool = true
+param encryptionAtHost bool = false
 
 @description('Optional. Specifies the SecurityType of the virtual machine. It is set as TrustedLaunch to enable UefiSettings.')
 param securityType string = ''

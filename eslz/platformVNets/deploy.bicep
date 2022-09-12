@@ -485,7 +485,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
 
 // 10. Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
-  name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
+  name: 'bhPip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
