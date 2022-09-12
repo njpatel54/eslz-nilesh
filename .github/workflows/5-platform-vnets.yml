@@ -1,11 +1,11 @@
-name: 3 - platform vnets
+name: 5 - platform vnets
 
 on:
   #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/3-platform-vnets.yml
+  #   - .github/workflows/5-platform-vnets.yml
       
   # pull_request:
   #  branches: [ main ]
