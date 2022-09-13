@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     steps:
-
-    - uses: actions/checkout@v2
-
     - name: 'Az Login with OpenID Connect'
       uses: azure/login@v1
       with:
