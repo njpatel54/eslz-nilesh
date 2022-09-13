@@ -11,7 +11,7 @@ jobs:
 
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: Production
+    #environment: Production
     steps:
     - name: 'Az Login with OpenID Connect'
       uses: azure/login@v1
@@ -25,7 +25,7 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Azure Cli - List Version'
+      name: 'Azure Cli - List Accounts'
       with:
         inlineScript: |
           az account list -o table
