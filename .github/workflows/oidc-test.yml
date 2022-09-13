@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: 'Az Login with OpenID Connect'
       env: 
-        GITHUB_BRANCH: ${{ github.ref_name }}
+        GITHUB_BRANCH: ${{ github.ref }}
       uses: azure/login@v1
       with:
           client-id: ${{ secrets.AZURE_CLIENTID }}
