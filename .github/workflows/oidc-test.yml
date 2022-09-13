@@ -31,4 +31,4 @@ jobs:
       name: 'Azure Cli - List Version'
       with:
         inlineScript: |
-          az --version
+          az account list -o table
