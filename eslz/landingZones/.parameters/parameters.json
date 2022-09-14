@@ -54,13 +54,6 @@
           ]
         },
         {
-          "description": "Backup Operator",
-          "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/00c29273-979b-4161-815c-10b084fb9324",
-          "principalIds": [
-            "9ef4fb72-34e1-4e98-8a30-104617aabb9c"
-          ]
-        },
-        {
           "description": "Backup Contributor",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b",
           "principalIds": [

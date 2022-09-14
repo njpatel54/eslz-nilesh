@@ -296,6 +296,9 @@ module sub 'wrapperModule/createSub.bicep' = {
 // 3. Create Resoruce Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
+  dependsOn: [
+    sub
+  ]
   params: {
     location: location
     combinedTags: combinedTags
