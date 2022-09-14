@@ -357,11 +357,14 @@
       "projowner": {
         "value": "ccs"
       },
-      "opscope": {
-        "value": "prod"
-      },
       "region": {
         "value": "usva"
+      },
+      "platformProjOwner": {
+        "value": "ccs"
+      },
+      "platformOpScope": {
+        "value": "sand"
       }
     }
   }
