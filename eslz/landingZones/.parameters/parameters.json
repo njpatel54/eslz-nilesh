@@ -362,10 +362,7 @@
       ]
     },
     "projowner": {
-      "value": "ccs"
-    },
-    "opscope": {
-      "value": "prod"
+      "value": "lz01"
     },
     "region": {
       "value": "usva"
