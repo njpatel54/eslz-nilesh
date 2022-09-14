@@ -70,7 +70,7 @@ param platformProjOwner string
 param platformOpScope string
 
 @description('Required. Subnet name to be used for Private Endpoint.')
-param mgmtSubnetName string = 'snet-${platformProjOwner}-${platformOpScope}-${region}-mgmt'
+param mgmtSubnetName string = 'snet-${projowner}-${region}-mgmt'
 // End - Common parameters
 
 // Start - 'subRbac' Module Parameters
