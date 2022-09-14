@@ -63,8 +63,14 @@ param suffix string
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string
 
+@description('Required. "projowner" parameter used for Platform.')
+param platformProjOwner string
+
+@description('Required. "opscope" parameter used for Platform.')
+param platformOpScope string
+
 @description('Required. Subnet name to be used for Private Endpoint.')
-param mgmtSubnetName string = 'snet-${projowner}-${region}-mgmt'
+param mgmtSubnetName string = 'snet-${platformProjOwner}-${platformOpScope}-${region}-mgmt'
 // End - Common parameters
 
 // Start - 'subRbac' Module Parameters
@@ -113,13 +119,13 @@ param networkSecurityGroups array = []
 param connsubid string
 
 @description('Required. Resource Group name for Private DNS Zones.')
-param priDNSZonesRgName string = 'rg-${projowner}-${region}-dnsz'
+param priDNSZonesRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-dnsz'
 
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
 @description('Required. SIEM Resource Group Name.')
-param siemRgName string = 'rg-${projowner}-${region}-siem'
+param siemRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-siem'
 
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
@@ -155,7 +161,7 @@ param stgGroupIds array
 // Start - 'akv' Module Parameters
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
-param lzAkvName string = toLower(take('akv-${projowner}-${region}-${suffix}', 24))
+param lzAkvName string = toLower(take('kv-${projowner}-${region}', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 @allowed([
@@ -195,7 +201,7 @@ param managementGroupId string
 param subscriptionOwnerId string
 
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
-param logsLawName string = 'log-${projowner}-${region}-${suffix}'
+param logsLawName string = 'log-${projowner}-${region}'
 
 @description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
 param logaGallerySolutions array = []
@@ -215,16 +221,16 @@ param publicNetworkAccessForIngestion string
 param publicNetworkAccessForQuery string
 
 @description('Required. Azure Monitor Private Link Scope Name.')
-param amplsName string = 'ampls-${projowner}-${region}-hub'
+param amplsName string = 'ampls-${platformProjOwner}-${platformOpScope}-${region}-hub'
 
 @description('Required. Azure SQL Server Name (Primary)')
-param sqlPrimaryServerName string = toLower('sql-${projowner}-${region}-${suffix}1')
+param sqlPrimaryServerName string = toLower('sql-${projowner}-${region}-01')
 
 @description('Required. Azure SQL Server Name (Primary)')
-param sqlSecondaryServerName string = toLower('sql-${projowner}-${region}-${suffix}2')
+param sqlSecondaryServerName string = toLower('sql-${projowner}-${region}-02')
 
 @description('Conditional. Azure SQL Fail Over Group Name.')
-param sqlFailOverGroupName string = toLower('fogrp-${projowner}-${region}-${suffix}')
+param sqlFailOverGroupName string = toLower('fogrp-${projowner}-${region}')
 
 @description('Conditional. The Azure Active Directory (AAD) administrator authentication. Required if no `administratorLogin` & `administratorLoginPassword` is provided.')
 param administrators object = {}
@@ -253,7 +259,7 @@ var params = json(loadTextContent('.parameters/parameters.json'))
 var lzVMsSubnetName = params.parameters.subnets.value[2].name
 
 @description('Required. Name of the Azure Recovery Service Vault.')
-param vaultName  string = 'rsv-${projowner}-${region}-${suffix}'
+param vaultName  string = 'rsv-${projowner}-${region}'
 
 @description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
 param rpcRgName string = 'rg-${projowner}-${region}-rpc'
@@ -263,7 +269,7 @@ param subPolicyAssignments array = []
 
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
-param akvName string = toLower(take('kv-${projowner}-${region}-siem', 24))
+param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
 
 // 1. Retrieve exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {

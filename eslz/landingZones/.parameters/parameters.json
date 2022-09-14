@@ -366,6 +366,12 @@
     },
     "region": {
       "value": "usva"
+    },
+    "platformProjOwner": {
+      "value": "ccs"
+    },
+    "platformOpScope": {
+      "value": "sand"
     }
   }
 }
