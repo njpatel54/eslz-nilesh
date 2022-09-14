@@ -230,13 +230,13 @@ param publicNetworkAccessForQuery string
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
 
 @description('Required. Azure SQL Server Name (Primary)')
-param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv1'
+param sqlPrimaryServerName string = toLower('sql-${projowner}-${opscope}-${region}-${suffix}1')
 
-@description('Required. Azure SQL Server Name (Secondary)')
-param sqlSecondaryServerName string = 'sql-${projowner}-${opscope}-${region}-srv2'
+@description('Required. Azure SQL Server Name (Primary)')
+param sqlSecondaryServerName string = toLower('sql-${projowner}-${opscope}-${region}-${suffix}2')
 
 @description('Conditional. Azure SQL Fail Over Group Name.')
-param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
+param sqlFailOverGroupName string = toLower('fogrp-${projowner}-${opscope}-${region}-${suffix}')
 
 @description('Conditional. The Azure Active Directory (AAD) administrator authentication. Required if no `administratorLogin` & `administratorLoginPassword` is provided.')
 param administrators object = {}
