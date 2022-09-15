@@ -18,3 +18,4 @@ resource vaultName_fabricName_protectionContainers_protectedItems 'Microsoft.Rec
     extendedProperties: extendedProperties[i]
   }
 }]
+

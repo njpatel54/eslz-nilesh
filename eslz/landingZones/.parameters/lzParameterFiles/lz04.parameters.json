@@ -3,16 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "billingAccount": {
-      "value": "xxxxxxxx"
+      "value": "5962875"
     },
     "enrollmentAccount": {
-      "value": "xxxxxx"
+      "value": "319490"
     },
     "subscriptionAlias": {
-      "value": "mySubscription"
+      "value": "lz04"
     },
     "subscriptionDisplayName": {
-      "value": "mySubscription"
+      "value": "lz04"
     },
     "subscriptionWorkload": {
       "value": "Production"
@@ -21,7 +21,7 @@
       "value": "mg-A2g-Landing-Zones"
     },
     "subscriptionOwnerId": {
-      "value": ""
+      "value": "ccsao-2875@ccsaz2govsandbox.onmicrosoft.us"
     },
     "suffix": {
       "value": "lz04"
@@ -43,21 +43,21 @@
         {
           "roleDefinitionIdOrName": "Contributor",
           "principalIds": [
-            "9ea84da1-90c2-4380-8f98-6c887741a4d6"
+            "fe63cf1d-7122-469e-8345-d077d9887957"
           ]
         },
         {
           "description": "Subscription owner",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
           "principalIds": [
-            "c4beea9a-5d9d-438c-ba60-66d6238fc3d4"
+            "faf335de-6f09-4651-8b04-eda232e2a107"
           ]
         },
         {
           "description": "Backup Contributor",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b",
           "principalIds": [
-            "d7f417ae-0e94-4c0b-b526-a604853fa315"
+            "671bc184-4265-419c-bcf0-3108504474a8"
           ]
         }
       ]
@@ -70,7 +70,7 @@
           "description": "Deploy Private Endpoint - Networking Permissions",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
           "principalIds": [
-            "5da6724f-843a-4f0b-89b6-2a530c758ff7"
+            "a999b511-c732-4fa6-b991-48a80fa7f704"
           ]
         }
       ]
@@ -110,14 +110,14 @@
     },
     "vnetAddressPrefixes": {
       "value": [
-        "10.30.64.0/24"
+        "10.30.66.0/24"
       ]
     },
     "subnets": {
       "value": [
         {
           "name": "snet-lz04-usva-app",
-          "addressPrefix": "10.30.64.0/26",
+          "addressPrefix": "10.30.66.0/26",
           "serviceEndpoints": [
             {
               "service": "Microsoft.EventHub"
@@ -140,7 +140,7 @@
         },
         {
           "name": "snet-lz04-usva-data",
-          "addressPrefix": "10.30.64.64/26",
+          "addressPrefix": "10.30.66.64/26",
           "serviceEndpoints": [
             {
               "service": "Microsoft.EventHub"
@@ -163,7 +163,7 @@
         },
         {
           "name": "snet-lz04-usva-mgmt",
-          "addressPrefix": "10.30.64.128/26",
+          "addressPrefix": "10.30.66.128/26",
           "serviceEndpoints": [
             {
               "service": "Microsoft.EventHub"
@@ -186,7 +186,7 @@
         },
         {
           "name": "snet-lz04-usva-web",
-          "addressPrefix": "10.30.64.192/26",
+          "addressPrefix": "10.30.66.192/26",
           "serviceEndpoints": [
             {
               "service": "Microsoft.EventHub"
@@ -212,7 +212,7 @@
     "virtualNetworkPeerings": {
       "value": [
         {
-          "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+          "remoteVirtualNetworkId": "/subscriptions/aa74db29-c2d4-4890-a064-e2c2af68a4fd/resourceGroups/rg-ccs-sand-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-sand-usva-conn",
           "allowForwardedTraffic": true,
           "allowGatewayTransit": false,
           "allowVirtualNetworkAccess": true,
@@ -233,10 +233,10 @@
       ]
     },
     "publicNetworkAccessForIngestion": {
-      "value": "Enabled"
+      "value": "Disabled"
     },
     "publicNetworkAccessForQuery": {
-      "value": "Enabled"
+      "value": "Disabled"
     },
     "networkAcls": {
       "value": {
@@ -256,10 +256,10 @@
       "value": {
         "administratorType": "ActiveDirectory",
         "azureADOnlyAuthentication": "false",
-        "login": "IRAD01 SQL Server Admins",
+        "login": "lz04 SQL Server Admins",
         "principalType": "Group",
-        "sid": "8c482db7-2379-405d-b681-e205b2d9f945",
-        "tenantId": "624e5a3d-aa66-4393-9eba-9fb802780e70"
+        "sid": "74686388-206b-4bc3-aa96-398a46e0b5d2",
+        "tenantId": "8584fde7-c397-451b-9715-d7df39e504a8"
       }
     },
     "databases": {

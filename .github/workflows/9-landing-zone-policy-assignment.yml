@@ -1,11 +1,11 @@
-name: 8 - landing zone
+name: 9 - landing zone policy assignment
 
 on:
   #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/8-landing-zone.yml
+  #   - .github/workflows/9-landing-zone-policy-assignment.yml
       
   # pull_request:
   #  branches: [ main ]
@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: 'Lint and Build Bicep'
-      run: az bicep build --file ./eslz/landingZones/deploy.bicep
+      run: az bicep build --file ./eslz/landingZones/policy.assignment.bicep
 
   validate: 
     runs-on: ubuntu-latest
@@ -42,15 +42,12 @@ jobs:
       with:
         inlineScript: |
           az deployment mg validate \
-            --name 'Landing-Zone-Deployment' \
+            --name 'Landing-Zone-Policy-Assignment' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/landingZones/deploy.bicep \
-            --parameters ./eslz/landingZones/.parameters/parameters.json \
-            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+            --template-file ./eslz/landingZones/policy.assignment.bicep \
+            --parameters ./eslz/landingZones/.parameters/policy.assignment.parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
 
   preview:
       runs-on: ubuntu-latest
@@ -73,15 +70,12 @@ jobs:
         with:
           inlineScript: |
             az deployment mg what-if \
-            --name 'Landing-Zone-Deployment' \
+            --name 'Landing-Zone-Policy-Assignment' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/landingZones/deploy.bicep \
-            --parameters ./eslz/landingZones/.parameters/parameters.json \
-            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+            --template-file ./eslz/landingZones/policy.assignment.bicep \
+            --parameters ./eslz/landingZones/.parameters/policy.assignment.parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
 
 
   deploy:
@@ -102,16 +96,13 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Deploy - Landing Zone'
+      name: 'Deploy - Landing Zone Policy Assignment'
       with:
         inlineScript: |
           az deployment mg create \
-            --name 'Landing-Zone-Deployment' \
+            --name 'Landing-Zone-Policy-Assignment' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/landingZones/deploy.bicep \
-            --parameters ./eslz/landingZones/.parameters/parameters.json \
-            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
-            --parameters location=${{ secrets.AZURE_LOCATION }} \
-                         connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
-                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+            --template-file ./eslz/landingZones/policy.assignment.bicep \
+            --parameters ./eslz/landingZones/.parameters/policy.assignment.parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}

@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "billingAccount": {
-        "value": "xxxxxxxx"
+        "value": "5962875"
       },
       "enrollmentAccount": {
-        "value": "xxxxxx"
+        "value": "319490"
       },
       "subscriptionAlias": {
-        "value": "mySubscription"
+        "value": "lz01"
       },
       "subscriptionDisplayName": {
-        "value": "mySubscription"
+        "value": "lz01"
       },
       "subscriptionWorkload": {
         "value": "Production"
@@ -21,10 +21,10 @@
         "value": "mg-A2g-Landing-Zones"
       },
       "subscriptionOwnerId": {
-        "value": ""
+        "value": "ccsao-2875@ccsaz2govsandbox.onmicrosoft.us"
       },
       "suffix": {
-        "value": "LZ03"
+        "value": "lz01"
       },
       "lzSqlDeploy": {
         "value": true
@@ -43,21 +43,21 @@
           {
             "roleDefinitionIdOrName": "Contributor",
             "principalIds": [
-              "ee262c01-73c9-4659-8758-f00f5feb208b"
+              "91bb7921-1be6-4f3d-bcd5-860a4946dd33"
             ]
           },
           {
             "description": "Subscription owner",
             "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
             "principalIds": [
-              "4940b8a0-6e41-40c2-a1b0-804b7e026769"
+              "a0f0a098-710c-4470-a3ba-4ad51a7c54b6"
             ]
           },
           {
             "description": "Backup Contributor",
             "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b",
             "principalIds": [
-              "f9bfdc8d-6f55-43fa-83ae-2d10b2c94605"
+              "b6e139b9-5aec-4a36-a524-d4688adffdbd"
             ]
           }
         ]
@@ -66,11 +66,11 @@
         "value": [
           {
             "subscriptionId": "",
-            "resourceGroupName": "rg-ccs-prod-usva-vnet",
+            "resourceGroupName": "rg-lz01-usva-vnet",
             "description": "Deploy Private Endpoint - Networking Permissions",
             "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
             "principalIds": [
-              "4e3b7506-a60d-4374-92e6-66ad95c90a12"
+              "5da6724f-843a-4f0b-89b6-2a530c758ff7"
             ]
           }
         ]
@@ -81,7 +81,7 @@
       "networkSecurityGroups": {
         "value": [
           {
-            "name": "nsg-css-prod-usva-vms",
+            "name": "nsg-lz01-usva-vms",
             "securityRules": [
               {
                 "name": "AllowInboundBastionHostTraffic",
@@ -106,18 +106,18 @@
         ]
       },
       "vnetName": {
-        "value": "vnet-ccs-prod-usva-lz03"
+        "value": "vnet-lz01-usva"
       },
       "vnetAddressPrefixes": {
         "value": [
-          "10.30.65.0/24"
+          "10.30.64.0/24"
         ]
       },
       "subnets": {
         "value": [
           {
-            "name": "snet-ccs-prod-usva-app",
-            "addressPrefix": "10.30.65.0/26",
+            "name": "snet-lz01-usva-app",
+            "addressPrefix": "10.30.64.0/26",
             "serviceEndpoints": [
               {
                 "service": "Microsoft.EventHub"
@@ -139,8 +139,8 @@
             "privateLinkServiceNetworkPolicies": "Enabled"
           },
           {
-            "name": "snet-ccs-prod-usva-data",
-            "addressPrefix": "10.30.65.64/26",
+            "name": "snet-lz01-usva-data",
+            "addressPrefix": "10.30.64.64/26",
             "serviceEndpoints": [
               {
                 "service": "Microsoft.EventHub"
@@ -162,8 +162,8 @@
             "privateLinkServiceNetworkPolicies": "Enabled"
           },
           {
-            "name": "snet-ccs-prod-usva-mgmt",
-            "addressPrefix": "10.30.65.128/26",
+            "name": "snet-lz01-usva-mgmt",
+            "addressPrefix": "10.30.64.128/26",
             "serviceEndpoints": [
               {
                 "service": "Microsoft.EventHub"
@@ -185,8 +185,8 @@
             "privateLinkServiceNetworkPolicies": "Enabled"
           },
           {
-            "name": "snet-ccs-prod-usva-web",
-            "addressPrefix": "10.30.65.192/26",
+            "name": "snet-lz01-usva-web",
+            "addressPrefix": "10.30.64.192/26",
             "serviceEndpoints": [
               {
                 "service": "Microsoft.EventHub"
@@ -212,7 +212,7 @@
       "virtualNetworkPeerings": {
         "value": [
           {
-            "remoteVirtualNetworkId": "/subscriptions/aa74db29-c2d4-4890-a064-e2c2af68a4fd/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+            "remoteVirtualNetworkId": "/subscriptions/aa74db29-c2d4-4890-a064-e2c2af68a4fd/resourceGroups/rg-ccs-sand-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-sand-usva-conn",
             "allowForwardedTraffic": true,
             "allowGatewayTransit": false,
             "allowVirtualNetworkAccess": true,
@@ -233,10 +233,10 @@
         ]
       },
       "publicNetworkAccessForIngestion": {
-        "value": "Enabled"
+        "value": "Disabled"
       },
       "publicNetworkAccessForQuery": {
-        "value": "Enabled"
+        "value": "Disabled"
       },
       "networkAcls": {
         "value": {
@@ -256,16 +256,16 @@
         "value": {
           "administratorType": "ActiveDirectory",
           "azureADOnlyAuthentication": "false",
-          "login": "IRAD01 SQL Server Admins",
+          "login": "LZ01 SQL Server Admins",
           "principalType": "Group",
-          "sid": "23da69ae-f72c-4796-89d7-1372b284b4ab",
+          "sid": "85a3be94-18cf-4421-bbae-61596074f983",
           "tenantId": "8584fde7-c397-451b-9715-d7df39e504a8"
         }
       },
       "databases": {
         "value": [
           {
-            "name": "sqldb-ccs-prod-usva-lz03",
+            "name": "sqldb-lz01-usva",
             "collation": "SQL_Latin1_General_CP1_CI_AS",
             "skuTier": "GeneralPurpose",
             "skuName": "GP_Gen5",
