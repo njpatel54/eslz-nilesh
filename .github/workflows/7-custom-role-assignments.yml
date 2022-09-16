@@ -5,7 +5,7 @@ on:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/6-custom-role-definitions.yml
+  #   - .github/workflows/7-custom-role-assignments.yml
       
   # pull_request:
   #  branches: [ main ]

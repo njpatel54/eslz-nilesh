@@ -5,7 +5,7 @@ on:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/eslz-mg-policy-assignment.yml
+  #   - .github/workflows/6-platform-policy-assignments.yml
       
   #pull_request:
   #  branches: [ main ]

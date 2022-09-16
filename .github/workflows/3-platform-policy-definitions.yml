@@ -6,7 +6,7 @@ on:
  #  branches: 
  #     - main 
  #  paths:
- #    - .github/workflows/eslz-platform-policy-definitions.yml
+ #    - .github/workflows/3-platform-policy-definitions.yml
       
 #  pull_request:
 #    branches: [ main ]
