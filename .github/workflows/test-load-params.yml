@@ -31,11 +31,19 @@ jobs:
     - name: 'Set Azure Subscription'
       run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
     
-    - name: Read json
-      id: read-json
+    - name: Read Parameters json file
+      id: read-parameters-json
       shell: pwsh
       run: |
         $params = Get-Content '.\eslz\landingZones\.parameters\parameters.json' | ConvertFrom-Json -Depth 10000
         echo "::set-output name=billingAccount::$(echo $params.parameters.billingAccount.value)"
 
-    - run: echo ${{ steps.read-json.outputs.billingAccount}}
+    - name: Read Tags json file
+      id: read-tags-json
+      shell: pwsh
+      run: |
+        $tags = Get-Content '.\eslz\landingZones\lzTags.json' | ConvertFrom-Json -Depth 10000
+        echo "::set-output name=tags::$(echo $tags.lzTags.value)"
+
+    - run: echo ${{ steps.read-parameters-json.outputs.billingAccount}}
+    - run: echo ${{ steps.read-tags-json.outputs.tags}}
