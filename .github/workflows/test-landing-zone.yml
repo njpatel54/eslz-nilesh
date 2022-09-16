@@ -5,7 +5,7 @@ on:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/8-landing-zone.yml
+  #   - .github/workflows/test-landing-zone.yml
       
   # pull_request:
   #  branches: [ main ]
