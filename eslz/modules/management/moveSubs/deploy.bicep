@@ -1,7 +1,10 @@
-param subscriptionId string
-param managementGroupName string
-
 targetScope='tenant'
+
+@description('subscriptionId for the deployment')
+param subscriptionId string
+
+@description('Required. The group ID of the Management group.')
+param managementGroupName string
 
 resource managementGroup 'Microsoft.Management/managementGroups@2021-04-01' existing = {
   name: managementGroupName

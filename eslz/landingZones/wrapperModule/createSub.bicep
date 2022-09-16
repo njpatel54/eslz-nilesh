@@ -3,9 +3,6 @@ targetScope = 'managementGroup'
 @description('Location for the deployments and the resources')
 param location string
 
-@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
-param combinedTags object
-
 @description('Required. BillingAccount used for subscription billing')
 param billingAccount string
 
@@ -28,6 +25,51 @@ param subscriptionWorkload string
 @description('Required. Management Group target for the subscription')
 param managementGroupId string
 
+// 1. Creat Subscription
+module sub '../../modules/subscription/alias/new.deploy.bicep' = {
+  name: 'sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  params: {
+    billingAccount: billingAccount
+    enrollmentAccount: enrollmentAccount
+    subscriptionAlias: subscriptionAlias
+    subscriptionDisplayName: subscriptionDisplayName
+    subscriptionWorkload: subscriptionWorkload
+  }
+}
+
+// 3. Move Subscription to Management Group
+module moveSubs '../../modules/management/moveSubs/deploy.bicep' = {
+  name: 'movesubs-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  scope: tenant()
+  dependsOn: [
+    sub
+  ]
+  params: {
+    subscriptionId: sub.outputs.subscriptionId
+    managementGroupName: managementGroupId
+  }
+}
+
+
+output subscriptionId string = sub.outputs.subscriptionId
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 @description('Required. Subscription Owner Id for the subscription')
 param subscriptionOwnerId string
 
@@ -45,5 +87,4 @@ module sub '../../modules/subscription/alias/deploy.bicep' = {
     tags: combinedTags
   }
 }
-
-output subscriptionId string = sub.outputs.subscriptionId
+*/

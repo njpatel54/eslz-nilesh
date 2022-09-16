@@ -15,9 +15,12 @@ param diagnosticWorkspaceId string = ''
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
+@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
+param combinedTags object
+
 // 1. Create Role Assignments for Subscription
 module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.bicep' = [for (roleAssignment, index) in subRoleAssignments: {
-  name: 'mod-subRbac-${take(uniqueString(deployment().name, location), 4)}-${index}'
+  name: 'subRbac-${take(uniqueString(deployment().name, location), 4)}-${index}'
   scope: subscription(subscriptionId)
   params: {
     location: location
@@ -31,11 +34,20 @@ module subRbac '../../modules/authorization/roleAssignments/subscription/deploy.
 
 // 2. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../../modules/insights/diagnosticSettings/sub.deploy.bicep' = {
-  name: 'mod-subDiagSettings-${subscriptionId}'
+  name: 'subDiagSettings-${subscriptionId}'
   scope: subscription(subscriptionId)
   params: {
     name: diagSettingName
     location: location
     diagnosticWorkspaceId: diagnosticWorkspaceId
+  }
+}
+
+//3 Configure Tags for Subscription
+module subTags '../../modules/resources/tags/subscriptions/deploy.bicep' = {
+  name: 'subTags-${subscriptionId}'
+  scope: subscription(subscriptionId)
+    params: {
+    tags: combinedTags
   }
 }

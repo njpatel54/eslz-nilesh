@@ -8,7 +8,7 @@ param deployVMBackup object
 
 // 1 - Create Policy Assignment (Deploy-VM-Backup) at Subscription Scope
 module policyAssignment_sub '../../modules/authorization/policyAssignments/subscription/deploy.bicep' = {
-  name: '${deployVMBackup.name}-policyAssignment'
+  name: 'policyAssignment_sub-${deployVMBackup.name}'
   scope: subscription(subscriptionId)
   params: {
     name: deployVMBackup.name
@@ -29,7 +29,7 @@ module policyAssignment_sub '../../modules/authorization/policyAssignments/subsc
 
 // 2. Create Policy Remediation (Deploy-VM-Backup Policy Assignment) for Exisitng Resources
 module remediation_sub '../../modules/policyInsights/remediations/subscription/deploy.bicep' = {
-  name: '${deployVMBackup.name}-remediation_sub'
+  name: 'remediation_sub-${deployVMBackup.name}'
   scope: subscription(subscriptionId)
   dependsOn: [
     policyAssignment_sub

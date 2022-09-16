@@ -38,12 +38,5 @@ jobs:
         $params = Get-Content '.\eslz\landingZones\.parameters\parameters.json' | ConvertFrom-Json -Depth 10000
         echo "::set-output name=billingAccount::$(echo $params.parameters.billingAccount.value)"
 
-    - name: Read Tags json file
-      id: read-tags-json
-      shell: pwsh
-      run: |
-        $tags = Get-Content '.\eslz\landingZones\lz04Tags.json' | ConvertFrom-Json -Depth 10000
-        echo "::set-output name=tags::$(echo $tags)"
-
     - run: echo ${{ steps.read-parameters-json.outputs.billingAccount}}
     - run: echo ${{ steps.read-tags-json.outputs.tags}}

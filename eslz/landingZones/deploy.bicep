@@ -1,21 +1,15 @@
-// Module - Subscriptions (Landing Zones and IRADs) 
-
 //Route Table
 
 targetScope = 'managementGroup'
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// "billingScope" -	Billing scope of the subscription.                                                                                              //
-// For CustomerLed and FieldLed - /billingAccounts/{billingAccountName}/billingProfiles/{billingProfileName}/invoiceSections/{invoiceSectionName}   //
-// For PartnerLed - /billingAccounts/{billingAccountName}/customers/{customerName}                                                                  //
-// For Legacy EA - /billingAccounts/{billingAccountName}/enrollmentAccounts/{enrollmentAccountName}                                                 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Start - Common parameters
 @description('Required. Location for all resources.')
 param location string
 
+/*
 @description('subscriptionId for the deployment')
 param subscriptionId string = 'df3b1809-17d0-47a0-9241-d2724780bdac'
+*/
 
 @description('Required. To deploy "lzSql" module or not')
 param lzSqlDeploy bool
@@ -273,35 +267,33 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-/*
+
 // 2. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
     location: location
-    combinedTags: combinedTags
     billingAccount: billingAccount
     enrollmentAccount: enrollmentAccount
     subscriptionAlias: subscriptionAlias
     subscriptionDisplayName: subscriptionDisplayName
     subscriptionWorkload: subscriptionWorkload
     managementGroupId: managementGroupId
-    subscriptionOwnerId: subscriptionOwnerId
   }
 }
-*/
+
 // 3. Create Resource Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
-  // dependsOn: [
-  //  sub
-  //]
+  dependsOn: [
+    sub
+  ]
   params: {
     location: location
     combinedTags: combinedTags
     resourceGroups: resourceGroups
     rgRoleAssignments: rgRoleAssignments
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
   }
 }
 
@@ -315,7 +307,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
     logsLawName: logsLawName
     location: location
     combinedTags: combinedTags
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     logaGallerySolutions: logaGallerySolutions
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
@@ -335,7 +327,8 @@ module subConfig 'wrapperModule/subconfig.bicep' = {
   params: {
     location: location
     subRoleAssignments: subRoleAssignments
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
+    combinedTags: combinedTags
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
@@ -352,7 +345,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     location: location
     combinedTags: combinedTags
     vnetRgName: vnetRgName
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetAddressPrefixes: vnetAddressPrefixes
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
@@ -378,7 +371,7 @@ module lzSa 'wrapperModule/storage.bicep' = if(lzSaDeploy) {
     wlRgName: wlRgName
     storageaccount_sku: storageaccount_sku
     stgGroupIds: stgGroupIds
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
     vnetName: vnetName
     mgmtSubnetName: mgmtSubnetName
@@ -402,7 +395,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if(lzAkvDeploy) {
     wlRgName: wlRgName
     networkAcls: networkAcls
     publicNetworkAccess: publicNetworkAccess
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
     vnetName: vnetName
     mgmtSubnetName: mgmtSubnetName
@@ -424,7 +417,7 @@ module lzSql 'wrapperModule/sql.bicep' = if(lzSqlDeploy) {
     combinedTags: combinedTags
     sqlPrimaryServerName: sqlPrimaryServerName
     sqlSecondaryServerName: sqlSecondaryServerName
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     administratorLogin: akv.getSecret(sqlAdministratorLogin)
     administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword)
@@ -446,7 +439,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
     name: '${virtualMachineNamePrefix}${i + 1}'
     location: location
     combinedTags: combinedTags
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     vmAdmin: akv.getSecret(virtualMachine.vmAdmin)
     vmAdminPassword: akv.getSecret(virtualMachine.vmAdminPassword)     
@@ -456,7 +449,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
     availabilityZone: virtualMachine.availabilityZone
     operatingSystem: virtualMachine.operatingSystem
     dataDisks: virtualMachine.dataDisks
-    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)
+    subnetResourceId: resourceId(sub.outputs.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }]
@@ -472,7 +465,7 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
     location: location
     combinedTags: combinedTags
     suffix: suffix
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     mgmtRgName: mgmtRgName
     rpcRgName: rpcRgName
     vnetRgName: vnetRgName
@@ -484,8 +477,6 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
-
-
 
 @description('Output - Resource Group "name" Array')
 output rgNames array = rgs.outputs.rgNames
