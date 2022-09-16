@@ -42,8 +42,8 @@ jobs:
       id: read-tags-json
       shell: pwsh
       run: |
-        $tags = Get-Content '.\eslz\landingZones\lzTags.json' | ConvertFrom-Json -Depth 10000
-        echo "::set-output name=tags::$(echo $tags.lzTags.value)"
+        $tags = Get-Content '.\eslz\landingZones\lz04Tags.json' | ConvertFrom-Json -Depth 10000
+        echo "::set-output name=tags::$(echo $tags)"
 
     - run: echo ${{ steps.read-parameters-json.outputs.billingAccount}}
     - run: echo ${{ steps.read-tags-json.outputs.tags}}
