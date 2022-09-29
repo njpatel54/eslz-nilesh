@@ -75,7 +75,7 @@ param logaSentinel string
 
 resource workspaceName_Microsoft_SecurityInsights_m365DefenderName 'Microsoft.SecurityInsights/dataConnectors@2022-07-01-preview' = if (connectM365Incidents || contains(dataConnectors, 'MicrosoftThreatProtection')) {
   name: '${workspaceName}-Microsoft.SecurityInsights-${m365DefenderName}'
-  scope: logaSentinel
+  scope: resource
   kind: 'MicrosoftThreatProtection'
   properties: {
     tenantId: tenantId

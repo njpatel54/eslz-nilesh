@@ -270,9 +270,6 @@ param vaultName  string = 'rsv-${projowner}-${opscope}-${region}-${suffix}'
 @description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
 param rpcRgName string = 'rg-${projowner}-${opscope}-${region}-rpc'
 
-@description('Required. Array containing all Policy Assignments at Subscription Scope.')
-param subPolicyAssignments array = []
-
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
@@ -491,19 +488,6 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
-
-// 12. Create Policy Assignment
-module policyAssignment 'wrapperModule/policyAssignment.bicep' = {
-  name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
-  dependsOn: [
-    rsv
-  ]
-  params: {
-    subscriptionId: subscriptionId
-    subPolicyAssignments: subPolicyAssignments
-  }
-}
-
 
 @description('Output - Resource Group "name" Array')
 output rgNames array = rgs.outputs.rgNames

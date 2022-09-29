@@ -37,7 +37,7 @@ module sub '../../modules/subscription/alias/new.deploy.bicep' = {
   }
 }
 
-// 3. Move Subscription to Management Group
+// 2. Move Subscription to Management Group
 module moveSubs '../../modules/management/moveSubs/deploy.bicep' = {
   name: 'movesubs-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: tenant()
