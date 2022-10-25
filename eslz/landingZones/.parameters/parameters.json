@@ -329,7 +329,7 @@
           "osType": "Linux",
           "licenseType": "",
           "availabilityZone": 1,
-          "operatingSystem": "UbuntuServer1904",
+          "operatingSystem": "UbuntuServer1804LTS",
           "virtualMachineSize": "Standard_DS2_v2",
           "vmAdmin": "vmAdmin",
           "vmAdminPassword": "vmAdminPassword",
