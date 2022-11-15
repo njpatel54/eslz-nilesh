@@ -153,6 +153,8 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
 var supportsBlobService = storageAccountKind == 'BlockBlobStorage' || storageAccountKind == 'BlobStorage' || storageAccountKind == 'StorageV2' || storageAccountKind == 'Storage'
 var supportsFileService = storageAccountKind == 'FileStorage' || storageAccountKind == 'StorageV2' || storageAccountKind == 'Storage'
 
+// https://github.com/Azure/bicep/issues/8890
+// If you wrap the place where the variable is used into an any(...), the error goes away. Not really nice, but at least a workaround.
 var identityType = systemAssignedIdentity ? (!empty(userAssignedIdentities) ? 'SystemAssigned,UserAssigned' : 'SystemAssigned') : (!empty(userAssignedIdentities) ? 'UserAssigned' : 'None')
 var identity = identityType != 'None' ? {
   type: identityType
@@ -166,7 +168,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-08-01' = {
   sku: {
     name: storageSKU
   }
-  identity: identity
+  identity: any(identity)
   tags: tags
   properties: {
     encryption: {

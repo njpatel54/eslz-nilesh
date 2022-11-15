@@ -55,6 +55,8 @@ param minimalTlsVersion string = '1.2'
 @description('Optional. Configuration details for private endpoints. For security reasons, it is recommended to use private endpoints whenever possible.')
 param privateEndpoints array = []
 
+// https://github.com/Azure/bicep/issues/8890
+// If you wrap the place where the variable is used into an any(...), the error goes away. Not really nice, but at least a workaround.
 var identityType = systemAssignedIdentity ? (!empty(userAssignedIdentities) ? 'SystemAssigned,UserAssigned' : 'SystemAssigned') : (!empty(userAssignedIdentities) ? 'UserAssigned' : 'None')
 
 var identity = identityType != 'None' ? {
@@ -69,7 +71,7 @@ resource server 'Microsoft.Sql/servers@2021-05-01-preview' = {
   location: location
   name: name
   tags: tags
-  identity: identity
+  identity: any(identity)
   properties: {
     administratorLogin: !empty(administratorLogin) ? administratorLogin : null
     administratorLoginPassword: !empty(administratorLoginPassword) ? administratorLoginPassword : null

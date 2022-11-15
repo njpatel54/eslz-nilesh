@@ -327,6 +327,8 @@ var accountSasProperties = {
   signedProtocol: 'https'
 }
 
+// https://github.com/Azure/bicep/issues/8890
+// If you wrap the place where the variable is used into an any(...), the error goes away. Not really nice, but at least a workaround.
 var identityType = systemAssignedIdentity ? (!empty(userAssignedIdentities) ? 'SystemAssigned,UserAssigned' : 'SystemAssigned') : (!empty(userAssignedIdentities) ? 'UserAssigned' : 'None')
 
 var identity = identityType != 'None' ? {
@@ -364,7 +366,7 @@ module vm_nic '.bicep/nested_networkInterface.bicep' = [for (nicConfiguration, i
 resource vm 'Microsoft.Compute/virtualMachines@2021-07-01' = {
   name: name
   location: location
-  identity: identity
+  identity: any(identity)
   tags: tags
   zones: availabilityZone != 0 ? array(availabilityZone) : null
   plan: !empty(plan) ? plan : null

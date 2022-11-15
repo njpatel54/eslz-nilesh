@@ -1,0 +1,52 @@
+{
+    "properties": {
+      "description": "This policy allows VNET peering with specified remote virtual networks",
+      "displayName": "Allowed VNET Peering",
+      "mode": "All",
+      "metadata": {
+        "version": "1.0.1",
+        "category": "Network"
+      },
+      "parameters": {
+        "effect": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Effect",
+            "description": "Enable or disable the execution of the policy"
+          },
+          "allowedValues": [
+            "Audit",
+            "Deny",
+            "Disabled"
+          ],
+          "defaultValue": "Deny"
+        },
+        "allowedVnetPeers": {
+            "type": "Array",
+            "metadata": {
+                "displayName": "Virtual network Id",
+                "description": "Resource Id of the virtual network. Example: /subscriptions/YourSubscriptionId/resourceGroups/YourResourceGroupName/providers/Microsoft.Network/virtualNetworks/Name"
+            }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings"
+            },
+            {
+              "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/remoteVirtualNetwork.id",
+              "notcontains": "[[subscription().id]"
+            }
+          ]
+        },
+        "then": {
+          "effect": "[parameters('effect')]"
+        }
+      }
+    },
+    "name": "Allowed-VNET-Peering"
+  }
+  

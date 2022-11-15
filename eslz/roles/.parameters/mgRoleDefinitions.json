@@ -59,6 +59,7 @@
                     "notActions": [
                         "Microsoft.Authorization/*/write",
                         "Microsoft.Network/vpnGateways/*",
+                        "Microsoft.Network/virtualNetworkGateways/*",
                         "Microsoft.Network/expressRouteCircuits/*",
                         "Microsoft.Network/routeTables/write",
                         "Microsoft.Network/vpnSites/*"
@@ -123,6 +124,45 @@
                     "managementGroupId": "mg-A2g",
                     "subscriptionId": "",
                     "resourceGroupName": ""
+                },
+                {
+                    "roleName": "Subscription contributor",
+                    "description": "Delegated role for subscription Contributor derived from subscription Contributor role",
+                    "actions": [
+                        "*"
+                    ],
+                    "notActions": [
+                        "Microsoft.Authorization/*/Delete",
+                        "Microsoft.Authorization/*/Write",
+                        "Microsoft.Authorization/elevateAccess/Action",
+                        "Microsoft.Blueprint/blueprintAssignments/write",
+                        "Microsoft.Blueprint/blueprintAssignments/delete",
+                        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write",
+                        "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/delete",
+                        "Microsoft.Network/virtualNetworks/peer/action",
+                        "Microsoft.Network/virtualNetworkGateways/*",
+                        "Microsoft.Network/connections/*",
+                        "Microsoft.Network/expressRouteCircuits/*",
+                        "Microsoft.Network/routeTables/*",
+                        "Microsoft.Network/virtualWans/*",
+                        "Microsoft.Network/applicationGateways/*",
+                        "Microsoft.Network/publicIPAddresses/write",
+                        "Microsoft.Network/publicIPAddresses/delete",
+                        "Microsoft.Capacity/register/action",
+                        "Microsoft.Capacity/exchange/action",
+                        "Microsoft.Capacity/reservationorders/action",
+                        "Microsoft.Capacity/reservationorders/write",
+                        "Microsoft.Capacity/reservationorders/delete",
+                        "Microsoft.Capacity/reservationorders/reservations/action",
+                        "Microsoft.Capacity/reservationorders/swap/action",
+                        "Microsoft.Capacity/reservationorders/split/action",
+                        "Microsoft.Capacity/reservationorders/merge/action",
+                        "Microsoft.Capacity/reservationorders/reservations/write",
+                        "Microsoft.Capacity/reservationorders/reservations/delete",
+                        "Microsoft.Capacity/resourceProviders/locations/serviceLimits/write"
+                    ],
+                    "assignableScopes": [],
+                    "managementGroupId": "mg-A2g"
                 }
             ]
         }
