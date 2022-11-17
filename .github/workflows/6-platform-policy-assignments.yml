@@ -17,7 +17,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: 'Lint and Build Bicep'
       run: az bicep build --file ./eslz/policy/policy.assignment.bicep
 
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - uses: azure/login@v1
       name: 'Login to Azure'
@@ -54,7 +54,7 @@ jobs:
       runs-on: ubuntu-latest
       needs: [validate]
       steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - uses: azure/login@v1
         name: 'Login to Azure'
@@ -84,7 +84,7 @@ jobs:
     needs: [preview]
     environment: Production
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - uses: azure/login@v1
       name: 'Login to Azure'
