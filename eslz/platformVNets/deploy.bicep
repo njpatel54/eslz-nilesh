@@ -15,6 +15,9 @@ param hubVnetAddressPrefixes array
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
 param hubVnetSubnets array = []
 
+@description('Required. Spoke - Network Security Groups Array.')
+param spokeNetworkSecurityGroups array
+
 @description('Optional. Hub Virtual Network configurations.')
 param spokeVnets array = []
 
@@ -386,6 +389,26 @@ module spokeRg '../modules/resources/resourceGroups/deploy.bicep' = [for (vNet, 
   }
 }]
 
+module spokeNsg '../modules/network/networkSecurityGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
+  name: 'spokeNsg-${take(uniqueString(deployment().name, location), 4)}-${spokeNetworkSecurityGroups[0].name}'
+  scope: resourceGroup(vNet.subscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+  ]
+  params: {
+    name: spokeNetworkSecurityGroups[0].name
+    location: location
+    tags: ccsCombinedTags
+    securityRules: spokeNetworkSecurityGroups[0].securityRules
+    roleAssignments: spokeNetworkSecurityGroups[0].roleAssignments    
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}]
+
 // 6. Create Spoke Virtual Network(s)
 module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
@@ -402,11 +425,13 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     subscriptionId: vNet.subscriptionId
+    networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', spokeNetworkSecurityGroups[0].name)
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName    
+    //diagnosticEventHubName: diagnosticEventHubName
+    
   }
 }]
 

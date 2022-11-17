@@ -22,6 +22,9 @@ param ddosProtectionPlanId string = ''
 @description('Optional. Virtual Network Peerings configurations.')
 param virtualNetworkPeerings array = []
 
+@description('Optional. Specifies the NSG Resoruce ID')
+param networkSecurityGroupId string = ''
+
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)
 @maxValue(365)
@@ -121,8 +124,13 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
         natGateway: contains(subnet, 'natGatewayId') ? {
           id: subnet.natGatewayId
         } : json('null')
+        /*
         networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? {
           id: subnet.networkSecurityGroupId
+        } : json('null')
+        */
+        networkSecurityGroup: !empty(networkSecurityGroupId) ? {
+          id: networkSecurityGroupId
         } : json('null')
         privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
         privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null

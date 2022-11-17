@@ -209,6 +209,33 @@
                 }
             ]
         },
+        "spokeNetworkSecurityGroups": {
+            "value": [
+                {
+                    "name": "nsg-ccs-prod-usva-vms",
+                    "securityRules": [
+                      {
+                        "name": "AllowInboundBastionHostTraffic",
+                        "description": "Controls inboud traffic from Bastion Host",
+                        "properties": {
+                          "access": "Allow",
+                          "direction": "Inbound",
+                          "priority": 120,
+                          "sourceAddressPrefix": "10.30.0.192/26",
+                          "destinationAddressPrefix": "*",
+                          "protocol": "Tcp",
+                          "sourcePortRange": "*",
+                          "destinationPortRanges": [
+                            "3389",
+                            "22"
+                          ]
+                        }
+                      }
+                    ],
+                    "roleAssignments": []
+                }
+            ]
+        },
         "spokeVnets": {
             "value": [
                 {
