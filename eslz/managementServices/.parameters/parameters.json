@@ -147,7 +147,7 @@
     "eventHubs": {
       "value": [
         {
-          "name": "evh-ccs-prod-usva-001",
+          "name": "evh-ccs-test-usva-001",
           "partitionCount": 1,
           "authorizationRules": [
             {
@@ -187,7 +187,7 @@
       "value": "ccs"
     },
     "opscope": {
-      "value": "prod"
+      "value": "test"
     },
     "region": {
       "value": "usva"
