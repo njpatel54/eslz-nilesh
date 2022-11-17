@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "deployVMBackup": {
+            "value": {
+                "name": "Deploy-VM-Backup",
+                "description": "Enforce backup for all virtual machines by backing them up to an existing central recovery services vault in the same location and subscription as the virtual machine. Doing this is useful when there is a central team in your organization managing backups for all resources in a subscription. You can optionally include virtual machines containing a specified tag to control the scope of assignment. See https://aka.ms/AzureVMCentralBackupIncludeTag.",
+                "displayName": "Configure backup on virtual machines with a given tag to an existing recovery services vault in the same location",
+                "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deploy-VM-Backup",
+                "parameters": {
+                    "effect": {
+                        "value": "DeployIfNotExists"
+                    },
+                    "vaultLocation": {
+                        "value": "usgovvirginia"
+                    },
+                    "inclusionTagName": {
+                        "value": "ProjectID"
+                    },
+                    "inclusionTagValue": {
+                        "value": [
+                            "lz04"
+                        ]
+                    },
+                    "backupPolicyId": {
+                        "value": "/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourcegroups/rg-lz04-usva-mgmt/providers/microsoft.recoveryservices/vaults/rsv-lz04-usva/backuppolicies/lz04vmBackupPolicy"
+                    }
+                },
+                "nonComplianceMessage": "Virutal Machines must be backed up to Recovery Services Vault in the same location.",
+                "enforcementMode": "Default",
+                "metadata": {},
+                "scope": null,
+                "notScopes": [],
+                "location": "usgovvirginia",
+                "identity": "SystemAssigned",
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+                    "/providers/microsoft.authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b"
+                ]
+            }
+        }
+    }
+}

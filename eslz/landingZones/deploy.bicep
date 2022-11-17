@@ -241,7 +241,7 @@ param sqlAdministratorLogin string = ''
 param sqlAdministratorLoginPassword string = ''
 
 @description('Optional. The array of Virtual Machines.')
-param virtualMachines array 
+param virtualMachines array
 
 @description('Virtual Machine Size')
 param virtualMachineSize string = 'Standard_DS2_v2'
