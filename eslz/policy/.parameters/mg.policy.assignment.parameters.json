@@ -200,7 +200,7 @@
                     "scope": null,
                     "notScopes": [],
                     "location": "",
-                    "identity": "",
+                    "identity": "None",
                     "roleDefinitionIds": [],
                     "managementGroupId": "mg-A2g"
                 }
