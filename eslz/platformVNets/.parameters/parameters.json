@@ -663,7 +663,7 @@
             "value": "ccs"
         },
         "opscope": {
-            "value": "prod"
+            "value": "test"
         },
         "region": {
             "value": "usva"
