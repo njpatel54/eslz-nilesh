@@ -24,7 +24,7 @@
       "value": ""
     },
     "suffix": {
-      "value": "lz04"
+      "value": "lz01"
     },
     "lzSqlDeploy": {
       "value": true
@@ -66,7 +66,7 @@
       "value": [
         {
           "subscriptionId": "",
-          "resourceGroupName": "rg-lz04-usva-vnet",
+          "resourceGroupName": "rg-lz01-usva-vnet",
           "description": "Deploy Private Endpoint - Networking Permissions",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
           "principalIds": [
@@ -81,7 +81,7 @@
     "networkSecurityGroups": {
       "value": [
         {
-          "name": "nsg-lz04-usva-vms",
+          "name": "nsg-lz01-usva-vms",
           "securityRules": [
             {
               "name": "AllowInboundBastionHostTraffic",
@@ -106,7 +106,7 @@
       ]
     },
     "vnetName": {
-      "value": "vnet-lz04-usva"
+      "value": "vnet-lz01-usva"
     },
     "vnetAddressPrefixes": {
       "value": [
@@ -116,7 +116,7 @@
     "subnets": {
       "value": [
         {
-          "name": "snet-lz04-usva-app",
+          "name": "snet-lz01-usva-app",
           "addressPrefix": "10.30.64.0/26",
           "serviceEndpoints": [
             {
@@ -139,7 +139,7 @@
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
-          "name": "snet-lz04-usva-data",
+          "name": "snet-lz01-usva-data",
           "addressPrefix": "10.30.64.64/26",
           "serviceEndpoints": [
             {
@@ -162,7 +162,7 @@
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
-          "name": "snet-lz04-usva-mgmt",
+          "name": "snet-lz01-usva-mgmt",
           "addressPrefix": "10.30.64.128/26",
           "serviceEndpoints": [
             {
@@ -185,7 +185,7 @@
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
-          "name": "snet-lz04-usva-web",
+          "name": "snet-lz01-usva-web",
           "addressPrefix": "10.30.64.192/26",
           "serviceEndpoints": [
             {
@@ -212,7 +212,7 @@
     "virtualNetworkPeerings": {
       "value": [
         {
-          "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-prod-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-prod-usva-conn",
+          "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-test-usva-conn",
           "allowForwardedTraffic": true,
           "allowGatewayTransit": false,
           "allowVirtualNetworkAccess": true,
@@ -265,7 +265,7 @@
     "databases": {
       "value": [
         {
-          "name": "sqldb-lz04-usva",
+          "name": "sqldb-lz01-usva",
           "collation": "SQL_Latin1_General_CP1_CI_AS",
           "skuTier": "GeneralPurpose",
           "skuName": "GP_Gen5",
@@ -365,7 +365,7 @@
       ]
     },
     "projowner": {
-      "value": "lz04"
+      "value": "lz01"
     },
     "region": {
       "value": "usva"
