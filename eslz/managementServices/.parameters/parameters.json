@@ -75,6 +75,766 @@
         }
       ]
     },
+    "dataSources": {
+      "value": [
+        {
+          "name": "applicationEvent",
+          "kind": "WindowsEvent",
+          "eventLogName": "Application",
+          "eventTypes": [
+            {
+              "eventType": "Critical"
+            },
+            {
+              "eventType": "Error"
+            },
+            {
+              "eventType": "Warning"
+            },
+            {
+              "eventType": "Information"
+            },
+            {
+              "eventType": "Verbose"
+            }
+          ]
+        },
+        {
+          "name": "systemEvent",
+          "kind": "WindowsEvent",
+          "eventLogName": "System",
+          "eventTypes": [
+            {
+              "eventType": "Critical"
+            },
+            {
+              "eventType": "Error"
+            },
+            {
+              "eventType": "Warning"
+            },
+            {
+              "eventType": "Information"
+            },
+            {
+              "eventType": "Verbose"
+            }
+          ]
+        },
+        {
+          "name": "windowsPerfCounter1",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Processor",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Processor Time"
+        },
+        {
+          "name": "windowsPerfCounter2",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Processor",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Privileged Time"
+        },
+        {
+          "name": "windowsPerfCounter3",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Processor",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% User Time"
+        },
+        {
+          "name": "windowsPerfCounter4",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Processor",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Processor Frequency"
+        },
+        {
+          "name": "windowsPerfCounter5",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Process",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Thread Count"
+        },
+        {
+          "name": "windowsPerfCounter6",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Process",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Handle Count"
+        },
+        {
+          "name": "windowsPerfCounter7",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "System",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "System Up Time"
+        },
+        {
+          "name": "windowsPerfCounter8",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "System",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Context Switches/sec"
+        },
+        {
+          "name": "windowsPerfCounter9",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "System",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Processor Queue Length"
+        },
+        {
+          "name": "windowsPerfCounter10",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "System",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Processes"
+        },
+        {
+          "name": "windowsPerfCounter11",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Committed Bytes In Use"
+        },
+        {
+          "name": "windowsPerfCounter12",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Available MBytes"
+        },
+        {
+          "name": "windowsPerfCounter13",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Available Bytes"
+        },
+        {
+          "name": "windowsPerfCounter14",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Committed Bytes"
+        },
+        {
+          "name": "windowsPerfCounter15",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Cache Bytes"
+        },
+        {
+          "name": "windowsPerfCounter16",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Pool Paged Bytes"
+        },
+        {
+          "name": "windowsPerfCounter17",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Pool Nonpaged Bytes"
+        },
+        {
+          "name": "windowsPerfCounter18",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Pages/sec"
+        },
+        {
+          "name": "windowsPerfCounter19",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Page Faults/sec"
+        },
+        {
+          "name": "windowsPerfCounter20",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Process",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Working Set"
+        },
+        {
+          "name": "windowsPerfCounter21",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Process",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Working Set - Private"
+        },
+        {
+          "name": "windowsPerfCounter22",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Disk Time"
+        },
+        {
+          "name": "windowsPerfCounter23",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Disk Read Time"
+        },
+        {
+          "name": "windowsPerfCounter24",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Disk Write Time"
+        },
+        {
+          "name": "windowsPerfCounter25",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Idle Time"
+        },
+        {
+          "name": "windowsPerfCounter26",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Disk Bytes/sec"
+        },
+        {
+          "name": "windowsPerfCounter27",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Disk Read Bytes/sec"
+        },
+        {
+          "name": "windowsPerfCounter28",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Disk Write Bytes/sec"
+        },
+        {
+          "name": "windowsPerfCounter29",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Disk Transfers/sec"
+        },
+        {
+          "name": "windowsPerfCounter30",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Disk Reads/sec"
+        },
+        {
+          "name": "windowsPerfCounter31",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Disk Writes/sec"
+        },
+        {
+          "name": "windowsPerfCounter32",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Avg. Disk sec/Transfer"
+        },
+        {
+          "name": "windowsPerfCounter33",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Avg. Disk sec/Read"
+        },
+        {
+          "name": "windowsPerfCounter34",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Avg. Disk sec/Write"
+        },
+        {
+          "name": "windowsPerfCounter35",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Avg. Disk Queue Length"
+        },
+        {
+          "name": "windowsPerfCounter36",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Avg. Disk Write Queue Length"
+        },
+        {
+          "name": "windowsPerfCounter37",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "% Free Space"
+        },
+        {
+          "name": "windowsPerfCounter38",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "LogicalDisk",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Free Megabytes"
+        },
+        {
+          "name": "windowsPerfCounter39",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Bytes Total/sec"
+        },
+        {
+          "name": "windowsPerfCounter40",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Bytes Sent/sec"
+        },
+        {
+          "name": "windowsPerfCounter41",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Bytes Received/sec"
+        },
+        {
+          "name": "windowsPerfCounter42",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Packets/sec"
+        },
+        {
+          "name": "windowsPerfCounter43",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Packets Sent/sec"
+        },
+        {
+          "name": "windowsPerfCounter44",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Packets Received/sec"
+        },
+        {
+          "name": "windowsPerfCounter45",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Packets Outbound Errors"
+        },
+        {
+          "name": "windowsPerfCounter46",
+          "kind": "WindowsPerformanceCounter",
+          "objectName": "Network Interface",
+          "instanceName": "*",
+          "intervalSeconds": 60,
+          "counterName": "Packets Received Errors"
+        },
+        {
+          "name": "sampleIISLog1",
+          "kind": "IISLogs",
+          "state": "OnPremiseEnabled"
+        },
+        {
+          "name": "sampleSyslog1",
+          "kind": "LinuxSyslog",
+          "syslogName": "kern",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslog2",
+          "kind": "LinuxSyslog",
+          "syslogName": "auth",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslog3",
+          "kind": "LinuxSyslog",
+          "syslogName": "authpriv",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslog4",
+          "kind": "LinuxSyslog",
+          "syslogName": "cron",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslog5",
+          "kind": "LinuxSyslog",
+          "syslogName": "daemon",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslog5",
+          "kind": "LinuxSyslog",
+          "syslogName": "syslog",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslog5",
+          "kind": "LinuxSyslog",
+          "syslogName": "user",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslog5",
+          "kind": "LinuxSyslog",
+          "syslogName": "uucp",
+          "syslogSeverities": [
+            {
+              "severity": "emerg"
+            },
+            {
+              "severity": "alert"
+            },
+            {
+              "severity": "crit"
+            },
+            {
+              "severity": "err"
+            },
+            {
+              "severity": "warning"
+            }
+          ]
+        },
+        {
+          "name": "sampleSyslogCollection1",
+          "kind": "LinuxSyslogCollection",
+          "state": "Enabled"
+        },
+        {
+          "name": "sampleLinuxPerf1",
+          "kind": "LinuxPerformanceObject",
+          "syslogSeverities": [
+            {
+              "counterName": "% Free Inodes"
+            },
+            {
+              "counterName": "% Used Inodes"
+            },
+            {
+              "counterName": "Free Megabytes"
+            },
+            {
+              "counterName": "% Free Space"
+            },
+            {
+              "counterName": "% Used Space"
+            },
+            {
+              "counterName": "Logical Disk Bytes/sec"
+            },
+            {
+              "counterName": "Disk Read Bytes/sec"
+            },
+            {
+              "counterName": "Disk Write Bytes/sec"
+            },
+            {
+              "counterName": "Disk Transfers/sec"
+            },
+            {
+              "counterName": "Disk Reads/sec"
+            },
+            {
+              "counterName": "Disk Writes/sec"
+            }
+          ],
+          "objectName": "Logical Disk",
+          "instanceName": "*",
+          "intervalSeconds": 60
+        },
+        {
+          "name": "sampleLinuxPerf2",
+          "kind": "LinuxPerformanceObject",
+          "syslogSeverities": [
+            {
+              "counterName": "% Processor Time"
+            },
+            {
+              "counterName": "% Idle Time"
+            },
+            {
+              "counterName": "% User Time"
+            },
+            {
+              "counterName": "% Nice Time"
+            },
+            {
+              "counterName": "% Privileged Time"
+            },
+            {
+              "counterName": "% IO Wait Time"
+            },
+            {
+              "counterName": "% Interrupt Time"
+            },
+            {
+              "counterName": "% DPC Time"
+            }
+          ],
+          "objectName": "Processor",
+          "instanceName": "*",
+          "intervalSeconds": 60
+        },
+        {
+          "name": "sampleLinuxPerf3",
+          "kind": "LinuxPerformanceObject",
+          "syslogSeverities": [
+            {
+              "counterName": "Available MBytes Memory"
+            },
+            {
+              "counterName": "% Available Memory"
+            },
+            {
+              "counterName": "Used Memory MBytes"
+            },
+            {
+              "counterName": "% Used Memory"
+            },
+            {
+              "counterName": "Pages/sec"
+            },
+            {
+              "counterName": "Page Reads/sec"
+            },
+            {
+              "counterName": "Page Writes/sec"
+            },
+            {
+              "counterName": "Available MBytes Swap"
+            }
+            ,
+            {
+              "counterName": "% Available Swap Space"
+            }
+            ,
+            {
+              "counterName": "Used MBytes Swap Space"
+            }
+            ,
+            {
+              "counterName": "% Used Swap Space"
+            }
+          ],
+          "objectName": "Memory",
+          "instanceName": "*",
+          "intervalSeconds": 60
+        },
+        {
+          "name": "sampleLinuxPerf4",
+          "kind": "LinuxPerformanceObject",
+          "syslogSeverities": [
+            {
+              "counterName": "Total Bytes Transmitted"
+            },
+            {
+              "counterName": "Total Bytes Received"
+            },
+            {
+              "counterName": "Total Bytes"
+            },
+            {
+              "counterName": "Total Packets Transmitted"
+            },
+            {
+              "counterName": "Total Packets Received"
+            },
+            {
+              "counterName": "Total Rx Errors"
+            },
+            {
+              "counterName": "Total Tx Errors"
+            },
+            {
+              "counterName": "Total Collisions"
+            }
+          ],
+          "objectName": "Network",
+          "instanceName": "*",
+          "intervalSeconds": 60
+        },
+        {
+          "name": "sampleLinuxPerfCollection1",
+          "kind": "LinuxPerformanceCollection",
+          "state": "Enabled"
+        }
+      ]
+    },
     "publicNetworkAccessForIngestion": {
       "value": "Enabled"
     },

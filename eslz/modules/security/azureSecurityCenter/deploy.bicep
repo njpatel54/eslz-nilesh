@@ -113,9 +113,6 @@ param cosmosDbsTier string = 'Free'
 @description('Optional. Security contact data.')
 param securityContactProperties object = {}
 
-@description('Optional. Location deployment metadata.')
-param location string = deployment().location
-
 var pricings = [
   {
     name: 'VirtualMachines'

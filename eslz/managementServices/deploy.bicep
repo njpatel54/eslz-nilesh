@@ -6,6 +6,9 @@ param logaSentinelGallerySolution array = []
 @description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
 param logaGallerySolutions array = []
 
+@description('Optional. List of data sources to be configured in the Log Ananlytics Workspace.')
+param dataSources array = []
+
 @description('Optional. The network access type for accessing Log Analytics ingestion.')
 param publicNetworkAccessForIngestion string = ''
 
@@ -221,7 +224,8 @@ module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
     name: sentinelLawName
     location: location
     tags: ccsCombinedTags
-    gallerySolutions: logaSentinelGallerySolution    
+    gallerySolutions: logaSentinelGallerySolution
+    dataSources: dataSources
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
     publicNetworkAccessForQuery: publicNetworkAccessForQuery
   }
@@ -239,8 +243,9 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
     location: location
     tags: ccsCombinedTags
     gallerySolutions: logaGallerySolutions
+    dataSources: dataSources
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
-    publicNetworkAccessForQuery: publicNetworkAccessForQuery
+    publicNetworkAccessForQuery: publicNetworkAccessForQuery    
   }
 }
 
