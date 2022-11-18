@@ -86,7 +86,7 @@
             "value": [
                 {
                     "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
-                    "resourceGroupName": "rg-ccs-prod-usva-dnsz",
+                    "resourceGroupName": "rg-ccs-test-usva-dnsz",
                     "description": "Deploy Private Endpoint - Private DNS A Contributor",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/794b3548-dc7a-5f71-8074-48e5ef635a26",
                     "principalIds": [
@@ -95,7 +95,7 @@
                 },
                 {
                     "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
-                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "resourceGroupName": "rg-ccs-test-usva-vnet",
                     "description": "Deploy Private Endpoint - Networking Permissions",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
                     "principalIds": [
@@ -104,7 +104,7 @@
                 },
                 {
                     "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
-                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "resourceGroupName": "rg-ccs-test-usva-vnet",
                     "description": "Deploy Private Endpoint - Networking Permissions",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
                     "principalIds": [
@@ -113,7 +113,7 @@
                 },
                 {
                     "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
-                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "resourceGroupName": "rg-ccs-test-usva-vnet",
                     "description": "Deploy Private Endpoint - Networking Permissions",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
                     "principalIds": [
@@ -122,7 +122,7 @@
                 },
                 {
                     "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
-                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "resourceGroupName": "rg-ccs-test-usva-vnet",
                     "description": "Deploy Private Endpoint - Networking Permissions",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
                     "principalIds": [
@@ -131,7 +131,7 @@
                 },
                 {
                     "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
-                    "resourceGroupName": "rg-ccs-prod-usva-vnet",
+                    "resourceGroupName": "rg-ccs-test-usva-vnet",
                     "description": "Bastion Host Reader",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/4fd7b947-6d03-581e-ba07-1320e21fce48",
                     "principalIds": [
