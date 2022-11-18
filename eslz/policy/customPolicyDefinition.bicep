@@ -64,6 +64,10 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Private-DNS-Zones.json'))
   }
   {
+    name: 'Deny-PublicEndpoint-ManagedDisk'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-PublicEndpoint-MangedDisk.json'))
+  }
+  {
     name: 'Deny-PublicEndpoint-MariaDB'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-PublicEndpoint-MariaDB.json'))
   }
@@ -439,7 +443,163 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Enforce-EncryptTransit.parameters.json')).WebAppServiceLatestTlsEffect.parameters
       }
     ]
-  }  
+  }
+  {
+    name: 'Deny-PaaS-PublicEndpoints'
+    setDefinition: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.json'))
+    setChildDefinitions: [
+      {
+        definitionReferenceId: 'AppConfigurationDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/3d9f5e4c-9947-4579-9539-2a7695fbc187'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AppConfigurationDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AppServiceAppsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/1b5ef780-c53c-4a64-87f3-bb9c8c8094ba'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AppServiceAppsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AppServiceAppSlotsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/701a595d-38fb-4a66-ae6d-fb3735217622'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AppServiceAppSlotsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AutomationAccountsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/955a914f-bf86-4f0e-acd5-e0766b0efcb6'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AutomationAccountsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureCacheForRedisDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/470baccb-7e51-4549-8b1a-3e5be069f663'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureCacheForRedisDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureCognitiveSearchServiceDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/ee980b6d-0eca-4501-8d54-f6290fd512c3'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureCognitiveSearchServiceDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureCosmosDBDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/797b37f7-06b8-444c-b1ad-fc62867f335a'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureCosmosDBDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureDataFactoryDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/1cf164be-6819-4a50-b8fa-4bcaa4f98fb6'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureDataFactoryDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureEventGridDomainsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/f8f774be-6aee-492a-9e29-486ef81f3a68'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureEventGridDomainsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureFileSyncDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/21a8cd35-125e-4d13-b82d-2e19b7208bb7'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureFileSyncDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureIoTHubDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/2d6830fb-07eb-48e7-8c4d-2a442b35f0fb'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureIoTHubDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureMachineLearningWorkspacesDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/438c38d2-3772-465a-a9cc-7a6666a275ce'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureMachineLearningWorkspacesDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureMediaServicesDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/8bfe3603-0888-404a-87ff-5c1b6b4cc5e3'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureMediaServicesDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureSignalRServiceDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/21a9766a-82a5-4747-abb5-650b6dbba6d0'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureSignalRServiceDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureSQLDatabaseDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/1b8ca024-1d5c-4dec-8995-b1a932b41780'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureSQLDatabaseDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureSQLManagedInstanceDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/9dfea752-dd46-4766-aed1-c355fa93fb91'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureSQLManagedInstanceDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'AzureSynapseWorkspaceDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/38d8df46-cf4e-4073-8e03-48c24b29de0d'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).AzureSynapseWorkspaceDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'BatchAccountsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/74c5a0ae-5e48-4738-b093-65e23a060488'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).BatchAccountsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'CognitiveServicesDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/0725b4dd-7e76-479c-a735-68e7ee23d5ca'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).CognitiveServicesDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'ContainerRegistryDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/0fdf0491-d080-4575-b627-ad0e843cba0f'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).ContainerRegistryDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'DatabricksWorkspaceDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/0e7849de-b939-4c50-ab48-fc6b0f5eeba2'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).DatabricksWorkspaceDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'EventGridTopicsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/1adadefe-5f21-44f7-b931-a59b54ccdb45'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).EventGridTopicsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'FunctionAppsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/969ac98b-88a8-449f-883c-2e9adb123127'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).FunctionAppsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'FunctionAppSlotsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/11c82d0c-db9f-4d7b-97c5-f3f9aa957da2'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).FunctionAppSlotsDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'IoTHubDeviceProvisioningServiceDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/d82101f3-f3ce-4fc5-8708-4c09f4009546'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).IoTHubDeviceProvisioningServiceDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'KeyVaultDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/405c5871-3e91-4644-8a63-58e19d68ff5b'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).KeyVaultDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-ManagedDisk'
+        definitionId: 'ManagedDiskDenyPaasPublicIP'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).ManagedDiskDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'MariaDBDenyPaasPublicIP'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-MariaDB'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).MariaDBDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'ServiceBusNamespacesDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/cbd11fd3-3002-4907-b6c8-579f0e700e13'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).ServiceBusNamespacesDenyPaasPublicIP.parameters
+      }
+      {
+        definitionReferenceId: 'StorageAccountsDenyPaasPublicIP'
+        definitionId: '/providers/Microsoft.Authorization/policyDefinitions/b2982f36-99f2-4db5-8eff-283140c09693'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).StorageAccountsDenyPaasPublicIP.parameters
+      }
+    ]
+  }
 ]
 
 // 1 - Create Custom Policy Defintions
@@ -478,7 +638,6 @@ module policySetDefinitions '../modules/authorization/policySetDefinitions/manag
     //policyDefinitionGroups: policySet.setDefinition.properties.policyDefinitionGroups
   }
 }]
-
 
 // Start - Outputs to supress warnings - "unused parameters"
 output location string = location

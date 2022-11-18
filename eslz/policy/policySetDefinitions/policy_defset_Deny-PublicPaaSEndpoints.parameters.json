@@ -1,0 +1,212 @@
+{
+  "AppConfigurationDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AppConfigurationDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AppServiceAppsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AppServiceAppsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AppServiceAppSlotsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AppServiceAppSlotsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AutomationAccountsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AutomationAccountsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureCacheForRedisDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureCacheForRedisDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureCognitiveSearchServiceDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureCognitiveSearchServiceDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureCosmosDBDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureCosmosDBDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureDataFactoryDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureDataFactoryDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureEventGridDomainsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureEventGridDomainsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureFileSyncDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureFileSyncDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureIoTHubDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureIoTHubDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureMachineLearningWorkspacesDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureMachineLearningWorkspacesDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureMediaServicesDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureMediaServicesDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureSignalRServiceDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureSignalRServiceDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureSQLDatabaseDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureSQLDatabaseDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureSQLManagedInstanceDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureSQLManagedInstanceDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "AzureSynapseWorkspaceDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('AzureSynapseWorkspaceDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "BatchAccountsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('BatchAccountsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "CognitiveServicesDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('CognitiveServicesDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "ContainerRegistryDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('ContainerRegistryDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "DatabricksWorkspaceDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('DatabricksWorkspaceDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "EventGridTopicsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('EventGridTopicsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "FunctionAppsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('FunctionAppsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "FunctionAppSlotsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('FunctionAppSlotsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "IoTHubDeviceProvisioningServiceDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('IoTHubDeviceProvisioningServiceDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "KeyVaultDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('KeyVaultDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "MariaDBDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('MariaDBDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "ServiceBusNamespacesDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('ServiceBusNamespacesDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "StorageAccountsDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('StorageAccountsDenyPaasPublicIPEffect')]"
+      }
+    }
+  },
+  "ManagedDiskDenyPaasPublicIP": {
+    "parameters": {
+      "effect": {
+        "value": "[[parameters('ManagedDiskDenyPaasPublicIPEffect')]"
+      }
+    }
+  }
+}

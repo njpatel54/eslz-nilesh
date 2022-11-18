@@ -155,6 +155,19 @@
       }
     }
   },
+  "BlobServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('BlobServicesLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
   "CDNEndpointsDeployDiagnosticLogDeployLogAnalytics": {
     "parameters": {
       "logAnalytics": {
@@ -318,6 +331,19 @@
       },
       "effect": {
         "value": "[[parameters('ExpressRouteLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
+  "FileServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('FileServicesLogAnalyticsEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -561,6 +587,19 @@
       }
     }
   },
+  "QueueServicesDeployDiagnosticLogDeployLogAnalytics": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('QueueServicesLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
+      }
+    }
+  },
   "RecoveryVaultDeployDiagnosticLogDeployLogAnalytics": {
     "parameters": {
       "logAnalytics": {
@@ -691,39 +730,13 @@
       }
     }
   },
-  "BlobServicesDeployDiagnosticLogDeployLogAnalytics": {
+  "StreamAnalyticsDeployDiagnosticLogDeployLogAnalytics": {
     "parameters": {
       "logAnalytics": {
         "value": "[[parameters('logAnalytics')]"
       },
       "effect": {
-        "value": "[[parameters('BlobServicesLogAnalyticsEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "FileServicesDeployDiagnosticLogDeployLogAnalytics": {
-    "parameters": {
-      "logAnalytics": {
-        "value": "[[parameters('logAnalytics')]"
-      },
-      "effect": {
-        "value": "[[parameters('FileServicesLogAnalyticsEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "QueueServicesDeployDiagnosticLogDeployLogAnalytics": {
-    "parameters": {
-      "logAnalytics": {
-        "value": "[[parameters('logAnalytics')]"
-      },
-      "effect": {
-        "value": "[[parameters('QueueServicesLogAnalyticsEffect')]"
+        "value": "[[parameters('StreamAnalyticsLogAnalyticsEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"
@@ -737,19 +750,6 @@
       },
       "effect": {
         "value": "[[parameters('TableServicesLogAnalyticsEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
-  "StreamAnalyticsDeployDiagnosticLogDeployLogAnalytics": {
-    "parameters": {
-      "logAnalytics": {
-        "value": "[[parameters('logAnalytics')]"
-      },
-      "effect": {
-        "value": "[[parameters('StreamAnalyticsLogAnalyticsEffect')]"
       },
       "profileName": {
         "value": "[[parameters('profileName')]"

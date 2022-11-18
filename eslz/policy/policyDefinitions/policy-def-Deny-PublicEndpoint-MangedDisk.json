@@ -1,0 +1,52 @@
+{
+    "properties": {
+      "description": "This policy denies the creation of Managed Disk with exposed public endpoints",
+      "displayName": "Public network access should be disabled for Managed Disk",
+      "mode": "Indexed",
+      "parameters": {
+        "effect": {
+          "type": "String",
+          "allowedValues": [
+            "Audit",
+            "Deny",
+            "Disabled"
+          ],
+          "defaultValue": "Deny",
+          "metadata": {
+            "displayName": "Effect",
+            "description": "Enable or disable the execution of the policy"
+          }
+        }
+      },
+      "metadata": {
+        "version": "1.0.0",
+        "category": "Compute"
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Compute/disks"
+            },
+            {
+              "field": "Microsoft.Compute/disks/networkAccessPolicy",
+              "notIn": [
+                "DenyAll",
+                "AllowPrivate"
+              ]
+            },
+            {
+              "field": "Microsoft.Compute/disks/publicNetworkAccess",
+              "notEquals": "Disabled"
+            }
+          ]
+        },
+        "then": {
+          "effect": "[parameters('effect')]"
+        }
+      }
+    },
+    "name": "Deny-PublicEndpoint-ManagedDisk"
+  }
+  
