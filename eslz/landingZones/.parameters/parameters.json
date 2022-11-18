@@ -355,6 +355,11 @@
             "value": {
               "enabled": true
             }
+          },
+          "extensionNetworkWatcherAgentConfig": {
+            "value": {
+              "enabled": true
+            }
           }
         }
       ]
