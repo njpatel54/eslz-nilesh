@@ -1,7 +1,7 @@
 {
     "properties": {
       "description": "This policy denies the creation of Managed Disk with exposed public endpoints",
-      "displayName": "Public network access should be disabled for Managed Disk",
+      "displayName": "Deny the creation of Managed Disk with public endpoints",
       "mode": "Indexed",
       "parameters": {
         "effect": {
