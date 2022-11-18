@@ -1,7 +1,7 @@
 {
     "properties": {
         "description": "This policy initiative is a group of policies that prevents creation of Azure PaaS services with exposed public endpoints",
-        "displayName": "Deny - Public network access for PaaS services",
+        "displayName": "Deny Public network access for PaaS services",
         "parameters": {
             "KeyVaultDenyPaasPublicIPEffect": {
                 "type": "String",
