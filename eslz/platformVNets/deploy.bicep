@@ -428,7 +428,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     subscriptionId: vNet.subscriptionId
-    networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', spokeNetworkSecurityGroups[0].name)
+    networkSecurityGroupId: resourceId(vNet.subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', spokeNetworkSecurityGroups[0].name)
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
