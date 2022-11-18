@@ -13,6 +13,61 @@
           "name": "SecurityCenterFree",
           "product": "OMSGallery/SecurityCenterFree",
           "publisher": "Microsoft"
+        },
+        {
+          "name": "AgentHealthAssessment",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "AntiMalware",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "AzureActivity",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "ChangeTracking",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "Security",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "ServiceMap",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "SQLAdvancedThreatProtection",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "SQLAssessment",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "SQLVulnerabilityAssessment",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "Updates",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "VMInsights",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
         }
       ]
     },
