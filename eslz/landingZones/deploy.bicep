@@ -144,6 +144,7 @@ param storageaccount_sku string
   'queue'
   'queue_secondary'
   'file'
+  'file_secondary'
   'web'
   'web_secondary'
   'dfs'
@@ -246,6 +247,9 @@ param virtualMachines array
 @description('Virtual Machine Size')
 param virtualMachineSize string = 'Standard_DS2_v2'
 
+@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
+param sentinelLawName string = 'log-${platformProjOwner}-${platformOpScope}-${region}-siem'
+
 @description('Required. Load content from json file to iterate over any array in the parameters file')
 var params = json(loadTextContent('.parameters/parameters.json'))
 
@@ -268,7 +272,13 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 2. Create Subscription
+// 2. Retrieve existing Log Analytics Workspace (Sentinel - From Management Subscription)
+resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: sentinelLawName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 3. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
@@ -282,7 +292,7 @@ module sub 'wrapperModule/createSub.bicep' = {
   }
 }
 
-// 3. Create Resource Groups
+// 4. Create Resource Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -297,7 +307,7 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
   }
 }
 
-// 4. Create Log Analytics Workspace
+// 5. Create Log Analytics Workspace
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   dependsOn: [
@@ -318,7 +328,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   }
 }
 
-// 5. Configure Subscription
+// 6. Configure Subscription
 module subConfig 'wrapperModule/subconfig.bicep' = {
   name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
@@ -334,7 +344,7 @@ module subConfig 'wrapperModule/subconfig.bicep' = {
   }
 }
 
-// 6. Create Virtual Network
+// 7. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   dependsOn: [
@@ -358,7 +368,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   }
 }
 
-// 7. Create Storage Account
+// 8. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if(lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
@@ -382,7 +392,7 @@ module lzSa 'wrapperModule/storage.bicep' = if(lzSaDeploy) {
   }
 }
 
-// 8. Create Azure Key Vault
+// 9. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = if(lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -406,7 +416,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if(lzAkvDeploy) {
   }
 }
 
-// 9. Create SQL Server(s)
+// 10. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if(lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -429,7 +439,7 @@ module lzSql 'wrapperModule/sql.bicep' = if(lzSqlDeploy) {
   }
 }
 
-// 10. Create Virtual Machine(s)
+// 11. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: if(lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   dependsOn: [
@@ -451,10 +461,15 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
     dataDisks: virtualMachine.dataDisks
     subnetResourceId: resourceId(sub.outputs.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    extensionAntiMalwareConfig: virtualMachine.extensionAntiMalwareConfig
+    extensionMonitoringAgentConfig: virtualMachine.extensionMonitoringAgentConfig
+    monitoringWorkspaceId: logaSentinel.id
+    extensionDependencyAgentConfig: virtualMachine.extensionDependencyAgentConfig
+    extensionNetworkWatcherAgentConfig: virtualMachine.extensionNetworkWatcherAgentConfig
   }
 }]
 
-// 11. Create Recovery Services Vault
+// 12. Create Recovery Services Vault
 module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [

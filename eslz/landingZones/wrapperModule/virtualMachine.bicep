@@ -21,6 +21,29 @@ param subnetResourceId string
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
+@description('Optional. The configuration for the [Anti Malware] extension. Must at least contain the ["enabled": true] property to be executed.')
+param extensionAntiMalwareConfig object = {
+  enabled: false
+}
+
+@description('Optional. The configuration for the [Monitoring Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
+param extensionMonitoringAgentConfig object = {
+  enabled: false
+}
+
+@description('Optional. Resource ID of the monitoring log analytics workspace. Must be set when extensionMonitoringAgentConfig is set to true.')
+param monitoringWorkspaceId string = ''
+
+@description('Optional. The configuration for the [Dependency Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
+param extensionDependencyAgentConfig object = {
+  enabled: false
+}
+
+@description('Optional. The configuration for the [Network Watcher Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
+param extensionNetworkWatcherAgentConfig object = {
+  enabled: false
+}
+
 @description('Required. The administrator login for the Virtual Machine.')
 @secure()
 param vmAdmin string
@@ -183,6 +206,11 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
       }
     ]
     diagnosticWorkspaceId: diagnosticWorkspaceId
+    extensionAntiMalwareConfig: extensionAntiMalwareConfig
+    extensionMonitoringAgentConfig: extensionMonitoringAgentConfig
+    monitoringWorkspaceId: monitoringWorkspaceId
+    extensionDependencyAgentConfig: extensionDependencyAgentConfig 
+    extensionNetworkWatcherAgentConfig: extensionNetworkWatcherAgentConfig    
   }
 }
 
