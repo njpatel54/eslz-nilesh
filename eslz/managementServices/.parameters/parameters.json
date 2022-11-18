@@ -83,9 +83,6 @@
           "eventLogName": "Application",
           "eventTypes": [
             {
-              "eventType": "Critical"
-            },
-            {
               "eventType": "Error"
             },
             {
@@ -104,9 +101,6 @@
           "kind": "WindowsEvent",
           "eventLogName": "System",
           "eventTypes": [
-            {
-              "eventType": "Critical"
-            },
             {
               "eventType": "Error"
             },
