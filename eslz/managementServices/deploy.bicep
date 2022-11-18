@@ -115,8 +115,11 @@ param logsLawName string = 'log-${projowner}-${opscope}-${region}-logs'
 @description('Required. Eventhub Namespace Name for resource Diagnostics Settings - Log Collection.')
 param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-logs'
 
-@description('Required. Automation Account Name.')
-param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
+@description('Required. Automation Account Name - LAW - Logs Collection.')
+param logAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Automation Account Name - LAW - Sentinel')
+param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
 
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
@@ -290,15 +293,15 @@ module eh '../modules/namespaces/deploy.bicep' = {
   }
 }
 
-// 6. Create Automation Account and link it to Log Analytics Workspace
-module aa '../modules/automation/automationAccounts/deploy.bicep' = {
-  name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}'
+// 6. Create Automation Account and link it to Log Analytics Workspace (LAW - Log Collection)
+module aaLoga '../modules/automation/automationAccounts/deploy.bicep' = {
+  name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     eh
   ]
   params:{
-    name: automationAcctName
+    name: logAutomationAcctName
     location: location
     tags: ccsCombinedTags
     linkedWorkspaceResourceId: loga.outputs.resourceId
@@ -310,7 +313,28 @@ module aa '../modules/automation/automationAccounts/deploy.bicep' = {
   }
 }
 
-// 7. Create Azure Key Vault
+// 7. Create Automation Account and link it to Log Analytics Workspace (LAW - Sentinel)
+module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = {
+  name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    eh
+    logaSentinel
+  ]
+  params:{
+    name: sentinelAutomationAcctName
+    location: location
+    tags: ccsCombinedTags
+    linkedWorkspaceResourceId: logaSentinel.outputs.resourceId
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
+    //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+  }
+}
+
+// 8. Create Azure Key Vault
 module akv '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -332,7 +356,7 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
     }
 }
 
-// 8. Configure Diagnostics Settings for Subscriptions
+// 9. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'subDiagSettings-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
@@ -349,7 +373,7 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
-// 9. Create Recovery Services Vault (Management Subscription)
+// 10. Create Recovery Services Vault (Management Subscription)
 module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -582,7 +606,7 @@ module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 10. Create Recovery Services Vault (Shared Services Subscription)
+// 11. Create Recovery Services Vault (Shared Services Subscription)
 module rsv_ssvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)

@@ -179,8 +179,11 @@ param peSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
 @description('Required. SIEM Resource Group Name.')
 param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
 
-@description('Required. Automation Account Name.')
-param automationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
+@description('Required. Automation Account Name - LAW - Logs Collection.')
+param logAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
+
+@description('Required. Automation Account Name - LAW - Sentinel')
+param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
 
 @description('Required. Last four digits of Enrollment Number.')
 param enrollmentID string
@@ -617,24 +620,24 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 16. Retrieve an existing Automation Account resource
-resource aa 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
-  name: automationAcctName
+// 16. Retrieve an existing Automation Account resource (LAW - Logs Collection)
+resource aaLoga 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
+  name: logAutomationAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 17. Create Private Endpoint for Automation Account
-module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${automationAcctName}-${aaGroupId}'
+// 17. Create Private Endpoint for Automation Account (LAW - Logs Collection)
+module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
+  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     priDNSZones
   ]
   params: {
-    name: '${automationAcctName}-${aaGroupId}-pe'
+    name: '${logAutomationAcctName}-${aaGroupId}-pe'
     location: location
     tags: ccsCombinedTags
-    serviceResourceId: aa.id
+    serviceResourceId: aaLoga.id
     groupIds: [
       aaGroupId
     ]
@@ -647,13 +650,43 @@ module aaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId
   }
 }]
 
-// 18. Retrieve an existing Key Vault resource
+// 18. Retrieve an existing Automation Account resource (LAW - Sentinel)
+resource aaLogaSentinel 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
+  name: sentinelAutomationAcctName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 19. Create Private Endpoint for Automation Account (LAW - Sentinel)
+module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
+  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    priDNSZones
+  ]
+  params: {
+    name: '${sentinelAutomationAcctName}-${aaGroupId}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: aaLogaSentinel.id
+    groupIds: [
+      aaGroupId
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.azure-automation.us')
+      ]
+    }
+  }
+}]
+
+// 20. Retrieve an existing Key Vault resource
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 19. Create Private Endpoint for Key Vault
+// 21. Create Private Endpoint for Key Vault
 module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -677,13 +710,13 @@ module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 20. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
+// 22. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
 resource rsv_mgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   name: mgmtVaultName
   scope: resourceGroup(mgmtsubid, mgmtRgName)
 }
 
-// 21. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 23. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributor_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -699,7 +732,7 @@ module roleAssignmentPriDNSAContributor_mgmt '../modules/authorization/roleAssig
   }
 }
 
-// 22. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - VNet RG)
+// 24. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - VNet RG)
 module roleAssignmentNetworkingPerms_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, vnetRgName)
@@ -715,7 +748,7 @@ module roleAssignmentNetworkingPerms_mgmt '../modules/authorization/roleAssignme
   }
 }
 
-// 23. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - MGMT RG)
+// 25. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - MGMT RG)
 module roleAssignmentContributor_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -731,7 +764,7 @@ module roleAssignmentContributor_mgmt '../modules/authorization/roleAssignments/
   }
 }
 
-// 24. Create Private Endpoint for Recovery Services Vault (Management Subscription)
+// 26. Create Private Endpoint for Recovery Services Vault (Management Subscription)
 module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPe_mgmt-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -759,13 +792,13 @@ module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 25. Retrieve an existing Recovery Services Vault Resource (Shared Services Subscription)
+// 27. Retrieve an existing Recovery Services Vault Resource (Shared Services Subscription)
 resource rsv_ssvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   name: ssvcVaultName
   scope: resourceGroup(ssvcsubid, mgmtRgName)
 }
 
-// 26. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 28. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -781,7 +814,7 @@ module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssig
   }
 }
 
-// 27. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
+// 29. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
 module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, vnetRgName)
@@ -797,7 +830,7 @@ module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignme
   }
 }
 
-// 28. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
+// 30. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
 module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -813,7 +846,7 @@ module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/
   }
 }
 
-// 29. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
+// 31. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
 module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPe_mgmt-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
