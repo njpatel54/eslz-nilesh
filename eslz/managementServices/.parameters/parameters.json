@@ -90,9 +90,6 @@
             },
             {
               "eventType": "Information"
-            },
-            {
-              "eventType": "Verbose"
             }
           ]
         },
@@ -109,9 +106,6 @@
             },
             {
               "eventType": "Information"
-            },
-            {
-              "eventType": "Verbose"
             }
           ]
         },
