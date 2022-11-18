@@ -69,7 +69,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/55f3eceb-5573-4f18-9695-226972c6d74a",
                     "parameters": {
                         "logAnalytics_1": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
                         }
                     },
                     "nonComplianceMessage": "Virtual Machines must be enabled for monitoring through Azure Monitor.",
@@ -92,7 +92,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/75714362-cae7-409e-9b99-a8e5075b7fad",
                     "parameters": {
                         "logAnalytics_1": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
                         }
                     },
                     "nonComplianceMessage": "Virtual Machines Scale Sets must be enabled for monitoring through Azure Monitor.",
@@ -115,7 +115,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9",
                     "parameters": {
                         "logAnalyticsWorkspaceIDForVMAgents": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
                         },
                         "membersToExcludeInLocalAdministratorsGroup": {
                             "value": "test@rajdisha.onmicrosoft.us"
@@ -143,7 +143,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deploy-Diagnostics-LogAnalytics",
                     "parameters": {
                         "logAnalytics": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-logs"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-logs"
                         }
                     },
                     "nonComplianceMessage": "Azure resources must be configured to forward diagnostics logs and metrics to Azure Log Analytics workspace.",
@@ -172,7 +172,7 @@
                     "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deploy-Diagnostics-LogAnalytics-Sentinel",
                     "parameters": {
                         "logAnalytics": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-prod-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-prod-usva-siem"
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
                         }
                     },
                     "nonComplianceMessage": "Azure resources must be configured to forward diagnostics logs and metrics to Azure Log Analytics workspace configured for Sentinel.",
@@ -186,6 +186,22 @@
                         "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
                         "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
                     ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deny-PaaS-PublicEndpoints",
+                    "description": "This policy initiative is a group of policies that prevents creation of Azure PaaS services with exposed public endpoints",
+                    "displayName": "Deny-PaaS-PublicEndpoints",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deny-PaaS-PublicEndpoints",
+                    "parameters": {},
+                    "nonComplianceMessage": "Azure PaaS Services must be configured with Private Endpoints to avoid any security exposure through Public Endpoints.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "",
+                    "identity": "",
+                    "roleDefinitionIds": [],
                     "managementGroupId": "mg-A2g"
                 }
             ]

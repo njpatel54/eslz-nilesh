@@ -1,6 +1,6 @@
 {
     "properties": {
-        "displayName": "Deploy Configure diagnostic settings for Azure Kubernetes Service to a Storage Account",
+        "displayName": "Deploy Diagnostic Settings for Azure Kubernetes Service to a Storage Account",
         "mode": "Indexed",
         "description": "Deploys the diagnostic settings for Azure Kubernetes Service to stream resource logs to a Storage Account.",
         "metadata": {

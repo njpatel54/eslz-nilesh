@@ -30,6 +30,7 @@ module policyAssignment_mg '../modules/authorization/policyAssignments/managemen
   }
 }]
 
+/*
 // 2 - Create Policy Assignment at Subscription Scope
 module policyAssignment_sub '../modules/authorization/policyAssignments/subscription/deploy.bicep' = [ for (policyAssignment, i) in subPolicyAssignments :  {
   name: '${policyAssignment.name}-policyAssignment-${i}'
@@ -51,7 +52,6 @@ module policyAssignment_sub '../modules/authorization/policyAssignments/subscrip
   }
 }]
 
-/*
 // 3 - Create Policy Assignment at Resource Group Scope
 module policyAssignment_rg '../modules/authorization/policyAssignments/resourceGroup/deploy.bicep' = [ for (policyAssignment, i) in rgPolicyAssignments :  {
   name: '${policyAssignment.name}-policyAssignment-${i}'
