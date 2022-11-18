@@ -1,21 +1,13 @@
-// Module - Subscriptions (Landing Zones and IRADs) 
-
 //Route Table
 
 targetScope = 'managementGroup'
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// "billingScope" -	Billing scope of the subscription.                                                                                              //
-// For CustomerLed and FieldLed - /billingAccounts/{billingAccountName}/billingProfiles/{billingProfileName}/invoiceSections/{invoiceSectionName}   //
-// For PartnerLed - /billingAccounts/{billingAccountName}/customers/{customerName}                                                                  //
-// For Legacy EA - /billingAccounts/{billingAccountName}/enrollmentAccounts/{enrollmentAccountName}                                                 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Start - Common parameters
 @description('Required. Location for all resources.')
 param location string
 
 @description('subscriptionId for the deployment')
-param subscriptionId string
+param subscriptionId string = 'df3b1809-17d0-47a0-9241-d2724780bdac'
 
 @description('Required. To deploy "lzSql" module or not')
 param lzSqlDeploy bool
@@ -43,22 +35,7 @@ param dynamictags object = ({
 var combinedTags = union(dynamictags, tags.lzTags.value)
 
 @description('Required. Project Owner (projowner) parameter.')
-@allowed([
-  'ccs'
-  'proj'
-])
 param projowner string
-
-@description('Required. Operational Scope (opscope) parameter.')
-@allowed([
-  'prod'
-  'dev'
-  'qa'
-  'stage'
-  'test'
-  'sand'
-])
-param opscope string
 
 @description('Required. Region (region) parameter.')
 @allowed([
@@ -70,7 +47,7 @@ param region string
 
 @description('Name of the virtual machine to be created')
 @maxLength(15)
-param virtualMachineNamePrefix string = 'vm-${projowner}-${opscope}-0'
+param virtualMachineNamePrefix string = 'vm-${projowner}-0'
 
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string
@@ -78,8 +55,14 @@ param suffix string
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string
 
+@description('Required. "projowner" parameter used for Platform.')
+param platformProjOwner string
+
+@description('Required. "opscope" parameter used for Platform.')
+param platformOpScope string
+
 @description('Required. Subnet name to be used for Private Endpoint.')
-param mgmtSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
+param mgmtSubnetName string = 'snet-${projowner}-${region}-mgmt'
 // End - Common parameters
 
 // Start - 'subRbac' Module Parameters
@@ -89,13 +72,13 @@ param subRoleAssignments array = []
 
 // Start - 'rgs' Module Parameters
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
-param wlRgName string = 'rg-${projowner}-${opscope}-${region}-wl01'
+param wlRgName string = 'rg-${projowner}-${region}-wl01'
 
 @description('Required. Name of the resourceGroup, where networking components will be.')
-param vnetRgName string = 'rg-${projowner}-${opscope}-${region}-vnet'
+param vnetRgName string = 'rg-${projowner}-${region}-vnet'
 
 @description('Required. Name of the resourceGroup, where centralized management components will be.')
-param mgmtRgName string = 'rg-${projowner}-${opscope}-${region}-mgmt'
+param mgmtRgName string = 'rg-${projowner}-${region}-mgmt'
 
 @description('Contains the array of resourceGroup names.')
 param resourceGroups array = [
@@ -128,21 +111,24 @@ param networkSecurityGroups array = []
 param connsubid string
 
 @description('Required. Resource Group name for Private DNS Zones.')
-param priDNSZonesRgName string = 'rg-${projowner}-${opscope}-${region}-dnsz'
+param priDNSZonesRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-dnsz'
 
 @description('Required. Subscription ID of Management Subscription.')
 param mgmtsubid string
 
 @description('Required. SIEM Resource Group Name.')
-param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
+param siemRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-siem'
 
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
 // End - 'virtualNetwork' Module Parameters
 
 // Start - 'sa' Module Parameters
+@description('Required. Taking 7 characters from billingAccount parameter to be used in Storage Account name')
+param billingAccountShort string = take('${billingAccount}', 7)
+
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${region}${suffix}', 24))
+param stgAcctName string = toLower(take('st${projowner}${billingAccountShort}${region}logs', 24))
 
 @description('Required. Storage Account SKU.')
 param storageaccount_sku string
@@ -156,6 +142,7 @@ param storageaccount_sku string
   'queue'
   'queue_secondary'
   'file'
+  'file_secondary'
   'web'
   'web_secondary'
   'dfs'
@@ -167,7 +154,7 @@ param stgGroupIds array
 // Start - 'akv' Module Parameters
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
-param lzAkvName string = toLower(take('akv-${projowner}-${opscope}-${region}-${suffix}', 24))
+param lzAkvName string = toLower(take('kv-${projowner}-${region}', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 @allowed([
@@ -207,7 +194,7 @@ param managementGroupId string
 param subscriptionOwnerId string
 
 @description('Required. Log Ananlytics Workspace Name for resource Diagnostics Settings - Log Collection.')
-param logsLawName string = 'log-${projowner}-${opscope}-${region}-${suffix}'
+param logsLawName string = 'log-${projowner}-${region}'
 
 @description('Optional. List of gallerySolutions to be created in the Log Ananlytics Workspace for resource Diagnostics Settings - Log Collection.')
 param logaGallerySolutions array = []
@@ -227,16 +214,16 @@ param publicNetworkAccessForIngestion string
 param publicNetworkAccessForQuery string
 
 @description('Required. Azure Monitor Private Link Scope Name.')
-param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
+param amplsName string = 'ampls-${platformProjOwner}-${platformOpScope}-${region}-hub'
 
 @description('Required. Azure SQL Server Name (Primary)')
-param sqlPrimaryServerName string = 'sql-${projowner}-${opscope}-${region}-${suffix}1'
+param sqlPrimaryServerName string = toLower('sql-${projowner}-${region}-01')
 
 @description('Required. Azure SQL Server Name (Primary)')
-param sqlSecondaryServerName string = 'sql-${projowner}-${opscope}-${region}-${suffix}2'
+param sqlSecondaryServerName string = toLower('sql-${projowner}-${region}-02')
 
 @description('Conditional. Azure SQL Fail Over Group Name.')
-param sqlFailOverGroupName string = 'fogrp-${projowner}-${opscope}-${region}-${suffix}'
+param sqlFailOverGroupName string = toLower('fogrp-${projowner}-${region}')
 
 @description('Conditional. The Azure Active Directory (AAD) administrator authentication. Required if no `administratorLogin` & `administratorLoginPassword` is provided.')
 param administrators object = {}
@@ -253,10 +240,13 @@ param sqlAdministratorLogin string = ''
 param sqlAdministratorLoginPassword string = ''
 
 @description('Optional. The array of Virtual Machines.')
-param virtualMachines array 
+param virtualMachines array
 
 @description('Virtual Machine Size')
 param virtualMachineSize string = 'Standard_DS2_v2'
+
+@description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
+param sentinelLawName string = 'log-${platformProjOwner}-${platformOpScope}-${region}-siem'
 
 @description('Required. Load content from json file to iterate over any array in the parameters file')
 var params = json(loadTextContent('.parameters/parameters.json'))
@@ -265,14 +255,14 @@ var params = json(loadTextContent('.parameters/parameters.json'))
 var lzVMsSubnetName = params.parameters.subnets.value[2].name
 
 @description('Required. Name of the Azure Recovery Service Vault.')
-param vaultName  string = 'rsv-${projowner}-${opscope}-${region}-${suffix}'
+param vaultName string = 'rsv-${projowner}-${region}'
 
 @description('Required. Name of the separate resource group to store the restore point collection of managed virtual machines - instant recovery points .')
-param rpcRgName string = 'rg-${projowner}-${opscope}-${region}-rpc'
+param rpcRgName string = 'rg-${projowner}-${region}-rpc'
 
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
-param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
+param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
 
 // 1. Retrieve exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
@@ -280,26 +270,32 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
+// 2. Retrieve existing Log Analytics Workspace (Sentinel - From Management Subscription)
+resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: sentinelLawName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
 /*
-// 2. Create Subscription
+// 3. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
     location: location
-    combinedTags: combinedTags
     billingAccount: billingAccount
     enrollmentAccount: enrollmentAccount
     subscriptionAlias: subscriptionAlias
     subscriptionDisplayName: subscriptionDisplayName
     subscriptionWorkload: subscriptionWorkload
     managementGroupId: managementGroupId
-    subscriptionOwnerId: subscriptionOwnerId
   }
 }
 */
-// 3. Create Resoruce Groups
+// 4. Create Resource Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
+  dependsOn: [
+    //sub
+  ]
   params: {
     location: location
     combinedTags: combinedTags
@@ -309,7 +305,7 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
   }
 }
 
-// 4. Create Log Analytics Workspace
+// 5. Create Log Analytics Workspace
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   dependsOn: [
@@ -330,7 +326,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   }
 }
 
-// 5. Configure Subscription
+// 6. Configure Subscription
 module subConfig 'wrapperModule/subconfig.bicep' = {
   name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
@@ -340,12 +336,13 @@ module subConfig 'wrapperModule/subconfig.bicep' = {
     location: location
     subRoleAssignments: subRoleAssignments
     subscriptionId: subscriptionId
+    combinedTags: combinedTags
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
 
-// 6. Create Virtual Network
+// 7. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   dependsOn: [
@@ -369,8 +366,8 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   }
 }
 
-// 7. Create Storage Account
-module lzSa 'wrapperModule/storage.bicep' = if(lzSaDeploy) {
+// 8. Create Storage Account
+module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
     lzVnet
@@ -393,8 +390,8 @@ module lzSa 'wrapperModule/storage.bicep' = if(lzSaDeploy) {
   }
 }
 
-// 8. Create Azure Key Vault
-module lzAkv 'wrapperModule/keyVault.bicep' = if(lzAkvDeploy) {
+// 9. Create Azure Key Vault
+module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
     lzVnet
@@ -417,8 +414,8 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if(lzAkvDeploy) {
   }
 }
 
-// 9. Create SQL Server(s)
-module lzSql 'wrapperModule/sql.bicep' = if(lzSqlDeploy) {
+// 10. Create SQL Server(s)
+module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
     lzVnet
@@ -440,8 +437,8 @@ module lzSql 'wrapperModule/sql.bicep' = if(lzSqlDeploy) {
   }
 }
 
-// 10. Create Virtual Machine(s)
-module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: if(lzVmsDeploy) {
+// 11. Create Virtual Machine(s)
+module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: if (lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   dependsOn: [
     lzVnet
@@ -453,19 +450,24 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
     subscriptionId: subscriptionId
     wlRgName: wlRgName
     vmAdmin: akv.getSecret(virtualMachine.vmAdmin)
-    vmAdminPassword: akv.getSecret(virtualMachine.vmAdminPassword)     
+    vmAdminPassword: akv.getSecret(virtualMachine.vmAdminPassword)
     osType: virtualMachine.osType
-    virtualMachineSize: virtualMachineSize    
+    virtualMachineSize: virtualMachineSize
     licenseType: virtualMachine.licenseType
     availabilityZone: virtualMachine.availabilityZone
     operatingSystem: virtualMachine.operatingSystem
     dataDisks: virtualMachine.dataDisks
     subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    extensionAntiMalwareConfig: virtualMachine.extensionAntiMalwareConfig
+    extensionMonitoringAgentConfig: virtualMachine.extensionMonitoringAgentConfig
+    monitoringWorkspaceId: logaSentinel.id
+    extensionDependencyAgentConfig: virtualMachine.extensionDependencyAgentConfig
+    extensionNetworkWatcherAgentConfig: virtualMachine.extensionNetworkWatcherAgentConfig
   }
 }]
 
-// 11. Create Recovery Services Vault
+// 12. Create Recovery Services Vault
 module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
@@ -486,6 +488,22 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
     priDNSZonesRgName: priDNSZonesRgName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+  }
+}
+
+@description('Required. Parameter for "Deploy-VM-Backup" policy assignment')
+param deployVMBackup object
+
+// 13. Create Policy Assignment and Remediation
+module policyAssignment 'wrapperModule/polAssignment.bicep' = {
+  name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
+  dependsOn: [
+    rsv
+    lzVms
+  ]
+  params: {
+    subscriptionId: subscriptionId
+    deployVMBackup: deployVMBackup
   }
 }
 
@@ -542,7 +560,7 @@ output subscriptionDisplayName string = subscriptionDisplayName
 output subscriptionWorkload string = subscriptionWorkload
 output managementGroupId string = managementGroupId
 output subscriptionOwnerId string = subscriptionOwnerId
-output subscriptionId string = subscriptionId
+//output subscriptionId string = subscriptionId
 // End - Outputs to supress warnings - "unused parameters"
 
 /*

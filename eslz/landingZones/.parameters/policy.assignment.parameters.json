@@ -20,11 +20,11 @@
                     },
                     "inclusionTagValue": {
                         "value": [
-                            "lz04"
+                            "LZ01"
                         ]
                     },
                     "backupPolicyId": {
-                        "value": "/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourcegroups/rg-lz04-usva-mgmt/providers/microsoft.recoveryservices/vaults/rsv-lz04-usva/backuppolicies/lz04vmBackupPolicy"
+                        "value": "/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourcegroups/rg-LZ01-usva-mgmt/providers/microsoft.recoveryservices/vaults/rsv-lz01-usva/backuppolicies/lz01vmBackupPolicy"
                     }
                 },
                 "nonComplianceMessage": "Virutal Machines must be backed up to Recovery Services Vault in the same location.",
