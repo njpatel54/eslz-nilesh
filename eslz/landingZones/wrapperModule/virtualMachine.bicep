@@ -21,20 +21,8 @@ param subnetResourceId string
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
-@description('Optional. The configuration for the [Anti Malware] extension. Must at least contain the ["enabled": true] property to be executed.')
-param extensionAntiMalwareConfig object = {}
-
-@description('Optional. The configuration for the [Monitoring Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
-param extensionMonitoringAgentConfig object = {}
-
 @description('Optional. Resource ID of the monitoring log analytics workspace. Must be set when extensionMonitoringAgentConfig is set to true.')
 param monitoringWorkspaceId string = ''
-
-@description('Optional. The configuration for the [Dependency Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
-param extensionDependencyAgentConfig object = {}
-
-@description('Optional. The configuration for the [Network Watcher Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
-param extensionNetworkWatcherAgentConfig object = {}
 
 @description('Required. The administrator login for the Virtual Machine.')
 @secure()
@@ -198,11 +186,34 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
       }
     ]
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    extensionAntiMalwareConfig: extensionAntiMalwareConfig
-    extensionMonitoringAgentConfig: extensionMonitoringAgentConfig
+    extensionMonitoringAgentConfig: {
+      enabled: true
+    }
     monitoringWorkspaceId: monitoringWorkspaceId
-    extensionDependencyAgentConfig: extensionDependencyAgentConfig 
-    extensionNetworkWatcherAgentConfig: extensionNetworkWatcherAgentConfig    
+    extensionDependencyAgentConfig: {
+      enabled: true
+    }
+    extensionNetworkWatcherAgentConfig: {
+      enabled: true
+    }
+    extensionAntiMalwareConfig: {
+      enabled: true
+      settings: {
+        AntimalwareEnabled: 'true'
+        Exclusions: {
+          Extensions: '.ext1;.ext2'
+          Paths: 'c:\\excluded-path-1;c:\\excluded-path-2'
+          Processes: 'excludedproc1.exe;excludedproc2.exe'
+        }
+        RealtimeProtectionEnabled: 'true'
+        ScheduledScanSettings: {
+          day: '7'
+          isEnabled: 'true'
+          scanType: 'Quick'
+          time: '120'
+        }
+      }
+    }
   }
 }
 
