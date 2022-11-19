@@ -878,15 +878,10 @@
     "softwareUpdateConfigurations": {
       "value": [
         {
-          "name": "Windows_ZeroDay",
+          "name": "Windows-VMs",
           "frequency": "Month",
           "operatingSystem": "Windows",
           "rebootSetting": "IfRequired",
-          "scopeByTags": {
-            "Update": [
-              "Automatic-Wave1"
-            ]
-          },
           "maintenanceWindow": "PT4H",
           "updateClassifications": [
             "Critical",
@@ -914,7 +909,7 @@
           "startTime": "22:00"
         },
         {
-          "name": "Linux_ZeroDay",
+          "name": "Linux-VMs",
           "frequency": "OneTime",
           "operatingSystem": "Linux",
           "rebootSetting": "IfRequired",

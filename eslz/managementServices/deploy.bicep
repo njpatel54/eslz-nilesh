@@ -299,7 +299,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
 
 // 6. Create Automation Account and link it to Log Analytics Workspace (LAW - Log Collection)
 module aaLoga '../modules/automation/automationAccounts/deploy.bicep' = {
-  name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}'
+  name: 'aaLoga-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     eh
@@ -320,7 +320,7 @@ module aaLoga '../modules/automation/automationAccounts/deploy.bicep' = {
 
 // 7. Create Automation Account and link it to Log Analytics Workspace (LAW - Sentinel)
 module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = {
-  name: 'aa-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}'
+  name: 'aaLogaSentinel-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     eh
@@ -332,7 +332,7 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
     tags: ccsCombinedTags
     publicNetworkAccess: automationAcctPublicNetworkAccess
     linkedWorkspaceResourceId: logaSentinel.outputs.resourceId
-    softwareUpdateConfigurations: softwareUpdateConfigurations
+    //softwareUpdateConfigurations: softwareUpdateConfigurations
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
@@ -340,6 +340,28 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
     //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }
+
+module aaUpdateMgmtManagement '../modules/automation/automationAccounts/softwareUpdateConfigurations/deploy.bicep' = [ for softwareUpdateConfiguration in softwareUpdateConfigurations: {
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  name: 'aaUpdateMgmtManagement-${take(uniqueString(deployment().name, location), 4)}-${softwareUpdateConfiguration.name}'
+  params: {
+    automationAccountName: aaLogaSentinel.outputs.name
+    name: 'Management-${softwareUpdateConfiguration.name}'
+    frequency: softwareUpdateConfiguration.frequency
+    operatingSystem: softwareUpdateConfiguration.operatingSystem
+    rebootSetting: softwareUpdateConfiguration.rebootSetting
+    maintenanceWindow: softwareUpdateConfiguration.maintenanceWindow
+    updateClassifications: softwareUpdateConfiguration.updateClassifications
+    includeUpdates: softwareUpdateConfiguration.includeUpdates
+    excludeUpdates: softwareUpdateConfiguration.excludeUpdates
+    interval: softwareUpdateConfiguration.interval
+    monthlyOccurrences: softwareUpdateConfiguration.monthlyOccurrences
+    startTime:softwareUpdateConfiguration.startTime
+    scopeByResources: [
+      mgmtsubid
+    ]
+  }
+}]
 
 // 8. Create Azure Key Vault
 module akv '../modules/keyVault/vaults/deploy.bicep' = {
