@@ -88,7 +88,7 @@ resource server 'Microsoft.Sql/servers@2021-05-01-preview' = {
     } : null
     version: '12.0'
     minimalTlsVersion: minimalTlsVersion
-    publicNetworkAccess: !empty(publicNetworkAccess) ? publicNetworkAccess : 'Disabled'
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 

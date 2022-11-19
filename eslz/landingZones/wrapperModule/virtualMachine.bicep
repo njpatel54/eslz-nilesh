@@ -23,12 +23,12 @@ param diagnosticWorkspaceId string = ''
 
 @description('Optional. The configuration for the [Anti Malware] extension. Must at least contain the ["enabled": true] property to be executed.')
 param extensionAntiMalwareConfig object = {
-  enabled: false
+  enabled: true
 }
 
 @description('Optional. The configuration for the [Monitoring Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
 param extensionMonitoringAgentConfig object = {
-  enabled: false
+  enabled: true
 }
 
 @description('Optional. Resource ID of the monitoring log analytics workspace. Must be set when extensionMonitoringAgentConfig is set to true.')
@@ -36,12 +36,12 @@ param monitoringWorkspaceId string = ''
 
 @description('Optional. The configuration for the [Dependency Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
 param extensionDependencyAgentConfig object = {
-  enabled: false
+  enabled: true
 }
 
 @description('Optional. The configuration for the [Network Watcher Agent] extension. Must at least contain the ["enabled": true] property to be executed.')
 param extensionNetworkWatcherAgentConfig object = {
-  enabled: false
+  enabled: true
 }
 
 @description('Required. The administrator login for the Virtual Machine.')
