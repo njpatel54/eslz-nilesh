@@ -187,14 +187,14 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
     ]
     diagnosticWorkspaceId: diagnosticWorkspaceId
     extensionMonitoringAgentConfig: {
-      enabled: true
+      enabled: false
     }
     monitoringWorkspaceId: monitoringWorkspaceId
     extensionDependencyAgentConfig: {
-      enabled: true
+      enabled: false
     }
     extensionNetworkWatcherAgentConfig: {
-      enabled: true
+      enabled: false
     }
     extensionAntiMalwareConfig: {
       enabled: true
