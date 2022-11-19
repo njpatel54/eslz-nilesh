@@ -138,7 +138,7 @@ param stgPublicNetworkAccess string = 'Disabled'
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
-param kvPublicNetworkAccess string = 'Enabled'
+param kvPublicNetworkAccess string = 'Disabled'
 
 @description('Optional. Key Vault Role Assignment array.')
 param kvRoleAssignments array
