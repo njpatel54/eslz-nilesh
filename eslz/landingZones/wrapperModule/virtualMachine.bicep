@@ -42,7 +42,7 @@ param osType string
 @description('Optional. Specifies that the image or disk that is being used was licensed on-premises. This element is only used for images that contain the Windows Server operating system.')
 @allowed([
   'Windows_Client'
-  'Windows_Server'    
+  'Windows_Server'
   'RHEL_BYOS'
   'SLES_BYOS'
   ''
@@ -196,7 +196,7 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
     extensionNetworkWatcherAgentConfig: {
       enabled: false
     }
-    extensionAntiMalwareConfig: {
+    extensionAntiMalwareConfig: osType == 'Windows' ? {
       enabled: true
       settings: {
         AntimalwareEnabled: 'true'
@@ -213,6 +213,8 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
           time: '120'
         }
       }
+    } : {
+      enabled: false
     }
   }
 }
