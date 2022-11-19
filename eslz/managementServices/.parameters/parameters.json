@@ -820,16 +820,13 @@
             },
             {
               "counterName": "Available MBytes Swap"
-            }
-            ,
+            },
             {
               "counterName": "% Available Swap Space"
-            }
-            ,
+            },
             {
               "counterName": "Used MBytes Swap Space"
-            }
-            ,
+            },
             {
               "counterName": "% Used Swap Space"
             }
@@ -875,6 +872,65 @@
           "name": "sampleLinuxPerfCollection1",
           "kind": "LinuxPerformanceCollection",
           "state": "Enabled"
+        }
+      ]
+    },
+    "softwareUpdateConfigurations": {
+      "value": [
+        {
+          "name": "Windows_ZeroDay",
+          "frequency": "Month",
+          "operatingSystem": "Windows",
+          "rebootSetting": "IfRequired",
+          "scopeByTags": {
+            "Update": [
+              "Automatic-Wave1"
+            ]
+          },
+          "maintenanceWindow": "PT4H",
+          "updateClassifications": [
+            "Critical",
+            "Security",
+            "UpdateRollup",
+            "FeaturePack",
+            "ServicePack",
+            "Definition",
+            "Tools",
+            "Updates"
+          ],
+          "includeUpdates": [
+            "654321"
+          ],
+          "excludeUpdates": [
+            "123456"
+          ],
+          "interval": 1,
+          "monthlyOccurrences": [
+            {
+              "occurrence": 3,
+              "day": "Friday"
+            }
+          ],
+          "startTime": "22:00"
+        },
+        {
+          "name": "Linux_ZeroDay",
+          "frequency": "OneTime",
+          "operatingSystem": "Linux",
+          "rebootSetting": "IfRequired",
+          "maintenanceWindow": "PT4H",
+          "updateClassifications": [
+            "Critical",
+            "Security",
+            "Other"
+          ],
+          "includeUpdates": [
+            "kernel"
+          ],
+          "excludeUpdates": [
+            "icacls"
+          ],
+          "startTime": "22:00"
         }
       ]
     },

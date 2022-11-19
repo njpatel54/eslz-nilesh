@@ -121,6 +121,9 @@ param logAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 @description('Required. Automation Account Name - LAW - Sentinel')
 param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
 
+@description('Optional. List of softwareUpdateConfigurations to be created in the automation account.')
+param softwareUpdateConfigurations array = []
+
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
 
@@ -326,6 +329,7 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
     location: location
     tags: ccsCombinedTags
     linkedWorkspaceResourceId: logaSentinel.outputs.resourceId
+    softwareUpdateConfigurations: softwareUpdateConfigurations
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
