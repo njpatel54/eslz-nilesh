@@ -28,7 +28,7 @@ param secondaryLocation string = 'USGovTexas'
 param administrators object
 
 @description('Optional. Whether or not public endpoint access is allowed for this server. Value is optional but if passed in, must be "Enabled" or "Disabled".')
-param publicNetworkAccess string = 'Enabled'
+param publicNetworkAccess string = 'Disabled'
 
 @description('Optional. The databases to create in the server.')
 param databases array

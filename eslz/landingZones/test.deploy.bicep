@@ -459,11 +459,11 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
     dataDisks: virtualMachine.dataDisks
     subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
-    extensionAntiMalwareConfig: virtualMachine.extensionAntiMalwareConfig.enabled
-    extensionMonitoringAgentConfig: virtualMachine.extensionMonitoringAgentConfig.enabled
+    extensionAntiMalwareConfig: virtualMachine.extensionAntiMalwareConfig
+    extensionMonitoringAgentConfig: virtualMachine.extensionMonitoringAgentConfig
     monitoringWorkspaceId: logaSentinel.id
-    extensionDependencyAgentConfig: virtualMachine.extensionDependencyAgentConfig.enabled
-    extensionNetworkWatcherAgentConfig: virtualMachine.extensionNetworkWatcherAgentConfig.enabled
+    extensionDependencyAgentConfig: virtualMachine.extensionDependencyAgentConfig
+    extensionNetworkWatcherAgentConfig: virtualMachine.extensionNetworkWatcherAgentConfig
   }
 }]
 
