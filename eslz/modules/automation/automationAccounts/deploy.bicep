@@ -30,6 +30,9 @@ param keyvaultUri string = ''
 @description('Optional. The key version of the key used to encrypt data. This parameter is needed only if you enable Microsoft.Keyvault as encryptionKeySource.')
 param keyVersion string = ''
 
+@description('Optional. Indicates whether traffic on the non-ARM endpoint (Webhook/Agent) is allowed from the public internet')
+param publicNetworkAccess bool = true
+
 @description('Optional. List of modules to be created in the automation account.')
 param modules array = []
 
@@ -165,6 +168,7 @@ resource automationAccount 'Microsoft.Automation/automationAccounts@2020-01-13-p
         keyVersion: keyVersion
       } : null
     }
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 
