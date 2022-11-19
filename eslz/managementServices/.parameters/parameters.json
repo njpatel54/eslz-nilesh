@@ -721,7 +721,7 @@
         {
           "name": "sampleLinuxPerf1",
           "kind": "LinuxPerformanceObject",
-          "syslogSeverities": [
+          "performanceCounters": [
             {
               "counterName": "% Free Inodes"
             },
@@ -763,7 +763,7 @@
         {
           "name": "sampleLinuxPerf2",
           "kind": "LinuxPerformanceObject",
-          "syslogSeverities": [
+          "performanceCounters": [
             {
               "counterName": "% Processor Time"
             },
@@ -796,7 +796,7 @@
         {
           "name": "sampleLinuxPerf3",
           "kind": "LinuxPerformanceObject",
-          "syslogSeverities": [
+          "performanceCounters": [
             {
               "counterName": "Available MBytes Memory"
             },
@@ -838,7 +838,7 @@
         {
           "name": "sampleLinuxPerf4",
           "kind": "LinuxPerformanceObject",
-          "syslogSeverities": [
+          "performanceCounters": [
             {
               "counterName": "Total Bytes Transmitted"
             },
