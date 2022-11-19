@@ -24,7 +24,7 @@
       "value": ""
     },
     "suffix": {
-      "value": "lz01"
+      "value": "lz50"
     },
     "lzSqlDeploy": {
       "value": true
@@ -66,7 +66,7 @@
       "value": [
         {
           "subscriptionId": "",
-          "resourceGroupName": "rg-lz01-usva-vnet",
+          "resourceGroupName": "rg-lz50-usva-vnet",
           "description": "Deploy Private Endpoint - Networking Permissions",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
           "principalIds": [
@@ -81,7 +81,7 @@
     "networkSecurityGroups": {
       "value": [
         {
-          "name": "nsg-lz01-usva-vms",
+          "name": "nsg-lz50-usva-vms",
           "securityRules": [
             {
               "name": "AllowInboundBastionHostTraffic",
@@ -106,7 +106,7 @@
       ]
     },
     "vnetName": {
-      "value": "vnet-lz01-usva"
+      "value": "vnet-lz50-usva"
     },
     "vnetAddressPrefixes": {
       "value": [
@@ -116,7 +116,7 @@
     "subnets": {
       "value": [
         {
-          "name": "snet-lz01-usva-app",
+          "name": "snet-lz50-usva-app",
           "addressPrefix": "10.30.64.0/26",
           "serviceEndpoints": [
             {
@@ -139,7 +139,7 @@
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
-          "name": "snet-lz01-usva-data",
+          "name": "snet-lz50-usva-data",
           "addressPrefix": "10.30.64.64/26",
           "serviceEndpoints": [
             {
@@ -162,7 +162,7 @@
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
-          "name": "snet-lz01-usva-mgmt",
+          "name": "snet-lz50-usva-mgmt",
           "addressPrefix": "10.30.64.128/26",
           "serviceEndpoints": [
             {
@@ -185,7 +185,7 @@
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
-          "name": "snet-lz01-usva-web",
+          "name": "snet-lz50-usva-web",
           "addressPrefix": "10.30.64.192/26",
           "serviceEndpoints": [
             {
@@ -265,7 +265,7 @@
     "databases": {
       "value": [
         {
-          "name": "sqldb-lz01-usva",
+          "name": "sqldb-lz50-usva",
           "collation": "SQL_Latin1_General_CP1_CI_AS",
           "skuTier": "GeneralPurpose",
           "skuName": "GP_Gen5",
@@ -365,7 +365,7 @@
       ]
     },
     "projowner": {
-      "value": "lz01"
+      "value": "lz50"
     },
     "region": {
       "value": "usva"
