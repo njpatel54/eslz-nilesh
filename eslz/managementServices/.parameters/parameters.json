@@ -910,7 +910,7 @@
         },
         {
           "name": "Linux-VMs",
-          "frequency": "OneTime",
+          "frequency": "Month",
           "operatingSystem": "Linux",
           "rebootSetting": "IfRequired",
           "maintenanceWindow": "PT4H",
@@ -931,6 +931,25 @@
               "occurrence": 3,
               "day": "Friday"
             }
+          ],
+          "startTime": "23:00"
+        },
+        {
+          "name": "Linux-VMs-Once",
+          "frequency": "OneTime",
+          "operatingSystem": "Linux",
+          "rebootSetting": "IfRequired",
+          "maintenanceWindow": "PT4H",
+          "updateClassifications": [
+            "Critical",
+            "Security",
+            "Other"
+          ],
+          "includeUpdates": [
+            "kernel"
+          ],
+          "excludeUpdates": [
+            "icacls"
           ],
           "startTime": "23:00"
         }
