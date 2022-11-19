@@ -906,7 +906,7 @@
               "day": "Friday"
             }
           ],
-          "startTime": "22:00"
+          "startTime": "23:00"
         },
         {
           "name": "Linux-VMs",
@@ -925,7 +925,14 @@
           "excludeUpdates": [
             "icacls"
           ],
-          "startTime": "22:00"
+          "interval": 1,
+          "monthlyOccurrences": [
+            {
+              "occurrence": 3,
+              "day": "Friday"
+            }
+          ],
+          "startTime": "23:00"
         }
       ]
     },
