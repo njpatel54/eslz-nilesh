@@ -27,6 +27,9 @@ param secondaryLocation string = 'USGovTexas'
 @description('Conditional. The Azure Active Directory (AAD) administrator authentication. Required if no `administratorLogin` & `administratorLoginPassword` is provided.')
 param administrators object
 
+@description('Optional. Whether or not public endpoint access is allowed for this server. Value is optional but if passed in, must be "Enabled" or "Disabled".')
+param publicNetworkAccess string = 'Enabled'
+
 @description('Optional. The databases to create in the server.')
 param databases array
 
@@ -69,6 +72,7 @@ module sqlPrimaryServer '../../modules/sql/servers/deploy.bicep' = {
       tenantId: administrators.tenantId
     }
     systemAssignedIdentity: true
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 
@@ -91,6 +95,7 @@ module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
       tenantId: administrators.tenantId
     }
     systemAssignedIdentity: true
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 

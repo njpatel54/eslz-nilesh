@@ -52,6 +52,9 @@ param administrators object = {}
 @description('Optional. Minimal TLS version allowed.')
 param minimalTlsVersion string = '1.2'
 
+@description('Optional. Whether or not public endpoint access is allowed for this server. Value is optional but if passed in, must be "Enabled" or "Disabled".')
+param publicNetworkAccess string = 'Disabled'
+
 @description('Optional. Configuration details for private endpoints. For security reasons, it is recommended to use private endpoints whenever possible.')
 param privateEndpoints array = []
 
@@ -85,6 +88,7 @@ resource server 'Microsoft.Sql/servers@2021-05-01-preview' = {
     } : null
     version: '12.0'
     minimalTlsVersion: minimalTlsVersion
+    publicNetworkAccess: !empty(publicNetworkAccess) ? publicNetworkAccess : 'Disabled'
   }
 }
 
