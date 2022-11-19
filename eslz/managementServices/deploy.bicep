@@ -118,6 +118,9 @@ param eventhubNamespaceName string = 'evhns-${projowner}-${opscope}-${region}-lo
 @description('Required. Automation Account Name - LAW - Logs Collection.')
 param logAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 
+@description('Optional. Indicates whether traffic on the non-ARM endpoint (Webhook/Agent) is allowed from the public internet')
+param automationAcctPublicNetworkAccess bool = false
+
 @description('Required. Automation Account Name - LAW - Sentinel')
 param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
 
@@ -127,17 +130,15 @@ param softwareUpdateConfigurations array = []
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
 
+@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
+param stgPublicNetworkAccess string = 'Disabled'
+
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
-@allowed([
-  ''
-  'Enabled'
-  'Disabled'
-])
-param publicNetworkAccess string = 'Enabled'
+param kvPublicNetworkAccess string = 'Enabled'
 
 @description('Optional. Key Vault Role Assignment array.')
 param kvRoleAssignments array
@@ -273,7 +274,7 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
     diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: stgPublicNetworkAccess
   }
 }
 
@@ -307,6 +308,7 @@ module aaLoga '../modules/automation/automationAccounts/deploy.bicep' = {
     name: logAutomationAcctName
     location: location
     tags: ccsCombinedTags
+    publicNetworkAccess: automationAcctPublicNetworkAccess
     linkedWorkspaceResourceId: loga.outputs.resourceId
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: sa.outputs.resourceId
@@ -328,6 +330,7 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
     name: sentinelAutomationAcctName
     location: location
     tags: ccsCombinedTags
+    publicNetworkAccess: automationAcctPublicNetworkAccess
     linkedWorkspaceResourceId: logaSentinel.outputs.resourceId
     softwareUpdateConfigurations: softwareUpdateConfigurations
     diagnosticSettingsName: diagSettingName
@@ -350,7 +353,7 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
       location: location
       tags: ccsCombinedTags
       vaultSku: 'premium'
-      publicNetworkAccess: publicNetworkAccess
+      publicNetworkAccess: kvPublicNetworkAccess
       roleAssignments: kvRoleAssignments
       diagnosticSettingsName: diagSettingName
       diagnosticStorageAccountId: sa.outputs.resourceId

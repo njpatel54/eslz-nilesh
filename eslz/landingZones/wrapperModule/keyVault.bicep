@@ -19,7 +19,7 @@ param akvName string
   'Enabled'
   'Disabled'
 ])
-param publicNetworkAccess string
+param publicNetworkAccess string = 'Disabled'
 
 @description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
 param networkAcls object
