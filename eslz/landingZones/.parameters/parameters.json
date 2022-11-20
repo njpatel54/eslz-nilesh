@@ -314,6 +314,66 @@
         }
       ]
     },
+    "softwareUpdateConfigurations": {
+      "value": [
+        {
+          "name": "Windows",
+          "operatingSystem": "Windows",
+          "rebootSetting": "IfRequired",
+          "scopeByTags": {
+            "ProjectID": [
+              "LZ50"
+            ]
+          },
+          "interval": 1,
+          "maintenanceWindow": "PT4H",
+          "frequency": "Month",
+          "monthlyOccurrences": [
+            {
+              "day": "Friday",
+              "occurrence": 3
+            }
+          ],
+          "startTime": "22:00",
+          "updateClassifications": [
+            "Critical",
+            "Definition",
+            "FeaturePack",
+            "Security",
+            "ServicePack",
+            "Tools",
+            "UpdateRollup",
+            "Updates"
+          ],
+          "excludeUpdates": [
+            "123456"
+          ],
+          "includeUpdates": [
+            "654321"
+          ]
+        },
+        {
+          "name": "Linux",
+          "operatingSystem": "Linux",
+          "rebootSetting": "IfRequired",
+          "maintenanceWindow": "PT4H",
+          "frequency": "OneTime",
+          "startTime": "22:00",
+          "updateClassifications": [
+            "Critical",
+            "Other",
+            "Security"
+          ],
+          "excludeUpdates": [
+            "icacls"
+          ],
+
+          "includeUpdates": [
+            "kernel"
+          ]
+        }
+      ]
+    },
     "projowner": {
       "value": "lz50"
     },
