@@ -273,6 +273,7 @@ param deployVMBackup object
 @description('Optional. List of softwareUpdateConfigurations to be created in the automation account.')
 param softwareUpdateConfigurations array = []
 
+/*
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
@@ -282,12 +283,6 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 // 2. Retrieve an existing Log Analytics Workspace (Sentinel - From Management Subscription)
 resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: sentinelLawName
-  scope: resourceGroup(mgmtsubid, siemRgName)
-}
-/*
-// 3. Retrieve an existing Automation Account (Sentine l - From Management Subscription)
-resource aaLogaSentinel 'Microsoft.Automanage/accounts@2020-06-30-preview' existing = { 
-  name: sentinelAutomationAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
@@ -304,7 +299,7 @@ module sub 'wrapperModule/createSub.bicep' = {
     managementGroupId: managementGroupId
   }
 }
-*/
+
 // 5. Create Resource Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
@@ -502,23 +497,6 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-// 14. Create Software Update Management Configuration
-module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
-  name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
-  dependsOn: [
-    lzVnet
-  ]
-  params: {
-    location: location
-    mgmtsubid: mgmtsubid
-    sentinelAutomationAcctName: sentinelAutomationAcctName
-    siemRgName: siemRgName
-    suffix: suffix
-    subscriptionId: subscriptionId
-    softwareUpdateConfigurations: softwareUpdateConfigurations
-  }
-}
-
 // 15. Create Policy Assignment and Remediation
 module policyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
@@ -531,7 +509,26 @@ module policyAssignment 'wrapperModule/polAssignment.bicep' = {
     deployVMBackup: deployVMBackup
   }
 }
+*/
 
+// 14. Create Software Update Management Configuration
+module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
+  name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
+ // dependsOn: [
+ //   lzVnet
+ // ]
+  params: {
+    location: location
+    mgmtsubid: mgmtsubid
+    sentinelAutomationAcctName: sentinelAutomationAcctName
+    siemRgName: siemRgName
+    suffix: suffix
+    subscriptionId: subscriptionId
+    softwareUpdateConfigurations: softwareUpdateConfigurations
+  }
+}
+
+/*
 @description('Output - Resource Group "name" Array')
 output rgNames array = rgs.outputs.rgNames
 
@@ -587,7 +584,7 @@ output managementGroupId string = managementGroupId
 output subscriptionOwnerId string = subscriptionOwnerId
 //output subscriptionId string = subscriptionId
 // End - Outputs to supress warnings - "unused parameters"
-
+*/
 /*
 @description('Required. The administrator login for the Virtual Machine.')
 @secure()
