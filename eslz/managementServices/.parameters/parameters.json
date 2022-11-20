@@ -878,80 +878,60 @@
     "softwareUpdateConfigurations": {
       "value": [
         {
-          "name": "Windows-VMs",
-          "frequency": "Month",
+          "name": "Windows_ZeroDay",
           "operatingSystem": "Windows",
           "rebootSetting": "IfRequired",
+          "scopeByTags": {
+            "ProjectID": [
+              "LZ50"
+            ]
+          },
+          "interval": 1,
           "maintenanceWindow": "PT4H",
+          "frequency": "Month",
+          "monthlyOccurrences": [
+            {
+              "day": "Friday",
+              "occurrence": 3
+            }
+          ],
+          "startTime": "22:00",
           "updateClassifications": [
             "Critical",
-            "Security",
-            "UpdateRollup",
-            "FeaturePack",
-            "ServicePack",
             "Definition",
+            "FeaturePack",
+            "Security",
+            "ServicePack",
             "Tools",
+            "UpdateRollup",
             "Updates"
-          ],
-          "includeUpdates": [
-            "654321"
           ],
           "excludeUpdates": [
             "123456"
           ],
-          "interval": 1,
-          "monthlyOccurrences": [
-            {
-              "occurrence": 3,
-              "day": "Friday"
-            }
-          ],
-          "startTime": "23:00"
+          "includeUpdates": [
+            "654321"
+          ]
         },
         {
-          "name": "Linux-VMs",
-          "frequency": "Month",
+          "name": "Linux_ZeroDay",
           "operatingSystem": "Linux",
           "rebootSetting": "IfRequired",
           "maintenanceWindow": "PT4H",
-          "updateClassifications": [
-            "Critical",
-            "Security",
-            "Other"
-          ],
-          "includeUpdates": [
-            "kernel"
-          ],
-          "excludeUpdates": [
-            "icacls"
-          ],
-          "interval": 1,
-          "monthlyOccurrences": [
-            {
-              "occurrence": 3,
-              "day": "Friday"
-            }
-          ],
-          "startTime": "23:00"
-        },
-        {
-          "name": "Linux-VMs-Once",
           "frequency": "OneTime",
-          "operatingSystem": "Linux",
-          "rebootSetting": "IfRequired",
-          "maintenanceWindow": "PT4H",
+          "startTime": "22:00",
           "updateClassifications": [
             "Critical",
-            "Security",
-            "Other"
-          ],
-          "includeUpdates": [
-            "kernel"
+            "Other",
+            "Security"
           ],
           "excludeUpdates": [
             "icacls"
           ],
-          "startTime": "23:00"
+
+          "includeUpdates": [
+            "kernel"
+          ]
         }
       ]
     },
