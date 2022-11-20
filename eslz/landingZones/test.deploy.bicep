@@ -523,7 +523,7 @@ module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
     sentinelAutomationAcctName: sentinelAutomationAcctName
     siemRgName: siemRgName
     suffix: suffix
-    subscriptionId: subscriptionId
+    subscriptionId: '/subscriptions/${subscriptionId}'
     softwareUpdateConfigurations: softwareUpdateConfigurations
   }
 }
