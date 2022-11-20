@@ -248,6 +248,9 @@ param virtualMachineSize string = 'Standard_DS2_v2'
 @description('Required. Log Ananlytics Workspace Name for Azure Sentinel.')
 param sentinelLawName string = 'log-${platformProjOwner}-${platformOpScope}-${region}-siem'
 
+@description('Required. Automation Account Name - LAW - Sentinel')
+param sentinelAutomationAcctName string = 'aa-${platformProjOwner}-${platformOpScope}-${region}-siem'
+
 @description('Required. Load content from json file to iterate over any array in the parameters file')
 var params = json(loadTextContent('.parameters/parameters.json'))
 
@@ -264,19 +267,31 @@ param rpcRgName string = 'rg-${projowner}-${region}-rpc'
 @maxLength(24)
 param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
 
-// 1. Retrieve exisiting Key Vault (From Management Subscription)
+@description('Required. Parameter for "Deploy-VM-Backup" policy assignment')
+param deployVMBackup object
+
+@description('Optional. List of softwareUpdateConfigurations to be created in the automation account.')
+param softwareUpdateConfigurations array = []
+
+// 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 2. Retrieve existing Log Analytics Workspace (Sentinel - From Management Subscription)
+// 2. Retrieve an existing Log Analytics Workspace (Sentinel - From Management Subscription)
 resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 /*
-// 3. Create Subscription
+// 3. Retrieve an existing Automation Account (Sentine l - From Management Subscription)
+resource aaLogaSentinel 'Microsoft.Automanage/accounts@2020-06-30-preview' existing = { 
+  name: sentinelAutomationAcctName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 4. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
@@ -290,7 +305,7 @@ module sub 'wrapperModule/createSub.bicep' = {
   }
 }
 */
-// 4. Create Resource Groups
+// 5. Create Resource Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -305,7 +320,7 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
   }
 }
 
-// 5. Create Log Analytics Workspace
+// 6. Create Log Analytics Workspace
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   dependsOn: [
@@ -326,7 +341,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   }
 }
 
-// 6. Configure Subscription
+// 7. Configure Subscription
 module subConfig 'wrapperModule/subconfig.bicep' = {
   name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
@@ -342,7 +357,7 @@ module subConfig 'wrapperModule/subconfig.bicep' = {
   }
 }
 
-// 7. Create Virtual Network
+// 8. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   dependsOn: [
@@ -366,7 +381,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   }
 }
 
-// 8. Create Storage Account
+// 9. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
@@ -390,7 +405,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   }
 }
 
-// 9. Create Azure Key Vault
+// 10. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -414,7 +429,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   }
 }
 
-// 10. Create SQL Server(s)
+// 11. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -437,7 +452,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   }
 }
 
-// 11. Create Virtual Machine(s)
+// 12. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in virtualMachines: if (lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   dependsOn: [
@@ -463,7 +478,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
   }
 }]
 
-// 12. Create Recovery Services Vault
+// 13. Create Recovery Services Vault
 module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
@@ -487,10 +502,24 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-@description('Required. Parameter for "Deploy-VM-Backup" policy assignment')
-param deployVMBackup object
+// 14. Create Software Update Management Configuration
+module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
+  name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
+  dependsOn: [
+    lzVnet
+  ]
+  params: {
+    location: location
+    mgmtsubid: mgmtsubid
+    sentinelAutomationAcctName: sentinelAutomationAcctName
+    siemRgName: siemRgName
+    suffix: suffix
+    subscriptionId: subscriptionId
+    softwareUpdateConfigurations: softwareUpdateConfigurations
+  }
+}
 
-// 13. Create Policy Assignment and Remediation
+// 15. Create Policy Assignment and Remediation
 module policyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
