@@ -6,6 +6,12 @@ param hubNetworkSecurityGroups array
 @description('Required. Subscription ID.')
 param hubVnetSubscriptionId string
 
+@description('Required. Default Route Table name.')
+param defaultRouteTableName string = 'rt-${projowner}-${opscope}-${region}-0001'
+
+@description('Optional. An Array of Routes to be established within the hub route table.')
+param routes array = []
+
 @description('Required. The Virtual Network (vNet) Name.')
 param hubVnetName string
 
@@ -339,12 +345,37 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
   }
 }]
 
+// 3. Create Route Table (Connectivity Subscription)
+module hubRouteTable '../modules/network//routeTables/deploy.bicep' = {
+  name: 'hubRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  params: {
+    name: defaultRouteTableName
+    location: location
+    tags: ccsCombinedTags
+    routes: routes
+  }
+}
+
+// 4. Create Route Table (Spoke Subscriptions)
+module spokeRouteTables '../modules/network//routeTables/deploy.bicep' = [for (vNet, index) in spokeVnets: {
+  name: 'spokeRouteTables-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
+  scope: resourceGroup(vNet.subscriptionId, vnetRgName)
+  params: {
+    name: defaultRouteTableName
+    location: location
+    tags: ccsCombinedTags
+    routes: routes
+  }
+}]
+
 // 3. Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${hubVnetName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubNsgs
+    hubRouteTable
   ]
   params: {
     name: hubVnetName
@@ -419,6 +450,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
   dependsOn: [
     spokeRg
     hubVnet
+    spokeRouteTables
   ]
   params: {
     name: vNet.name

@@ -41,7 +41,8 @@
     "subRoleAssignments": {
       "value": [
         {
-          "roleDefinitionIdOrName": "Contributor",
+          "description": "Subscription contributor",
+          "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/781ac3ad-c9cc-5ba6-b808-004c03170489",
           "principalIds": [
             "9ea84da1-90c2-4380-8f98-6c887741a4d6"
           ]

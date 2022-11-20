@@ -201,12 +201,5 @@
         "value": "[[parameters('StorageAccountsDenyPaasPublicIPEffect')]"
       }
     }
-  },
-  "ManagedDiskDenyPaasPublicIP": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('ManagedDiskDenyPaasPublicIPEffect')]"
-      }
-    }
   }
 }

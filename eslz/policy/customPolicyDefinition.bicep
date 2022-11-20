@@ -191,6 +191,14 @@ var customPolicyDefinitions = [
     name: 'Deploy-VM-Backup'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-VM-Backup.json'))
   }
+  {
+    name: 'Modify-Deny-Disk-Export'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Modify-Deny-Disk-Export.json'))
+  }
+  {
+    name: 'Modify-Deny-Disk-Export'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-DNS-Zone-With-Privatelink-Prefix.json'))  
+  }  
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')

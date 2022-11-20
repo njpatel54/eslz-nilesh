@@ -367,19 +367,6 @@
                     "description": "This policy prevents creation of Azure Event Grid Domains with exposed public endpoints."
                 }
             },
-            "ManagedDiskDenyPaasPublicIPEffect": {
-                "type": "String",
-                "defaultValue": "Deny",
-                "allowedValues": [
-                    "Audit",
-                    "Deny",
-                    "Disabled"
-                ],
-                "metadata": {
-                    "displayName": "Deny public network acess for Managed Disk",
-                    "description": "This policy prevents creation of Managed Disk with exposed public endpoints."
-                }
-            },
             "MariaDBDenyPaasPublicIPEffect": {
                 "type": "String",
                 "defaultValue": "Deny",
@@ -658,15 +645,6 @@
                 "parameters": {
                     "effect": {
                         "value": "[[parameters('MariaDBDenyPaasPublicIPEffect')]"
-                    }
-                }
-            },
-            {
-                "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-ManagedDisk",
-                "policyDefinitionReferenceId": "ManagedDiskDenyPaasPublicIP",
-                "parameters": {
-                    "effect": {
-                        "value": "[[parameters('ManagedDiskDenyPaasPublicIPEffect')]"
                     }
                 }
             }

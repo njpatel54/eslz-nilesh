@@ -1,0 +1,55 @@
+{
+    "properties": {
+        "displayName": "Deny the export of Managed Disks",
+        "mode": "All",
+        "description": "Deny the export of Managed Disks",
+        "metadata": {
+            "version": "1.0.0",
+            "category": "Compute"
+        },
+        "parameters": {
+            "effect": {
+                "type": "String",
+                "defaultValue": "Modify",
+                "allowedValues": [
+                    "Modify",
+                    "Disabled"
+                ],
+                "metadata": {
+                    "displayName": "Effect",
+                    "description": "Enable or disable the execution of the policy"
+                }
+            }
+        },
+        "policyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.Compute/disks"
+                    },
+                    {
+                        "field": "Microsoft.Compute/disks/networkAccessPolicy",
+                        "notequals": "DenyAll"
+                    }
+                ]
+            },
+            "then": {
+                "effect": "[parameters('effect')]",
+                "details": {
+                    "roleDefinitionIds": [
+                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "operations": [
+                        {
+                            "operation": "addOrReplace",
+                            "field": "Microsoft.Compute/disks/networkAccessPolicy",
+                            "value": "DenyAll"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "name": "Modify-Deny-Disk-Export"
+}
