@@ -273,11 +273,14 @@ param rpcRgName string = 'rg-${projowner}-${region}-rpc'
 @maxLength(24)
 param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
 
-@description('Required. Parameter for "Deploy-VM-Backup" policy assignment')
-param deployVMBackup object
+@description('Required. Parameter for policyAssignments')
+param policyAssignments array
 
 @description('Optional. List of softwareUpdateConfigurations to be created in the automation account.')
 param softwareUpdateConfigurations array = []
+
+@description('Required. Disk Access resource name.')
+param diskAccessName string = 'da-${projowner}-${region}-01'
 
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
@@ -504,25 +507,12 @@ module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-// 15. Create Policy Assignment and Remediation
-module policyAssignment 'wrapperModule/polAssignment.bicep' = {
-  name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
-  dependsOn: [
-    rsv
-    lzVms
-  ]
-  params: {
-    subscriptionId: subscriptionId
-    deployVMBackup: deployVMBackup
-  }
-}
-
 // 14. Create Software Update Management Configuration
 module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
   name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
- // dependsOn: [
- //   lzVnet
- // ]
+  dependsOn: [
+    lzVnet
+  ]
   params: {
     location: location
     mgmtsubid: mgmtsubid
@@ -533,6 +523,41 @@ module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
     softwareUpdateConfigurations: softwareUpdateConfigurations
   }
 }
+
+// 15. Create Disk Accesses Resource
+module diskAccess 'wrapperModule/diskAccesses.bicep' = {
+  name: 'mod-diskAccess-${take(uniqueString(deployment().name, location), 4)}-${diskAccessName}'
+  dependsOn: [
+    lzVnet
+  ]
+  params: {
+    name: diskAccessName
+    location: location
+    combinedTags: combinedTags
+    wlRgName: wlRgName
+    subscriptionId: subscriptionId
+    vnetRgName: vnetRgName
+    vnetName: vnetName
+    mgmtSubnetName: mgmtSubnetName
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+  }
+}
+
+// 15. Create Policy Assignment and Remediation
+module policyAssignment 'wrapperModule/polAssignment.bicep' = {
+  name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
+  dependsOn: [
+    rsv
+    lzVms
+  ]
+  params: {
+    subscriptionId: subscriptionId
+    policyAssignments: policyAssignments
+  }
+}
+
+
 
 /*
 @description('Output - Resource Group "name" Array')
