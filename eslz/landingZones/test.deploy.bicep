@@ -572,6 +572,7 @@ module defender 'wrapperModule/defender.bicep' = {
       location: location
       subscriptionAlias: subscriptionAlias
       subscriptionId: subscriptionId
+      workspaceId: sentinelLawName
       defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }

@@ -3,14 +3,14 @@ targetScope = 'subscription'
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
-@description('Optional. Resource ID of the diagnostic log analytics workspace.')
-param diagnosticWorkspaceId string = ''
-
 @description('Location for the deployments and the resources')
 param location string
 
 @description('Required. Alias to assign to the subscription')
 param subscriptionAlias string
+
+@description('Required. The full Azure ID of the workspace to save the data in.')
+param workspaceId string
 
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
@@ -20,7 +20,7 @@ module defender '../../modules/security/azureSecurityCenter/deploy.bicep' = {
   scope: subscription(subscriptionId)
   params: {
     scope: subscriptionId
-    workspaceId: diagnosticWorkspaceId
+    workspaceId: workspaceId
     securityContactProperties: defenderSecurityContactProperties
   }
 }
