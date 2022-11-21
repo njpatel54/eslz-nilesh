@@ -587,11 +587,6 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).KeyVaultDenyPaasPublicIP.parameters
       }
       {
-        definitionReferenceId: 'ManagedDiskDenyPaasPublicIP'
-        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-ManagedDisk'
-        definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).ManagedDiskDenyPaasPublicIP.parameters
-      }
-      {
         definitionReferenceId: 'MariaDBDenyPaasPublicIP'
         definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-MariaDB'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy_defset_Deny-PublicPaaSEndpoints.parameters.json')).MariaDBDenyPaasPublicIP.parameters
