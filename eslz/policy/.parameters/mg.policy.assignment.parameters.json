@@ -51,6 +51,24 @@
                     "managementGroupId": "mg-A2g"
                 },
                 {
+                    "name": "Deny-Privatelink-Zones",
+                    "description": "This policy restricts creation of private DNS zones with the `privatelink` prefix",
+                    "displayName": "Deny creation of Private DNS Zone with the 'privatelink' prefix",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deny-PrivateDNSZone-PrivateLink",
+                    "parameters": {},
+                    "nonComplianceMessage": "Deny creation of Private DNS Zone with the 'privatelink' prefix",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [
+                        "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553"
+                    ],
+                    "location": "",
+                    "identity": "None",
+                    "roleDefinitionIds": [],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
                     "name": "Deploy-Res-Diag-LAW",
                     "description": "This policy initiative deploys the diagnostic settings for Azure Services to forward diagnostic logs and metrics to an Azure Log Analytics workspace.",
                     "displayName": "Deploy Diagnostic Settings for Azure Services to send logs to Azure Log Analytics Workspace",
