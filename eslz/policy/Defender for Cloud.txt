@@ -1,0 +1,38 @@
+=======================
+As of Monday 11/21/2022
+=======================
+
+
+When you use "Settings & Monitoring" tab to configure Azure Policy assignments you will find following difference betwnee different clouds.
+
+Azure Commercial Cloud
+======================
+[Preview]: Configure machines to create the user-defined Microsoft Defender for Cloud pipeline using Azure Monitor Agent - 500ab3a2-f1bd-4a5a-8e47-3e09d9a294c3 - Not Available - Not needed as in Gov cloud it is not mature enough to use it
+Configure machines to receive a vulnerability assessment provider - 13ce0167-8ca6-4048-8e6b-f996402e3c1b - Not Available 
+Configure Azure Kubernetes Service clusters to enable Defender profile - 64def556-fbad-4622-930e-72d1d5589bf5 - Not Available 
+[Preview]: Configure Azure Arc enabled Kubernetes clusters to install Microsoft Defender for Cloud extension - 708b60a6-d253-4fe0-9114-4be4c00f012c
+[Preview]: Configure Azure Arc enabled Kubernetes clusters to install the Azure Policy extension - 0adc5395-9169-4b9b-8687-af838d69410a - Not Available 
+Deploy Azure Policy Add-on to Azure Kubernetes Service clusters - a8eff44f-8c92-45c3-a3fb-9880802d67a7
+
+
+
+
+Azure Government Cloud
+======================
+Following policy gets assigned at given Subscription scope
+
+	Policy Initiatives
+	------------------
+	Legacy - Enable Azure Monitor for VMs - /providers/Microsoft.Authorization/policySetDefinitions/55f3eceb-5573-4f18-9695-226972c6d74a - Assignment Name (Deploy-VM-Monitoring) <--- This was done through ESLZ policy assignment.
+	Legacy - Enable Azure Monitor for Virtual Machine Scale Sets - /providers/Microsoft.Authorization/policySetDefinitions/75714362-cae7-409e-9b99-a8e5075b7fad - Assignment Name (Deploy-VMSS-Monitoring) <--- This was done through ESLZ policy assignment.
+	Configure Azure Defender to be enabled on SQL Servers and SQL Managed Instances - /providers/Microsoft.Authorization/policySetDefinitions/9cb3cc7a-b39b-4b82-bc89-e5a5d9ff7b97 - Assignment Name (ASC DataProtection (subscription: df3b1809-17d0-47a0-9241-d2724780bdac))
+	Configure Advanced Threat Protection to be enabled on open-source relational databases - /providers/Microsoft.Authorization/policySetDefinitions/e77fc0b3-f7e9-4c58-bc13-cb753ed8e46e - Assignment Name (ASC OpenSourceRelationalDatabasesProtection (subscription: df3b1809-17d0-47a0-9241-d2724780bdac))
+
+	Policies
+	--------
+	Deploy the Linux Guest Configuration extension to enable Guest Configuration assignments on Linux VMs - /providers/Microsoft.Authorization/policyDefinitions/331e8ea8-378a-410f-a2e5-ae22f38bb0da - Assignment Name (ASC provisioning Guest Configuration agent for Linux)
+	Deploy the Windows Guest Configuration extension to enable Guest Configuration assignments on Windows VMs - /providers/Microsoft.Authorization/policyDefinitions/385f5831-96d4-41db-9a3c-cd3af78aaae6 - Assignment Name (ASC provisioning Guest Configuration agent for Windows)
+	Add system-assigned managed identity to enable Guest Configuration assignments on virtual machines with no identities - /providers/Microsoft.Authorization/policyDefinitions/3cf2ab00-13f1-4d0c-8971-2ac904541a7e - Assignment Name (ASC provisioning machines with no MI for GC agent)
+	Add system-assigned managed identity to enable Guest Configuration assignments on VMs with a user-assigned identity - /providers/Microsoft.Authorization/policyDefinitions/497dff13-db2a-4c0f-8603-28fa3b331ab6 - Assignment Name (ASC provisioning machines with user assigned MI for GC agent)
+	Deploy Azure Policy Add-on to Azure Kubernetes Service clusters - /providers/Microsoft.Authorization/policyDefinitions/a8eff44f-8c92-45c3-a3fb-9880802d67a7 - Assignment Name (Defender for Containers provisioning Azure Policy Addon for Kub)	
+	[Preview]: Configure Azure Arc enabled Kubernetes clusters to install Microsoft Defender for Cloud extension - /providers/Microsoft.Authorization/policyDefinitions/708b60a6-d253-4fe0-9114-4be4c00f012c - Assignment Name (Defender for Containers provisioning ARC k8s Enabled)

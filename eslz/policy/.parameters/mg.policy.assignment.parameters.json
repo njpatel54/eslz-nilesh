@@ -5,47 +5,7 @@
         "mgPolicyAssignments": {
             "value": [
                 {
-                    "name": "Deploy-MDFC-Config",
-                    "description": "Deploy Microsoft Defender for Cloud configuration and Security Contacts",
-                    "displayName": "Deploy Microsoft Defender for Cloud configuration",
-                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deploy-MDFC-Config",
-                    "parameters": {
-                        "emailSecurityContact": {
-                            "value": "ccsao-1669@azgperatonpartners.onmicrosoft.us"
-                        },
-                        "enableAscForServers": {
-                            "value": "DeployIfNotExists"
-                        },
-                        "enableAscForSql": {
-                            "value": "DeployIfNotExists"
-                        },
-                        "enableAscForStorage": {
-                            "value": "DeployIfNotExists"
-                        },
-                        "enableAscForContainers": {
-                            "value": "DeployIfNotExists"
-                        },
-                        "enableAscForArm": {
-                            "value": "DeployIfNotExists"
-                        },
-                        "enableAscForDns": {
-                            "value": "DeployIfNotExists"
-                        }
-                    },
-                    "nonComplianceMessage": "Microsoft Defender for Cloud must be deployed.",
-                    "enforcementMode": "Default",
-                    "metadata": {},
-                    "scope": null,
-                    "notScopes": [],
-                    "location": "usgovvirginia",
-                    "identity": "SystemAssigned",
-                    "roleDefinitionIds": [
-                        "/providers/microsoft.authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "managementGroupId": "mg-A2g"
-                },
-                {
-                    "name": "Deploy-ASC-Monitoring",
+                    "name": "Deploy-AS-Benchmark",
                     "description": "The Azure Security Benchmark initiative represents the policies and controls implementing security recommendations defined in Azure Security Benchmark v2, see https://aka.ms/azsecbm. This also serves as the Azure Security Center default policy initiative. You can directly assign this initiative, or manage its policies and compliance results within Azure Security Center.",
                     "displayName": "Azure Security Benchmark",
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
@@ -59,52 +19,6 @@
                     "identity": "SystemAssigned",
                     "roleDefinitionIds": [
                         "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
-                    ],
-                    "managementGroupId": "mg-A2g"
-                },
-                {
-                    "name": "Deploy-VM-Monitoring",
-                    "description": "Enable Azure Monitor for the virtual machines (VMs) in the specified scope (management group, subscription or resource group). Takes Log Analytics workspace as parameter.",
-                    "displayName": "Enable Azure Monitor for VMs",
-                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/55f3eceb-5573-4f18-9695-226972c6d74a",
-                    "parameters": {
-                        "logAnalytics_1": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
-                        }
-                    },
-                    "nonComplianceMessage": "Virtual Machines must be enabled for monitoring through Azure Monitor.",
-                    "enforcementMode": "Default",
-                    "metadata": {},
-                    "scope": null,
-                    "notScopes": [],
-                    "location": "usgovvirginia",
-                    "identity": "SystemAssigned",
-                    "roleDefinitionIds": [
-                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
-                        "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c"
-                    ],
-                    "managementGroupId": "mg-A2g"
-                },
-                {
-                    "name": "Deploy-VMSS-Monitoring",
-                    "description": "Enable Azure Monitor for the Virtual Machine Scale Sets in the specified scope (Management group, Subscription or resource group). Takes Log Analytics workspace as parameter. Note: if your scale set upgradePolicy is set to Manual, you need to apply the extension to the all VMs in the set by calling upgrade on them. In CLI this would be az vmss update-instances.",
-                    "displayName": "Enable Azure Monitor for Virtual Machine Scale Sets",
-                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/75714362-cae7-409e-9b99-a8e5075b7fad",
-                    "parameters": {
-                        "logAnalytics_1": {
-                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
-                        }
-                    },
-                    "nonComplianceMessage": "Virtual Machines Scale Sets must be enabled for monitoring through Azure Monitor.",
-                    "enforcementMode": "Default",
-                    "metadata": {},
-                    "scope": null,
-                    "notScopes": [],
-                    "location": "usgovvirginia",
-                    "identity": "SystemAssigned",
-                    "roleDefinitionIds": [
-                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
-                        "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c"
                     ],
                     "managementGroupId": "mg-A2g"
                 },
@@ -202,6 +116,202 @@
                     "location": "",
                     "identity": "None",
                     "roleDefinitionIds": [],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy-VM-Monitoring",
+                    "description": "Legacy - Enable Azure Monitor for the virtual machines (VMs) in the specified scope (management group, subscription or resource group). Takes Log Analytics workspace as parameter. Use the new initiative named: Enable Azure Monitor for VMs with Azure Monitoring Agent(AMA).",
+                    "displayName": "Legacy - Enable Azure Monitor for VMs",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/55f3eceb-5573-4f18-9695-226972c6d74a",
+                    "parameters": {
+                        "logAnalytics_1": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
+                        }
+                    },
+                    "nonComplianceMessage": "Virtual Machines must be enabled for monitoring through Azure Monitor.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+                        "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy-VMSS-Monitoring",
+                    "description": "Legacy - Enable Azure Monitor for the Virtual Machine Scale Sets in the specified scope (Management group, Subscription or resource group). Takes Log Analytics workspace as parameter. Use the new initiative named: Enable Azure Monitor for VMSS with Azure Monitoring Agent(AMA). Note: if your scale set upgradePolicy is set to Manual, you need to apply the extension to the all VMs in the set by calling upgrade on them. In CLI this would be az vmss update-instances.",
+                    "displayName": "Legacy - Enable Azure Monitor for Virtual Machine Scale Sets",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/75714362-cae7-409e-9b99-a8e5075b7fad",
+                    "parameters": {
+                        "logAnalytics_1": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
+                        }
+                    },
+                    "nonComplianceMessage": "Virtual Machines Scale Sets must be enabled for monitoring through Azure Monitor.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+                        "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy-MDFC-SQL",
+                    "description": "Enable Azure Defender on your SQL Servers and SQL Managed Instances to detect anomalous activities indicating unusual and potentially harmful attempts to access or exploit databases.",
+                    "displayName": "Configure Azure Defender to be enabled on SQL Servers and SQL Managed Instances",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/9cb3cc7a-b39b-4b82-bc89-e5a5d9ff7b97",
+                    "parameters": {},
+                    "nonComplianceMessage": "Azure Defender for Cloud must be enabled for SQL Servers and SQL Managed Instances.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/056cd41c-7e88-42e1-933e-88ba6a50c9c3"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy-ATP-OpenSourceDB",
+                    "description": "Enable Advanced Threat Protection on your non-Basic tier open-source relational databases to detect anomalous activities indicating unusual and potentially harmful attempts to access or exploit databases. See https://aka.ms/AzDforOpenSourceDBsDocu.",
+                    "displayName": "Configure Advanced Threat Protection to be enabled on open-source relational databases",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/e77fc0b3-f7e9-4c58-bc13-cb753ed8e46e",
+                    "parameters": {},
+                    "nonComplianceMessage": "Advanced Threat Protection must be enabled on your non-Basic tier open-source relational databases to detect anomalous activities indicating unusual and potentially harmful attempts to access or exploit databases.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy the Linux Guest Configuration extension to enable Guest Configuration assignments on Linux VMs",
+                    "description": "This policy deploys the Linux Guest Configuration extension to Linux virtual machines hosted in Azure that are supported by Guest Configuration. The Linux Guest Configuration extension is a prerequisite for all Linux Guest Configuration assignments and must be deployed to machines before using any Linux Guest Configuration policy definition. For more information on Guest Configuration, visit https://aka.ms/gcpol.",
+                    "displayName": "Deploy the Linux Guest Configuration extension to enable Guest Configuration assignments on Linux VMs",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/331e8ea8-378a-410f-a2e5-ae22f38bb0da",
+                    "parameters": {},
+                    "nonComplianceMessage": "Linux Guest Configuration Extension must be deployed to enable Guest Configuration assignments on Linux VMs",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy the Windows Guest Configuration extension to enable Guest Configuration assignments on Windows VMs",
+                    "description": "This policy deploys the Windows Guest Configuration extension to Windows virtual machines hosted in Azure that are supported by Guest Configuration. The Windows Guest Configuration extension is a prerequisite for all Windows Guest Configuration assignments and must be deployed to machines before using any Windows Guest Configuration policy definition. For more information on Guest Configuration, visit https://aka.ms/gcpol.",
+                    "displayName": "Deploy the Windows Guest Configuration extension to enable Guest Configuration assignments on Windows VMs",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/385f5831-96d4-41db-9a3c-cd3af78aaae6",
+                    "parameters": {},
+                    "nonComplianceMessage": "Windows Guest Configuration Extension must be deployed to enable Guest Configuration assignments on Windows VMs",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Add system-assigned managed identity to enable Guest Configuration assignments on virtual machines with no identities",
+                    "description": "This policy adds a system-assigned managed identity to virtual machines hosted in Azure that are supported by Guest Configuration but do not have any managed identities. A system-assigned managed identity is a prerequisite for all Guest Configuration assignments and must be added to machines before using any Guest Configuration policy definitions. For more information on Guest Configuration, visit https://aka.ms/gcpol.",
+                    "displayName": "Add system-assigned managed identity to enable Guest Configuration assignments on virtual machines with no identities",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/3cf2ab00-13f1-4d0c-8971-2ac904541a7e",
+                    "parameters": {},
+                    "nonComplianceMessage": "Add system-assigned managed identity to enable Guest Configuration assignments on virtual machines with no identities",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Add system-assigned managed identity to enable Guest Configuration assignments on VMs with a user-assigned identity",
+                    "description": "This policy adds a system-assigned managed identity to virtual machines hosted in Azure that are supported by Guest Configuration and have at least one user-assigned identity but do not have a system-assigned managed identity. A system-assigned managed identity is a prerequisite for all Guest Configuration assignments and must be added to machines before using any Guest Configuration policy definitions. For more information on Guest Configuration, visit https://aka.ms/gcpol.",
+                    "displayName": "Add system-assigned managed identity to enable Guest Configuration assignments on VMs with a user-assigned identity",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/497dff13-db2a-4c0f-8603-28fa3b331ab6",
+                    "parameters": {},
+                    "nonComplianceMessage": "Add system-assigned managed identity to enable Guest Configuration assignments on VMs with a user-assigned identity",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Deploy Azure Policy Add-on to Azure Kubernetes Service clusters",
+                    "description": "Use Azure Policy Add-on to manage and report on the compliance state of your Azure Kubernetes Service (AKS) clusters. For more information, see https://aka.ms/akspolicydoc.",
+                    "displayName": "Deploy Azure Policy Add-on to Azure Kubernetes Service clusters",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/a8eff44f-8c92-45c3-a3fb-9880802d67a7",
+                    "parameters": {},
+                    "nonComplianceMessage": "Deploy Azure Policy Add-on to Azure Kubernetes Service clusters",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/Microsoft.Authorization/roleDefinitions/ed7f3fbd-7b88-4dd4-9017-9adb7ce333f8",
+                        "/providers/Microsoft.Authorization/roleDefinitions/18ed5180-3e48-46fd-8541-4ea054d57064"
+                    ],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Configure Azure Arc enabled Kubernetes clusters to install Microsoft Defender for Cloud extension",
+                    "description": "Microsoft Defender for Cloud extension for Azure Arc provides threat protection for your Arc enabled Kubernetes clusters. The extension collects data from all nodes in the cluster and sends it to the Azure Defender for Kubernetes backend in the cloud for further analysis. Learn more in https://docs.microsoft.com/azure/defender-for-cloud/defender-for-containers-enable?pivots=defender-for-container-arc.",
+                    "displayName": "Configure Azure Arc enabled Kubernetes clusters to install Microsoft Defender for Cloud extension",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/708b60a6-d253-4fe0-9114-4be4c00f012c",
+                    "parameters": {
+                        "logAnalyticsWorkspaceResourceId": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
+                        }
+                    },
+                    "nonComplianceMessage": "[Preview]: Configure Azure Arc enabled Kubernetes clusters to install Microsoft Defender for Cloud extension",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+                        "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                    ],
                     "managementGroupId": "mg-A2g"
                 }
             ]
