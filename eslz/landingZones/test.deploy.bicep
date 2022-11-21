@@ -92,6 +92,12 @@ param rgRoleAssignments array = []
 // End - 'rgs' Module Parameters
 
 // Start - 'virtualNetwork' Module Parameters
+@description('Required. Default Route Table name.')
+param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
+
+@description('Optional. An Array of Routes to be established within the hub route table.')
+param routes array = []
+
 @description('Required. The Virtual Network (vNet) Name.')
 param vnetName string
 
@@ -273,7 +279,6 @@ param deployVMBackup object
 @description('Optional. List of softwareUpdateConfigurations to be created in the automation account.')
 param softwareUpdateConfigurations array = []
 
-/*
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
@@ -285,7 +290,7 @@ resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-
+/*
 // 4. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
@@ -299,7 +304,7 @@ module sub 'wrapperModule/createSub.bicep' = {
     managementGroupId: managementGroupId
   }
 }
-
+*/
 // 5. Create Resource Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
@@ -362,6 +367,8 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     vnetName: vnetName
     location: location
     combinedTags: combinedTags
+    defaultRouteTableName: defaultRouteTableName
+    routes: routes
     vnetRgName: vnetRgName
     subscriptionId: subscriptionId
     vnetAddressPrefixes: vnetAddressPrefixes
@@ -509,7 +516,6 @@ module policyAssignment 'wrapperModule/polAssignment.bicep' = {
     deployVMBackup: deployVMBackup
   }
 }
-*/
 
 // 14. Create Software Update Management Configuration
 module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {

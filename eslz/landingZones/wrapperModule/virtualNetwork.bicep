@@ -9,6 +9,12 @@ param location string
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
 param combinedTags object
 
+@description('Required. Default Route Table name.')
+param defaultRouteTableName string
+
+@description('Optional. An Array of Routes to be established within the hub route table.')
+param routes array
+
 @description('Required. The Virtual Network (vNet) Name.')
 param vnetName string
 
@@ -49,10 +55,25 @@ var params = json(loadTextContent('../.parameters/parameters.json'))
 var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 // End - Variables created to be used to attach NSG to Management Subnet
 
-// 1. Create Virtual Network
+// 1. Create Route Table (Connectivity Subscription)
+module lzRouteTable '../../modules/network//routeTables/deploy.bicep' = {
+  name: 'hubRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
+  scope: resourceGroup(subscriptionId, vnetRgName)
+  params: {
+    name: defaultRouteTableName
+    location: location
+    tags: combinedTags
+    routes: routes
+  }
+}
+
+// 2. Create Virtual Network
 module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, vnetRgName)
+  dependsOn: [
+    lzRouteTable
+  ]
   params: {
     name: vnetName
     location: location
@@ -66,7 +87,7 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   }
 }
 
-// 2. Create Network Security Group(s)
+// 3. Create Network Security Group(s)
 module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
   name: 'nsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(subscriptionId, vnetRgName)
@@ -84,7 +105,7 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
   }
 }]
 
-// 3. Attach NSG to Subnets
+// 4. Attach NSG & Route Table to Subnets
 @batchSize(1)
 module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
   name: 'attachNsgToSubnets-${subnet.name}'
@@ -101,10 +122,11 @@ module attachNsgToSubnets '../../modules/network/virtualNetworks/subnets/deploy.
     privateEndpointNetworkPolicies: subnet.privateEndpointNetworkPolicies
     privateLinkServiceNetworkPolicies: subnet.privateLinkServiceNetworkPolicies
     networkSecurityGroupId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)
+    routeTableId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/routeTables', defaultRouteTableName)
   }
 }]
 
-// 4. Update Virtual Network Links on Provate DNS Zones
+// 5. Update Virtual Network Links on Provate DNS Zones
 module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'vnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)

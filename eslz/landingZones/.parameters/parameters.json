@@ -106,6 +106,18 @@
         }
       ]
     },
+    "routes": {
+      "value": [
+          {
+              "name": "default",
+              "properties": {
+                  "addressPrefix": "0.0.0.0/0",
+                  "nextHopIpAddress": "10.30.0.68",
+                  "nextHopType": "VirtualAppliance"
+              }
+          }
+      ]
+  },
     "vnetName": {
       "value": "vnet-lz50-usva"
     },

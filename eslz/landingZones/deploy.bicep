@@ -1,5 +1,3 @@
-//Route Table
-
 targetScope = 'managementGroup'
 
 // Start - Common parameters
@@ -94,6 +92,12 @@ param rgRoleAssignments array = []
 // End - 'rgs' Module Parameters
 
 // Start - 'virtualNetwork' Module Parameters
+@description('Required. Default Route Table name.')
+param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
+
+@description('Optional. An Array of Routes to be established within the hub route table.')
+param routes array = []
+
 @description('Required. The Virtual Network (vNet) Name.')
 param vnetName string
 
@@ -354,6 +358,8 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     vnetName: vnetName
     location: location
     combinedTags: combinedTags
+    defaultRouteTableName: defaultRouteTableName
+    routes: routes
     vnetRgName: vnetRgName
     subscriptionId: sub.outputs.subscriptionId
     vnetAddressPrefixes: vnetAddressPrefixes
