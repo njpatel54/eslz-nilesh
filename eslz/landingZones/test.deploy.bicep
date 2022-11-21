@@ -572,7 +572,7 @@ module defender 'wrapperModule/defender.bicep' = {
       location: location
       subscriptionAlias: subscriptionAlias
       subscriptionId: subscriptionId
-      workspaceId: sentinelLawName
+      workspaceId: resourceId(mgmtsubid, siemRgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
       defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }
