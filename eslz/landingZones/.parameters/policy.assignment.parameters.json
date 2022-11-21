@@ -46,7 +46,7 @@
                     "displayName": "Configure managed disks to disable public network access",
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/8426280e-b5be-43d9-979e-653d12a08638",
                     "parameters": {
-                        "vaultLocation": {
+                        "location": {
                             "value": "usgovvirginia"
                         },
                         "diskAccessId": {
