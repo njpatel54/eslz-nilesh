@@ -189,6 +189,9 @@ param mgmtVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${mgmtSuffi
 @description('Required. Name of the Azure Recovery Service Vault in Shared Services Subscription.')
 param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffix}'
 
+@description('Optional. Security contact data.')
+param defenderSecurityContactProperties object
+
 // 1. Create Resoruce Groups
 module siem_rg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${siemRgName}'
@@ -377,6 +380,17 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
     //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+  }
+}]
+
+// 10. Configure Defender for Cloud
+module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for subscription in subscriptions: {
+  name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
+  scope: subscription(subscription.subscriptionId)
+  params: {
+    scope: '/subscriptions/${subscription.subscriptionId}'
+    workspaceId: logaSentinel.outputs.resourceId
+    securityContactProperties: defenderSecurityContactProperties
   }
 }]
 
