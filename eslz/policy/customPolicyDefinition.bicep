@@ -196,7 +196,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('policyDefinitions/policy-def-Modify-Deny-Disk-Export.json'))
   }
   {
-    name: 'Modify-Deny-Disk-Export'
+    name: 'Deny-PrivateDNSZone-PrivateLink'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-DNS-Zone-With-Privatelink-Prefix.json'))  
   }  
 ]
