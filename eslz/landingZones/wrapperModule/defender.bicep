@@ -19,7 +19,7 @@ module defender '../../modules/security/azureSecurityCenter/deploy.bicep' = {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)
   params: {
-    scope: subscriptionId
+    scope: '/subscriptions/${subscriptionId}'
     workspaceId: workspaceId
     securityContactProperties: defenderSecurityContactProperties
   }
