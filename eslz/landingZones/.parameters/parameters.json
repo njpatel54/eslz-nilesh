@@ -388,9 +388,20 @@
     },
     "defenderSecurityContactProperties": {
       "value": {
-        "alertNotifications": "Off",
-        "alertsToAdmins": "Off",
-        "email": "foo@contoso.com",
+        "alertNotifications": {
+          "minimalSeverity": "High",
+          "state": "On"
+        },
+        "emails": "foo@contoso.com",
+        "notificationsByRole": {
+          "roles": [
+            "AccountAdmin",
+            "Contributor",
+            "Owner",
+            "ServiceAdmin"
+          ],
+          "state": "On"
+        },
         "phone": "+12345678"
       }
     },

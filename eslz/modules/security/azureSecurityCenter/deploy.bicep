@@ -172,7 +172,7 @@ var pricings = [
   */
 ]
 
-resource pricingTiers 'Microsoft.Security/pricings@2018-06-01' = [for (pricing, index) in pricings: {
+resource pricingTiers 'Microsoft.Security/pricings@2022-03-01' = [for (pricing, index) in pricings: {
   name: pricing.name
   properties: {
     pricingTier: pricing.pricingTier
@@ -204,13 +204,13 @@ module iotSecuritySolutions '.bicep/nested_iotSecuritySolutions.bicep' = if (!em
   }
 }
 
-resource securityContacts 'Microsoft.Security/securityContacts@2017-08-01-preview' = if (!empty(securityContactProperties)) {
+resource securityContacts 'Microsoft.Security/securityContacts@2020-01-01-preview' = if (!empty(securityContactProperties)) {
   name: 'securityContacts'
   properties: {
-    email: securityContactProperties.email
-    phone: securityContactProperties.phone
     alertNotifications: securityContactProperties.alertNotifications
-    alertsToAdmins: securityContactProperties.alertsToAdmins
+    emails: securityContactProperties.email
+    notificationsByRole: securityContactProperties.notificationsByRole
+    phone: securityContactProperties.phone
   }
 }
 
