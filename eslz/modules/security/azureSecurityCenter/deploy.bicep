@@ -11,7 +11,7 @@ param scope string
   'On'
   'Off'
 ])
-param autoProvision string = 'On'
+param autoProvision string = 'Off'
 
 @description('Optional. Device Security group data.')
 param deviceSecurityGroupProperties object = {}

@@ -1,6 +1,6 @@
 {
   "properties": {
-    "description": "This policy set deploys the configurations of application Azure resources to forward diagnostic logs and metrics to an Azure Log Analytics workspace. See the list of policies of the services that are included ",
+    "description": "This policy initiative deploys the diagnostic settings for Azure Services to forward diagnostic logs and metrics to an Azure Log Analytics workspace.",
     "displayName": "Deploy Diagnostic Settings for Azure Services to send logs to Azure Log Analytics Workspace - Sentinel",
     "parameters": {
       "logAnalytics": {
