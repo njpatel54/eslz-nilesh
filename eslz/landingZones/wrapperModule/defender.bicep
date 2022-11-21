@@ -13,7 +13,7 @@ param location string
 param subscriptionAlias string
 
 @description('Optional. Security contact data.')
-param defenderSecurityContactProperties object = {}
+param defenderSecurityContactProperties object
 
 module defender '../../modules/security/azureSecurityCenter/deploy.bicep' = {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'

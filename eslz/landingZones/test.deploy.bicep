@@ -282,6 +282,9 @@ param softwareUpdateConfigurations array = []
 @description('Required. Disk Access resource name.')
 param diskAccessName string = 'da-${projowner}-${region}-01'
 
+@description('Optional. Security contact data.')
+param defenderSecurityContactProperties object
+
 /*
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
@@ -569,6 +572,7 @@ module defender 'wrapperModule/defender.bicep' = {
       location: location
       subscriptionAlias: subscriptionAlias
       subscriptionId: subscriptionId
+      defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }
 
