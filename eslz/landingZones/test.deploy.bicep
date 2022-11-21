@@ -282,6 +282,7 @@ param softwareUpdateConfigurations array = []
 @description('Required. Disk Access resource name.')
 param diskAccessName string = 'da-${projowner}-${region}-01'
 
+/*
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
@@ -293,7 +294,7 @@ resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-/*
+
 // 4. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
@@ -307,7 +308,7 @@ module sub 'wrapperModule/createSub.bicep' = {
     managementGroupId: managementGroupId
   }
 }
-*/
+
 // 5. Create Resource Groups
 module rgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
@@ -556,8 +557,20 @@ module policyAssignment 'wrapperModule/polAssignment.bicep' = {
     policyAssignments: policyAssignments
   }
 }
-
-
+*/
+// 16. Cconfigure Defender for Cloud
+module defender 'wrapperModule/defender.bicep' = {
+  name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  scope: subscription(subscriptionId)
+  //dependsOn: [
+  //  sub
+  //]
+    params: {
+      location: location
+      subscriptionAlias: subscriptionAlias
+      subscriptionId: subscriptionId
+  }
+}
 
 /*
 @description('Output - Resource Group "name" Array')

@@ -108,16 +108,16 @@
     },
     "routes": {
       "value": [
-          {
-              "name": "default",
-              "properties": {
-                  "addressPrefix": "0.0.0.0/0",
-                  "nextHopIpAddress": "10.30.0.68",
-                  "nextHopType": "VirtualAppliance"
-              }
+        {
+          "name": "default",
+          "properties": {
+            "addressPrefix": "0.0.0.0/0",
+            "nextHopIpAddress": "10.30.0.68",
+            "nextHopType": "VirtualAppliance"
           }
+        }
       ]
-  },
+    },
     "vnetName": {
       "value": "vnet-lz50-usva"
     },
@@ -380,12 +380,19 @@
           "excludeUpdates": [
             "icacls"
           ],
-
           "includeUpdates": [
             "kernel"
           ]
         }
       ]
+    },
+    "defenderSecurityContactProperties": {
+      "value": {
+        "alertNotifications": "Off",
+        "alertsToAdmins": "Off",
+        "email": "foo@contoso.com",
+        "phone": "+12345678"
+      }
     },
     "projowner": {
       "value": "lz50"
