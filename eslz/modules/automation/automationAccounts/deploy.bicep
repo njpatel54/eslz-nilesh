@@ -232,7 +232,7 @@ module automationAccount_jobSchedules 'jobSchedules/deploy.bicep' = [for (jobSch
   ]
 }]
 
-module automationAccount_variables 'variables/deploy.bicep' = [for (variable, index) in variables: {
+module automationAccountVariables 'variables/deploy.bicep' = [for (variable, index) in variables: {
   name: '${uniqueString(deployment().name, location)}-AutoAccount-Variable-${index}'
   params: {
     automationAccountName: automationAccount.name

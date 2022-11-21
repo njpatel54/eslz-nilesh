@@ -53,11 +53,11 @@ param notScopes array = []
 @sys.description('Optional. Location for all resources.')
 param location string = deployment().location
 
-var nonComplianceMessage_var = {
+var nonComplianceMessageVar = {
   message: !empty(nonComplianceMessage) ? nonComplianceMessage : null
 }
 
-var identity_var = identity == 'SystemAssigned' ? {
+var identityVar = identity == 'SystemAssigned' ? {
   type: identity
 } : identity == 'UserAssigned' ? {
   type: identity
@@ -75,11 +75,11 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01'
     description: !empty(description) ? description : null
     policyDefinitionId: policyDefinitionId
     parameters: parameters
-    nonComplianceMessages: !empty(nonComplianceMessage) ? array(nonComplianceMessage_var) : []
+    nonComplianceMessages: !empty(nonComplianceMessage) ? array(nonComplianceMessageVar) : []
     enforcementMode: enforcementMode
     notScopes: !empty(notScopes) ? notScopes : []
   }
-  identity: identity_var
+  identity: identityVar
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = [for roleDefinitionId in roleDefinitionIds: if (!empty(roleDefinitionIds) && identity == 'SystemAssigned') {

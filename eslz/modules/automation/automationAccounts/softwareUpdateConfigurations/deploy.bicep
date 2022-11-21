@@ -177,7 +177,7 @@ param scheduleDescription string = ''
 @description('Generated. Do not touch. Is used to provide the base time for time comparison for startTime. If startTime is specified in HH:MM format, baseTime is used to check if the provided startTime has passed, adding one day before setting the deployment schedule.')
 param baseTime string = utcNow('u')
 
-var updateClassifications_var = replace(replace(replace(replace(string(updateClassifications), ',', ', '), '[', ''), ']', ''), '"', '')
+var updateClassificationsVar = replace(replace(replace(replace(string(updateClassifications), ',', ', '), '[', ''), ']', ''), '"', '')
 
 resource automationAccount 'Microsoft.Automation/automationAccounts@2020-01-13-preview' existing = {
   name: automationAccountName
@@ -193,13 +193,13 @@ resource softwareUpdateConfiguration 'Microsoft.Automation/automationAccounts/so
       linux: ((operatingSystem == 'Linux') ? {
         excludedPackageNameMasks: excludeUpdates
         includedPackageNameMasks: includeUpdates
-        includedPackageClassifications: updateClassifications_var
+        includedPackageClassifications: updateClassificationsVar
         rebootSetting: rebootSetting
       } : null)
       windows: ((operatingSystem == 'Windows') ? {
         excludedKbNumbers: excludeUpdates
         includedKbNumbers: includeUpdates
-        includedUpdateClassifications: updateClassifications_var
+        includedUpdateClassifications: updateClassificationsVar
         rebootSetting: rebootSetting
       } : null)
       targets: {

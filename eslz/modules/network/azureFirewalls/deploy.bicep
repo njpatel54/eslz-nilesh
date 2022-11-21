@@ -99,7 +99,7 @@ param diagnosticMetricsToEnable array = [
   'AllMetrics'
 ]
 
-var ipConfigurations_var = [for ipConfiguration in ipConfigurations: {
+var ipConfigurationsVar = [for ipConfiguration in ipConfigurations: {
   name: ipConfiguration.name
   properties: {
     publicIPAddress: contains(ipConfiguration, 'publicIPAddressResourceId') ? {
@@ -143,7 +143,7 @@ resource azureFirewall 'Microsoft.Network/azureFirewalls@2021-05-01' = {
     firewallPolicy: empty(firewallPolicyId) ? null : {
       id: firewallPolicyId
     }
-    ipConfigurations: ipConfigurations_var
+    ipConfigurations: ipConfigurationsVar
     sku: {
       name: azureSkuName
       tier: azureSkuTier

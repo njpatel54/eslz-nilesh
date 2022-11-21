@@ -119,8 +119,8 @@ param diagnosticMetricsToEnable array = [
 ]
 
 var uniqueEventHubNamespace = 'evhns-${uniqueString(resourceGroup().id)}'
-var name_var = empty(eventhubNamespaceName) ? uniqueEventHubNamespace : eventhubNamespaceName
-var maximumThroughputUnits_var = !isAutoInflateEnabled ? 0 : maximumThroughputUnits
+var nameVar = empty(eventhubNamespaceName) ? uniqueEventHubNamespace : eventhubNamespaceName
+var maximumThroughputUnitsVar = !isAutoInflateEnabled ? 0 : maximumThroughputUnits
 
 @description('Optional. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = '${eventhubNamespaceName}-diagnosticSettings'
@@ -152,7 +152,7 @@ var identity = identityType != 'None' ? {
 } : null
 
 resource eventHubNamespace 'Microsoft.EventHub/namespaces@2021-06-01-preview' = {
-  name: name_var
+  name: nameVar
   location: location
   tags: tags
   identity: identity
@@ -164,7 +164,7 @@ resource eventHubNamespace 'Microsoft.EventHub/namespaces@2021-06-01-preview' = 
   properties: {
     zoneRedundant: zoneRedundant
     isAutoInflateEnabled: isAutoInflateEnabled
-    maximumThroughputUnits: maximumThroughputUnits_var
+    maximumThroughputUnits: maximumThroughputUnitsVar
   }
 }
 

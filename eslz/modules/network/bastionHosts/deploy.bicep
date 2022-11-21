@@ -98,9 +98,9 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
   }
 }]
 
-var scaleUnits_var = skuType == 'Basic' ? 2 : scaleUnits
+var scaleUnitsVar = skuType == 'Basic' ? 2 : scaleUnits
 
-var additionalPublicIpConfigurations_var = [for ipConfiguration in additionalPublicIpConfigurations: {
+var additionalPublicIpConfigurationsVar = [for ipConfiguration in additionalPublicIpConfigurations: {
   name: ipConfiguration.name
   properties: {
     publicIPAddress: contains(ipConfiguration, 'publicIPAddressResourceId') ? {
@@ -114,7 +114,7 @@ var additionalPublicIpConfigurations_var = [for ipConfiguration in additionalPub
 // 1. Use existing public ip
 // 2. Use new public ip created in this module
 // 3. Do not use a public ip if isCreateDefaultPublicIP is false
-var subnet_var = {
+var subnetVar = {
   subnet: {
     id: '${vNetId}/subnets/AzureBastionSubnet' // The subnet name must be AzureBastionSubnet
   }
@@ -134,9 +134,9 @@ var ipConfigurations = concat([
   {
     name: 'IpConfAzureBastionSubnet'
     //Use existing public ip, new public ip created in this module, or none if isCreateDefaultPublicIP is false
-    properties: union(subnet_var, !empty(azureBastionSubnetPublicIpId) ? existingPip : {}, (isCreateDefaultPublicIP ? newPip : {}))
+    properties: union(subnetVar, !empty(azureBastionSubnetPublicIpId) ? existingPip : {}, (isCreateDefaultPublicIP ? newPip : {}))
   }
-], additionalPublicIpConfigurations_var)
+], additionalPublicIpConfigurationsVar)
 
 // ----------------------------------------------------------------------------
 
@@ -178,7 +178,7 @@ resource azureBastion 'Microsoft.Network/bastionHosts@2021-05-01' = {
     name: skuType
   }
   properties: {
-    scaleUnits: scaleUnits_var
+    scaleUnits: scaleUnitsVar
     ipConfigurations: ipConfigurations
   }
 }

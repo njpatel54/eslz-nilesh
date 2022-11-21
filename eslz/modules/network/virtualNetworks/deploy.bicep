@@ -94,7 +94,7 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
   }
 }]
 
-var dnsServers_var = {
+var dnsServersVar = {
   dnsServers: array(dnsServers)
 }
 
@@ -111,7 +111,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
       addressPrefixes: addressPrefixes
     }
     ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
-    dhcpOptions: !empty(dnsServers) ? dnsServers_var : null
+    dhcpOptions: !empty(dnsServers) ? dnsServersVar : null
     enableDdosProtection: !empty(ddosProtectionPlanId)
     subnets: [for subnet in subnets: {
       name: subnet.name
