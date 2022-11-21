@@ -1,7 +1,7 @@
 targetScope = 'managementGroup'
 
 @sys.description('Required. Specifies the name of the policy assignment. Maximum length is 24 characters for management group scope.')
-//@maxLength(24)
+@maxLength(24)
 param name string
 
 @sys.description('Optional. This message will be part of response in case of policy violation.')
