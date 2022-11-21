@@ -402,7 +402,7 @@ param dataConnectors array = [
   'AzureAdvancedThreatProtection'
   'AzureSecurityCenter'
   'MicrosoftCloudAppSecurity'
-  'MicrosoftDefenderAdvancedThreatProtection'
+  // 'MicrosoftDefenderAdvancedThreatProtection'                       // Requires license
   'Office365'
   'ThreatIntelligence'
 ]
