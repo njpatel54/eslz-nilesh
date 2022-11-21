@@ -208,7 +208,7 @@ resource securityContacts 'Microsoft.Security/securityContacts@2020-01-01-previe
   name: 'securityContacts'
   properties: {
     alertNotifications: securityContactProperties.alertNotifications
-    emails: securityContactProperties.email
+    emails: securityContactProperties.emails
     notificationsByRole: securityContactProperties.notificationsByRole
     phone: securityContactProperties.phone
   }
