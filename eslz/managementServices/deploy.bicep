@@ -138,7 +138,7 @@ param stgPublicNetworkAccess string = 'Disabled'
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
-param kvPublicNetworkAccess string = 'Disabled'
+param kvPublicNetworkAccess string = 'Enabled'
 
 @description('Optional. Key Vault Role Assignment array.')
 param kvRoleAssignments array
@@ -394,6 +394,29 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
   }
 }]
 
+
+@description('The kind of data connectors that can be deployed via ARM templates: ["AmazonWebServicesCloudTrail", "AzureActivityLog", "AzureAdvancedThreatProtection", "AzureSecurityCenter", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
+param dataConnectors array = [
+  'AmazonWebServicesCloudTrail'
+  'AzureActiveDirectory'
+  'AzureAdvancedThreatProtection'
+  'AzureSecurityCenter'
+  'MicrosoftCloudAppSecurity'
+  'MicrosoftDefenderAdvancedThreatProtection'
+  'Office365'
+  'ThreatIntelligence'
+]
+
+// 11. Configure Sentinel Data Connectors
+module sentinelDataConnectors '../modules/securityInsights/dataConnectors/deploy.bicep' = {
+  name: 'sentinelDataConnectors-${take(uniqueString(deployment().name, location), 4)}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  params: {
+    subscriptionId: mgmtsubid
+    workspaceName: sentinelLawName
+    dataConnectors: dataConnectors
+  }
+}
 // 10. Create Recovery Services Vault (Management Subscription)
 module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'

@@ -35,6 +35,11 @@
           "publisher": "Microsoft"
         },
         {
+          "name": "DnsAnalytics",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
           "name": "Security",
           "product": "OMSGallery",
           "publisher": "Microsoft"
@@ -66,6 +71,11 @@
         },
         {
           "name": "VMInsights",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "WindowsFirewall",
           "product": "OMSGallery",
           "publisher": "Microsoft"
         }
@@ -94,6 +104,11 @@
           "publisher": "Microsoft"
         },
         {
+          "name": "DnsAnalytics",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
           "name": "Security",
           "product": "OMSGallery",
           "publisher": "Microsoft"
@@ -125,6 +140,11 @@
         },
         {
           "name": "VMInsights",
+          "product": "OMSGallery",
+          "publisher": "Microsoft"
+        },
+        {
+          "name": "WindowsFirewall",
           "product": "OMSGallery",
           "publisher": "Microsoft"
         }
