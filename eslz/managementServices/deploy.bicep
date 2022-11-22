@@ -398,7 +398,7 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
 @description('The kind of data connectors that can be deployed via ARM templates: ["AmazonWebServicesCloudTrail", "AzureActivityLog", "AzureAdvancedThreatProtection", "AzureSecurityCenter", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
 param dataConnectors array = [
   // 'AmazonWebServicesCloudTrail'
-  'AzureActiveDirectory'
+  // 'AzureActiveDirectory'
   'AzureAdvancedThreatProtection'
   'AzureSecurityCenter'
   'MicrosoftCloudAppSecurity'
