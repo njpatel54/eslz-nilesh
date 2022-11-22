@@ -285,7 +285,7 @@ param diskAccessName string = 'da-${projowner}-${region}-01'
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
-/*
+
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
@@ -297,7 +297,7 @@ resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-
+/*
 // 4. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
@@ -311,9 +311,9 @@ module sub 'wrapperModule/createSub.bicep' = {
     managementGroupId: managementGroupId
   }
 }
-
+*/
 // 5. Create Resource Groups
-module rgs './wrapperModule/resourceGroup.bicep' = {
+module lzRgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
     //sub
@@ -331,7 +331,7 @@ module rgs './wrapperModule/resourceGroup.bicep' = {
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   dependsOn: [
-    rgs
+    lzRgs
   ]
   params: {
     logsLawName: logsLawName
@@ -349,7 +349,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
 }
 
 // 7. Configure Subscription
-module subConfig 'wrapperModule/subconfig.bicep' = {
+module lzSubConfig 'wrapperModule/subconfig.bicep' = {
   name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
     lzLoga
@@ -488,7 +488,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = [for (virtualMachine, i) in 
 }]
 
 // 13. Create Recovery Services Vault
-module rsv 'wrapperModule/recoveryServicesVault.bicep' = {
+module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
     lzVnet
@@ -529,7 +529,7 @@ module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
 }
 
 // 15. Create Disk Accesses Resource
-module diskAccess 'wrapperModule/diskAccesses.bicep' = {
+module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   name: 'mod-diskAccess-${take(uniqueString(deployment().name, location), 4)}-${diskAccessName}'
   dependsOn: [
     lzVnet
@@ -552,7 +552,7 @@ module diskAccess 'wrapperModule/diskAccesses.bicep' = {
 module policyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
-    rsv
+    lzRsv
     lzVms
   ]
   params: {
@@ -560,9 +560,9 @@ module policyAssignment 'wrapperModule/polAssignment.bicep' = {
     policyAssignments: policyAssignments
   }
 }
-*/
+
 // 16. Cconfigure Defender for Cloud
-module defender 'wrapperModule/defender.bicep' = {
+module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)
   //dependsOn: [
