@@ -119,6 +119,7 @@ var sources = {
   }
 }
 
+/*
 resource deployDataConnectors 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = [for (dataConnector, index) in dataConnectors: if (!empty(dataConnectors)) {
   name: '${dataConnector}/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
@@ -128,15 +129,16 @@ resource deployDataConnectors 'Microsoft.OperationalInsights/workspaces/provider
   ]
   properties: contains(sources, dataConnector) ? sources[dataConnector].properties : ''
 }]
-
+*/
 
 
 
 // Reference for connectors can be found here:
 // https://docs.microsoft.com/en-us/azure/templates/microsoft.operationalinsights/workspaces/datasources?tabs=bicep#workspacesdatasources
+// Microsoft.SecurityInsights/dataConnectors@2022-08-01
 
-/*
-resource awsCloudTrailDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'AmazonWebServicesCloudTrail')) {
+
+resource awsCloudTrailDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AmazonWebServicesCloudTrail')) {
   name: 'AmazonWebServicesCloudTrail-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'AmazonWebServicesCloudTrail'
@@ -156,7 +158,7 @@ resource awsCloudTrailDataConnector 'Microsoft.SecurityInsights/dataConnectors@2
 // Note: commenting out as Azure Active Directory diagnostic settings
 // It is being deployed by /eslz/management-services/.scripts/set-aaddiagsettings.ps1
 
-resource aadDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'AzureActiveDirectory')) {
+resource aadDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AzureActiveDirectory')) {
   name: 'AzureActiveDirectory-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'AzureActiveDirectory'
@@ -176,7 +178,7 @@ resource aadDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01'
 // Defender for Identity
 // (Formerly Azure Advanced Threat Protection)
 
-resource aatpDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'AzureAdvancedThreatProtection')) {
+resource aatpDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AzureAdvancedThreatProtection')) {
   name: 'AzureAdvancedThreatProtection-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'AzureAdvancedThreatProtection'
@@ -197,7 +199,7 @@ resource aatpDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01
 // (Formerly Azure Security Center)
 // Enabled through Defender for Cloud Bicep code
 
-resource ascDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'AzureSecurityCenter')) {
+resource ascDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AzureSecurityCenter')) {
   name: 'AzureSecurityCenter-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'AzureSecurityCenter'
@@ -217,7 +219,7 @@ resource ascDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01'
 // Microsoft Cloud App Security (MCAS)
 // Note: MCAS not available in Il6
 
-resource mcasDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'MicrosoftCloudAppSecurity')) {
+resource mcasDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'MicrosoftCloudAppSecurity')) {
   name: 'MicrosoftCloudAppSecurity-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'MicrosoftCloudAppSecurity'
@@ -241,7 +243,7 @@ resource mcasDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01
 // (Formerly Defender Advanced Threat Protection)
 // Note: Requires license
 
-resource mdatpDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'MicrosoftDefenderAdvancedThreatProtection')) {
+resource mdatpDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'MicrosoftDefenderAdvancedThreatProtection')) {
   name: 'MicrosoftDefenderAdvancedThreatProtection-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'MicrosoftDefenderAdvancedThreatProtection'
@@ -261,7 +263,7 @@ resource mdatpDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-0
 // Office 365 Logs
 // Note: Not available in IL6
 
-resource O365DataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'Office365')) {
+resource O365DataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'Office365')) {
   name: 'Office365-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'Office365'
@@ -287,7 +289,7 @@ resource O365DataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01
 // Threat Intelligence
 // Note: Threat Intelligence connector not available in IL6
 
-resource ThreatIntelligenceDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'ThreatIntelligence')) {
+resource ThreatIntelligenceDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'ThreatIntelligence')) {
   name: 'ThreatIntelligence-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'ThreatIntelligence'
@@ -304,5 +306,3 @@ resource ThreatIntelligenceDataConnector 'Microsoft.SecurityInsights/dataConnect
     tipLookbackPeriod: '60'
   }
 }
-
-*/
