@@ -19,6 +19,7 @@ resource logaOnboardingStatus 'Microsoft.SecurityInsights/onboardingStates@2022-
   name: workspaceName
 }
 
+/*
 var sources = {
   AmazonWebServicesCloudTrail: {
     kind: 'AmazonWebServicesCloudTrail'
@@ -119,7 +120,6 @@ var sources = {
   }
 }
 
-/*
 resource deployDataConnectors 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = [for (dataConnector, index) in dataConnectors: if (!empty(dataConnectors)) {
   name: '${dataConnector}/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
@@ -130,8 +130,6 @@ resource deployDataConnectors 'Microsoft.SecurityInsights/dataConnectors@2022-08
   properties: contains(sources, dataConnector) ? sources[dataConnector].properties : ''
 }]
 */
-
-
 
 // Reference for connectors can be found here:
 // https://docs.microsoft.com/en-us/azure/templates/microsoft.operationalinsights/workspaces/datasources?tabs=bicep#workspacesdatasources
