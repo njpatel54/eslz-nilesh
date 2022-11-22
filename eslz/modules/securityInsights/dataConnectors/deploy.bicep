@@ -120,7 +120,7 @@ var sources = {
 }
 
 resource deployDataConnectors 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2020-01-01' = [for (dataConnector, index) in dataConnectors: if (!empty(dataConnectors)) {
-  name: '${dataConnector}-Microsoft.SecurityInsights-${workspaceName}'
+  name: '${dataConnector}/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: contains(sources, dataConnector) ? sources[dataConnector].kind : ''
   dependsOn: [
