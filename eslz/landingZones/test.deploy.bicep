@@ -548,19 +548,6 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   }
 }
 
-// 15. Create Policy Assignment and Remediation
-module policyAssignment 'wrapperModule/polAssignment.bicep' = {
-  name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
-  dependsOn: [
-    lzRsv
-    lzVms
-  ]
-  params: {
-    subscriptionId: subscriptionId
-    policyAssignments: policyAssignments
-  }
-}
-
 // 16. Cconfigure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
@@ -576,6 +563,20 @@ module lzDefender 'wrapperModule/defender.bicep' = {
       defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }
+// 17. Create Policy Assignment and Remediation
+module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
+  name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
+  dependsOn: [
+    lzRsv
+    lzVms
+  ]
+  params: {
+    subscriptionId: subscriptionId
+    policyAssignments: policyAssignments
+  }
+}
+
+
 
 /*
 @description('Output - Resource Group "name" Array')

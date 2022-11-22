@@ -19,7 +19,8 @@ resource managementGroup 'Microsoft.Management/managementGroups@2021-04-01' = {
     displayName: displayName
     details: !empty(parentId) ? {
       parent: {
-        id: '/providers/Microsoft.Management/managementGroups/${parentId}'
+        // id: '/providers/Microsoft.Management/managementGroups/${parentId}'
+        id: tenantResourceId('Microsoft.Management/managementGroups', parentId)
       }
     } : null
   }
