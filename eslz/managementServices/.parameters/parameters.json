@@ -916,7 +916,7 @@
             }
           ],
           "startTime": "23:00",
-          "timeZone": "ET",
+          "timeZone": "EST",
           "updateClassifications": [
             "Critical",
             "Definition",
@@ -953,7 +953,7 @@
             }
           ],
           "startTime": "23:00",
-          "timeZone": "ET",
+          "timeZone": "EST",
           "updateClassifications": [
             "Critical",
             "Other",
