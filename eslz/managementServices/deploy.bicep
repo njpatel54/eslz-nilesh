@@ -399,7 +399,7 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
 param dataConnectors array = [
   // 'AmazonWebServicesCloudTrail'
   // 'AzureActiveDirectory'
-  'AzureAdvancedThreatProtection'
+  // 'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
   'AzureSecurityCenter'
   'MicrosoftCloudAppSecurity'
   // 'MicrosoftDefenderAdvancedThreatProtection'                       // Requires license
