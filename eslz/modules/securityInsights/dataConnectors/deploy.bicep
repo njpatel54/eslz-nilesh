@@ -132,7 +132,7 @@ resource deployDataConnectors 'Microsoft.SecurityInsights/dataConnectors@2022-08
 // Reference for connectors can be found here:
 // https://docs.microsoft.com/en-us/azure/templates/microsoft.operationalinsights/workspaces/datasources?tabs=bicep#workspacesdatasources
 
-
+/*
 resource awsCloudTrailDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'AmazonWebServicesCloudTrail')) {
   name: 'AmazonWebServicesCloudTrail-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
@@ -302,3 +302,4 @@ resource ThreatIntelligenceDataConnector 'Microsoft.SecurityInsights/dataConnect
   }
 }
 
+*/
