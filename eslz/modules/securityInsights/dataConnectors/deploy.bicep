@@ -139,7 +139,7 @@ resource deployDataConnectors 'Microsoft.OperationalInsights/workspaces/provider
 
 
 resource awsCloudTrailDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AmazonWebServicesCloudTrail')) {
-  name: 'AmazonWebServicesCloudTrail-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'AmazonWebServicesCloudTrail/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'AmazonWebServicesCloudTrail'
   dependsOn: [
@@ -159,7 +159,7 @@ resource awsCloudTrailDataConnector 'Microsoft.OperationalInsights/workspaces/pr
 // It is being deployed by /eslz/management-services/.scripts/set-aaddiagsettings.ps1
 
 resource aadDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AzureActiveDirectory')) {
-  name: 'AzureActiveDirectory-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'AzureActiveDirectory/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'AzureActiveDirectory'
   dependsOn: [
@@ -179,7 +179,7 @@ resource aadDataConnector 'Microsoft.OperationalInsights/workspaces/providers/da
 // (Formerly Azure Advanced Threat Protection)
 
 resource aatpDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AzureAdvancedThreatProtection')) {
-  name: 'AzureAdvancedThreatProtection-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'AzureAdvancedThreatProtection/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'AzureAdvancedThreatProtection'
   dependsOn: [
@@ -200,7 +200,7 @@ resource aatpDataConnector 'Microsoft.OperationalInsights/workspaces/providers/d
 // Enabled through Defender for Cloud Bicep code
 
 resource ascDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'AzureSecurityCenter')) {
-  name: 'AzureSecurityCenter-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'AzureSecurityCenter/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'AzureSecurityCenter'
   dependsOn: [
@@ -220,7 +220,7 @@ resource ascDataConnector 'Microsoft.OperationalInsights/workspaces/providers/da
 // Note: MCAS not available in Il6
 
 resource mcasDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'MicrosoftCloudAppSecurity')) {
-  name: 'MicrosoftCloudAppSecurity-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'MicrosoftCloudAppSecurity/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'MicrosoftCloudAppSecurity'
   dependsOn: [
@@ -244,7 +244,7 @@ resource mcasDataConnector 'Microsoft.OperationalInsights/workspaces/providers/d
 // Note: Requires license
 
 resource mdatpDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'MicrosoftDefenderAdvancedThreatProtection')) {
-  name: 'MicrosoftDefenderAdvancedThreatProtection-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'MicrosoftDefenderAdvancedThreatProtection/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'MicrosoftDefenderAdvancedThreatProtection'
   dependsOn: [
@@ -264,7 +264,7 @@ resource mdatpDataConnector 'Microsoft.OperationalInsights/workspaces/providers/
 // Note: Not available in IL6
 
 resource O365DataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'Office365')) {
-  name: 'Office365-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'Office365/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'Office365'
   dependsOn: [
@@ -290,7 +290,7 @@ resource O365DataConnector 'Microsoft.OperationalInsights/workspaces/providers/d
 // Note: Threat Intelligence connector not available in IL6
 
 resource ThreatIntelligenceDataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'ThreatIntelligence')) {
-  name: 'ThreatIntelligence-Microsoft.SecurityInsights-${workspaceName}'
+  name: 'ThreatIntelligence/Microsoft.SecurityInsights/${workspaceName}'
   scope: loga
   kind: 'ThreatIntelligence'
   dependsOn: [
