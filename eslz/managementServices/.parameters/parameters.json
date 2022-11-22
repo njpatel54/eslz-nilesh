@@ -915,7 +915,7 @@
               "occurrence": 3
             }
           ],
-          "startTime": "22:00",
+          "startTime": "21:00",
           "updateClassifications": [
             "Critical",
             "Definition",
@@ -937,9 +937,21 @@
           "name": "Linux",
           "operatingSystem": "Linux",
           "rebootSetting": "IfRequired",
+          "scopeByTags": {
+            "ProjectID": [
+              "LZ50"
+            ]
+          },
+          "interval": 1,
           "maintenanceWindow": "PT4H",
-          "frequency": "OneTime",
-          "startTime": "22:00",
+          "frequency": "Month",
+          "monthlyOccurrences": [
+            {
+              "day": "Friday",
+              "occurrence": 3
+            }
+          ],
+          "startTime": "21:00",
           "updateClassifications": [
             "Critical",
             "Other",
