@@ -129,7 +129,6 @@ resource deployDataConnectors 'Microsoft.SecurityInsights/dataConnectors@2022-08
   properties: contains(sources, dataConnector) ? sources[dataConnector].properties : ''
 }]
 
-/*
 // Reference for connectors can be found here:
 // https://docs.microsoft.com/en-us/azure/templates/microsoft.operationalinsights/workspaces/datasources?tabs=bicep#workspacesdatasources
 
@@ -152,7 +151,7 @@ resource awsCloudTrailDataConnector 'Microsoft.SecurityInsights/dataConnectors@2
 
 // Azure Active Directory
 // Note: commenting out as Azure Active Directory diagnostic settings
-// It is being deployed by /eslz/management-services/set-aaddiagsettings.ps1
+// It is being deployed by /eslz/management-services/.scripts/set-aaddiagsettings.ps1
 
 resource aadDataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'AzureActiveDirectory')) {
   name: 'AzureActiveDirectory-Microsoft.SecurityInsights-${workspaceName}'
@@ -302,4 +301,4 @@ resource ThreatIntelligenceDataConnector 'Microsoft.SecurityInsights/dataConnect
     tipLookbackPeriod: '60'
   }
 }
-*/
+

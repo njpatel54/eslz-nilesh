@@ -398,13 +398,13 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
 @description('The kind of data connectors that can be deployed via ARM templates: ["AmazonWebServicesCloudTrail", "AzureActivityLog", "AzureAdvancedThreatProtection", "AzureSecurityCenter", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
 param dataConnectors array = [
   // 'AmazonWebServicesCloudTrail'
-  // 'AzureActiveDirectory'
-  // 'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
-  'AzureSecurityCenter'
-  'MicrosoftCloudAppSecurity'
-  // 'MicrosoftDefenderAdvancedThreatProtection'                       // Requires license
-  // 'Office365'
-  'ThreatIntelligence'
+  //'AzureActiveDirectory'
+  //'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
+  //'AzureSecurityCenter'
+ // 'MicrosoftCloudAppSecurity'
+  'MicrosoftDefenderAdvancedThreatProtection'                       
+  'Office365'
+  //'ThreatIntelligence'
 ]
 
 // 11. Configure Sentinel Data Connectors
