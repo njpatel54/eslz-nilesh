@@ -119,7 +119,7 @@ var sources = {
   }
 }
 
-resource deployDataConnectors 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = [for (dataConnector, index) in dataConnectors: if (!empty(dataConnectors)) {
+resource deployDataConnectors 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2020-01-01' = [for (dataConnector, index) in dataConnectors: if (!empty(dataConnectors)) {
   name: '${dataConnector}-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: contains(sources, dataConnector) ? sources[dataConnector].kind : ''
@@ -128,6 +128,9 @@ resource deployDataConnectors 'Microsoft.SecurityInsights/dataConnectors@2022-08
   ]
   properties: contains(sources, dataConnector) ? sources[dataConnector].properties : ''
 }]
+
+
+
 
 // Reference for connectors can be found here:
 // https://docs.microsoft.com/en-us/azure/templates/microsoft.operationalinsights/workspaces/datasources?tabs=bicep#workspacesdatasources
