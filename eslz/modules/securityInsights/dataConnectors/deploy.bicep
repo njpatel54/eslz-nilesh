@@ -263,8 +263,8 @@ resource mdatpDataConnector 'Microsoft.OperationalInsights/workspaces/providers/
 // Office 365 Logs
 // Note: Not available in IL6
 
-resource O365DataConnector 'Microsoft.OperationalInsights/workspaces/providers/dataConnectors@2022-10-01' = if (contains(dataConnectors, 'Office365')) {
-  name: 'Office365/Microsoft.SecurityInsights/${workspaceName}'
+resource O365DataConnector 'Microsoft.SecurityInsights/dataConnectors@2022-08-01' = if (contains(dataConnectors, 'Office365')) {
+  name: 'Office365-Microsoft.SecurityInsights-${workspaceName}'
   scope: loga
   kind: 'Office365'
   dependsOn: [
