@@ -232,7 +232,7 @@ resource softwareUpdateConfiguration 'Microsoft.Automation/automationAccounts/so
       interval: interval
       frequency: frequency
       isEnabled: isEnabled
-      timeZone: timeZone
+      timeZone:  timeZone
       advancedSchedule: {
         weekDays: (empty(weekDays) ? null : weekDays)
         monthDays: (empty(monthDays) ? null : monthDays)
