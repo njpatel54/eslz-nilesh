@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Key Vault Certificate Purged",
+    "alertDescription": "This activity log alert fires when Azure Key Vault Certificate is purged, making it unrecoverable",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.KeyVault/vaults/certificates/purge/action"
+            }
+        ]
+    }
+}

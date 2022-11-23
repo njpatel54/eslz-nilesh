@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Key Vault Deleted",
+    "alertDescription": "This activity log alert fires when Azure Key Vault is deleted.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.KeyVault/vaults/delete"
+            }
+        ]
+    }
+}

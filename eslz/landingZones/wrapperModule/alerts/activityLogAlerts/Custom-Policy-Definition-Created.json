@@ -1,0 +1,16 @@
+{
+    "alertName": "Custom Policy Definition Created",
+    "alertDescription": "This activity log alert fires when Custom Policy Definition is created.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Authorization/policyDefinitions/write"
+            }
+        ]
+    }
+}

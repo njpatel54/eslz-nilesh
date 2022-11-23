@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Key Vault Created or Updated",
+    "alertDescription": "This activity log alert fires when Azure Key Vault is created or existing Azure Key Vault is updated.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.KeyVault/vaults/write"
+            }
+        ]
+    }
+}

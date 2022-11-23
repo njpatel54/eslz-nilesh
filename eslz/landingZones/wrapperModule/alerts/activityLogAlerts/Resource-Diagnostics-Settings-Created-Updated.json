@@ -1,0 +1,16 @@
+{
+    "alertName": "Resoruce Diagnostics Settings Created or Updated",
+    "alertDescription": "This activity log alert fires when Resoruce Diagnostics Settings is created or existing Resoruce Diagnostics Settings is updated.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Insights/DiagnosticSettings/Write"
+            }
+        ]
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Virtual Network Created or Updated",
+    "alertDescription": "This activity log alert fires when Azure Virtual Network is created or existing Virtul Network is updated.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Network/VirtualNetworks/write"
+            }
+        ]
+    }
+}

@@ -443,24 +443,6 @@
               "phoneNumber": "6094681972"
             }
           ]
-        },
-        {
-          "name": "ag-lz50-usva-002",
-          "groupShortName": "aglz50002",
-          "emailReceivers": [
-            {
-              "name": "Administrators_email",
-              "emailAddress": "nileshpa@microsoft.com",
-              "useCommonAlertSchema": true
-            }
-          ],
-          "smsReceivers": [
-            {
-              "name": "Administrators_sms",
-              "countryCode": "1",
-              "phoneNumber": "6094681972"
-            }
-          ]
         }
       ]
     },

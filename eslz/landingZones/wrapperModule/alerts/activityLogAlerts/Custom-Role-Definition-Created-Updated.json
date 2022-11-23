@@ -1,0 +1,16 @@
+{
+    "alertName": "Custom Role Definition Created or Updated",
+    "alertDescription": "This activity log alert fires when Custom Role Definition is created or updated with specified permissions and assignable scopes.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Authorization/roleDefinitions/write"
+            }
+        ]
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Policy Assignment Deleted",
+    "alertDescription": "This activity log alert fires when Azure Policy Assignment is deleted.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Authorization/policyAssignments/delete"
+            }
+        ]
+    }
+}

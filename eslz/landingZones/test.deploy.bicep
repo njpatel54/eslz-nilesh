@@ -615,7 +615,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = [for (actionGroup, i) i
 
 // 18. Create Alerts
 module lzAlerts 'wrapperModule/alerts.bicep' = {
-  name: 'lzAlerts--${take(uniqueString(deployment().name, location), 4)}-${subscriptionId}'
+  name: 'lzAlerts--${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzActionGroup
@@ -625,6 +625,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
     wlRgName: wlRgName
     actionGroups: actionGroups
     tags: combinedTags
+    suffix: suffix
   }
 }
 

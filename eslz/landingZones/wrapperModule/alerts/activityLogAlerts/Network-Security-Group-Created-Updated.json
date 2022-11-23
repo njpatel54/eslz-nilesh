@@ -1,0 +1,17 @@
+{
+    "alertName": "Network Security Group Created or Updated",
+    "alertDescription": "This activity log alert fires when Network Security Group is created or existing Network Security Group is updated.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Network/networkSecurityGroups/write"
+            }
+        ]
+    }
+}
+

@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Virtual Network Peering Created or Updated",
+    "alertDescription": "This activity log alert fires when Azure Virtual Network Peering is created or existing Virtual Network Peering is updated.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write"
+            }
+        ]
+    }
+}

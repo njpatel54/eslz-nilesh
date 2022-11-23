@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Role Assignment Created",
+    "alertDescription": "This activity log alert fires when Azure Role Assignment is created.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Authorization/roleAssignments/write"
+            }
+        ]
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "alertName": "Azure Private DNS Zone Created or Updated",
+    "alertDescription": "This activity log alert fires when Azure Private DNS Zone is created or exisiting Private DNS Zone updated.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Network/privateDnsZones/write"
+            }
+        ]
+    }
+}
