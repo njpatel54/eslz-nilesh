@@ -127,9 +127,9 @@ var activityLogAlertRulesVar = [
 
 // 1. Create Activity Log Alerts
 module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (activityLogAlertRule, i) in activityLogAlertRulesVar: {
-  name: 'activityLogAlertRules-${activityLogAlertRule.rule.alertName}'
+  name: 'activityLogAlertRules-${i}'
   params: {
-    name: '${suffix}-${activityLogAlertRule.rule.alertName}'
+    name: '${suffix} - ${activityLogAlertRule.rule.alertName}'
     alertDescription: activityLogAlertRule.rule.alertDescription
     conditions: activityLogAlertRule.rule.condition.value
     location: 'global'
