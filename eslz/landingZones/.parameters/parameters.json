@@ -438,7 +438,7 @@
           ],
           "smsReceivers": [
             {
-              "name": "Administrators",
+              "name": "Administrators1",
               "countryCode": "1",
               "phoneNumber": "2345678901"
             }
@@ -450,15 +450,15 @@
           "emailReceivers": [
             {
               "name": "Administrators",
-              "emailAddress": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+              "emailAddress": "admin@azgperatonpartners.onmicrosoft.us",
               "useCommonAlertSchema": true
             }
           ],
           "smsReceivers": [
             {
-              "name": "Administrators",
+              "name": "Administrators1",
               "countryCode": "1",
-              "phoneNumber": "2345678901"
+              "phoneNumber": "2345678902"
             }
           ]
         }
