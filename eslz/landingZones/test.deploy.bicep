@@ -598,14 +598,17 @@ module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
 param actionGroups array = []
 
 // 18. Create Action Group(s)
-module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
-  name: 'lzActionGroup--${take(uniqueString(deployment().name, location), 4)}-${subscriptionId}'
+module lzActionGroup 'wrapperModule/actionGroup.bicep' = [for (actionGroup, i) in actionGroups: {
+  name: 'lzActionGroup--${take(uniqueString(deployment().name, location), 4)}-${actionGroup.name}'
   scope: resourceGroup(subscriptionId, mgmtRgName)
   params: {
-    actionGroups: actionGroups
+    name: actionGroup.name
+    groupShortName: actionGroup.groupShortName
+    emailReceivers: actionGroup.emailReceivers
+    smsReceivers: actionGroup.smsReceivers
     tags: combinedTags
   }
-}
+}]
 
 // 18. Create Alerts
 module lzAlerts 'wrapperModule/alerts.bicep' = {
