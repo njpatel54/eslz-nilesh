@@ -472,8 +472,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName
-    
+    //diagnosticEventHubName: diagnosticEventHubName    
   }
 }]
 
@@ -817,6 +816,8 @@ module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
     roleAssignmentPriDNSAContributor_mgmt
     roleAssignmentNetworkingPerms_mgmt
     roleAssignmentContributor_mgmt
+    hubVnet
+    spokeVnet
   ]
   params: {
     name: '${mgmtVaultName}-AzureBackup-pe'
@@ -905,6 +906,8 @@ module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
     roleAssignmentPriDNSAContributor_ssvc
     roleAssignmentNetworkingPerms_ssvc
     roleAssignmentContributor_ssvc
+    hubVnet
+    spokeVnet
   ]
   params: {
     name: '${mgmtVaultName}-AzureBackup-pe'
