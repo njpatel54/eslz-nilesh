@@ -43,7 +43,7 @@ module subDiagSettings '../../modules/insights/diagnosticSettings/sub.deploy.bic
   }
 }
 
-//3 Configure Tags for Subscription
+// 3. Configure Tags for Subscription
 module subTags '../../modules/resources/tags/subscriptions/deploy.bicep' = {
   name: 'subTags-${subscriptionId}'
   scope: subscription(subscriptionId)

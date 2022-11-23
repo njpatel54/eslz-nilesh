@@ -895,6 +895,11 @@
         }
       ]
     },
+    "dataConnectors": {
+      "value": [
+        "Office365"
+      ]
+    },
     "softwareUpdateConfigurations": {
       "value": [
         {
@@ -903,7 +908,7 @@
           "rebootSetting": "IfRequired",
           "scopeByTags": {
             "ProjectID": [
-              "LZ50"
+              "A2g-0"
             ]
           },
           "interval": 1,
@@ -940,7 +945,7 @@
           "rebootSetting": "IfRequired",
           "scopeByTags": {
             "ProjectID": [
-              "LZ50"
+              "A2g-0"
             ]
           },
           "interval": 1,

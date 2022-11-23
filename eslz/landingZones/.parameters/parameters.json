@@ -335,7 +335,7 @@
           "rebootSetting": "IfRequired",
           "scopeByTags": {
             "ProjectID": [
-              "LZ50"
+              "lz50"
             ]
           },
           "interval": 1,
@@ -372,7 +372,7 @@
           "rebootSetting": "IfRequired",
           "scopeByTags": {
             "ProjectID": [
-              "LZ50"
+              "lz50"
             ]
           },
           "interval": 1,

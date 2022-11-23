@@ -192,6 +192,18 @@ param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffi
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
+@description('The kind of data connectors that can be deployed via ARM templates: ["AmazonWebServicesCloudTrail", "AzureActivityLog", "AzureAdvancedThreatProtection", "AzureSecurityCenter", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
+param dataConnectors array = [
+  // 'AmazonWebServicesCloudTrail'
+  // 'AzureActiveDirectory'
+  // 'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
+  // 'AzureSecurityCenter'
+  // 'MicrosoftCloudAppSecurity'
+  // 'MicrosoftDefenderAdvancedThreatProtection'                       
+  // 'Office365'
+  // 'ThreatIntelligence'
+]
+
 // 1. Create Resoruce Groups
 module siem_rg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${siemRgName}'
@@ -383,6 +395,15 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
+// 10. Configure Tags for Subscription
+module subTags '../modules/resources/tags/subscriptions/deploy.bicep' = [ for subscription in subscriptions: {
+  name: 'subTags-${subscription.subscriptionId}'
+  scope: subscription(subscription.subscriptionId)
+    params: {
+    tags: ccsCombinedTags
+  }
+}]
+
 // 10. Configure Defender for Cloud
 module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
@@ -393,18 +414,6 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
     securityContactProperties: defenderSecurityContactProperties
   }
 }]
-
-@description('The kind of data connectors that can be deployed via ARM templates: ["AmazonWebServicesCloudTrail", "AzureActivityLog", "AzureAdvancedThreatProtection", "AzureSecurityCenter", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
-param dataConnectors array = [
-  // 'AmazonWebServicesCloudTrail'
-  // 'AzureActiveDirectory'
-  // 'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
-  // 'AzureSecurityCenter'
-  // 'MicrosoftCloudAppSecurity'
-  // 'MicrosoftDefenderAdvancedThreatProtection'                       
-  'Office365'
-  //'ThreatIntelligence'
-]
 
 // 11. Configure Sentinel Data Connectors
 module sentinelDataConnectors '../modules/securityInsights/dataConnectors/deploy.bicep' = {
