@@ -349,6 +349,9 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 module hubRouteTable '../modules/network//routeTables/deploy.bicep' = {
   name: 'hubRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+  ]
   params: {
     name: defaultRouteTableName
     location: location
@@ -436,6 +439,9 @@ module spokeNsg '../modules/network/networkSecurityGroups/deploy.bicep' = [for (
 module spokeRouteTables '../modules/network//routeTables/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'spokeRouteTables-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
   scope: resourceGroup(vNet.subscriptionId, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
   params: {
     name: defaultRouteTableName
     location: location
@@ -755,6 +761,8 @@ module roleAssignmentPriDNSAContributor_mgmt '../modules/authorization/roleAssig
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
   dependsOn: [
     rsv_mgmt
+    hubRg
+    spokeRg
   ]
   params: {
     roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
@@ -771,6 +779,8 @@ module roleAssignmentNetworkingPerms_mgmt '../modules/authorization/roleAssignme
   scope: resourceGroup(mgmtsubid, vnetRgName)
   dependsOn: [
     rsv_mgmt
+    hubRg
+    spokeRg
   ]
   params: {
     roleDefinitionIdOrName: networkingPermsRoleDefintionId
@@ -787,6 +797,8 @@ module roleAssignmentContributor_mgmt '../modules/authorization/roleAssignments/
   scope: resourceGroup(mgmtsubid, mgmtRgName)
   dependsOn: [
     rsv_mgmt
+    hubRg
+    spokeRg
   ]
   params: {
     roleDefinitionIdOrName: 'Contributor'
@@ -836,7 +848,9 @@ module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssig
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
   dependsOn: [
-    rsv_ssvc
+    rsv_mgmt
+    hubRg
+    spokeRg
   ]
   params: {
     roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
@@ -852,7 +866,9 @@ module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignme
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, vnetRgName)
   dependsOn: [
-    rsv_ssvc
+    rsv_mgmt
+    hubRg
+    spokeRg
   ]
   params: {
     roleDefinitionIdOrName: networkingPermsRoleDefintionId
@@ -868,7 +884,9 @@ module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
-    rsv_ssvc
+    rsv_mgmt
+    hubRg
+    spokeRg
   ]
   params: {
     roleDefinitionIdOrName: 'Contributor'
