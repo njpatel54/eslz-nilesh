@@ -285,6 +285,11 @@ param diskAccessName string = 'da-${projowner}-${region}-01'
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
+@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureActivityLog", "AzureSecurityCenter"]')
+param dataConnectorsSubs array = [
+  // 'AzureSecurityCenter'
+]
+
 /*
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
@@ -563,11 +568,6 @@ module lzDefender 'wrapperModule/defender.bicep' = {
       defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }
-
-@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureActivityLog", "AzureSecurityCenter"]')
-param dataConnectorsSubs array = [
-  // 'AzureSecurityCenter'
-]
 
 // 11. Configure Sentinel Data Connectors - Subscription Level
 module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
