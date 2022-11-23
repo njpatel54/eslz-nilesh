@@ -563,6 +563,7 @@ module lzDefender 'wrapperModule/defender.bicep' = {
       defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }
+
 // 17. Create Policy Assignment and Remediation
 module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
