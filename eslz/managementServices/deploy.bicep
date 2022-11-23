@@ -416,8 +416,8 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
 }]
 
 // 11. Configure Sentinel Data Connectors - Tenent Level
-module sentinelDataConnectorsTenant '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
-  name: 'sentinelDataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
+module dataConnectorsTenant '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
+  name: 'dataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   params: {
     workspaceName: sentinelLawName
@@ -426,8 +426,8 @@ module sentinelDataConnectorsTenant '../modules/securityInsights/dataConnectors/
 }
 
 // 11. Configure Sentinel Data Connectors - Subscription Level
-module sentinelDataConnectorsSubs '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'sentinelDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
+module dataConnectorsSubs '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
+  name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   params: {
     subscriptionId: subscription.subscriptionId
