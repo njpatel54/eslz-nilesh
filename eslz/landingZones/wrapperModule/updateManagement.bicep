@@ -61,7 +61,6 @@ module automationAccount_softwareUpdateConfigurations '../../modules/automation/
       'Critical'
       'Security'
     ]
-    weekDays: contains(softwareUpdateConfiguration, 'weekDays') ? softwareUpdateConfiguration.weekDays : []
-    
+    weekDays: contains(softwareUpdateConfiguration, 'weekDays') ? softwareUpdateConfiguration.weekDays : []    
   }
 }]

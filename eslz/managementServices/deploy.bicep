@@ -415,16 +415,26 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
   }
 }]
 
-// 11. Configure Sentinel Data Connectors
-module sentinelDataConnectors '../modules/securityInsights/dataConnectors/deploy.bicep' = {
-  name: 'sentinelDataConnectors-${take(uniqueString(deployment().name, location), 4)}'
+// 11. Configure Sentinel Data Connectors - Tenent Level
+module sentinelDataConnectorsTenant '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
+  name: 'sentinelDataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   params: {
-    subscriptionId: mgmtsubid
     workspaceName: sentinelLawName
     dataConnectors: dataConnectors
   }
 }
+
+// 11. Configure Sentinel Data Connectors - Subscription Level
+module sentinelDataConnectorsSubs '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
+  name: 'sentinelDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  params: {
+    subscriptionId: subscription.subscriptionId
+    workspaceName: sentinelLawName
+    dataConnectors: dataConnectors
+  }
+}]
 
 // 10. Create Recovery Services Vault (Management Subscription)
 module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
