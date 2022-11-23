@@ -428,7 +428,7 @@
       "value": [
         {
           "name": "ag-lz50-usva-001",
-          "groupShortName": "ag-lz50-001",
+          "groupShortName": "aglz50001",
           "emailReceivers": [
             {
               "name": "Administrators",
@@ -446,7 +446,7 @@
         },
         {
           "name": "ag-lz50-usva-002",
-          "groupShortName": "ag-lz50-002",
+          "groupShortName": "aglz50002",
           "emailReceivers": [
             {
               "name": "Administrators",
