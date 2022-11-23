@@ -192,16 +192,20 @@ param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffi
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
-@description('The kind of data connectors that can be deployed via ARM templates: ["AmazonWebServicesCloudTrail", "AzureActivityLog", "AzureAdvancedThreatProtection", "AzureSecurityCenter", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
-param dataConnectors array = [
+@description('The kind of data connectors that can be deployed via ARM templates at Tenent level: ["AmazonWebServicesCloudTrail",  "AzureAdvancedThreatProtection", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
+param dataConnectorsTenant array = [
   // 'AmazonWebServicesCloudTrail'
   // 'AzureActiveDirectory'
   // 'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
-  // 'AzureSecurityCenter'
   // 'MicrosoftCloudAppSecurity'
   // 'MicrosoftDefenderAdvancedThreatProtection'                       
   // 'Office365'
   // 'ThreatIntelligence'
+]
+
+@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureActivityLog", "AzureSecurityCenter"]')
+param dataConnectorsSubs array = [
+  // 'AzureSecurityCenter'
 ]
 
 // 1. Create Resoruce Groups
@@ -416,23 +420,23 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
 }]
 
 // 11. Configure Sentinel Data Connectors - Tenent Level
-module dataConnectorsTenant '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
+module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
   name: 'dataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   params: {
     workspaceName: sentinelLawName
-    dataConnectors: dataConnectors
+    dataConnectors: dataConnectorsTenant
   }
 }
 
 // 11. Configure Sentinel Data Connectors - Subscription Level
-module dataConnectorsSubs '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
+module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   params: {
     subscriptionId: subscription.subscriptionId
     workspaceName: sentinelLawName
-    dataConnectors: dataConnectors
+    dataConnectors: dataConnectorsSubs
   }
 }]
 

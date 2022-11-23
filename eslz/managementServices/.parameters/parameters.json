@@ -895,9 +895,14 @@
         }
       ]
     },
-    "dataConnectors": {
+    "dataConnectorsTenant": {
       "value": [
         "Office365"
+      ]
+    },
+    "dataConnectorsSubs": {
+      "value": [
+        "AzureSecurityCenter"
       ]
     },
     "softwareUpdateConfigurations": {

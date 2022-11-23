@@ -1,0 +1,24 @@
+{
+    "alertName": "ala-ccs-test-usva-0001",
+    "alertDescription": "",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Network/VirtualNetworks/write"
+            },
+            {
+                "field": "resourceType",
+                "equals": "Microsoft.Network/VirtualNetworks"
+            },
+            {
+                "field": "status",
+                "equals": "Succeeded"
+            }
+        ]
+    }
+}

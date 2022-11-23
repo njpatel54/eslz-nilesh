@@ -394,7 +394,6 @@
           "excludeUpdates": [
             "icacls"
           ],
-
           "includeUpdates": [
             "kernel"
           ]
@@ -419,6 +418,67 @@
         },
         "phone": "+12345678"
       }
+    },
+    "dataConnectorsSubs": {
+      "value": [
+        "AzureSecurityCenter"
+      ]
+    },
+    "actionGroups": {
+      "value": [
+        {
+          "name": {
+            "value": "ag-ccs-test-usva-001"
+          },
+          "groupShortName": {
+            "value": "agccstestusva001"
+          },
+          "emailReceivers": {
+            "value": [
+              {
+                "name": "Administrators",
+                "emailAddress": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+                "useCommonAlertSchema": true
+              }
+            ]
+          },
+          "smsReceivers": {
+            "value": [
+              {
+                "name": "Administrators",
+                "countryCode": "1",
+                "phoneNumber": "2345678901"
+              }
+            ]
+          }
+        },
+        {
+          "name": {
+            "value": "ag-ccs-test-usva-002"
+          },
+          "groupShortName": {
+            "value": "agccstestusva002"
+          },
+          "emailReceivers": {
+            "value": [
+              {
+                "name": "Administrators",
+                "emailAddress": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+                "useCommonAlertSchema": true
+              }
+            ]
+          },
+          "smsReceivers": {
+            "value": [
+              {
+                "name": "Administrators",
+                "countryCode": "1",
+                "phoneNumber": "2345678901"
+              }
+            ]
+          }
+        }
+      ]
     },
     "projowner": {
       "value": "lz50"

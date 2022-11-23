@@ -285,7 +285,7 @@ param diskAccessName string = 'da-${projowner}-${region}-01'
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
-
+/*
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
@@ -297,7 +297,7 @@ resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-/*
+
 // 4. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
@@ -311,7 +311,7 @@ module sub 'wrapperModule/createSub.bicep' = {
     managementGroupId: managementGroupId
   }
 }
-*/
+
 // 5. Create Resource Groups
 module lzRgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
@@ -564,6 +564,22 @@ module lzDefender 'wrapperModule/defender.bicep' = {
   }
 }
 
+@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureActivityLog", "AzureSecurityCenter"]')
+param dataConnectorsSubs array = [
+  // 'AzureSecurityCenter'
+]
+
+// 11. Configure Sentinel Data Connectors - Subscription Level
+module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
+  name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscriptionId}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  params: {
+    subscriptionId: subscriptionId
+    workspaceName: sentinelLawName
+    dataConnectors: dataConnectorsSubs
+  }
+}
+
 // 17. Create Policy Assignment and Remediation
 module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
@@ -576,8 +592,32 @@ module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
     policyAssignments: policyAssignments
   }
 }
+*/
 
+@description('Required. Array of Action Groups')
+param actionGroups array = []
 
+// 18. Create Action Group(s)
+module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
+  name: 'lzActionGroup--${take(uniqueString(deployment().name, location), 4)}-${subscriptionId}'
+  scope: resourceGroup(subscriptionId, mgmtRgName)
+  params: {
+    actionGroups: actionGroups
+    tags: combinedTags
+  }
+}
+
+// 18. Create Alerts
+module lzAlerts 'wrapperModule/alerts.bicep' = {
+  name: 'lzAlerts--${take(uniqueString(deployment().name, location), 4)}-${subscriptionId}'
+  scope: resourceGroup(subscriptionId, mgmtRgName)
+  params: {
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName
+    actionGroups: actionGroups
+    tags: combinedTags
+  }
+}
 
 /*
 @description('Output - Resource Group "name" Array')
