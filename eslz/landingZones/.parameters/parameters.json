@@ -427,8 +427,8 @@
     "actionGroups": {
       "value": [
         {
-          "name": "ag-ccs-test-usva-001",
-          "groupShortName": "agccstestusva001",
+          "name": "ag-lz50-usva-001",
+          "groupShortName": "ag-lz50-001",
           "emailReceivers": [
             {
               "name": "Administrators",
@@ -445,8 +445,8 @@
           ]
         },
         {
-          "name": "ag-ccs-test-usva-002",
-          "groupShortName": "agccstestusva002",
+          "name": "ag-lz50-usva-002",
+          "groupShortName": "ag-lz50-002",
           "emailReceivers": [
             {
               "name": "Administrators",
