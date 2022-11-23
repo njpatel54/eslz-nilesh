@@ -27,7 +27,7 @@ module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bi
     location: 'global'
     tags: tags
     actions: [for (actionGroup, i) in actionGroups: {
-            actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.groupShortName)    
+      actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)    
     }]
   }
 }]
