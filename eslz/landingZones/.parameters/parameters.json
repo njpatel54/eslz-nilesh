@@ -431,14 +431,14 @@
           "groupShortName": "aglz50001",
           "emailReceivers": [
             {
-              "name": "Administrators",
+              "name": "Administrators_email",
               "emailAddress": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
               "useCommonAlertSchema": true
             }
           ],
           "smsReceivers": [
             {
-              "name": "Administrators1",
+              "name": "Administrators_sms",
               "countryCode": "1",
               "phoneNumber": "2345678901"
             }
@@ -449,16 +449,16 @@
           "groupShortName": "aglz50002",
           "emailReceivers": [
             {
-              "name": "Administrators",
-              "emailAddress": "admin@azgperatonpartners.onmicrosoft.us",
+              "name": "Administrators_email",
+              "emailAddress": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
               "useCommonAlertSchema": true
             }
           ],
           "smsReceivers": [
             {
-              "name": "Administrators1",
+              "name": "Administrators_sms",
               "countryCode": "1",
-              "phoneNumber": "2345678902"
+              "phoneNumber": "2345678901"
             }
           ]
         }
