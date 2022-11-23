@@ -432,7 +432,7 @@
           "emailReceivers": [
             {
               "name": "Administrators_email",
-              "emailAddress": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+              "emailAddress": "nileshpa@microsoft.com",
               "useCommonAlertSchema": true
             }
           ],
@@ -440,7 +440,7 @@
             {
               "name": "Administrators_sms",
               "countryCode": "1",
-              "phoneNumber": "2345678901"
+              "phoneNumber": "6094681972"
             }
           ]
         },
@@ -450,7 +450,7 @@
           "emailReceivers": [
             {
               "name": "Administrators_email",
-              "emailAddress": "ccsao-1669@azgperatonpartners.onmicrosoft.us",
+              "emailAddress": "nileshpa@microsoft.com",
               "useCommonAlertSchema": true
             }
           ],
@@ -458,7 +458,7 @@
             {
               "name": "Administrators_sms",
               "countryCode": "1",
-              "phoneNumber": "2345678901"
+              "phoneNumber": "6094681972"
             }
           ]
         }

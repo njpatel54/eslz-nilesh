@@ -600,7 +600,7 @@ param actionGroups array = []
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = [for (actionGroup, i) in actionGroups: {
   name: 'lzActionGroup--${take(uniqueString(deployment().name, location), 4)}-${actionGroup.name}'
-  scope: resourceGroup(subscriptionId, mgmtRgName)
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     name: actionGroup.name
     groupShortName: actionGroup.groupShortName
@@ -613,7 +613,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = [for (actionGroup, i) i
 // 18. Create Alerts
 module lzAlerts 'wrapperModule/alerts.bicep' = {
   name: 'lzAlerts--${take(uniqueString(deployment().name, location), 4)}-${subscriptionId}'
-  scope: resourceGroup(subscriptionId, mgmtRgName)
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     subscriptionId: subscriptionId
     wlRgName: wlRgName
