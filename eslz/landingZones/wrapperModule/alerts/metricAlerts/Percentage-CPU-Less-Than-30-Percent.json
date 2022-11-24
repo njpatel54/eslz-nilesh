@@ -3,7 +3,7 @@
     "windowSize": "PT15M",
     "targetResourceType": "microsoft.compute/virtualmachines",
     "targetResourceRegion": "usgovvirginia",
-    "alertCriteriaType": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+    "alertCriteriaType": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
     "criterias": {
         "value": [
             {
