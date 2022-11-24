@@ -1,8 +1,9 @@
 {
-  "name": "Percentage CPU GreaterOrLesThan Dynamic Thresholds",
+  "name": "Percentage CPU GreaterOrLessThan Dynamic Thresholds",
+  "alertDescription": "Whenever the average percentage cpu is greater or less than dynamic thresholds",
   "windowSize": "PT15M",
   "targetResourceType": "microsoft.compute/virtualmachines",
-  "targetResourceRegion": "usgovvirginia",
+  "targetResourceRegion": "all",
   "alertCriteriaType": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
   "criterias": {
     "value": [

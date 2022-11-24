@@ -128,15 +128,14 @@ var activityLogAlertRulesVar = [
 @description('Variable containing all Metric Alert Rules.')
 var metricAlertRulesVar = [
   {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Or-Less-Than-Dynamic-Threshold.json'))
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Or-Less-Than-Dynamic-Thresholds.json'))
   }
   {
     rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Than-80-Percent.json'))
   }
   {
     rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Less-Than-30-Percent.json'))
-  }
-  
+  }  
 ]
 
 @description('Variable containing all Service Health Alert Rules.')
@@ -159,7 +158,7 @@ var serviceHealthAlertRulesVar = [
 module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (activityLogAlertRule, i) in activityLogAlertRulesVar: {
   name: 'activityLogAlertRules-${i}'
   params: {
-    name: '${suffix} - ${activityLogAlertRule.rule.alertName}'
+    name: '${suffix} - Activity Log - ${activityLogAlertRule.rule.alertName}'
     alertDescription: activityLogAlertRule.rule.alertDescription
     conditions: activityLogAlertRule.rule.condition.value
     location: 'global'
@@ -175,7 +174,8 @@ module metricAlertRules '../../modules/insights/metricAlerts/deploy.bicep' = [fo
   name: 'metricAlertRules-${i}'
   params: {
 
-    name: '${suffix} - ${metricAlertRule.rule.name}'
+    name: '${suffix} - Metric - ${metricAlertRule.rule.name}'
+    alertDescription: metricAlertRule.rule.alertDescription
     windowSize: metricAlertRule.rule.windowSize
     targetResourceType: metricAlertRule.rule.targetResourceType
     targetResourceRegion: metricAlertRule.rule.targetResourceRegion
@@ -193,7 +193,7 @@ module metricAlertRules '../../modules/insights/metricAlerts/deploy.bicep' = [fo
 module serviceHealthAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (serviceHealthAlertRule, i) in serviceHealthAlertRulesVar: {
   name: 'serviceHealthAlertRules-${i}'
   params: {
-    name: '${suffix} - ${serviceHealthAlertRule.rule.alertName}'
+    name: '${suffix} - Service Health - ${serviceHealthAlertRule.rule.alertName}'
     alertDescription: serviceHealthAlertRule.rule.alertDescription
     conditions: serviceHealthAlertRule.rule.condition.value
     location: 'global'

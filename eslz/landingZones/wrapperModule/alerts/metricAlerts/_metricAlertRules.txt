@@ -1,9 +1,9 @@
-{
-	rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Or-Less-Than-Dynamic-Threshold.json'))
-}
-{
-	rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Than-80-Percent.json'))
-}
-{
-	rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Less-Than-30-Percent.json'))
-}
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Or-Less-Than-Dynamic-Thresholds.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Than-80-Percent.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Less-Than-30-Percent.json'))
+  }
