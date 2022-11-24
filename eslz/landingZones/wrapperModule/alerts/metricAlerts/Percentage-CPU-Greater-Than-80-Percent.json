@@ -1,6 +1,5 @@
 {
     "name": "Percentage CPU Greater Than 80 Percent",
-    "alertDescription": "Whenever the average percentage cpu is greater than 80%",
     "windowSize": "PT15M",
     "targetResourceType": "microsoft.compute/virtualmachines",
     "targetResourceRegion": "usgovvirginia",

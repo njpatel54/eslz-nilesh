@@ -175,7 +175,6 @@ module metricAlertRules '../../modules/insights/metricAlerts/deploy.bicep' = [fo
   params: {
 
     name: '${suffix} - Metric - ${metricAlertRule.rule.name}'
-    alertDescription: metricAlertRule.rule.alertDescription
     windowSize: metricAlertRule.rule.windowSize
     targetResourceType: metricAlertRule.rule.targetResourceType
     targetResourceRegion: metricAlertRule.rule.targetResourceRegion
