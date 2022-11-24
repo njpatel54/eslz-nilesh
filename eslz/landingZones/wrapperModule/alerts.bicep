@@ -13,7 +13,7 @@ param suffix string
 @description('Required - Action Groups Array')
 param actionGroups array
 
-@description('Variable containing all Activity Log Alerts.')
+@description('Variable containing all Activity Log Alert Rules.')
 var activityLogAlertRulesVar = [
   {
     rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Policy-Definition-Created.json'))
@@ -125,13 +125,73 @@ var activityLogAlertRulesVar = [
   }
 ]
 
-// 1. Create Activity Log Alerts
+@description('Variable containing all Metric Alert Rules.')
+var metricAlertRulesVar = [
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Or-Less-Than-Dynamic-Threshold.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Than-80-Percent.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Less-Than-30-Percent.json'))
+  }
+  
+]
+
+@description('Variable containing all Service Health Alert Rules.')
+var serviceHealthAlertRulesVar = [
+  {
+    rule: json(loadTextContent('alerts/serviceHealthAlerts/Health-Advisories-Selected-Regions.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/serviceHealthAlerts/Planned-Maintenance-Selected-Regions.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/serviceHealthAlerts/Security-Advisory-Selected-Regions.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/serviceHealthAlerts/Service-Issue-Selected-Regions.json'))
+  }  
+]
+
+// 1. Create Activity Log Alert Rules
 module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (activityLogAlertRule, i) in activityLogAlertRulesVar: {
   name: 'activityLogAlertRules-${i}'
   params: {
     name: '${suffix} - ${activityLogAlertRule.rule.alertName}'
     alertDescription: activityLogAlertRule.rule.alertDescription
     conditions: activityLogAlertRule.rule.condition.value
+    location: 'global'
+    tags: tags
+    actions: [for (actionGroup, i) in actionGroups: {
+      actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
+    }]
+  }
+}]
+
+// 2. Create Metric Alert Rules
+module metricAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRulesVar: {
+  name: 'metricAlertRules-${i}'
+  params: {
+    name: '${suffix} - ${metricAlertRule.rule.alertName}'
+    alertDescription: metricAlertRule.rule.alertDescription
+    conditions: metricAlertRule.rule.condition.value
+    location: 'global'
+    tags: tags
+    actions: [for (actionGroup, i) in actionGroups: {
+      actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
+    }]
+  }
+}]
+
+// 3. Create Service Health Alert Rules
+module serviceHealthAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (serviceHealthAlertRule, i) in serviceHealthAlertRulesVar: {
+  name: 'serviceHealthAlertRules-${i}'
+  params: {
+    name: '${suffix} - ${serviceHealthAlertRule.rule.alertName}'
+    alertDescription: serviceHealthAlertRule.rule.alertDescription
+    conditions: serviceHealthAlertRule.rule.condition.value
     location: 'global'
     tags: tags
     actions: [for (actionGroup, i) in actionGroups: {

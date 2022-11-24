@@ -1,0 +1,12 @@
+{
+	rule: json(loadTextContent('alerts/serviceHealthAlerts/Health-Advisories-Selected-Regions.json'))
+}
+{
+	rule: json(loadTextContent('alerts/serviceHealthAlerts/Planned-Maintenance-Selected-Regions.json'))
+}
+{
+	rule: json(loadTextContent('alerts/serviceHealthAlerts/Security-Advisory-Selected-Regions.json'))
+}
+{
+	rule: json(loadTextContent('alerts/serviceHealthAlerts/Service-Issue-Selected-Regions.json'))
+}
