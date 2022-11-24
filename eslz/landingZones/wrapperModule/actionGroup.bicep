@@ -1,15 +1,3 @@
-@description('Required. The name of the action group.')
-param name string
-
-@description('Required. The short name of the action group.')
-param groupShortName string
-
-@description('Optional. The list of email receivers that are part of this action group.')
-param emailReceivers array = []
-
-@description('Optional. The list of SMS receivers that are part of this action group.')
-param smsReceivers array = []
-
 @description('Optional. The list of webhook receivers that are part of this action group.')
 param webhookReceivers array = []
 
@@ -37,16 +25,22 @@ param armRoleReceivers array = []
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
+@description('Location for the deployments and the resources')
+param location string
+
+@description('Required. Array of Action Groups')
+param actionGroups array = []
+
 // 1. Create Action Group(s)
-module actionGroup '../../modules/insights/actionGroups/deploy.bicep' = {
-  name: 'actionGroup-${name}'
+module actionGroup '../../modules/insights/actionGroups/deploy.bicep' = [for (actionGroup, i) in actionGroups: {
+  name: 'actionGroup--${take(uniqueString(deployment().name, location), 4)}-${actionGroup.name}'
   params: {
-    name: name
-    groupShortName: groupShortName
+    name: actionGroup.name
+    groupShortName: actionGroup.groupShortName
     location: 'global'
     tags: tags
-    emailReceivers: emailReceivers
-    smsReceivers: smsReceivers
+    emailReceivers: actionGroup.emailReceivers
+    smsReceivers: actionGroup.smsReceivers
     webhookReceivers: webhookReceivers
     itsmReceivers: itsmReceivers
     azureAppPushReceivers: azureAppPushReceivers
@@ -56,5 +50,18 @@ module actionGroup '../../modules/insights/actionGroups/deploy.bicep' = {
     azureFunctionReceivers: azureFunctionReceivers
     armRoleReceivers: armRoleReceivers
   }
-}
+}]
 
+/*
+@description('Required. The name of the action group.')
+param name string
+
+@description('Required. The short name of the action group.')
+param groupShortName string
+
+@description('Optional. The list of email receivers that are part of this action group.')
+param emailReceivers array = []
+
+@description('Optional. The list of SMS receivers that are part of this action group.')
+param smsReceivers array = []
+*/

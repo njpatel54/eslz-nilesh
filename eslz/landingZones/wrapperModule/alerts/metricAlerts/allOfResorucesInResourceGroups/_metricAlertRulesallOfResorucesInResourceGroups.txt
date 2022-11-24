@@ -1,0 +1,9 @@
+{
+	rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-GreaterOrLessThan-All-VMs-In-RGs-Dynamic-Thresholds.json'))
+}
+{
+	rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-GreaterThan-80-Percent-All-VMs-In-RGs-Static-Thresholds.json'))
+}
+{
+	rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-LessThan-30-Percent-All-VMs-In-RGs-Static-Thresholds.json'))
+}

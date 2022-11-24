@@ -12,9 +12,6 @@ param subscriptionId string
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string
 
-@description('Optional. The name of the virtual machine to be created. You should use a unique prefix to reduce name collisions in Active Directory. If no value is provided, a 10 character long unique string will be generated based on the Resource Group\'s name.')
-param name string
-
 @description('Required. Subnet resoruceId for Network Interface Card.')
 param subnetResourceId string
 
@@ -32,55 +29,8 @@ param vmAdmin string
 @secure()
 param vmAdminPassword string
 
-@description('Required. The chosen OS type.')
-@allowed([
-  'Windows'
-  'Linux'
-])
-param osType string
-
-@description('Optional. Specifies that the image or disk that is being used was licensed on-premises. This element is only used for images that contain the Windows Server operating system.')
-@allowed([
-  'Windows_Client'
-  'Windows_Server'
-  'RHEL_BYOS'
-  'SLES_BYOS'
-  ''
-])
-param licenseType string = ''
-
-@description('Optional. Specifies the data disks. For security reasons, it is recommended to specify DiskEncryptionSet into the dataDisk object. Restrictions: DiskEncryptionSet cannot be enabled if Azure Disk Encryption (guest-VM encryption using bitlocker/DM-Crypt) is enabled on your VMs.')
-param dataDisks array = []
-
 @description('Optional. Specifies the time zone of the virtual machine. e.g. \'Pacific Standard Time\'. Possible values can be `TimeZoneInfo.id` value from time zones returned by `TimeZoneInfo.GetSystemTimeZones`.')
 param timeZone string = 'Eastern Standard Time'
-
-@description('Virtual Machine Size')
-param virtualMachineSize string = 'Standard_DS2_v2'
-
-@description('Operating System of the Server')
-@allowed([
-  'Server2012R2'
-  'Server2016'
-  'Server2019'
-  'Server2022'
-  'UbuntuServer1604LTS'
-  'UbuntuServer1804LTS'
-  'UbuntuServer1904'
-  'RedHat85Gen2'
-  'RedHat86Gen2'
-  'RedHat90Gen2'
-])
-param operatingSystem string = 'Server2019'
-
-@description('Optional. If set to 1, 2 or 3, the availability zone for all VMs is hardcoded to that value. If zero, then availability zones is not used. Cannot be used in combination with availability set nor scale set.')
-@allowed([
-  0
-  1
-  2
-  3
-])
-param availabilityZone int = 0
 
 var operatingSystemValues = {
   Server2012R2: {
@@ -135,25 +85,32 @@ var operatingSystemValues = {
   }
 }
 
-module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
-  name: 'lzVm-${take(uniqueString(deployment().name, location), 4)}-${name}'
+@description('Name of the virtual machine to be created')
+@maxLength(15)
+param virtualMachineNamePrefix string
+
+@description('Optional. The array of Virtual Machines.')
+param virtualMachines array
+
+module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtualMachine, i) in virtualMachines: {
+  name: 'lzVm-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   scope: resourceGroup(subscriptionId, wlRgName)
   params: {
-    name: name
+    name: '${virtualMachineNamePrefix}${i + 1}'
     location: location
     tags: combinedTags
     adminUsername: vmAdmin
     adminPassword: vmAdminPassword
     vmComputerNamesTransformation: 'lowercase'
-    osType: osType
-    vmSize: virtualMachineSize
-    licenseType: licenseType
+    osType: virtualMachine.osType
+    vmSize: virtualMachine.virtualMachineSize
+    licenseType: virtualMachine.licenseType
     timeZone: timeZone
-    availabilityZone: availabilityZone
+    availabilityZone: virtualMachine.availabilityZone
     imageReference: {
-      publisher: operatingSystemValues[operatingSystem].publisher
-      offer: operatingSystemValues[operatingSystem].offer
-      sku: operatingSystemValues[operatingSystem].sku
+      publisher: operatingSystemValues[virtualMachine.operatingSystem].publisher
+      offer: operatingSystemValues[virtualMachine.operatingSystem].offer
+      sku: operatingSystemValues[virtualMachine.operatingSystem].sku
       version: 'latest'
     }
     osDisk: {
@@ -164,7 +121,7 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
       }
       caching: 'ReadWrite'
     }
-    dataDisks: [for (dataDisk, index) in dataDisks: {
+    dataDisks: [for (dataDisk, index) in virtualMachine.dataDisks: {
       diskSizeGB: dataDisk.diskSizeGB
       caching: 'ReadOnly'
       managedDisk: {
@@ -196,7 +153,7 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
     extensionNetworkWatcherAgentConfig: {
       enabled: false
     }
-    extensionAntiMalwareConfig: osType == 'Windows' ? {
+    extensionAntiMalwareConfig: virtualMachine.osType == 'Windows' ? {
       enabled: true
       settings: {
         AntimalwareEnabled: 'true'
@@ -217,9 +174,66 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = {
       enabled: false
     }
   }
-}
+}]
+
+@description('Output - Array of Virtual Machine Resoruce IDs')
+output vmResourceIDs array = [for (virtualMachine, i) in virtualMachines: {
+  vmResourceId: virtualMachine[i].outputs.resourceId
+}]
+
 
 /*
+@description('Optional. The name of the virtual machine to be created. You should use a unique prefix to reduce name collisions in Active Directory. If no value is provided, a 10 character long unique string will be generated based on the Resource Group\'s name.')
+param name string
+
+@description('Optional. Specifies that the image or disk that is being used was licensed on-premises. This element is only used for images that contain the Windows Server operating system.')
+@allowed([
+  'Windows_Client'
+  'Windows_Server'
+  'RHEL_BYOS'
+  'SLES_BYOS'
+  ''
+])
+param licenseType string = ''
+
+@description('Optional. Specifies the data disks. For security reasons, it is recommended to specify DiskEncryptionSet into the dataDisk object. Restrictions: DiskEncryptionSet cannot be enabled if Azure Disk Encryption (guest-VM encryption using bitlocker/DM-Crypt) is enabled on your VMs.')
+param dataDisks array = []
+
+
+@description('Required. The chosen OS type.')
+@allowed([
+  'Windows'
+  'Linux'
+])
+param osType string
+
+@description('Virtual Machine Size')
+param virtualMachineSize string = 'Standard_DS2_v2'
+
+@description('Operating System of the Server')
+@allowed([
+  'Server2012R2'
+  'Server2016'
+  'Server2019'
+  'Server2022'
+  'UbuntuServer1604LTS'
+  'UbuntuServer1804LTS'
+  'UbuntuServer1904'
+  'RedHat85Gen2'
+  'RedHat86Gen2'
+  'RedHat90Gen2'
+])
+param operatingSystem string = 'Server2019'
+
+@description('Optional. If set to 1, 2 or 3, the availability zone for all VMs is hardcoded to that value. If zero, then availability zones is not used. Cannot be used in combination with availability set nor scale set.')
+@allowed([
+  0
+  1
+  2
+  3
+])
+param availabilityZone int = 0
+
 @description('Availability Set Name where the VM will be placed')
 param availabilitySetName string = 'MyAvailabilitySet'
 

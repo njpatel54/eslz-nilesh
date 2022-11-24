@@ -1,0 +1,20 @@
+{
+    "name": "Percentage CPU Greater Than 80 Percent - All VMs in Subscription",
+    "windowSize": "PT15M",
+    "targetResourceType": "microsoft.compute/virtualmachines",
+    "targetResourceRegion": "usgovvirginia",
+    "alertCriteriaType": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
+    "criterias": {
+        "value": [
+            {
+                "criterionType": "StaticThresholdCriterion",
+                "metricName": "Percentage CPU",
+                "metricNamespace": "microsoft.compute/virtualmachines",
+                "name": "HighCPU",
+                "operator": "GreaterThan",
+                "threshold": "80",
+                "timeAggregation": "Average"
+            }
+        ]
+    }
+}

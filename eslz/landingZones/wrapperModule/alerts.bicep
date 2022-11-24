@@ -13,6 +13,12 @@ param suffix string
 @description('Required - Action Groups Array')
 param actionGroups array
 
+@description('Output - Resource Group Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
+param rgResoruceIds array
+
+@description('Required. Virtual Machine Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
+param vmResourceIDs array 
+
 @description('Variable containing all Activity Log Alert Rules.')
 var activityLogAlertRulesVar = [
   {
@@ -125,17 +131,17 @@ var activityLogAlertRulesVar = [
   }
 ]
 
-@description('Variable containing all Metric Alert Rules.')
-var metricAlertRulesVar = [
+@description('Variable containing Metric Alert Rules for All Resoruces in Subscription.')
+var metricAlertRules = [
   {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Or-Less-Than-Dynamic-Thresholds.json'))
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterOrLessThan-Dynamic-Thresholds.json'))
   }
   {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Greater-Than-80-Percent.json'))
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterThan-80-Percent-Static-Thresholds.json'))
   }
   {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-Less-Than-30-Percent.json'))
-  }  
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-LessThan-30-Percent-Static-Thresholds.json'))
+  }
 ]
 
 @description('Variable containing all Service Health Alert Rules.')
@@ -159,46 +165,136 @@ module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bi
   name: 'activityLogAlertRules-${i}'
   params: {
     name: '${suffix} - Activity Log - ${activityLogAlertRule.rule.alertName}'
-    alertDescription: activityLogAlertRule.rule.alertDescription
-    conditions: activityLogAlertRule.rule.condition.value
     location: 'global'
     tags: tags
+    alertDescription: activityLogAlertRule.rule.alertDescription
+    conditions: activityLogAlertRule.rule.condition.value
     actions: [for (actionGroup, i) in actionGroups: {
       actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
     }]
   }
 }]
 
-// 2. Create Metric Alert Rules
-module metricAlertRules '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRulesVar: {
+// 2. Create Metric Alert Rules - All Resources in Subscription
+module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
   name: 'metricAlertRules-${i}'
   params: {
-
-    name: '${suffix} - Metric - ${metricAlertRule.rule.name}'
+    name: '${suffix} - Metric - ${metricAlertRule.rule.name} - All Resoruces in Subscription'
+    location: 'global'
+    tags: tags
     windowSize: metricAlertRule.rule.windowSize
     targetResourceType: metricAlertRule.rule.targetResourceType
     targetResourceRegion: metricAlertRule.rule.targetResourceRegion
     alertCriteriaType: metricAlertRule.rule.alertCriteriaType
     criterias: metricAlertRule.rule.criterias.value
-    location: 'global'
-    tags: tags
+    scopes: [
+      subscriptionId
+    ]
     actions: [for (actionGroup, i) in actionGroups: {
       actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
     }]
   }
 }]
 
-// 3. Create Service Health Alert Rules
-module serviceHealthAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (serviceHealthAlertRule, i) in serviceHealthAlertRulesVar: {
-  name: 'serviceHealthAlertRules-${i}'
+// 3. Create Metric Alert Rules - All Resources in Resource Groups
+module metricAlertRulesAllResorucesinRGs '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
+  name: 'metricAlertRules-${i}'
   params: {
-    name: '${suffix} - Service Health - ${serviceHealthAlertRule.rule.alertName}'
-    alertDescription: serviceHealthAlertRule.rule.alertDescription
-    conditions: serviceHealthAlertRule.rule.condition.value
+    name: '${suffix} - Metric - ${metricAlertRule.rule.name} - All Resoruces in Resource Groups'
     location: 'global'
     tags: tags
+    windowSize: metricAlertRule.rule.windowSize
+    targetResourceType: metricAlertRule.rule.targetResourceType
+    targetResourceRegion: metricAlertRule.rule.targetResourceRegion
+    alertCriteriaType: metricAlertRule.rule.alertCriteriaType
+    criterias: metricAlertRule.rule.criterias.value
+    scopes: [
+      rgResoruceIds
+    ]
     actions: [for (actionGroup, i) in actionGroups: {
       actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
     }]
   }
 }]
+
+// 4. Create Metric Alert Rules - List of Resources in Subscription
+module metricAlertRulesListOfResourcesInSub '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
+  name: 'metricAlertRules-${i}'
+  params: {
+    name: '${suffix} - Metric - ${metricAlertRule.rule.name} - List of Resources in Subscription'
+    location: 'global'
+    tags: tags
+    windowSize: metricAlertRule.rule.windowSize
+    targetResourceType: metricAlertRule.rule.targetResourceType
+    targetResourceRegion: metricAlertRule.rule.targetResourceRegion
+    alertCriteriaType: metricAlertRule.rule.alertCriteriaType
+    criterias: metricAlertRule.rule.criterias.value
+    scopes: [
+      vmResourceIDs
+    ]
+    actions: [for (actionGroup, i) in actionGroups: {
+      actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
+    }]
+  }
+}]
+
+// 5. Create Service Health Alert Rules
+module serviceHealthAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (serviceHealthAlertRule, i) in serviceHealthAlertRulesVar: {
+  name: 'serviceHealthAlertRules-${i}'
+  params: {
+    name: '${suffix} - Service Health - ${serviceHealthAlertRule.rule.alertName}'
+    location: 'global'
+    tags: tags
+    alertDescription: serviceHealthAlertRule.rule.alertDescription
+    conditions: serviceHealthAlertRule.rule.condition.value
+    actions: [for (actionGroup, i) in actionGroups: {
+      actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
+    }]
+  }
+}]
+
+
+/*
+@description('Variable containing Metric Alert Rules for All Resoruces in Subscription.')
+var metricAlertRulesAllResourcesInResourceGroup = [
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-GreaterOrLessThan-All-VMs-In-RGs-Dynamic-Thresholds-nileshsurbook.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-GreaterOrLessThan-All-VMs-In-RGs-Dynamic-Thresholds.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-GreaterThan-80-Percent-All-VMs-In-RGs-Static-Thresholds-nileshsurbook.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-GreaterThan-80-Percent-All-VMs-In-RGs-Static-Thresholds.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-LessThan-30-Percent-All-VMs-In-RGs-Static-Thresholds-nileshsurbook.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/allOfResorucesInResourceGroups/Percentage-CPU-LessThan-30-Percent-All-VMs-In-RGs-Static-Thresholds.json'))
+  }
+]
+
+@description('Variable containing Metric Alert Rules for All Resoruces in Subscription.')
+var metricAlertRulesListOfResourcesInSubscription = [
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-GreaterOrLessThan-List-Of-VMs-In-Sub-Dynamic-Thresholds-nileshsurbook.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-GreaterOrLessThan-List-Of-VMs-In-Sub-Dynamic-Thresholds.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-GreaterThan-80-Percent-List-Of-VMs-In-Sub-Static-Thresholds-nileshsurbook.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-GreaterThan-80-Percent-List-Of-VMs-In-Sub-Static-Thresholds.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-LessThan-30-Percent-List-Of-VMs-In-Sub-Static-Thresholds-nileshsurbook.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-LessThan-30-Percent-List-Of-VMs-In-Sub-Static-Thresholds.json'))
+  }
+]*/
