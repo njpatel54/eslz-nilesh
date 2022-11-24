@@ -180,7 +180,7 @@ module metricAlertRules '../../modules/insights/metricAlerts/deploy.bicep' = [fo
     targetResourceType: metricAlertRule.rule.targetResourceType
     targetResourceRegion: metricAlertRule.rule.targetResourceRegion
     alertCriteriaType: metricAlertRule.rule.alertCriteriaType
-    criterias: metricAlertRule.rule.criterias
+    criterias: metricAlertRule.rule.criterias.value
     location: 'global'
     tags: tags
     actions: [for (actionGroup, i) in actionGroups: {
