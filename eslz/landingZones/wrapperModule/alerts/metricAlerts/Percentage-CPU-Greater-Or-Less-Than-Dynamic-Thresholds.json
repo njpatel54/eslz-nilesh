@@ -11,7 +11,7 @@
         "criterionType": "DynamicThresholdCriterion",
         "dimensions": [],
         "metricName": "Percentage CPU",
-        "name": "string",
+        "name": "DynamicCPUThreshold",
         "operator": "GreaterOrLessThan",
         "timeAggregation": "Average",
         "alertSensitivity": "Medium",
