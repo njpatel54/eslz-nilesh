@@ -171,12 +171,16 @@ module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bi
 }]
 
 // 2. Create Metric Alert Rules
-module metricAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRulesVar: {
+module metricAlertRules '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRulesVar: {
   name: 'metricAlertRules-${i}'
   params: {
-    name: '${suffix} - ${metricAlertRule.rule.alertName}'
-    alertDescription: metricAlertRule.rule.alertDescription
-    conditions: metricAlertRule.rule.condition.value
+
+    name: '${suffix} - ${metricAlertRule.rule.name}'
+    windowSize: metricAlertRule.rule.windowSize
+    targetResourceType: metricAlertRule.rule.targetResourceType
+    targetResourceRegion: metricAlertRule.rule.targetResourceRegion
+    alertCriteriaType: metricAlertRule.rule.alertCriteriaType
+    criterias: metricAlertRule.rule.criterias
     location: 'global'
     tags: tags
     actions: [for (actionGroup, i) in actionGroups: {
