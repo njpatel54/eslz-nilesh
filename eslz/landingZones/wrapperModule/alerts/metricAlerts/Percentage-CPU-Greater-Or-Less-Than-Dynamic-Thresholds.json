@@ -3,7 +3,7 @@
   "alertDescription": "Whenever the average percentage cpu is greater or less than dynamic thresholds",
   "windowSize": "PT15M",
   "targetResourceType": "microsoft.compute/virtualmachines",
-  "targetResourceRegion": "all",
+  "targetResourceRegion": "usgovvirginia",
   "alertCriteriaType": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
   "criterias": {
     "value": [
