@@ -11,6 +11,7 @@
         "criterionType": "DynamicThresholdCriterion",
         "dimensions": [],
         "metricName": "Percentage CPU",
+        "metricNamespace": "microsoft.compute/virtualmachines",
         "name": "DynamicCPUThreshold",
         "operator": "GreaterOrLessThan",
         "timeAggregation": "Average",

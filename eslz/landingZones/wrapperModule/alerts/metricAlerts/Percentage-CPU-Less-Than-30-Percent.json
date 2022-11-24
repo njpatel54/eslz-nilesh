@@ -1,5 +1,6 @@
 {
     "name": "Percentage CPU Less Than 30 Percent",
+    "alertDescription": "Whenever the average percentage cpu is less than 30%",
     "windowSize": "PT15M",
     "targetResourceType": "microsoft.compute/virtualmachines",
     "targetResourceRegion": "usgovvirginia",
