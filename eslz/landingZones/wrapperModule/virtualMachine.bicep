@@ -21,14 +21,6 @@ param diagnosticWorkspaceId string = ''
 @description('Optional. Resource ID of the monitoring log analytics workspace. Must be set when extensionMonitoringAgentConfig is set to true.')
 param monitoringWorkspaceId string = ''
 
-@description('Required. Administrator username.')
-@secure()
-param adminUsername string
-
-@description('Optional. When specifying a Windows Virtual Machine, this value should be passed.')
-@secure()
-param adminPassword string = ''
-
 @description('Optional. Specifies the time zone of the virtual machine. e.g. \'Pacific Standard Time\'. Possible values can be `TimeZoneInfo.id` value from time zones returned by `TimeZoneInfo.GetSystemTimeZones`.')
 param timeZone string = 'Eastern Standard Time'
 
@@ -214,6 +206,14 @@ output vmResourceIDs array = [for (virtualMachine, i) in virtualMachines: {
 
 
 /*
+@description('Required. Administrator username.')
+@secure()
+param adminUsername string
+
+@description('Optional. When specifying a Windows Virtual Machine, this value should be passed.')
+@secure()
+param adminPassword string = ''
+
 @description('Optional. The name of the virtual machine to be created. You should use a unique prefix to reduce name collisions in Active Directory. If no value is provided, a 10 character long unique string will be generated based on the Resource Group\'s name.')
 param name string
 

@@ -482,8 +482,6 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     wlRgName: wlRgName
     mgmtsubid: mgmtsubid
     siemRgName: siemRgName
-    adminUsername: akv.getSecret(vmAdmin)
-    adminPassword: akv.getSecret(vmAdminPassword)
     subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)    
     virtualMachineNamePrefix: virtualMachineNamePrefix
     virtualMachines: virtualMachines
@@ -493,6 +491,8 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
     monitoringWorkspaceId: logaSentinel.id
     //name: '${virtualMachineNamePrefix}${i + 1}'
+    //adminUsername: akv.getSecret(vmAdmin)
+    //adminPassword: akv.getSecret(vmAdminPassword)
     //osType: virtualMachine.osType
     //virtualMachineSize: virtualMachineSize
     //licenseType: virtualMachine.licenseType
