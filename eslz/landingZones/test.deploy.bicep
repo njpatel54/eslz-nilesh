@@ -565,7 +565,7 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
 
 // 16. Cconfigure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
-  name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  name: 'mod-lzDefender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)
   //dependsOn: [
   //  sub
@@ -580,8 +580,8 @@ module lzDefender 'wrapperModule/defender.bicep' = {
 }
 
 // 11. Configure Sentinel Data Connectors - Subscription Level
-module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
-  name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
+module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
+  name: 'mod--lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   params: {
     subscriptionId: subscriptionId
@@ -595,7 +595,7 @@ param actionGroups array
 
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
-  name: 'lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
   //dependsOn: [
   //  lzRgs
@@ -609,7 +609,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
 
 // 18. Create Alerts
 module lzAlerts 'wrapperModule/alerts.bicep' = {
-  name: 'lzAlerts--${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzAlerts--${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzRgs
@@ -628,7 +628,6 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
 }
 
 /*
-
 // 17. Create Policy Assignment and Remediation
 module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
