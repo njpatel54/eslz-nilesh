@@ -177,7 +177,7 @@ module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bi
 
 // 2. Create Metric Alert Rules - All Resources in Subscription
 module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
-  name: 'metricAlertRules-${i}'
+  name: 'metricAlertRulesAllResorucesinSub-${i}'
   params: {
     name: '${suffix} - Metric - ${metricAlertRule.rule.name} - All Resoruces in Subscription'
     location: 'global'
@@ -198,7 +198,7 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
 
 // 3. Create Metric Alert Rules - All Resources in Resource Groups
 module metricAlertRulesAllResorucesinRGs '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
-  name: 'metricAlertRules-${i}'
+  name: 'metricAlertRulesAllResorucesinRGs-${i}'
   params: {
     name: '${suffix} - Metric - ${metricAlertRule.rule.name} - All Resoruces in Resource Groups'
     location: 'global'
@@ -219,7 +219,7 @@ module metricAlertRulesAllResorucesinRGs '../../modules/insights/metricAlerts/de
 
 // 4. Create Metric Alert Rules - List of Resources in Subscription
 module metricAlertRulesListOfResourcesInSub '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
-  name: 'metricAlertRules-${i}'
+  name: 'metricAlertRulesListOfResourcesInSub-${i}'
   params: {
     name: '${suffix} - Metric - ${metricAlertRule.rule.name} - List of Resources in Subscription'
     location: 'global'
