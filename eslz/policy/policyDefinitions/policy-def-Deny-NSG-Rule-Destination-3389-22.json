@@ -49,11 +49,11 @@
                                     },
                                     {
                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges",
-                                        "equals": ["3389,22"]
+                                        "in": ["3389,22"]
                                     },
                                     {
                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges",
-                                        "equals": ["22,3389"]
+                                        "in": ["22,3389"]
                                     }
                                 ]
                             }
@@ -86,11 +86,11 @@
                                                     },
                                                     {
                                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges",
-                                                        "equals": ["3389,22"]
+                                                        "in": ["3389,22"]
                                                     },
                                                     {
                                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges",
-                                                        "equals": ["22,3389"]
+                                                        "in": ["22,3389"]
                                                     }
                                                 ]
                                             }
