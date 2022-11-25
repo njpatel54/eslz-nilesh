@@ -48,11 +48,11 @@
                                         "equals": "3389"
                                     },
                                     {
-                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges",
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
                                         "in": ["3389,22"]
                                     },
                                     {
-                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges",
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
                                         "in": ["22,3389"]
                                     }
                                 ]
@@ -85,11 +85,11 @@
                                                         "equals": "3389"
                                                     },
                                                     {
-                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges",
+                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges[*]",
                                                         "in": ["3389,22"]
                                                     },
                                                     {
-                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges",
+                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges[*]",
                                                         "in": ["22,3389"]
                                                     }
                                                 ]
