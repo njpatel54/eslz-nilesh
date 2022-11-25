@@ -68,7 +68,7 @@
                 ]
             },
             "then": {
-                "effect": "deny"
+                "effect": "[parameters('effect')]"
             }
         },
         "name": "Deny-NSG-Rule-With-Any-Source-Allow-Inbound"
