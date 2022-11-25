@@ -92,6 +92,37 @@ param virtualMachineNamePrefix string
 @description('Optional. The array of Virtual Machines.')
 param virtualMachines array
 
+@description('Required. "projowner" parameter used for Platform.')
+param platformProjOwner string
+
+@description('Required. "opscope" parameter used for Platform.')
+param platformOpScope string
+
+@description('Required. Region (region) parameter.')
+@allowed([
+  'usva'
+  'ustx'
+  'usaz'
+])
+param region string
+
+@description('Required. Subscription ID of Management Subscription.')
+param mgmtsubid string
+
+@description('Required. SIEM Resource Group Name.')
+param siemRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-siem'
+
+@description('Required. Name of the Key Vault. Must be globally unique.')
+@maxLength(24)
+param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
+
+// 1. Retrieve an exisiting Key Vault (From Management Subscription)
+resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: akvName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+
 module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtualMachine, i) in virtualMachines: {
   name: 'lzVm-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -99,8 +130,8 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
     name: '${virtualMachineNamePrefix}${i + 1}'
     location: location
     tags: combinedTags
-    adminUsername: adminUsername
-    adminPassword: adminPassword
+    adminUsername: akv.getSecret(virtualMachine.vmAdmin)
+    adminPassword: akv.getSecret(virtualMachine.vmAdminPassword)
     vmComputerNamesTransformation: 'lowercase'
     osType: virtualMachine.osType
     vmSize: virtualMachine.virtualMachineSize

@@ -476,18 +476,23 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     lzVnet
   ]
   params: {
-    //name: '${virtualMachineNamePrefix}${i + 1}'
     location: location
     combinedTags: combinedTags
     subscriptionId: subscriptionId
     wlRgName: wlRgName
+    mgmtsubid: mgmtsubid
+    siemRgName: siemRgName
     adminUsername: akv.getSecret(vmAdmin)
     adminPassword: akv.getSecret(vmAdminPassword)
     subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)    
     virtualMachineNamePrefix: virtualMachineNamePrefix
     virtualMachines: virtualMachines
+    platformProjOwner: platformProjOwner
+    platformOpScope: platformOpScope
+    region: region
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
     monitoringWorkspaceId: logaSentinel.id
+    //name: '${virtualMachineNamePrefix}${i + 1}'
     //osType: virtualMachine.osType
     //virtualMachineSize: virtualMachineSize
     //licenseType: virtualMachine.licenseType
@@ -576,7 +581,7 @@ module lzDefender 'wrapperModule/defender.bicep' = {
 
 // 11. Configure Sentinel Data Connectors - Subscription Level
 module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
-  name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscriptionId}'
+  name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   params: {
     subscriptionId: subscriptionId
