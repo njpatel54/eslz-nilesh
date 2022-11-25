@@ -201,7 +201,7 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
 
 @description('Output - Array of Virtual Machine Resoruce IDs')
 output vmResourceIDs array = [for (virtualMachine, i) in virtualMachines: {
-  vmResourceId: virtualMachine[i].outputs.resourceId
+  vmResourceId: lzVm[i].outputs.resourceId
 }]
 
 
