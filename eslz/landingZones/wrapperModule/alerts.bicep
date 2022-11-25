@@ -141,6 +141,19 @@ var serviceHealthAlertRulesVar = [
   }  
 ]
 
+@description('Variable containing Metric Alert Rules for All Resoruces in Subscription.')
+var metricAlertRules = [
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterOrLessThan-Dynamic-Thresholds.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterThan-80-Percent-Static-Thresholds.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-LessThan-30-Percent-Static-Thresholds.json'))
+  }
+]
+
 // 1. Create Activity Log Alert Rules
 module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (activityLogAlertRule, i) in activityLogAlertRulesVar: {
   name: 'activityLogAlertRules-${i}'
@@ -171,27 +184,6 @@ module serviceHealthAlertRules '../../modules/insights/activityLogAlerts/deploy.
   }
 }]
 
-
-/*
-@description('Output - Resource Group Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
-param rgResoruceIds array
-
-@description('Required. Virtual Machine Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
-param vmResourceIDs array 
-
-@description('Variable containing Metric Alert Rules for All Resoruces in Subscription.')
-var metricAlertRules = [
-  {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterOrLessThan-Dynamic-Thresholds.json'))
-  }
-  {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterThan-80-Percent-Static-Thresholds.json'))
-  }
-  {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-LessThan-30-Percent-Static-Thresholds.json'))
-  }
-]
-
 // 3. Create Metric Alert Rules - All Resources in Subscription
 module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
   name: 'metricAlertRulesAllResorucesinSub-${i}'
@@ -204,14 +196,18 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
     targetResourceRegion: metricAlertRule.rule.targetResourceRegion
     alertCriteriaType: metricAlertRule.rule.alertCriteriaType
     criterias: metricAlertRule.rule.criterias.value
-    scopes: [
-      subscriptionId
-    ]
     actions: [for (actionGroup, i) in actionGroups: {
       actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
     }]
   }
 }]
+
+/*
+@description('Output - Resource Group Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
+param rgResoruceIds array
+
+@description('Required. Virtual Machine Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
+param vmResourceIDs array
 
 // 4. Create Metric Alert Rules - All Resources in Resource Groups
 module metricAlertRulesAllResorucesinRGs '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
