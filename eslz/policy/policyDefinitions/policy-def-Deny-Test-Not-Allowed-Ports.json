@@ -3,6 +3,10 @@
         "displayName": "policy-def-Deny-Test-Not-Allowed-Ports",
         "mode": "All",
         "description": "policy-def-Deny-Test-Not-Allowed-Ports",
+        "metadata": {
+            "version": "1.0.0",
+            "category": "Network"
+        },
         "parameters": {
             "effect": {
                 "type": "String",
