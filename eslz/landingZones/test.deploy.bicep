@@ -235,19 +235,19 @@ param administrators object = {}
 @description('Optional. The databases to create in the server.')
 param databases array = []
 
-@description('Conditional. The administrator username for the SQL server. Required if no `administrators` object for AAD authentication is provided.')
+@description('Required. The administrator username for the SQL server. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
 param sqlAdministratorLogin string = ''
 
-@description('Conditional. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
+@description('Required. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
 param sqlAdministratorLoginPassword string = ''
 
-@description('Conditional. The administrator username for the virtual machine.')
+@description('Required. The administrator username for the virtual machine.')
 @secure()
 param vmAdmin string = ''
 
-@description('Conditional. The administrator login passwordfor the virtual machine.')
+@description('Required. The administrator login passwordfor the virtual machine.')
 @secure()
 param vmAdminPassword string = ''
 
@@ -481,8 +481,8 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     combinedTags: combinedTags
     subscriptionId: subscriptionId
     wlRgName: wlRgName
-    vmAdmin: akv.getSecret(vmAdmin)
-    vmAdminPassword: akv.getSecret(vmAdminPassword)
+    adminUsername: akv.getSecret(vmAdmin)
+    adminPassword: akv.getSecret(vmAdminPassword)
     subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)    
     virtualMachineNamePrefix: virtualMachineNamePrefix
     virtualMachines: virtualMachines

@@ -21,13 +21,13 @@ param diagnosticWorkspaceId string = ''
 @description('Optional. Resource ID of the monitoring log analytics workspace. Must be set when extensionMonitoringAgentConfig is set to true.')
 param monitoringWorkspaceId string = ''
 
-@description('Required. The administrator login for the Virtual Machine.')
+@description('Required. Administrator username.')
 @secure()
-param vmAdmin string
+param adminUsername string
 
-@description('Required. The administrator login password for the Virtual Machine.')
+@description('Optional. When specifying a Windows Virtual Machine, this value should be passed.')
 @secure()
-param vmAdminPassword string
+param adminPassword string = ''
 
 @description('Optional. Specifies the time zone of the virtual machine. e.g. \'Pacific Standard Time\'. Possible values can be `TimeZoneInfo.id` value from time zones returned by `TimeZoneInfo.GetSystemTimeZones`.')
 param timeZone string = 'Eastern Standard Time'
@@ -99,8 +99,8 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
     name: '${virtualMachineNamePrefix}${i + 1}'
     location: location
     tags: combinedTags
-    adminUsername: vmAdmin
-    adminPassword: vmAdminPassword
+    adminUsername: adminUsername
+    adminPassword: adminPassword
     vmComputerNamesTransformation: 'lowercase'
     osType: virtualMachine.osType
     vmSize: virtualMachine.virtualMachineSize
