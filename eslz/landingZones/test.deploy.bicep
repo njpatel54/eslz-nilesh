@@ -622,8 +622,8 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
     tags: combinedTags    
     suffix: suffix
     actionGroups: actionGroups
-    rgResoruceIds: lzRgs.outputs.rgResoruceIds
-    vmResourceIDs: lzVms.outputs.vmResourceIDs
+    //rgResoruceIds: lzRgs.outputs.rgResoruceIds
+    //vmResourceIDs: lzVms.outputs.vmResourceIDs
   }
 }
 
