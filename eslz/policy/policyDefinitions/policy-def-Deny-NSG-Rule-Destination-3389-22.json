@@ -1,0 +1,96 @@
+{
+    "properties": {
+        "displayName": "Deny NSG Rules with Destination Ports 3389 and 22",
+        "mode": "All",
+        "description": "Deny NSG Rules with Destination Ports 3389 and 22.",
+        "metadata": {
+          "version": "1.0.0",
+          "category": "Network"
+        },
+        "parameters": {
+          "effect": {
+            "type": "String",
+            "defaultValue": "Deny",
+            "allowedValues": [
+              "Audit",
+              "Disabled",
+              "Deny"
+            ],
+            "metadata": {
+              "displayName": "Effect",
+              "description": "Enable or disable the execution of the policy"
+            }
+          }
+        },
+        "policyRule": {
+            "if": {
+                "anyOf": [
+                    {
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Network/networkSecurityGroups/securityRules"
+                            },
+                            {
+                                "not": {
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                                    "notEquals": "*"
+                                }
+                            },
+                            {
+                                "anyOf": [
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
+                                        "equals": "22"
+                                    },
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
+                                        "equals": "3389"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Network/networkSecurityGroups"
+                            },
+                            {
+                                "count": {
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules[*]",
+                                    "where": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
+                                                "equals": "*"
+                                            },
+                                            {
+                                                "anyOf": [
+                                                    {
+                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRange",
+                                                        "equals": "22"
+                                                    },
+                                                    {
+                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRange",
+                                                        "equals": "3389"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "greater": 0
+                            }
+                        ]
+                    }
+                ]
+            },
+            "then": {
+                "effect": "[parameters('effect')]"
+            }
+        },
+        "name": "Deny-NSG-Rule-Destination-3389-22"
+    }
+}

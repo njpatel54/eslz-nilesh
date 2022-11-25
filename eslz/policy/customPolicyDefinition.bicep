@@ -197,8 +197,33 @@ var customPolicyDefinitions = [
   }
   {
     name: 'Deny-PrivateDNSZone-PrivateLink'
-    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-DNS-Zone-With-Privatelink-Prefix.json'))  
-  }  
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-DNS-Zone-With-Privatelink-Prefix.json'))
+  }
+  {
+    name: 'Deny-Enforce-Naming-Convention'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Enforce-Naming-Convention.json'))
+  }
+
+  {
+    name: 'Deny-Route-NextHopVirtualAppliance'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Route-NextHopVirtualAppliance.json'))
+  }
+  {
+    name: 'Modify-RouteTable-NextHopVirtualAppliance'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Modify-RouteTable-NextHopVirtualAppliance.json'))
+  }
+  {
+    name: 'Deny-NSG-Rule-Destination-443-80'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-Rule-Destination-443-80.json'))
+  }
+  {
+    name: 'Deny-NSG-Rule-Destination-3389-22'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-Rule-Destination-3389-22.json'))
+  }
+  {
+    name: 'Deny-NSG-Rule-With-Any-Source-Allow-Inbound'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-Rule-With-Any-Source-Allow-Inbound.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')

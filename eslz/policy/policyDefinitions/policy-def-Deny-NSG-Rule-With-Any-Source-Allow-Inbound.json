@@ -1,0 +1,76 @@
+{
+    "properties": {
+        "displayName": "Deny NSG Rules with Any Source with Allow Inbound Direction",
+        "mode": "All",
+        "description": "Deny NSG Rules with Any Source with Allow Inbound Direction",
+        "metadata": {
+            "version": "1.0.0",
+            "category": "Network"
+        },
+        "parameters": {
+            "effect": {
+                "type": "String",
+                "defaultValue": "Deny",
+                "allowedValues": [
+                    "Audit",
+                    "Disabled",
+                    "Deny"
+                ],
+                "metadata": {
+                    "displayName": "Effect",
+                    "description": "Enable or disable the execution of the policy"
+                }
+            }
+        },
+        "policyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.Network/networkSecurityGroups"
+                    },
+                    {
+                        "count": {
+                            "field": "Microsoft.Network/networkSecurityGroups/securityRules[*]",
+                            "where": {
+                                "allOf": [
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
+                                        "equals": "*"
+                                    },
+                                    {
+                                        "anyOf": [
+                                            {
+                                                "not": {
+                                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                                                    "notIn": []
+                                                }
+                                            },
+                                            {
+                                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                                                "exists": false
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].access",
+                                        "equals": "Allow"
+                                    },
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].direction",
+                                        "equals": "Inbound"
+                                    }
+                                ]
+                            }
+                        },
+                        "greater": 0
+                    }
+                ]
+            },
+            "then": {
+                "effect": "deny"
+            }
+        },
+        "name": "Deny-NSG-Rule-With-Any-Source-Allow-Inbound"
+    }
+}
