@@ -228,6 +228,10 @@ var customPolicyDefinitions = [
     name: 'Deny-Test-Not-Allowed-Ports'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Test-Not-Allowed-Ports.json'))
   }
+  {
+    name: 'Deny-Test-Not-Allowed-Ports-1'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Test-Not-Allowed-Ports-1.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')
