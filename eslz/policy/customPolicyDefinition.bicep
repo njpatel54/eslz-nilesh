@@ -224,6 +224,10 @@ var customPolicyDefinitions = [
     name: 'Deny-NSG-Rule-With-Any-Source-Allow-Inbound'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-Rule-With-Any-Source-Allow-Inbound.json'))
   }
+  {
+    name: 'Deny-Test-Not-Allowed-Ports'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Test-Not-Allowed-Ports.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')
