@@ -54,8 +54,21 @@
                     {
                         "anyOf": [
                             {
-                                "value": "[ipRangeContains(current('allowedIPRanges'), current('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))]",
-                                "equals": true
+                                "count": {
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                                    "where": {
+                                        "count": {
+                                            "value": "[parameters('allowedIPRanges')]",
+                                            "name": "allowedIPRanges",
+                                            "where": {
+                                                "value": "[ipRangeContains(current('allowedIPRanges'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))]",
+                                                "equals": true
+                                            }
+                                        },
+                                        "equals": 0
+                                    }
+                                },
+                                "greater": 0
                             },
                             {
                                 "count": {
@@ -72,7 +85,7 @@
                                         "greater": 0
                                     }
                                 },
-                                "greater": 0
+                                "notEquals": "[length(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]'))]"
                             },
                             {
                                 "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
@@ -81,6 +94,18 @@
                             {
                                 "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
                                 "equals": "Internet"
+                            },
+                            {
+                              "not": {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
+                                "notEquals": "*"
+                              }
+                            },
+                            {
+                              "not": {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
+                                "notEquals": "Internet"
+                              }
                             }
                         ]
                     },
