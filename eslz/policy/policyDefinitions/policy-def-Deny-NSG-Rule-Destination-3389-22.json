@@ -46,6 +46,14 @@
                                     {
                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
                                         "equals": "3389"
+                                    },
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges",
+                                        "equals": ["3389,22"]
+                                    },
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges",
+                                        "equals": ["22,3389"]
                                     }
                                 ]
                             }
@@ -75,6 +83,14 @@
                                                     {
                                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRange",
                                                         "equals": "3389"
+                                                    },
+                                                    {
+                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges",
+                                                        "equals": ["3389,22"]
+                                                    },
+                                                    {
+                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRanges",
+                                                        "equals": ["22,3389"]
                                                     }
                                                 ]
                                             }
