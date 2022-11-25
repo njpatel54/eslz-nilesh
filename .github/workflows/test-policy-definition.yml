@@ -1,0 +1,57 @@
+name: test - policy definitions
+
+on:
+  #push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/4-custom-role-definitions.yml
+      
+  # pull_request:
+  #  branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploying Custom Policy Definitions'
+      with:
+        inlineScript: |
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDefinition.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagLaw.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
+            az deployment mg create \
+              --name 'Platform-Policy-Definitions' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+              --template-file ./eslz/policy/customPolicyDiagStgAcct.bicep \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           targetMgId=${{ secrets.AZURE_MG_TOP }}
