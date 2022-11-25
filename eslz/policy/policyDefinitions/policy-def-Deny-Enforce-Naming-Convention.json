@@ -1,0 +1,85 @@
+{
+    "properties": {
+        "displayName": "Deny resource creation is specific naming convention is not followed",
+        "mode": "Indexed",
+        "description": "This policy will deny the creation of a resource when the resource name does not contain allowed values in \"first segment\", \"second segment\" and \"third segment\" split by a \"-\".",
+        "metadata": {
+            "version": "1.0.0",
+            "category": "General"
+        },
+        "parameters": {
+            "effect": {
+                "type": "String",
+                "allowedValues": [
+                    "Audit",
+                    "Deny",
+                    "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                    "displayName": "Effect",
+                    "description": "Enable or disable the execution of the policy"
+                }
+            }
+        },
+        "policyRule": {
+            "if": {
+                "anyOf": [
+                    {
+                        "count": {
+                            "value": [
+                                "vm",
+                                "vnet",
+                                "kv",
+                                "sql"
+                            ],
+                            "name": "pattern",
+                            "where": {
+                                "value": "[split(field('name'), '-')[0]]",
+                                "like": "[current('pattern')]"
+                            }
+                        },
+                        "notEquals": 1
+                    },
+                    {
+                        "count": {
+                            "value": [
+                                "prod",
+                                "dev",
+                                "qa",
+                                "stage",
+                                "test",
+                                "sand"
+                            ],
+                            "name": "pattern",
+                            "where": {
+                                "value": "[split(field('name'), '-')[1]]",
+                                "like": "[current('pattern')]"
+                            }
+                        },
+                        "notEquals": 1
+                    },
+                    {
+                        "count": {
+                            "value": [
+                                "usva",
+                                "ustx",
+                                "usaz"
+                            ],
+                            "name": "pattern",
+                            "where": {
+                                "value": "[split(field('name'), '-')[2]]",
+                                "like": "[current('pattern')]"
+                            }
+                        },
+                        "notEquals": 1
+                    }
+                ]
+            },
+            "then": {
+                "effect": "[parameters('effect')]"
+            }
+        },
+        "name": "Deny-Enforce-Naming-Convention"
+    }
+}

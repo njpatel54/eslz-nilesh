@@ -107,7 +107,7 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 
 // 4. Attach NSG & Route Table to Subnets
 @batchSize(1)
-module attachNsgRtToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
+module attachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
   name: 'attachNsgRtToSubnets-${subnet.name}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
@@ -131,7 +131,7 @@ module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/depl
   name: 'vnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
   dependsOn: [
-    attachNsgRtToSubnets
+    attachNsgRouteTableToSubnets
   ]
   params: {
     location: 'global'
