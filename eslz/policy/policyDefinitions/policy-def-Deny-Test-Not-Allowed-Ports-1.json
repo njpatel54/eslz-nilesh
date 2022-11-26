@@ -1,8 +1,8 @@
 {
     "properties": {
-        "displayName": "policy-def-Deny-Test-Not-Allowed-Ports",
+        "displayName": "policy-def-Deny-Test-Not-Allowed-Ports-1",
         "mode": "All",
-        "description": "policy-def-Deny-Test-Not-Allowed-Ports",
+        "description": "policy-def-Deny-Test-Not-Allowed-Ports-1",
         "metadata": {
             "version": "1.0.0",
             "category": "Network"
@@ -123,5 +123,5 @@
             }
         }
     },
-    "name": "Deny-Test-Not-Allowed-Ports"
+    "name": "Deny-Test-Not-Allowed-Ports-1"
 }
