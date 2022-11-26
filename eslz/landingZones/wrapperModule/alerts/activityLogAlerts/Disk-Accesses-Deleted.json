@@ -10,6 +10,13 @@
             {
                 "field": "operationName",
                 "equals": "Microsoft.Compute/diskAccesses/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
             }
         ]
     }

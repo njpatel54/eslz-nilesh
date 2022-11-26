@@ -10,6 +10,13 @@
             {
                 "field": "operationName",
                 "equals": "Microsoft.Authorization/policyAssignments/write"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
             }
         ]
     }

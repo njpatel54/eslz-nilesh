@@ -225,11 +225,11 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-Rule-With-Any-Source-Allow-Inbound.json'))
   }
   {
-    name: 'Deny-Security-Rule-to-Dest-Ports-If-Source-IP-Ranges-Not-From-List'
+    name: 'Deny-Sec-Rule-to-Dest-Ports-If-Src-IP-Ranges-Not-From-List'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Security-Rule-to-Specific-Dest-Ports-If-Source-IP-Ranges-Not-From-Allowed-List.json'))
   }
   {
-    name: 'Deny-NSG-With-Security-Rule-to-Dest-Ports-If-Source-IP-Ranges-Not-From-List'
+    name: 'Deny-NSG-Sec-Rule-to-Dest-Ports-If-Src-IP-Ranges-Not-From-List'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-With-Security-Rule-to-Specific-Dest-Ports-If-Source-IP-Ranges-Not-From-Allowed-List.json'))
   }
 ]

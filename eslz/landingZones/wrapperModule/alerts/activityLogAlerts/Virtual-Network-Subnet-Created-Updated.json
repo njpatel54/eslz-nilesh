@@ -10,6 +10,13 @@
             {
                 "field": "operationName",
                 "equals": "Microsoft.Network/virtualNetworks/subnets/write"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
             }
         ]
     }

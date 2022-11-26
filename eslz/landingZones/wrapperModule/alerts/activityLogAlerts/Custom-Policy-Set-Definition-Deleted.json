@@ -10,6 +10,13 @@
             {
                 "field": "operationName",
                 "equals": "Microsoft.Authorization/policySetDefinitions/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
             }
         ]
     }

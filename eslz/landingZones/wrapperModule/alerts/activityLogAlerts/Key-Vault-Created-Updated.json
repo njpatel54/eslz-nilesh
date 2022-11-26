@@ -10,6 +10,13 @@
             {
                 "field": "operationName",
                 "equals": "Microsoft.KeyVault/vaults/write"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
             }
         ]
     }

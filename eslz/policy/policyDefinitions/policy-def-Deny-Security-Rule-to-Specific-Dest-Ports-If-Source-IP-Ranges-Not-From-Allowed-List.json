@@ -123,5 +123,5 @@
             }
         }
     },
-    "name": "Deny-Security-Rule-to-Dest-Ports-If-Source-IP-Ranges-Not-From-List"
+    "name": "Deny-Sec-Rule-to-Dest-Ports-If-Src-IP-Ranges-Not-From-List"
 }

@@ -10,6 +10,13 @@
             {
                 "field": "operationName",
                 "equals": "Microsoft.KeyVault/vaults/certificates/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
             }
         ]
     }
