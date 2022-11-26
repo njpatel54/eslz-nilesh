@@ -72,7 +72,7 @@
                     "parameters": {
                         "destinationPort": {
                             "value": [
-                                "3389", 
+                                "3389",
                                 "22"
                             ]
                         },
@@ -92,9 +92,39 @@
                     "roleDefinitionIds": []
                 },
                 {
+                    "name": "Deny-NSG-Rule-Any-Src-In",
+                    "description": "Deny NSG Rules with Any Source with Allow Inbound Direction",
+                    "displayName": "Deny NSG Rules with Any Source with Allow Inbound Direction",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deny-NSG-Rule-With-Any-Source-Allow-Inbound",
+                    "parameters": {},
+                    "nonComplianceMessage": "NSG Rule creation is denied as it uses ANY Source with Allow Inbound access.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "",
+                    "identity": "None",
+                    "roleDefinitionIds": []
+                },
+                {
+                    "name": "Deny-Subnet-without-UDR",
+                    "description": "This policy denies the creation of a subnet without a User Defined Route (UDR).",
+                    "displayName": "Deny creation of a subnet without a User Defined Route (UDR)",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deny-Subnet-Without-Udr",
+                    "parameters": {},
+                    "nonComplianceMessage": "Subnet creation is denied without a User Defined Route (UDR). Please associate your subnet with appropriate Route Table.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "",
+                    "identity": "None",
+                    "roleDefinitionIds": []
+                },
+                {
                     "name": "Deny-Route-NextHopVA",
                     "description": "Deny route with address prefix 0.0.0.0/0 NOT pointing to the virtual appliance IP address. Both creating routes as a standalone resource or nested within their parent resource route table are considered.",
-                    "displayName": "Deny route with address prefix 0.0.0.0/0 NOT pointing to the virtual appliance IP address.",
+                    "displayName": "Deny route with address prefix 0.0.0.0/0 NOT pointing to the virtual appliance IP address",
                     "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deny-Route-NextHopVirtualAppliance",
                     "parameters": {
                         "routeTableSettings": {
@@ -114,10 +144,34 @@
                     "location": "",
                     "identity": "None",
                     "roleDefinitionIds": []
+                },
+                {
+                    "name": "Modify-RT-NextHopVA",
+                    "description": "Adds route with address prefix 0.0.0.0/0 pointing to the virtual appliance in case there is none. Best combined with policy deny-route-nexthopvirtualappliance to ensure the correct IP address of the virtual appliance.",
+                    "displayName": "Adds route with address prefix 0.0.0.0/0 pointing to the virtual appliance in case there is none",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Modify-RouteTable-NextHopVirtualAppliance",
+                    "parameters": {
+                        "routeTableSettings": {
+                            "usgovvirginia": {
+                                "virtualApplianceIpAddress": "10.30.0.68"
+                            },
+                            "disabled": {
+                                "virtualApplianceIpAddress": ""
+                            }
+                        }
+                    },
+                    "nonComplianceMessage": "Adds route with address prefix 0.0.0.0/0 pointing to the virtual appliance in case there is none.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7"
+                    ]
                 }
             ]
         }
     }
 }
-
-

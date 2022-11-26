@@ -1,6 +1,6 @@
 {
     "properties": {
-        "displayName": "Adds route with address prefix 0.0.0.0/0 pointing to the virtual appliance in case there is none.",
+        "displayName": "Adds route with address prefix 0.0.0.0/0 pointing to the virtual appliance in case there is none",
         "mode": "All",
         "description": "Adds route with address prefix 0.0.0.0/0 pointing to the virtual appliance in case there is none. Best combined with policy deny-route-nexthopvirtualappliance to ensure the correct IP address of the virtual appliance.",
         "metadata": {
