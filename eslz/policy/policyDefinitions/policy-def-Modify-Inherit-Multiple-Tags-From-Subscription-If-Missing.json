@@ -3,6 +3,10 @@
         "displayName": "Inherits multiple tags to resource if missing from Subscription",
         "mode": "Indexed",
         "description": "Adds multiple tags with its value from the subscription when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed.",
+        "metadata": {
+            "version": "1.0.0",
+            "category": "General"
+        },
         "parameters": {
             "tagName1": {
                 "type": "String",
