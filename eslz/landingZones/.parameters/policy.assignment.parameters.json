@@ -63,8 +63,37 @@
                     "roleDefinitionIds": [
                         "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
                     ]
+                },
+                {
+                    "name": "Deny-NSGRule-NoAllowList",
+                    "description": "Deny NSG Rules to specific Destination Ports if Source IP Ranges are not from allowed list (allowedIPRanges). For example, If centralized Bastion host is being utilized for RDP-SSH session to VMs then parameter \"allowedIPRanges\" should include Source IP Rnages of AzureBastionSubnet and parameter \"destinationPort\" should include ports 3389 and 22.",
+                    "displayName": "Deny NSG Rules to specific Destination Ports if Source IP Ranges are not from allowed list",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deny-NSG-Rule-to-Dest-Ports-If-Source-IP-Ranges-Not-From-List",
+                    "parameters": {
+                        "destinationPort": {
+                            "value": [
+                                "3389", 
+                                "22"
+                            ]
+                        },
+                        "allowedIPRanges": {
+                            "value": [
+                                "10.30.0.192/26"
+                            ]
+                        }
+                    },
+                    "nonComplianceMessage": "NSG Rule denied as Source IP Range is not from allow list.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "",
+                    "identity": "None",
+                    "roleDefinitionIds": []
                 }
             ]
         }
     }
 }
+
+

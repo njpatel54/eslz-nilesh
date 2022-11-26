@@ -29,7 +29,8 @@
           "description": "Array of subnet names that are excluded from this policy"
         },
         "defaultValue": [
-          "AzureBastionSubnet"
+          "AzureBastionSubnet",
+          "AzureFirewallManagementSubnet"
         ]
       }
     },
