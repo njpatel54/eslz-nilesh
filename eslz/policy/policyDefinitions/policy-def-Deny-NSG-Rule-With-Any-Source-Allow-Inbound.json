@@ -24,46 +24,84 @@
         },
         "policyRule": {
             "if": {
-                "allOf": [
+                "anyOf": [
                     {
-                        "field": "type",
-                        "equals": "Microsoft.Network/networkSecurityGroups"
-                    },
-                    {
-                        "count": {
-                            "field": "Microsoft.Network/networkSecurityGroups/securityRules[*]",
-                            "where": {
-                                "allOf": [
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Network/networkSecurityGroups/securityRules"
+                            },
+                            {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
+                                "equals": "*"
+                            },
+                            {
+                                "anyOf": [
                                     {
-                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
-                                        "equals": "*"
+                                        "not": {
+                                            "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                                            "notIn": []
+                                        }
                                     },
                                     {
-                                        "anyOf": [
-                                            {
-                                                "not": {
-                                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
-                                                    "notIn": []
-                                                }
-                                            },
-                                            {
-                                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
-                                                "exists": false
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].access",
-                                        "equals": "Allow"
-                                    },
-                                    {
-                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].direction",
-                                        "equals": "Inbound"
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                                        "exists": false
                                     }
                                 ]
+                            },
+                            {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].access",
+                                "equals": "Allow"
+                            },
+                            {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].direction",
+                                "equals": "Inbound"
                             }
-                        },
-                        "greater": 0
+                        ]
+                    },
+                    {
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Network/networkSecurityGroups"
+                            },
+                            {
+                                "count": {
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules[*]",
+                                    "where": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
+                                                "equals": "*"
+                                            },
+                                            {
+                                                "anyOf": [
+                                                    {
+                                                        "not": {
+                                                            "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                                                            "notIn": []
+                                                        }
+                                                    },
+                                                    {
+                                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                                                        "exists": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].access",
+                                                "equals": "Allow"
+                                            },
+                                            {
+                                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].direction",
+                                                "equals": "Inbound"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "greater": 0
+                            }
+                        ]
                     }
                 ]
             },

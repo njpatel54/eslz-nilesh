@@ -331,8 +331,33 @@
                         "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
                     ],
                     "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Allowed-Locations",
+                    "description": "This policy enables you to restrict the locations your organization can specify when deploying resources. Use to enforce your geo-compliance requirements. Excludes resource groups, Microsoft.AzureActiveDirectory/b2cDirectories, and resources that use the 'global' region.",
+                    "displayName": "Allowed locations",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/708b60a6-d253-4fe0-9114-4be4c00f012c",
+                    "parameters": {
+                        "listOfAllowedLocations": [
+                            "usgovarizona",
+                            "usgoviowa",
+                            "usgovtexas",
+                            "usgovvirginia"
+                        ]
+                    },
+                    "nonComplianceMessage": "Azure resources are only allowed to be created in \"USGovViginia\", \"USGovTexas\" and \"USGovArizona\" regions.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "",
+                    "identity": "None",
+                    "roleDefinitionIds": [],
+                    "managementGroupId": "mg-A2g"
                 }
             ]
         }
     }
 }
+
+
