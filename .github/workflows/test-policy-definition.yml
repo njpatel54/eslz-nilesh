@@ -1,4 +1,4 @@
-name: test - policy definitions
+name: test - pltform policy definitions
 
 on:
   #push:
