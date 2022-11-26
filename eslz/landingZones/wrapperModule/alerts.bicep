@@ -217,6 +217,7 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
   }
 }]
 
+/*
 // 4. Create Budget
 module budget '../../modules/consumption/budgets/deploy.bicep' = [for (budget, i) in budgets: {
   name: 'budget-${take(uniqueString(deployment().name, location), 4)}-${i}'
@@ -230,6 +231,8 @@ module budget '../../modules/consumption/budgets/deploy.bicep' = [for (budget, i
     actionGroups: actionGroups
   }
 }]
+*/
+
 
 /*
 @description('Output - Resource Group Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
