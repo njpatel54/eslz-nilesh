@@ -649,7 +649,9 @@ param vmAdminPassword string = ''
 
 @description('Virtual Machine Size')
 param virtualMachineSize string = 'Standard_DS2_v2'
+*\
 
+/*
 @description('Output - Resource Group "name" Array')
 output rgNames array = rgs.outputs.rgNames
 
