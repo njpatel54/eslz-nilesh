@@ -2,7 +2,7 @@
     "alertName": "Azure Advisor Performance Recommendations",
     "alertDescription": "This activity log alert fires when there is Performance related recommendations from Azure Advisor.",
     "condition": {
-        "allOf": [
+        "value": [
             {
                 "field": "category",
                 "equals": "Recommendation"

@@ -2,7 +2,7 @@
   "alertName": "Azure Advisor Cost Recommendations",
   "alertDescription": "This activity log alert fires when there is Cost related recommendations from Azure Advisor.",
   "condition": {
-    "allOf": [
+    "value": [
       {
         "field": "category",
         "equals": "Recommendation"

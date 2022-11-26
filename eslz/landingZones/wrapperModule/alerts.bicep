@@ -222,7 +222,7 @@ module budget '../../modules/consumption/budgets/deploy.bicep' = [for (budget, i
   name: 'budget-${take(uniqueString(deployment().name, location), 4)}-${i}'
   scope: subscription(subscriptionId)
   params: {
-    //name: 
+    name: '${budget.resetPeriod}-${budget.category}-Budget'
     amount: budget.amount
     category: budget.category
     resetPeriod: budget.resetPeriod
