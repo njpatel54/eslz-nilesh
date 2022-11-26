@@ -246,15 +246,6 @@ param sqlAdministratorLogin string = ''
 @secure()
 param sqlAdministratorLoginPassword string = ''
 
-@description('Required. The administrator username for the virtual machine.')
-@secure()
-param vmAdmin string = ''
-
-@description('Required. The administrator login passwordfor the virtual machine.')
-@secure()
-param vmAdminPassword string = ''
-
-
 @description('Optional. The array of Virtual Machines.')
 param virtualMachines array
 
@@ -632,23 +623,30 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   }
 }
 
-
-/*
 // 17. Create Policy Assignment and Remediation
 module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
     lzRsv
     lzVms
+    lzAlerts
   ]
   params: {
     subscriptionId: subscriptionId
     policyAssignments: policyAssignments
   }
-}*/
+}
 
 
 /*
+@description('Required. The administrator username for the virtual machine.')
+@secure()
+param vmAdmin string = ''
+
+@description('Required. The administrator login passwordfor the virtual machine.')
+@secure()
+param vmAdminPassword string = ''
+
 @description('Virtual Machine Size')
 param virtualMachineSize string = 'Standard_DS2_v2'
 
