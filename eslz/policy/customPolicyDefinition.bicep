@@ -225,12 +225,8 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-Rule-With-Any-Source-Allow-Inbound.json'))
   }
   {
-    name: 'Deny-Test-Not-Allowed-Ports'
-    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Test-Not-Allowed-Ports.json'))
-  }
-  {
-    name: 'Deny-Test-Not-Allowed-Ports-1'
-    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Test-Not-Allowed-Ports-1.json'))
+    name: 'Deny-NSG-Rule-to-Specific-Dest-Ports-If-Source-IP-Ranges-Not-From-Allowed-List'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-Rule-to-Specific-Dest-Ports-If-Source-IP-Ranges-Not-From-Allowed-List.json'))
   }
 ]
 
