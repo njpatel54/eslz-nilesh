@@ -232,6 +232,10 @@ var customPolicyDefinitions = [
     name: 'Deny-NSG-Sec-Rule-to-Dest-Ports-If-Src-IP-Ranges-Not-From-List'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-With-Security-Rule-to-Specific-Dest-Ports-If-Source-IP-Ranges-Not-From-Allowed-List.json'))
   }
+  {
+    name: 'Modify-Inherit-Tags-From-Sub'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Modify-Inherit-Multiple-Tags-From-Subscription-If-Missing.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')

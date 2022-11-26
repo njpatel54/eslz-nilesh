@@ -336,7 +336,7 @@
                     "name": "Allowed-Locations",
                     "description": "This policy enables you to restrict the locations your organization can specify when deploying resources. Use to enforce your geo-compliance requirements. Excludes resource groups, Microsoft.AzureActiveDirectory/b2cDirectories, and resources that use the 'global' region.",
                     "displayName": "Allowed locations",
-                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/708b60a6-d253-4fe0-9114-4be4c00f012c",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
                     "parameters": {
                         "listOfAllowedLocations": {
                             "value": [
@@ -355,6 +355,40 @@
                     "location": "",
                     "identity": "None",
                     "roleDefinitionIds": [],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
+                    "name": "Modify-Inherit-Tags-From-Sub",
+                    "description": "Adds multiple tags with its value from the subscription when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed.",
+                    "displayName": "Inherits multiple tags to resource if missing from Subscription",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Modify-Inherit-Tags-From-Sub",
+                    "parameters": {
+                        "tagName1": {
+                            "value": "Customer"
+                        },
+                        "tagName2": {
+                            "value": "ProjectID"
+                        },
+                        "tagName3": {
+                            "value": "ProjectName"
+                        },
+                        "tagName4": {
+                            "value": "SecurityContactEmail"
+                        },
+                        "tagName5": {
+                            "value": "TechContactEmail"
+                        }
+                    },
+                    "nonComplianceMessage": "Inherits multiple tags to resource if missing from Subscription",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "usgovvirginia",
+                    "identity": "SystemAssigned",
+                    "roleDefinitionIds": [
+                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
                     "managementGroupId": "mg-A2g"
                 }
             ]

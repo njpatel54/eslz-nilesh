@@ -1,7 +1,6 @@
 {
     "properties": {
-        "displayName": "Adds multiple tags to resource if missing from Subscription",
-        "policyType": "Custom",
+        "displayName": "Inherits multiple tags to resource if missing from Subscription",
         "mode": "Indexed",
         "description": "Adds multiple tags with its value from the subscription when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed.",
         "parameters": {
@@ -39,34 +38,6 @@
                     "displayName": "Fifth Tag Name",
                     "description": "Name of the tag, such as 'environment'"
                 }
-            },
-            "tagName6": {
-                "type": "String",
-                "metadata": {
-                    "displayName": "Sixth Tag Name",
-                    "description": "Name of the tag, such as 'environment'"
-                }
-            },
-            "tagName7": {
-                "type": "String",
-                "metadata": {
-                    "displayName": "Seventh Tag Name",
-                    "description": "Name of the tag, such as 'environment'"
-                }
-            },
-            "tagName8": {
-                "type": "String",
-                "metadata": {
-                    "displayName": "Eighth Tag Name",
-                    "description": "Name of the tag, such as 'environment'"
-                }
-            },
-            "tagName9": {
-                "type": "String",
-                "metadata": {
-                    "displayName": "Ninth Tag Name",
-                    "description": "Name of the tag, such as 'environment'"
-                }
             }
         },
         "policyRule": {
@@ -91,22 +62,6 @@
                     {
                         "field": "[concat('tags[', parameters('tagName5'), ']')]",
                         "exists": "false"
-                    },
-                    {
-                        "field": "[concat('tags[', parameters('tagName6'), ']')]",
-                        "exists": "false"
-                    },
-                    {
-                        "field": "[concat('tags[', parameters('tagName7'), ']')]",
-                        "exists": "false"
-                    },
-                    {
-                        "field": "[concat('tags[', parameters('tagName8'), ']')]",
-                        "exists": "false"
-                    },
-                    {
-                        "field": "[concat('tags[', parameters('tagName9'), ']')]",
-                        "exists": "false"
                     }
                 ]
             },
@@ -120,51 +75,32 @@
                         {
                             "operation": "add",
                             "field": "[concat('tags[', parameters('tagName1'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName1')]]"
+                            "value": "[subscription().tags[parameters('tagName1')]]"
                         },
                         {
                             "operation": "add",
                             "field": "[concat('tags[', parameters('tagName2'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName2')]]"
+                            "value": "[subscription().tags[parameters('tagName2')]]"
                         },
                         {
                             "operation": "add",
                             "field": "[concat('tags[', parameters('tagName3'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName3')]]"
+                            "value": "[subscription().tags[parameters('tagName3')]]"
                         },
                         {
                             "operation": "add",
                             "field": "[concat('tags[', parameters('tagName4'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName4')]]"
+                            "value": "[subscription().tags[parameters('tagName4')]]"
                         },
                         {
                             "operation": "add",
                             "field": "[concat('tags[', parameters('tagName5'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName5')]]"
-                        },
-                        {
-                            "operation": "add",
-                            "field": "[concat('tags[', parameters('tagName6'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName6')]]"
-                        },
-                        {
-                            "operation": "add",
-                            "field": "[concat('tags[', parameters('tagName7'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName7')]]"
-                        },
-                        {
-                            "operation": "add",
-                            "field": "[concat('tags[', parameters('tagName8'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName8')]]"
-                        },
-                        {
-                            "operation": "add",
-                            "field": "[concat('tags[', parameters('tagName9'), ']')]",
-                            "value": "[resourceGroup().tags[parameters('tagName9')]]"
+                            "value": "[subscription().tags[parameters('tagName5')]]"
                         }
                     ]
                 }
             }
         }
-    }
+    },
+    "name": "Modify-Inherit-Tags-From-Sub"
 }
