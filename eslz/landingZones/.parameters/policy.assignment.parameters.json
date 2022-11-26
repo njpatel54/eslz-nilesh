@@ -92,7 +92,7 @@
                     "location": "",
                     "identity": "None",
                     "roleDefinitionIds": []
-                },                
+                },
                 {
                     "name": "Deny-NSGRule-NoAllowList",
                     "description": "This Policy will detect if an NSG rule would allow a port or set of ports to be accessed from outside of an IP whitelist. This will check Service Tags as well as Port Ranges. Example, if you specify port 22 in the parameter for this Policy, and only allow communications from 10.0.0.0/8, and someone creates a rule that allows ports 20-30 inbound from 20.x.x.x, this would be denied as 22 falls within that port range and 20.x.x.x is not on the IP whitelist. Assign 2nd policy to cover all possibilities.",
@@ -159,11 +159,13 @@
                     "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Deny-Route-NextHopVirtualAppliance",
                     "parameters": {
                         "routeTableSettings": {
-                            "usgovvirginia": {
-                                "virtualApplianceIpAddress": "10.30.0.68"
-                            },
-                            "disabled": {
-                                "virtualApplianceIpAddress": ""
+                            "value": {
+                                "usgovvirginia": {
+                                    "virtualApplianceIpAddress": "10.30.0.68"
+                                },
+                                "disabled": {
+                                    "virtualApplianceIpAddress": ""
+                                }
                             }
                         }
                     },
@@ -183,11 +185,13 @@
                     "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policyDefinitions/Modify-RouteTable-NextHopVirtualAppliance",
                     "parameters": {
                         "routeTableSettings": {
-                            "usgovvirginia": {
-                                "virtualApplianceIpAddress": "10.30.0.68"
-                            },
-                            "disabled": {
-                                "virtualApplianceIpAddress": ""
+                            "value": {
+                                "usgovvirginia": {
+                                    "virtualApplianceIpAddress": "10.30.0.68"
+                                },
+                                "disabled": {
+                                    "virtualApplianceIpAddress": ""
+                                }
                             }
                         }
                     },
@@ -206,5 +210,3 @@
         }
     }
 }
-
-
