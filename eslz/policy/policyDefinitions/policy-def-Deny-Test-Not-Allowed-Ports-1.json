@@ -1,8 +1,8 @@
 {
     "properties": {
-        "displayName": "policy-def-Deny-Test-Not-Allowed-Ports-1",
+        "displayName": "policy-def-Deny-Test-Not-Allowed-Ports",
         "mode": "All",
-        "description": "policy-def-Deny-Test-Not-Allowed-Ports-1",
+        "description": "policy-def-Deny-Test-Not-Allowed-Ports",
         "metadata": {
             "version": "1.0.0",
             "category": "Network"
@@ -55,20 +55,14 @@
                         "anyOf": [
                             {
                                 "count": {
-                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                                    "value": "[parameters('allowedIPRanges')]",
+                                    "name": "allowedIPRanges",
                                     "where": {
-                                        "count": {
-                                            "value": "[parameters('allowedIPRanges')]",
-                                            "name": "allowedIPRanges",
-                                            "where": {
-                                                "value": "[ipRangeContains(current('allowedIPRanges'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))]",
-                                                "equals": true
-                                            }
-                                        },
-                                        "equals": 0
+                                        "value": "[if(and(not(empty(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))),not(contains(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'),'*')),not(contains(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'),'Internet'))),not(or(ipRangeContains(current('allowedIPRanges'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix')))),'false')]",
+                                        "equals": false
                                     }
                                 },
-                                "greater": 0
+                                "equals": "[length(parameters('allowedIPRanges'))]"
                             },
                             {
                                 "count": {
@@ -94,18 +88,6 @@
                             {
                                 "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
                                 "equals": "Internet"
-                            },
-                            {
-                              "not": {
-                                "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
-                                "notEquals": "*"
-                              }
-                            },
-                            {
-                              "not": {
-                                "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
-                                "notEquals": "Internet"
-                              }
                             }
                         ]
                     },
@@ -141,5 +123,5 @@
             }
         }
     },
-    "name": "Deny-Test-Not-Allowed-Ports-1"
+    "name": "Deny-Test-Not-Allowed-Ports"
 }
