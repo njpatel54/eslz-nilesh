@@ -51,3 +51,5 @@ module subTags '../../modules/resources/tags/subscriptions/deploy.bicep' = {
     tags: combinedTags
   }
 }
+
+

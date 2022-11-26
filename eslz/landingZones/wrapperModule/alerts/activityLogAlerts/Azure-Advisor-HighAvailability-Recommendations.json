@@ -1,0 +1,24 @@
+{
+    "alertName": "Azure Advisor HighAvailability Recommendations",
+    "alertDescription": "This activity log alert fires when there is HighAvailability related recommendations from Azure Advisor.",
+    "condition": {
+        "allOf": [
+            {
+                "field": "category",
+                "equals": "Recommendation"
+            },
+            {
+                "field": "properties.recommendationCategory",
+                "equals": "HighAvailability"
+            },
+            {
+                "field": "properties.recommendationImpact",
+                "equals": "Medium"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Advisor/recommendations/available/action"
+            }
+        ]
+    }
+}

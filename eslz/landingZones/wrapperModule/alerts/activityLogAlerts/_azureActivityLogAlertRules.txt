@@ -1,4 +1,13 @@
 {
+	rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-Cost-Recommendations.json'))
+}
+{
+	rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-HighAvailability-Recommendations.json'))
+}
+{
+	rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-Performance-Recommendations.json'))
+}
+{
 	rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Policy-Definition-Created.json'))
 }
 {

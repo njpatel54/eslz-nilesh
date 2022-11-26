@@ -59,6 +59,9 @@ param platformProjOwner string
 @description('Required. "opscope" parameter used for Platform.')
 param platformOpScope string
 
+@description('Required. Array containing Budgets.')
+param budgets array = []
+
 @description('Required. Subnet name to be used for Private Endpoint.')
 param mgmtSubnetName string = 'snet-${projowner}-${region}-mgmt'
 // End - Common parameters
@@ -619,13 +622,16 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   params: {
     subscriptionId: subscriptionId
     wlRgName: wlRgName
+    location: location
     tags: combinedTags    
     suffix: suffix
     actionGroups: actionGroups
+    budgets: budgets
     //rgResoruceIds: lzRgs.outputs.rgResoruceIds
     //vmResourceIDs: lzVms.outputs.vmResourceIDs
   }
 }
+
 
 /*
 // 17. Create Policy Assignment and Remediation

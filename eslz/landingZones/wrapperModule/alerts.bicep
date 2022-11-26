@@ -4,6 +4,9 @@ param subscriptionId string
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string
 
+@description('Location for the deployments and the resources')
+param location string
+
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
@@ -13,8 +16,20 @@ param suffix string
 @description('Required - Action Groups Array')
 param actionGroups array
 
+@description('Required. Array containing Budgets.')
+param budgets array
+
 @description('Variable containing all Activity Log Alert Rules.')
 var activityLogAlertRulesVar = [
+  {
+    rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-Cost-Recommendations.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-HighAvailability-Recommendations.json'))
+  }
+  {
+    rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-Performance-Recommendations.json'))
+  }
   {
     rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Policy-Definition-Created.json'))
   }
@@ -122,7 +137,7 @@ var activityLogAlertRulesVar = [
   }
   {
     rule: json(loadTextContent('alerts/activityLogAlerts/Virtual-Network-Subnet-Deleted.json'))
-  }
+  }  
 ]
 
 @description('Variable containing all Service Health Alert Rules.')
@@ -199,6 +214,20 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
     actions: [for (actionGroup, i) in actionGroups: {
       actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
     }]
+  }
+}]
+
+// 4. Create Budget
+module budget '../../modules/consumption/budgets/deploy.bicep' = [for (budget, i) in budgets: {
+  name: 'budget-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: subscription(subscriptionId)
+  params: {
+    //name: 
+    amount: budget.amount
+    category: budget.category
+    resetPeriod: budget.resetPeriod
+    thresholds: budget.thresholds
+    actionGroups: actionGroups
   }
 }]
 
