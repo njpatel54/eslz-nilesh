@@ -1,8 +1,8 @@
 {
     "properties": {
-        "displayName": "Deny NSG Rules with Destination Ports 3389 and 22 if Source IP Ranges not from allowed list",
+        "displayName": "Deny NSG Rules to specific Destination Ports if Source IP Ranges are not from allowed list",
         "mode": "All",
-        "description": "Deny NSG Rules with Destination Ports 3389 and 22 if Source IP Ranges not from allowed list (allowedIPRanges). Parameter \"allowedIPRanges\" should include IP Rnages of AzureBastionSubnet if centralized Bastion host is being utilized for RDP-SSH to VMs.",
+        "description": "Deny NSG Rules to specific Destination Ports if Source IP Ranges are not from allowed list (allowedIPRanges). For example, If centralized Bastion host is being utilized for RDP-SSH session to VMs then parameter \"allowedIPRanges\" should include Source IP Rnages of AzureBastionSubnet and parameter \"destinationPort\" should include ports 3389 and 22.",
         "metadata": {
             "version": "1.0.0",
             "category": "Network"
