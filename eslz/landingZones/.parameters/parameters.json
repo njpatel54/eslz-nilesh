@@ -79,7 +79,7 @@
     "budgets": {
       "value": [
         {
-          "amount": "1000",
+          "amount": 1000,
           "category": "Cost",
           "resetPeriod": "Monthly",
           "thresholds": [
