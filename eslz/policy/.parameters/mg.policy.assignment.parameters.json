@@ -358,7 +358,7 @@
                     "managementGroupId": "mg-A2g"
                 },
                 {
-                    "name": "Modify-Inherit-Tags-From-Sub",
+                    "name": "Modify-Inherit-Tags-Sub",
                     "description": "Adds multiple tags with its value from the subscription when any resource missing this tag is created or updated. Existing resources can be remediated by triggering a remediation task. If the tag exists with a different value it will not be changed.",
                     "displayName": "Inherits multiple tags to resource if missing from Subscription",
                     "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Modify-Inherit-Tags-From-Sub",
