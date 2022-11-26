@@ -338,12 +338,14 @@
                     "displayName": "Allowed locations",
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/708b60a6-d253-4fe0-9114-4be4c00f012c",
                     "parameters": {
-                        "listOfAllowedLocations": [
-                            "usgovarizona",
-                            "usgoviowa",
-                            "usgovtexas",
-                            "usgovvirginia"
-                        ]
+                        "listOfAllowedLocations": {
+                            "value": [
+                                "usgovarizona",
+                                "usgoviowa",
+                                "usgovtexas",
+                                "usgovvirginia"
+                            ]
+                        }
                     },
                     "nonComplianceMessage": "Azure resources are only allowed to be created in \"USGovViginia\", \"USGovTexas\" and \"USGovArizona\" regions.",
                     "enforcementMode": "Default",
@@ -359,5 +361,3 @@
         }
     }
 }
-
-
