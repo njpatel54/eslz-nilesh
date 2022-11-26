@@ -233,7 +233,7 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-NSG-With-Security-Rule-to-Specific-Dest-Ports-If-Source-IP-Ranges-Not-From-Allowed-List.json'))
   }
   {
-    name: 'Modify-Inherit-Tags-From-Sub'
+    name: 'Modify-Inherit-Tags-Sub'
     definition: json(loadTextContent('policyDefinitions/policy-def-Modify-Inherit-Multiple-Tags-From-Subscription-If-Missing.json'))
   }
 ]
