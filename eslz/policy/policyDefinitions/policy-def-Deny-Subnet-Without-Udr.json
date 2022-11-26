@@ -1,6 +1,6 @@
 {
   "properties": {
-    "displayName": "Subnets should have a User Defined Route",
+    "displayName": "Deny creation of a subnet without a User Defined Route (UDR)",
     "policyType": "Custom",
     "mode": "All",
     "description": "This policy denies the creation of a subnet without a User Defined Route (UDR).",
