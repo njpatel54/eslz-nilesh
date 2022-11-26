@@ -59,7 +59,7 @@
                                     "name": "allowedIPRanges",
                                     "where": {
                                         "value": "[if(and(not(empty(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'))),not(contains(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'),'*')),not(contains(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix'),'Internet'))),not(or(ipRangeContains(current('allowedIPRanges'), field('Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix')))),'false')]",
-                                        "equals": false
+                                        "equals": true
                                     }
                                 },
                                 "equals": "[length(parameters('allowedIPRanges'))]"
