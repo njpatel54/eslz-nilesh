@@ -84,7 +84,7 @@
                             ]
                         }
                     },
-                    "nonComplianceMessage": "NSG Rule denied as Source IP Range is not from allow list.",
+                    "nonComplianceMessage": "Security Rule denied as Source IP Range is not from allow list.",
                     "enforcementMode": "Default",
                     "metadata": {},
                     "scope": null,
@@ -113,7 +113,7 @@
                             ]
                         }
                     },
-                    "nonComplianceMessage": "NSG Rule denied as Source IP Range is not from allow list.",
+                    "nonComplianceMessage": "NSG Security Rule denied as Source IP Range is not from allow list.",
                     "enforcementMode": "Default",
                     "metadata": {},
                     "scope": null,
