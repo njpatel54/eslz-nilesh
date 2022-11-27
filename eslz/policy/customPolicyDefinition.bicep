@@ -236,6 +236,10 @@ var customPolicyDefinitions = [
     name: 'Modify-Inherit-Tags-Sub'
     definition: json(loadTextContent('policyDefinitions/policy-def-Modify-Inherit-Multiple-Tags-From-Subscription-If-Missing.json'))
   }
+  {
+    name: 'Deploy-Stg-DLM-Policy'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Storage-Acct-Data-Lifecycle-Management-Policy.json'))
+  }
 ]
 
 @description('Variable containing all Custom Policy-Set Definitions info.')

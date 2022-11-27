@@ -592,6 +592,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
+    
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
   }

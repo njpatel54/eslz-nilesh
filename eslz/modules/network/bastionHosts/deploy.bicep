@@ -19,6 +19,21 @@ param isCreateDefaultPublicIP bool = true
 @description('Optional. Specifies the properties of the public IP to create and be used by Azure Bastion. If it\'s not provided and publicIPAddressResourceId is empty, a \'-pip\' suffix will be appended to the Bastion\'s name.')
 param publicIPAddressObject object = {}
 
+@description('Optional. Enable/Disable Copy/Paste feature of the Bastion Host resource.')
+param disableCopyPaste bool = false
+
+@description('Optional. Enable/Disable File Copy feature of the Bastion Host resource.')
+param enableFileCopy bool = true
+
+@description('Optional. Enable/Disable Tunneling feature of the Bastion Host resource.')
+param enableTunneling bool = true
+
+@description('Optional. Enable/Disable IP Connect feature of the Bastion Host resource.')
+param enableIpConnect bool = false
+
+@description('Optional. Enable/Disable Shareable Link of the Bastion Host resource.')
+param enableShareableLink bool = false
+
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)
 @maxValue(365)
@@ -180,6 +195,11 @@ resource azureBastion 'Microsoft.Network/bastionHosts@2021-05-01' = {
   properties: {
     scaleUnits: scaleUnitsVar
     ipConfigurations: ipConfigurations
+    disableCopyPaste: disableCopyPaste
+    enableFileCopy: enableFileCopy
+    enableTunneling: enableTunneling
+    enableIpConnect: enableIpConnect
+    enableShareableLink: enableShareableLink
   }
 }
 

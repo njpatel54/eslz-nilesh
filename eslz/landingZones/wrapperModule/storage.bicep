@@ -51,7 +51,6 @@ var groupIds = {
   queue: 'privatelink.queue.core.usgovcloudapi.net'
   queue_secondary: 'privatelink.queue.core.usgovcloudapi.net'
   file: 'privatelink.file.core.usgovcloudapi.net'
-  file_secondary: 'privatelink.file.core.usgovcloudapi.net'
   web: 'privatelink.web.core.usgovcloudapi.net'
   web_secondary: 'privatelink.web.core.usgovcloudapi.net'
   dfs: 'privatelink.dfs.core.usgovcloudapi.net'
