@@ -423,6 +423,9 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
 module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
   name: 'dataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    siem_rg 
+  ]
   params: {
     workspaceName: sentinelLawName
     dataConnectors: dataConnectorsTenant
@@ -433,6 +436,9 @@ module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/ten
 module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    siem_rg 
+  ]
   params: {
     subscriptionId: subscription.subscriptionId
     workspaceName: sentinelLawName
