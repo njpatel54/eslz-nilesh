@@ -190,6 +190,21 @@
                     "roleDefinitionIds": [
                         "/providers/microsoft.authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7"
                     ]
+                },
+                {
+                    "name": "Deny-PaaS-PubEndpoints",
+                    "description": "This policy initiative is a group of policies that prevents creation of Azure PaaS services with exposed public endpoints",
+                    "displayName": "Deny Public network access for PaaS services",
+                    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/mg-A2g/providers/Microsoft.Authorization/policySetDefinitions/Deny-PaaS-PublicEndpoints",
+                    "parameters": {},
+                    "nonComplianceMessage": "Azure PaaS Services must be configured with Private Endpoints to avoid any security exposure through Public Endpoints.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "",
+                    "identity": "None",
+                    "roleDefinitionIds": []
                 }
             ]
         }
