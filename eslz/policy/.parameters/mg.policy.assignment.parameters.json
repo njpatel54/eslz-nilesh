@@ -255,7 +255,7 @@
                     "managementGroupId": "mg-A2g"
                 },
                 {
-                    "name": "Add-SysMI-With-NoIdentiy",
+                    "name": "Add-SysMI-to-NoIdentity",
                     "description": "This policy adds a system-assigned managed identity to virtual machines hosted in Azure that are supported by Guest Configuration but do not have any managed identities. A system-assigned managed identity is a prerequisite for all Guest Configuration assignments and must be added to machines before using any Guest Configuration policy definitions. For more information on Guest Configuration, visit https://aka.ms/gcpol.",
                     "displayName": "Add system-assigned managed identity to enable Guest Configuration assignments on virtual machines with no identities",
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/3cf2ab00-13f1-4d0c-8971-2ac904541a7e",

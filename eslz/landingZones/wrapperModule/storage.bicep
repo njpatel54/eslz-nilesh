@@ -57,7 +57,7 @@ var groupIds = {
   dfs_secondary: 'privatelink.dfs.core.usgovcloudapi.net'
 }
 
-// 1. Create Storage Account
+// 1. Create Storage Account - Landing Zone Subscription
 module sa '../../modules/storageAccounts/deploy.bicep' = {
   name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -72,7 +72,7 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
   }
 }
 
-// 2. Create Private Endpoint for Storage Account
+// 2. Create Private Endpoint for Storage Account - Landing Zone Subscription
 module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}-${stgGroupId}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -96,6 +96,19 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGro
   }
 }]
 
+/*
+// 3. Create Azure File Share
+module fileShare '../../modules/storageAccounts/fileServices/shares/deploy.bicep' = {
+  scope: 
+  name: 
+  params: {
+    name: 
+    storageAccountName: 
+  }
+}
+*/
+
+// 4. Create Private Endpoint for Storage Account - Shared Services Subscription
 @description('Output - Storage Account "name"')
 output saName string = sa.outputs.name
 
