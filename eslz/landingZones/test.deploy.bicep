@@ -288,6 +288,9 @@ param dataConnectorsSubs array = [
   // 'AzureSecurityCenter'
 ]
 
+@description('Required. Array of Action Groups')
+param actionGroups array
+
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
@@ -583,9 +586,6 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
     dataConnectors: dataConnectorsSubs
   }
 }
-
-@description('Required. Array of Action Groups')
-param actionGroups array
 
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {

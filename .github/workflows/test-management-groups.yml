@@ -1,0 +1,36 @@
+name: test - management group
+
+on:
+
+  workflow_dispatch:
+
+
+jobs:
+
+  deploy:
+      runs-on: ubuntu-latest
+      environment: Production
+      steps:
+      - uses: actions/checkout@v3
+      
+      - uses: azure/login@v1
+        name: 'Login to Azure'
+        with:
+         creds: ${{ secrets.AZURE_CREDENTIALS }}
+         environment: ${{ secrets.AZURE_ENVIRONMENT }}
+         enable-AzPSSession: false
+        
+      - name: 'Set Azure Subscription'
+        run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+                
+      - uses: Azure/cli@v1
+        name: 'Deploying Management Groups'
+        with:
+          inlineScript: |
+            az deployment tenant create \
+              --name 'Deploy-Platform-Management-Groups' \
+              --location ${{ secrets.AZURE_LOCATION }} \
+              --template-file ./eslz/managementGroups/deploy.bicep \
+              --parameters ./eslz/managementGroups/.parameters/parameters.json \
+              --parameters location=${{ secrets.AZURE_LOCATION }} \
+                           tenantid=${{ secrets.AZURE_TENANTID }}

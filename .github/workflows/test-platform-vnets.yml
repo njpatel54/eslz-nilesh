@@ -1,0 +1,51 @@
+name: test - platform vnets
+
+on:
+  #push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/5-platform-vnets.yml
+      
+  # pull_request:
+  #  branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploy - Platform Hub-Spoke VNet'
+      with:
+        inlineScript: |
+          az deployment sub create \
+            --name 'Deploy-Platform-Hub-Spoke-VNet' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/platformVNets/deploy.bicep \
+            --parameters ./eslz/platformVNets/.parameters/parameters.json \
+            --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                         diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
+                         diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
+                         diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
+                         diagnosticEventHubAuthorizationRuleId=${{ secrets.AZURE_DIAGEHAUTHRULEID }} \
+                         enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}

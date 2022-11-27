@@ -1,0 +1,43 @@
+name: test - custom role definitions
+
+on:
+  #push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/4-custom-role-definitions.yml
+      
+  # pull_request:
+  #  branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_CONNSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploy - Custom Role Definitions'
+      with:
+        inlineScript: |
+          az deployment mg create \
+            --name 'Deploy-MG-Custom-Role-Definitions' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
+            --template-file ./eslz/roles/mgRoleDefinitions.bicep \
+            --parameters ./eslz/roles/.parameters/mgRoleDefinitions.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}

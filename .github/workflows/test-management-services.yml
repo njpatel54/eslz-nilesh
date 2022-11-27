@@ -1,0 +1,50 @@
+name: test - management services
+
+on:
+  # push:
+  #   branches: 
+  #     - master
+  #     - main 
+  #     - dev
+  #   paths:
+  #     - .github/workflows/2-management-services.yml
+  #     - eslz/management-services/*
+    
+  # pull_request:
+  #   branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+ deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploying Management Services'
+      with:
+        inlineScript: |
+          az deployment tenant create \
+            --name 'Deploy-Platform-Management-Services' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/managementServices/deploy.bicep \
+            --parameters ./eslz/managementServices/.parameters/parameters.json \
+            --parameters ./eslz/managementGroups/.parameters/parameters.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }} \
+                         mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
+                         ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                         tenantid=${{ secrets.AZURE_TENANTID }} \
+                         enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}

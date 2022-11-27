@@ -258,7 +258,7 @@
     "stgGroupIds": {
       "value": [
         "blob",
-        "table"
+        "file"
       ]
     },
     "publicNetworkAccessForIngestion": {
