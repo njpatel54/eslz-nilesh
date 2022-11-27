@@ -1,0 +1,42 @@
+name: test - custom role assignments
+
+on:
+  #push:
+  # branches: 
+  #    - main 
+  # paths:
+  #   - .github/workflows/7-custom-role-assignments.yml
+      
+  # pull_request:
+  #  branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: azure/login@v1
+      name: 'Login to Azure'
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        environment: ${{ secrets.AZURE_ENVIRONMENT }}
+        enable-AzPSSession: false
+      
+    - name: 'Set Azure Subscription'
+      run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
+              
+    - uses: Azure/cli@v1
+      name: 'Deploy - Custom Role Assignments'
+      with:
+        inlineScript: |
+          az deployment tenant create \
+            --name 'Deploy-Custom-Role-Assignments' \
+            --location ${{ secrets.AZURE_LOCATION }} \
+            --template-file ./eslz/roles/customRoleAssingments.bicep \
+            --parameters ./eslz/roles/.parameters/customRoleAssignments.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}
