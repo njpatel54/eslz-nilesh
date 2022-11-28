@@ -766,6 +766,12 @@
                 }
             ]
         },
+        "stgGroupIds": {
+            "value": [
+                "blob",
+                "file"
+            ]
+        },
         "diagSettingName": {
             "value": "logging-diagSetting-centralized"
         },

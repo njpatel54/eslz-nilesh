@@ -240,6 +240,24 @@ var priDNSAContributorRoleDefintionId = paramsRoles.parameters.rgRoleAssignments
 @description('Required. Iterate over "rgRoleAssignments" and build variable to store roleDefitionId for "Deploy Private Endpoint - Networking Permissions" custom role.')
 var networkingPermsRoleDefintionId = paramsRoles.parameters.rgRoleAssignments.value[1].roleDefinitionIdOrName
 
+@description('Required. Storage Account Subresource(s) (aka "groupIds").')
+param stgGroupIds array
+
+@description('Required. Mapping Storage Account Subresource(s) with required Privaate DNS Zone(s) for Private Endpoint creation.')
+var groupIds = {
+  blob: 'privatelink.blob.core.usgovcloudapi.net'
+  blob_secondary: 'privatelink.blob.core.usgovcloudapi.net'
+  table: 'privatelink.table.core.usgovcloudapi.net'
+  table_secondary: 'privatelink.table.core.usgovcloudapi.net'
+  queue: 'privatelink.queue.core.usgovcloudapi.net'
+  queue_secondary: 'privatelink.queue.core.usgovcloudapi.net'
+  file: 'privatelink.file.core.usgovcloudapi.net'
+  web: 'privatelink.web.core.usgovcloudapi.net'
+  web_secondary: 'privatelink.web.core.usgovcloudapi.net'
+  dfs: 'privatelink.dfs.core.usgovcloudapi.net'
+  dfs_secondary: 'privatelink.dfs.core.usgovcloudapi.net'
+}
+
 var varAzBackupGeoCodes = {
   australiacentral: 'acl'
   australiacentral2: 'acl2'
@@ -639,29 +657,28 @@ resource saMgmt 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
 }
 
 // 18. Create Private Endpoint for Storage Account (Management Subscription)
-module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
+module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
+  name: 'saMgmtPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     priDNSZones
   ]
   params: {
-    name: '${stgAcctName}-blob-pe'
+    name: '${stgAcctName}-${stgGroupId}-pe'
     location: location
     tags: ccsCombinedTags
     serviceResourceId: saMgmt.id
     groupIds: [
-      'blob'
-      'file'
+      stgGroupId
     ]
     subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
       ]
     }
   }
-}
+}]
 
 // 17. Retrieve an existing Storage Account resource (Shared Services Subscription)
 resource saSsvc 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
@@ -670,29 +687,28 @@ resource saSsvc 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
 }
 
 // 18. Create Private Endpoint for Storage Account (Shared Services Subscription)
-module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'saSsvcPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctSsvcName}'
+module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
+  name: 'saSsvcPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
     priDNSZones
   ]
   params: {
-    name: '${stgAcctSsvcName}-blob-pe'
+    name: '${stgAcctSsvcName}-${stgGroupId}-pe'
     location: location
     tags: ccsCombinedTags
     serviceResourceId: saSsvc.id
     groupIds: [
-      'blob'
-      'file'
+      stgGroupId
     ]
     subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
       ]
     }
   }
-}
+}]
 
 // 19. Retrieve an existing Automation Account resource (LAW - Logs Collection)
 resource aaLoga 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
