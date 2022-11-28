@@ -692,6 +692,7 @@ module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
     priDNSZones
+    saMgmtPe
   ]
   params: {
     name: '${stgAcctSsvcName}-${stgGroupId}-pe'
@@ -701,7 +702,7 @@ module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
     groupIds: [
       stgGroupId
     ]
-    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
