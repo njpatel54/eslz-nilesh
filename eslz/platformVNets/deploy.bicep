@@ -194,8 +194,11 @@ param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-
 @description('Required. Last four digits of Enrollment Number.')
 param enrollmentID string
 
-@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
+@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection - Management Subscription.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
+
+@description('Required. Storage Account Name for Storing Shared data managed by platform team - Shared Services Subscription.')
+param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}ssvc', 24))
 
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
@@ -629,14 +632,14 @@ module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
-// 17. Retrieve an existing Storage Account resource
-resource sa 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+// 17. Retrieve an existing Storage Account resource (Management Subscription)
+resource saMgmt 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: stgAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 18. Create Private Endpoint for Storage Account
-module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
+// 18. Create Private Endpoint for Storage Account (Management Subscription)
+module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'saPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
@@ -646,9 +649,41 @@ module saPe '../modules/network/privateEndpoints/deploy.bicep' = {
     name: '${stgAcctName}-blob-pe'
     location: location
     tags: ccsCombinedTags
-    serviceResourceId: sa.id
+    serviceResourceId: saMgmt.id
     groupIds: [
       'blob'
+      'file'
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+// 17. Retrieve an existing Storage Account resource (Shared Services Subscription)
+resource saSsvc 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: stgAcctSsvcName
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+}
+
+// 18. Create Private Endpoint for Storage Account (Shared Services Subscription)
+module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'saSsvcPe-${take(uniqueString(deployment().name, location), 4)}-${stgAcctSsvcName}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    priDNSZones
+  ]
+  params: {
+    name: '${stgAcctSsvcName}-blob-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: saSsvc.id
+    groupIds: [
+      'blob'
+      'file'
     ]
     subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {

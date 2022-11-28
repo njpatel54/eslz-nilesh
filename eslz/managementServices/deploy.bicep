@@ -127,8 +127,11 @@ param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-
 @description('Optional. List of softwareUpdateConfigurations to be created in the automation account.')
 param softwareUpdateConfigurations array = []
 
-@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection.')
+@description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection - Management Subscription.')
 param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
+
+@description('Required. Storage Account Name for Storing Shared data managed by platform team - Shared Services Subscription.')
+param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}ssvc', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 param stgPublicNetworkAccess string = 'Disabled'
@@ -275,9 +278,9 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
   }
 }
 
-// 4. Create Storage Account
-module sa '../modules/storageAccounts/deploy.bicep' = {
-  name: 'sa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
+// 4. Create Storage Account (Management Subscription)
+module saMgmt '../modules/storageAccounts/deploy.bicep' = {
+  name: 'saMgmt-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     loga
@@ -297,12 +300,34 @@ module sa '../modules/storageAccounts/deploy.bicep' = {
   }
 }
 
+// 4. Create Storage Account (Shared Services Subscription)
+module saSsvc '../modules/storageAccounts/deploy.bicep' = {
+  name: 'saSsvc-${take(uniqueString(deployment().name, location), 4)}-${stgAcctSsvcName}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    loga
+  ]
+  params: {
+    location: location
+    storageAccountName: stgAcctSsvcName
+    storageSKU: storageaccount_sku
+    blobServices: blobServices
+    fileServices: fileServices
+    queueServices: queueServices
+    tableServices: tableServices
+    diagnosticSettingsName: diagSettingName
+    diagnosticWorkspaceId: loga.outputs.resourceId
+    tags: ccsCombinedTags
+    publicNetworkAccess: stgPublicNetworkAccess
+  }
+}
+
 // 5. Create Event Hub Namespace and Event Hub
 module eh '../modules/namespaces/deploy.bicep' = {
   name: 'eh-${take(uniqueString(deployment().name, location), 4)}-${eventhubNamespaceName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    sa
+    saMgmt
   ]
   params: {
     location: location
@@ -311,7 +336,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
     eventHubs: eventHubs
     authorizationRules: authorizationRules
     diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticStorageAccountId: saMgmt.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId    
   }
 }
@@ -330,7 +355,7 @@ module aaLoga '../modules/automation/automationAccounts/deploy.bicep' = {
     publicNetworkAccess: automationAcctPublicNetworkAccess
     linkedWorkspaceResourceId: loga.outputs.resourceId
     diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticStorageAccountId: saMgmt.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
     //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
@@ -353,7 +378,7 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
     linkedWorkspaceResourceId: logaSentinel.outputs.resourceId
     softwareUpdateConfigurations: softwareUpdateConfigurations
     diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticStorageAccountId: saMgmt.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
     //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
@@ -375,7 +400,7 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
       publicNetworkAccess: kvPublicNetworkAccess
       roleAssignments: kvRoleAssignments
       diagnosticSettingsName: diagSettingName
-      diagnosticStorageAccountId: sa.outputs.resourceId
+      diagnosticStorageAccountId: saMgmt.outputs.resourceId
       diagnosticWorkspaceId: loga.outputs.resourceId
       //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
       //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
@@ -392,7 +417,7 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   params:{
     name: diagSettingName
     location: location
-    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticStorageAccountId: saMgmt.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
     //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
     //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
@@ -674,7 +699,7 @@ module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
       }
     ]
     diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticStorageAccountId: saMgmt.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
   }
 }
@@ -907,7 +932,7 @@ module rsv_ssvc '../modules/recoveryServices/vaults/deploy.bicep' = {
       }
     ]
     diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: sa.outputs.resourceId
+    diagnosticStorageAccountId: saMgmt.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
   }
 }
@@ -934,10 +959,10 @@ output logaName string = loga.outputs.name
 output logaResourceId string = loga.outputs.resourceId
 
 @description('Output - Storage Account Name')
-output saName string = sa.outputs.name
+output saMgmtName string = saMgmt.outputs.name
 
 @description('Output - Storage Account resourceId')
-output saResourceId string = sa.outputs.resourceId
+output saMgmtResourceId string = saMgmt.outputs.resourceId
 
 @description('Output - Eventhub Namespace Name')
 output ehNamespaceName string = eh.outputs.name

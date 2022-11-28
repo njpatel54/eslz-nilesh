@@ -986,7 +986,7 @@
       "value": "Enabled"
     },
     "storageaccount_sku": {
-      "value": "Standard_LRS"
+      "value": "Standard_GRS"
     },
     "blobServices": {
       "value": {
