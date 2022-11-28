@@ -579,7 +579,7 @@ module lzDefender 'wrapperModule/defender.bicep' = {
 // 11. Configure Sentinel Data Connectors - Subscription Level
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
   name: 'mod--lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  scope: resourceGroup(mgmtsubid, wlRgName)
   dependsOn: [
     lzRgs
   ]
