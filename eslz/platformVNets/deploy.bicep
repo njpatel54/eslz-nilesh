@@ -258,6 +258,7 @@ var groupIds = {
   dfs_secondary: 'privatelink.dfs.core.usgovcloudapi.net'
 }
 
+// Azure Backup Geo Codes - https://learn.microsoft.com/en-us/azure/backup/scripts/geo-code-list
 var varAzBackupGeoCodes = {
   australiacentral: 'acl'
   australiacentral2: 'acl2'
