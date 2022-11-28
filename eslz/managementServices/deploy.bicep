@@ -284,6 +284,7 @@ module saMgmt '../modules/storageAccounts/deploy.bicep' = {
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     loga
+    logaSentinel
   ]
   params: {
     location: location
@@ -306,6 +307,7 @@ module saSsvc '../modules/storageAccounts/deploy.bicep' = {
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
     loga
+    logaSentinel
   ]
   params: {
     location: location
@@ -437,6 +439,9 @@ module subTags '../modules/resources/tags/subscriptions/deploy.bicep' = [ for su
 module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
+  dependsOn: [
+    logaSentinel
+  ]
   params: {
     scope: '/subscriptions/${subscription.subscriptionId}'
     workspaceId: logaSentinel.outputs.resourceId
@@ -449,7 +454,7 @@ module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/ten
   name: 'dataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    siem_rg 
+    logaSentinel
   ]
   params: {
     workspaceName: sentinelLawName
@@ -462,7 +467,7 @@ module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subsc
   name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    siem_rg 
+    logaSentinel 
   ]
   params: {
     subscriptionId: subscription.subscriptionId

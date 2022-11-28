@@ -294,6 +294,12 @@ param dataConnectorsSubs array = [
 @description('Required. Array of Action Groups')
 param actionGroups array
 
+@description('Required. Firewall Policy name.')
+param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-0001'
+
+@description('Optional. Rule collection groups.')
+param firewallPolicyRuleCollectionGroups array
+
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
@@ -581,7 +587,7 @@ module lzDefender 'wrapperModule/defender.bicep' = {
 
 // 11. Configure Sentinel Data Connectors - Subscription Level
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
-  name: 'mod--lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     lzRgs
@@ -629,16 +635,9 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   }
 }
 
-@description('Required. Firewall Policy name.')
-param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-0001'
-
-@description('Optional. Rule collection groups.')
-param firewallPolicyRuleCollectionGroups array = []
-
-
 // 11. Create Firewall Policy Rule Collection Groups
 module afwrcg 'wrapperModule/firewallRules.bicep' = {
-  name: 'afwrcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
+  name: 'mod-afwrcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
   scope: resourceGroup(connsubid, connVnetRgName)
   params: {
     location: location
