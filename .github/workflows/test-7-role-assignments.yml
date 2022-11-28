@@ -1,13 +1,13 @@
-name: test - platform policy assignments
+name: test - 7 custom role assignments
 
 on:
-  # push:
+  #push:
   # branches: 
   #    - main 
   # paths:
-  #   - .github/workflows/6-platform-policy-assignments.yml
+  #   - .github/workflows/7-custom-role-assignments.yml
       
-  #pull_request:
+  # pull_request:
   #  branches: [ main ]
 
   workflow_dispatch:
@@ -31,14 +31,12 @@ jobs:
       run: az account set --subscription ${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
               
     - uses: Azure/cli@v1
-      name: 'Platform Policy Assignments'
+      name: 'Deploy - Custom Role Assignments'
       with:
         inlineScript: |
-          az deployment mg create \
-            --name 'Platform-Policy-Assignments' \
+          az deployment tenant create \
+            --name 'Deploy-Custom-Role-Assignments' \
             --location ${{ secrets.AZURE_LOCATION }} \
-            --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/policy/policy.assignment.bicep \
-            --parameters ./eslz/policy/.parameters/mg.policy.assignment.parameters.json \
-            --parameters ./eslz/policy/.parameters/sub.policy.assignment.parameters.json \
-            --parameters ./eslz/policy/.parameters/rg.policy.assignment.parameters.json
+            --template-file ./eslz/roles/customRoleAssingments.bicep \
+            --parameters ./eslz/roles/.parameters/customRoleAssignments.json \
+            --parameters location=${{ secrets.AZURE_LOCATION }}

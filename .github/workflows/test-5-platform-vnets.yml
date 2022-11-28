@@ -1,4 +1,4 @@
-name: test - platform vnets
+name: test - 5 platform vnets
 
 on:
   #push:
