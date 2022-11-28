@@ -117,6 +117,9 @@ param networkSecurityGroups array = []
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
 
+@description('Required. Subscription ID of Connectivity Subscription')
+param connVnetRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-vnet'
+
 @description('Required. Resource Group name for Private DNS Zones.')
 param priDNSZonesRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-dnsz'
 
@@ -623,6 +626,26 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
     budgets: budgets
     //rgResoruceIds: lzRgs.outputs.rgResoruceIds
     //vmResourceIDs: lzVms.outputs.vmResourceIDs
+  }
+}
+
+@description('Required. Firewall Policy name.')
+param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-0001'
+
+@description('Optional. Rule collection groups.')
+param firewallPolicyRuleCollectionGroups array = []
+
+
+// 11. Create Firewall Policy Rule Collection Groups
+module afwrcg 'wrapperModule/firewallRules.bicep' = {
+  name: 'afwrcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
+  scope: resourceGroup(connsubid, connVnetRgName)
+  params: {
+    location: location
+    firewallPolicyName: firewallPolicyName
+    firewallPolicyRuleCollectionGroups: firewallPolicyRuleCollectionGroups
+    connsubid: connsubid
+    connVnetRgName: connVnetRgName
   }
 }
 

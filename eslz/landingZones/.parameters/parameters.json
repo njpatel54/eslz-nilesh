@@ -462,6 +462,48 @@
         }
       ]
     },
+    "firewallPolicyRuleCollectionGroups": {
+      "value": [
+        {
+          "name": "afwrcg-lz50-usva-0001",
+          "priority": 6000,
+          "ruleCollections": [
+            {
+              "name": "afwrc-lz50-usva-0001",
+              "priority": 6666,
+              "action": {
+                "type": "Allow"
+              },
+              "rules": [
+                {
+                  "name": "Allow-lz50-To-Platform-Subs",
+                  "ipProtocols": [
+                    "Any"
+                  ],
+                  "destinationPorts": [
+                    "*"
+                  ],
+                  "sourceAddresses": [
+                    "10.30.64.0/24"
+                  ],
+                  "sourceIpGroups": [],
+                  "ruleType": "NetworkRule",
+                  "destinationIpGroups": [],
+                  "destinationAddresses": [
+                    "10.30.0.0/21",
+                    "10.30.8.0/21",
+                    "10.20.11.0/24",
+                    "10.30.16.0/21"
+                  ],
+                  "destinationFqdns": []
+                }
+              ],
+              "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+            }
+          ]
+        }
+      ]
+    },
     "projowner": {
       "value": "lz50"
     },
