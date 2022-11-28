@@ -225,7 +225,7 @@ param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffi
 @description('Required. Subscription ID of Shared Services Subscription.')
 param ssvcsubid string
 
-@description('Required. Virtual Network name in Management Subscription.')
+@description('Required. Virtual Network name in Shared Services Subscription.')
 param ssvcVnetName string = 'vnet-${projowner}-${opscope}-${region}-ssvc'
 
 @description('Required. Name of the resourceGroup, where centralized management components will be.')
@@ -330,9 +330,6 @@ var varAzBackupGeoCodes = {
 
 // If region entered in `location` and matches a lookup to varAzBackupGeoCodes then insert Azure Backup Private DNS Zone with appropriate geo code inserted alongside zones in parPrivateDnsZones. If not just return parPrivateDnsZones
 var privatelinkBackup = replace('privatelink.<geoCode>.backup.windowsazure.us', '<geoCode>', '${varAzBackupGeoCodes[toLower(location)]}')
-
-@description('Required. Subnet name to be used for Private Endpoint.')
-param mgmtSubnetName string = 'snet-${projowner}-${opscope}-${region}-mgmt'
 
 // 1. Create Hub Resoruce Group
 module hubRg '../modules/resources/resourceGroups/deploy.bicep' = {
@@ -702,7 +699,7 @@ module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
     groupIds: [
       stgGroupId
     ]
-    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', ssvcVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
@@ -880,7 +877,7 @@ module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
     groupIds: [
       'AzureBackup'
     ]
-    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, mgmtSubnetName)
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', privatelinkBackup)
@@ -970,7 +967,7 @@ module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
     groupIds: [
       'AzureBackup'
     ]
-    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', ssvcVnetName, mgmtSubnetName)
+    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', ssvcVnetName, peSubnetName)
     privateDnsZoneGroup: {
       privateDNSResourceIds: [
         resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', privatelinkBackup)
