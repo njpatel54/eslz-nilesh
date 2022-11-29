@@ -228,37 +228,7 @@ module siemRg '../modules/resources/resourceGroups/deploy.bicep'= {
     tags: ccsCombinedTags
   }
 }
-/*
-module mgmt_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
-  scope: subscription(mgmtsubid)
-  params: {
-    name: mgmtRgName
-    location: location
-    tags: ccsCombinedTags
-  }
-}
 
-module ssvc_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
-  scope: subscription(ssvcsubid)
-  params: {
-    name: mgmtRgName
-    location: location
-    tags: ccsCombinedTags
-  }
-}
-
-module conn_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
-  scope: subscription(connsubid)
-  params: {
-    name: mgmtRgName
-    location: location
-    tags: ccsCombinedTags
-  }
-}
-*/
 module mgmtRg '../modules/resources/resourceGroups/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
   scope: subscription(subscription.subscriptionId)
@@ -415,8 +385,8 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
 }
 
 // 9. Create Azure Key Vault (Management Subscription)
-module akv '../modules/keyVault/vaults/deploy.bicep' = {
-  name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+module akvManagement '../modules/keyVault/vaults/deploy.bicep' = {
+  name: 'akvManagement-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     eh
@@ -1030,14 +1000,23 @@ output subDiagSettingsNames array = [for (subscription, i) in subscriptions: {
   diagnosticSettingsName: subDiagSettings[i].outputs.name
 }]
 
-@description('Output - Log Analytics Workspace "name"')
-output akvName string = akv.outputs.name
+@description('Output - Key Vault "name"')
+output akvManagementName string = akvManagement.outputs.name
 
-@description('Output - Log Analytics Workspace "resoruceId"')
-output akvResoruceId string = akv.outputs.resourceId
+@description('Output - Key Vault "resoruceId"')
+output akvManagementResoruceId string = akvManagement.outputs.resourceId
 
-@description('Output - Log Analytics Workspace "resoruceId"')
-output akvUri string = akv.outputs.uri
+@description('Output - Key Vault "resoruceId"')
+output akvManagementUri string = akvManagement.outputs.uri
+
+@description('Output - Key Vault "name"')
+output akvConnectivityName string = akvConnectivity.outputs.name
+
+@description('Output - Key Vault "resoruceId"')
+output akvConnectivityResoruceId string = akvConnectivity.outputs.resourceId
+
+@description('Output - Key Vault "resoruceId"')
+output akvConnectivityUri string = akvConnectivity.outputs.uri
 
 // Start - Outputs to supress warnings - "unused parameters"
 output onboardmg string = onboardmg
@@ -1075,5 +1054,36 @@ module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' =
 }]
 
 
-*/
 
+
+
+module mgmt_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
+  scope: subscription(mgmtsubid)
+  params: {
+    name: mgmtRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}
+
+module ssvc_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
+  scope: subscription(ssvcsubid)
+  params: {
+    name: mgmtRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}
+
+module conn_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
+  scope: subscription(connsubid)
+  params: {
+    name: mgmtRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}
+*/
