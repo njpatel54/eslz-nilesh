@@ -109,11 +109,18 @@ param publicIPAllocationMethod string
 @description('Required. Firewall Public IP zones.')
 param publicIPzones array
 
-@description('Required. Firewall Policy name.')
-param firewallPolicyName string = 'afwp-${projowner}-${opscope}-${region}-0001'
+@description('Required. User Assgined Managed Identity to be used to access Key Vault Certificate for TLS Inspection configuration in Firewall Policy.')
+param userMiAfpTlsInspection string = 'id-${projowner}-${opscope}-${region}-afwp'
 
-@description('Required. Firewall Policy Tier.')
-param firewallPolicyTier string
+@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
+@maxLength(24)
+param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
+
+@description('Required. Firewall Policy name prefix.')
+param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-00'
+
+@description('Required. Firewall Policies array.')
+param firewallPolicies array
 
 @description('Optional. Rule collection groups.')
 param firewallPolicyRuleCollectionGroups array = []
@@ -200,7 +207,7 @@ param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}
 @description('Required. Storage Account Name for Storing Shared data managed by platform team - Shared Services Subscription.')
 param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}ssvc', 24))
 
-@description('Required. Name of the Key Vault. Must be globally unique.')
+@description('Required. Name of the Key Vault. Must be globally unique - Management Subscription.')
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
@@ -517,23 +524,95 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// 11. Create Fireall Policy and Firewall Policy Rule Collection Groups
-module afwp '../modules/network/firewallPolicies/deploy.bicep' = {
-  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
+// 11. Create User Assigned Managed Identity (Firewall Policy - TLS Inspection/KeyVault Secret)
+module userMiAfwp '../modules/managedIdentity/userAssignedIdentities/deploy.bicep' = {
+  name: 'userMiAfwp-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
   ]
   params: {
-    name: firewallPolicyName
+    name: userMiAfpTlsInspection
     location: location
     tags: ccsCombinedTags
-    defaultWorkspaceId: diagnosticWorkspaceId
-    insightsIsEnabled: true
-    tier: firewallPolicyTier
-    ruleCollectionGroups: firewallPolicyRuleCollectionGroups
   }
 }
+
+// 12. Retrieve an existing Key Vault resource (Connectivity Subscription)
+resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: akvConnectivityName
+  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
+}
+
+// 24. Create Private Endpoint for Key Vault (Connectivity Subscription)
+module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
+  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
+  dependsOn: [
+    priDNSZones
+  ]
+  params: {
+    name: '${akvConnectivityName}-vault-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: akv.id
+    groupIds: [
+      'vault'
+    ]
+    subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+// 13. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
+module roleAssignmentConnKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentConnKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
+  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
+  dependsOn: [
+    userMiAfwp
+    akvConnectivity
+  ]
+  params: {
+    roleDefinitionIdOrName: 'Key Vault Certificates Officer'
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      userMiAfwp.outputs.principalId
+    ]
+  }
+}
+
+// 11. Create Fireall Policy and Firewall Policy Rule Collection Groups
+module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
+  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+    roleAssignmentConnKeyVault
+  ]
+  params: {
+    name:  '${firewallPolicyNamePrefix}${i + 1}'
+    location: location
+    tags: ccsCombinedTags
+    insightsIsEnabled: firewallPolicy.insightsIsEnabled
+    defaultWorkspaceId: diagnosticWorkspaceId
+    tier: firewallPolicy.tier
+    enableProxy: firewallPolicy.enableDnsProxy
+    servers: firewallPolicy.customDnsServers
+    certificateName: firewallPolicy.transportSecurityCertificateName
+    keyVaultSecretId: akvConnectivity.getSecret(firewallPolicy.transportSecurityCertificateName)
+    mode: firewallPolicy.intrusionDetectionMode
+    bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
+    signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
+    threatIntelMode: firewallPolicy.threatIntelMode
+    fqdns: firewallPolicy.threatIntelFqdns
+    ipAddresses: firewallPolicy.threatIntelIpAddresses
+    ruleCollectionGroups: firewallPolicyRuleCollectionGroups
+  }
+}]
 
 // 12. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
@@ -558,7 +637,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
         subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureFirewallSubnet')
       }
     ]
-    firewallPolicyId: afwp.outputs.resourceId
+    firewallPolicyId: afwp[0].outputs.resourceId
     roleAssignments: firewallRoleAssignments
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
@@ -769,7 +848,7 @@ module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [ f
   }
 }]
 
-// 23. Retrieve an existing Key Vault resource
+// 23. Retrieve an existing Key Vault resource (Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)

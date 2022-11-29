@@ -27,6 +27,9 @@ param mgmtsubid string
 @description('Required. Subscription ID of Shared Services Subscription.')
 param ssvcsubid string
 
+@description('Required. Subscription ID of Connectivity Subscription.')
+param connsubid string
+
 @description('Required. Default Management Group where newly created Subscription will be added to.')
 param onboardmg string
 
@@ -136,9 +139,13 @@ param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmen
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 param stgPublicNetworkAccess string = 'Disabled'
 
-@description('Required. Name of the Key Vault. Must be globally unique.')
+@description('Required. Name of the Key Vault. Must be globally unique - Management Subscription.')
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
+
+@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
+@maxLength(24)
+param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 param kvPublicNetworkAccess string = 'Enabled'
@@ -235,6 +242,16 @@ module mgmt_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
 module ssvc_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
   scope: subscription(ssvcsubid)
+  params: {
+    name: mgmtRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}
+
+module conn_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
+  scope: subscription(connsubid)
   params: {
     name: mgmtRgName
     location: location
@@ -387,7 +404,7 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
   }
 }
 
-// 8. Create Azure Key Vault
+// 8. Create Azure Key Vault (Management Subscription)
 module akv '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -396,6 +413,28 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
   ]
     params: {
       name: akvName
+      location: location
+      tags: ccsCombinedTags
+      vaultSku: 'premium'
+      publicNetworkAccess: kvPublicNetworkAccess
+      roleAssignments: kvRoleAssignments
+      diagnosticSettingsName: diagSettingName
+      diagnosticStorageAccountId: saMgmt.outputs.resourceId
+      diagnosticWorkspaceId: loga.outputs.resourceId
+      //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
+      //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+    }
+}
+
+// 8. Create Azure Key Vault (Connectivity Subscription)
+module akvConnectivity '../modules/keyVault/vaults/deploy.bicep' = {
+  name: 'akvConnectivity-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
+  scope: resourceGroup(connsubid, mgmtRgName)
+  dependsOn: [
+    eh
+  ]
+    params: {
+      name: akvConnectivityName
       location: location
       tags: ccsCombinedTags
       vaultSku: 'premium'

@@ -46,5 +46,6 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                         connsubId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          tenantid=${{ secrets.AZURE_TENANTID }} \
                          enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}

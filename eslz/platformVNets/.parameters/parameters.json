@@ -502,229 +502,349 @@
                 "3"
             ]
         },
-        "firewallPolicyTier": {
-            "value": "Premium"
-        },
-        "firewallPolicyRuleCollectionGroups": {
+        "firewallPolicies": {
             "value": [
                 {
-                    "name": "afwrcg-ccs-test-usva-0001",
-                    "priority": 5000,
-                    "ruleCollections": [
+                    "insightsIsEnabled": true,
+                    "tier": "Premium",
+                    "enableDnsProxy": true,
+                    "customDnsServers": [],
+                    "transportSecurityCertificateName": "tlsInspection",
+                    "intrusionDetectionMode": "Deny",
+                    "intrusionDetectionBypassTrafficSettings": [],
+                    "intrusionDetectionSignatureOverrides": [],
+                    "threatIntelMode": "Deny",
+                    "threatIntelFqdns": [],
+                    "threatIntelIpAddresses": [],
+                    "firewallPolicyRuleCollectionGroups": [
                         {
-                            "name": "afwrc-ccs-test-usva-0001",
-                            "priority": 5555,
-                            "action": {
-                                "type": "Allow"
-                            },
-                            "rules": [
+                            "name": "DefaultNetworkRuleCollectionGroup",
+                            "priority": 200,
+                            "ruleCollections": [
                                 {
-                                    "name": "Allow-80",
-                                    "ipProtocols": [
-                                        "TCP",
-                                        "UDP"
+                                    "name": "afwrc-ccs-test-usva-0001",
+                                    "priority": 100,
+                                    "action": {
+                                        "type": "Allow"
+                                    },
+                                    "rules": [
+                                        {
+                                            "name": "Allow-80",
+                                            "ipProtocols": [
+                                                "TCP",
+                                                "UDP"
+                                            ],
+                                            "destinationPorts": [
+                                                "80"
+                                            ],
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "NetworkRule",
+                                            "destinationIpGroups": [],
+                                            "destinationAddresses": [
+                                                "*"
+                                            ],
+                                            "destinationFqdns": []
+                                        },
+                                        {
+                                            "name": "Allow-ntp",
+                                            "ipProtocols": [
+                                                "Any"
+                                            ],
+                                            "destinationPorts": [
+                                                "123",
+                                                "12000"
+                                            ],
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "NetworkRule",
+                                            "destinationIpGroups": [],
+                                            "destinationAddresses": [
+                                                "*"
+                                            ],
+                                            "destinationFqdns": []
+                                        },
+                                        {
+                                            "name": "Allow-Management-To-Other-Platform-Subs",
+                                            "ipProtocols": [
+                                                "Any"
+                                            ],
+                                            "destinationPorts": [
+                                                "*"
+                                            ],
+                                            "sourceAddresses": [
+                                                "10.30.8.0/21"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "NetworkRule",
+                                            "destinationIpGroups": [],
+                                            "destinationAddresses": [
+                                                "10.20.11.0/24",
+                                                "10.30.16.0/21"
+                                            ],
+                                            "destinationFqdns": []
+                                        },
+                                        {
+                                            "name": "Allow-Identity-To-Other-Platform-Subs",
+                                            "ipProtocols": [
+                                                "Any"
+                                            ],
+                                            "destinationPorts": [
+                                                "*"
+                                            ],
+                                            "sourceAddresses": [
+                                                "10.20.11.0/24"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "NetworkRule",
+                                            "destinationIpGroups": [],
+                                            "destinationAddresses": [
+                                                "10.30.8.0/21",
+                                                "10.30.16.0/21"
+                                            ],
+                                            "destinationFqdns": []
+                                        },
+                                        {
+                                            "name": "Allow-SharedServices-To-Other-Platform-Subs",
+                                            "ipProtocols": [
+                                                "Any"
+                                            ],
+                                            "destinationPorts": [
+                                                "*"
+                                            ],
+                                            "sourceAddresses": [
+                                                "10.30.16.0/21"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "NetworkRule",
+                                            "destinationIpGroups": [],
+                                            "destinationAddresses": [
+                                                "10.30.8.0/21",
+                                                "10.20.11.0/24"
+                                            ],
+                                            "destinationFqdns": []
+                                        },
+                                        {
+                                            "name": "Allow-Sandbox-To-Other-Platform-Subs",
+                                            "ipProtocols": [
+                                                "Any"
+                                            ],
+                                            "destinationPorts": [
+                                                "*"
+                                            ],
+                                            "sourceAddresses": [
+                                                "10.30.16.0/21"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "NetworkRule",
+                                            "destinationIpGroups": [],
+                                            "destinationAddresses": [
+                                                "10.30.8.0/21",
+                                                "10.20.11.0/24"
+                                            ],
+                                            "destinationFqdns": []
+                                        }
                                     ],
-                                    "destinationPorts": [
-                                        "80"
-                                    ],
-                                    "sourceAddresses": [
-                                        "*"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "NetworkRule",
-                                    "destinationIpGroups": [],
-                                    "destinationAddresses": [
-                                        "*"
-                                    ],
-                                    "destinationFqdns": []
-                                },
-                                {
-                                    "name": "Allow-ntp",
-                                    "ipProtocols": [
-                                        "Any"
-                                    ],
-                                    "destinationPorts": [
-                                        "123",
-                                        "12000"
-                                    ],
-                                    "sourceAddresses": [
-                                        "*"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "NetworkRule",
-                                    "destinationIpGroups": [],
-                                    "destinationAddresses": [
-                                        "*"
-                                    ],
-                                    "destinationFqdns": []
-                                },
-                                {
-                                    "name": "Allow-mgmt-To-Platform-Subs",
-                                    "ipProtocols": [
-                                        "Any"
-                                    ],
-                                    "destinationPorts": [
-                                        "*"
-                                    ],
-                                    "sourceAddresses": [
-                                        "10.30.8.0/21"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "NetworkRule",
-                                    "destinationIpGroups": [],
-                                    "destinationAddresses": [
-                                        "10.20.11.0/24",
-                                        "10.30.16.0/21"
-                                    ],
-                                    "destinationFqdns": []
-                                },
-                                {
-                                    "name": "Allow-iden-To-Platform-Subs",
-                                    "ipProtocols": [
-                                        "Any"
-                                    ],
-                                    "destinationPorts": [
-                                        "*"
-                                    ],
-                                    "sourceAddresses": [
-                                        "10.20.11.0/24"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "NetworkRule",
-                                    "destinationIpGroups": [],
-                                    "destinationAddresses": [
-                                        "10.30.8.0/21",
-                                        "10.30.16.0/21"
-                                    ],
-                                    "destinationFqdns": []
-                                },
-                                {
-                                    "name": "Allow-ssvc-To-Platform-Subs",
-                                    "ipProtocols": [
-                                        "Any"
-                                    ],
-                                    "destinationPorts": [
-                                        "*"
-                                    ],
-                                    "sourceAddresses": [
-                                        "10.30.16.0/21"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "NetworkRule",
-                                    "destinationIpGroups": [],
-                                    "destinationAddresses": [
-                                        "10.30.8.0/21",
-                                        "10.20.11.0/24"
-                                    ],
-                                    "destinationFqdns": []
-                                },
-                                {
-                                    "name": "Allow-sand-To-Platform-Subs",
-                                    "ipProtocols": [
-                                        "Any"
-                                    ],
-                                    "destinationPorts": [
-                                        "*"
-                                    ],
-                                    "sourceAddresses": [
-                                        "10.30.16.0/21"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "NetworkRule",
-                                    "destinationIpGroups": [],
-                                    "destinationAddresses": [
-                                        "10.30.8.0/21",
-                                        "10.20.11.0/24"
-                                    ],
-                                    "destinationFqdns": []
+                                    "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                                 }
-                            ],
-                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+                            ]
                         },
                         {
-                            "name": "afwrc-ccs-test-usva-0002",
-                            "priority": 6666,
-                            "action": {
-                                "type": "Allow"
-                            },
-                            "rules": [
+                            "name": "DefaultApplicationRuleCollectionGroup",
+                            "priority": 300,
+                            "ruleCollections": [
                                 {
-                                    "name": "Allow-sql",
-                                    "protocols": [
+                                    "name": "afwrc-ccs-test-usva-0002",
+                                    "priority": 100,
+                                    "action": {
+                                        "type": "Allow"
+                                    },
+                                    "rules": [
                                         {
-                                            "protocolType": "Mssql",
-                                            "port": 1433
-                                        }
-                                    ],
-                                    "sourceAddresses": [
-                                        "*"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "ApplicationRule",
-                                    "destinationAddresses": [],
-                                    "targetFqdns": [
-                                        "*"
-                                    ],
-                                    "fqdnTags": [],
-                                    "webCategories": [],
-                                    "targetUrls": [],
-                                    "terminateTLS": false
-                                },
-                                {
-                                    "name": "allow-ase-tags",
-                                    "protocols": [
-                                        {
-                                            "protocolType": "HTTP",
-                                            "port": "80"
+                                            "name": "Allow-sql",
+                                            "protocols": [
+                                                {
+                                                    "protocolType": "Mssql",
+                                                    "port": 1433
+                                                }
+                                            ],
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "ApplicationRule",
+                                            "destinationAddresses": [],
+                                            "targetFqdns": [
+                                                "*"
+                                            ],
+                                            "fqdnTags": [],
+                                            "webCategories": [],
+                                            "targetUrls": [],
+                                            "terminateTLS": false
                                         },
                                         {
-                                            "protocolType": "HTTPS",
-                                            "port": "443"
-                                        }
-                                    ],
-                                    "sourceAddresses": [
-                                        "*"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "ApplicationRule",
-                                    "destinationAddresses": [],
-                                    "targetFqdns": [],
-                                    "fqdnTags": [
-                                        "AppServiceEnvironment",
-                                        "WindowsUpdate"
-                                    ],
-                                    "webCategories": [],
-                                    "targetUrls": [],
-                                    "terminateTLS": false
-                                },
-                                {
-                                    "name": "allow-ase-management",
-                                    "protocols": [
-                                        {
-                                            "protocolType": "HTTP",
-                                            "port": "80"
+                                            "name": "allow-ase-tags",
+                                            "protocols": [
+                                                {
+                                                    "protocolType": "HTTP",
+                                                    "port": "80"
+                                                },
+                                                {
+                                                    "protocolType": "HTTPS",
+                                                    "port": "443"
+                                                }
+                                            ],
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "ApplicationRule",
+                                            "destinationAddresses": [],
+                                            "targetFqdns": [],
+                                            "fqdnTags": [
+                                                "AppServiceEnvironment",
+                                                "WindowsUpdate"
+                                            ],
+                                            "webCategories": [],
+                                            "targetUrls": [],
+                                            "terminateTLS": false
                                         },
                                         {
-                                            "protocolType": "HTTPS",
-                                            "port": "443"
+                                            "name": "allow-ase-management",
+                                            "protocols": [
+                                                {
+                                                    "protocolType": "HTTP",
+                                                    "port": "80"
+                                                },
+                                                {
+                                                    "protocolType": "HTTPS",
+                                                    "port": "443"
+                                                }
+                                            ],
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "ruleType": "ApplicationRule",
+                                            "destinationAddresses": [],
+                                            "targetFqdns": [
+                                                "management.usgovcloudapi.net"
+                                            ],
+                                            "fqdnTags": [],
+                                            "webCategories": [],
+                                            "targetUrls": [],
+                                            "terminateTLS": false
+                                        },
+                                        {
+                                            "ruleType": "ApplicationRule",
+                                            "name": "lz50-to-github",
+                                            "protocols": [
+                                                {
+                                                    "protocolType": "Http",
+                                                    "port": 80
+                                                },
+                                                {
+                                                    "protocolType": "Https",
+                                                    "port": 443
+                                                }
+                                            ],
+                                            "fqdnTags": [],
+                                            "webCategories": [],
+                                            "targetFqdns": [],
+                                            "targetUrls": [
+                                                "github.githubassets.com/*",
+                                                "github.com/session",
+                                                "github.com/sessions/two-factor",
+                                                "github.com/login*",
+                                                "github.com/Azure*",
+                                                "raw.githubusercontent.com/Azure*",
+                                                "raw.githubusercontent.com/Microsoft*"
+                                            ],
+                                            "terminateTLS": true,
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "destinationAddresses": [],
+                                            "sourceIpGroups": []
                                         }
                                     ],
-                                    "sourceAddresses": [
-                                        "*"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "ApplicationRule",
-                                    "destinationAddresses": [],
-                                    "targetFqdns": [
-                                        "management.usgovcloudapi.net"
-                                    ],
-                                    "fqdnTags": [],
-                                    "webCategories": [],
-                                    "targetUrls": [],
-                                    "terminateTLS": false
+                                    "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                                 }
-                            ],
-                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+                            ]
+                        },
+                        {
+                            "name": "DefaultApplicationRuleCollectionGroup",
+                            "priority": 300,
+                            "ruleCollections": [
+                                {
+                                    "name": "afwrc-ccs-test-usva-0002",
+                                    "priority": 500,
+                                    "action": {
+                                        "type": "Deny"
+                                    },
+                                    "rules": [
+                                        {
+                                            "ruleType": "ApplicationRule",
+                                            "name": "Deny-Web-Categories",
+                                            "protocols": [
+                                                {
+                                                    "protocolType": "Http",
+                                                    "port": 80
+                                                },
+                                                {
+                                                    "protocolType": "Https",
+                                                    "port": 443
+                                                }
+                                            ],
+                                            "fqdnTags": [],
+                                            "webCategories": [
+                                                "AlcoholAndTobacco",
+                                                "ChildAbuseImages",
+                                                "ChildInappropriate",
+                                                "CriminalActivity",
+                                                "DatingAndPersonals",
+                                                "Gambling",
+                                                "Hacking",
+                                                "HateAndIntolerance",
+                                                "IllegalDrug",
+                                                "IllegalSoftware",
+                                                "LingerieAndSwimsuits",
+                                                "Marijuana",
+                                                "Nudity",
+                                                "PornographyAndSexuallyExplicit",
+                                                "SchoolCheating",
+                                                "SelfHarm",
+                                                "SexEducation",
+                                                "Tasteless",
+                                                "Violence",
+                                                "Weapons",
+                                                "PeerToPeer",
+                                                "Chat",
+                                                "Cults",
+                                                "Games",
+                                                "InstantMessaging",
+                                                "SocialNetworking",
+                                                "Shopping",
+                                                "AdvertisementsAndPopUps",
+                                                "StreamingMediaAndDownloads"
+                                            ],
+                                            "targetFqdns": [],
+                                            "targetUrls": [],
+                                            "terminateTLS": false,
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "destinationAddresses": [],
+                                            "sourceIpGroups": []
+                                        }
+                                    ],
+                                    "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+                                }
+                            ]
                         }
                     ]
                 }
