@@ -109,7 +109,7 @@ param publicIPAllocationMethod string
 @description('Required. Firewall Public IP zones.')
 param publicIPzones array
 
-@description('Required. User Assgined Managed Identity to be used to access Key Vault Certificate for TLS Inspection configuration in Firewall Policy.')
+@description('Required. User Assigned Managed Identity to be used to access Key Vault Certificate for TLS Inspection configuration in Firewall Policy.')
 param userMiAfpTlsInspection string = 'id-${projowner}-${opscope}-${region}-afwp'
 
 @description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
