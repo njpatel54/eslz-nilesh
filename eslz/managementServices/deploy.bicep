@@ -219,7 +219,7 @@ param dataConnectorsSubs array = [
 ]
 
 // 1. Create Resoruce Groups
-module siem_rg '../modules/resources/resourceGroups/deploy.bicep'= {
+module siemRg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${siemRgName}'
   scope: subscription(mgmtsubid)
   params: {
@@ -228,7 +228,7 @@ module siem_rg '../modules/resources/resourceGroups/deploy.bicep'= {
     tags: ccsCombinedTags
   }
 }
-
+/*
 module mgmt_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
   scope: subscription(mgmtsubid)
@@ -258,13 +258,23 @@ module conn_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
     tags: ccsCombinedTags
   }
 }
+*/
+module mgmtRg '../modules/resources/resourceGroups/deploy.bicep' = [ for subscription in subscriptions: {
+  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
+  scope: subscription(subscription.subscriptionId)
+  params: {
+    name: mgmtRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}]
 
 // 2. Create Log Analytics Workspace for Azure Sentinel
 module logaSentinel '../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'logaSentinel-${take(uniqueString(deployment().name, location), 4)}-${sentinelLawName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    siem_rg
+    siemRg
   ]
   params:{
     name: sentinelLawName
@@ -282,7 +292,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
   name: 'loga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
-    siem_rg
+    siemRg
   ]
   params:{
     name: logsLawName
@@ -318,7 +328,7 @@ module saMgmt '../modules/storageAccounts/deploy.bicep' = {
   }
 }
 
-// 4. Create Storage Account (Shared Services Subscription)
+// 5. Create Storage Account (Shared Services Subscription)
 module saSsvc '../modules/storageAccounts/deploy.bicep' = {
   name: 'saSsvc-${take(uniqueString(deployment().name, location), 4)}-${stgAcctSsvcName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -341,7 +351,7 @@ module saSsvc '../modules/storageAccounts/deploy.bicep' = {
   }
 }
 
-// 5. Create Event Hub Namespace and Event Hub
+// 6. Create Event Hub Namespace and Event Hub
 module eh '../modules/namespaces/deploy.bicep' = {
   name: 'eh-${take(uniqueString(deployment().name, location), 4)}-${eventhubNamespaceName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -360,7 +370,7 @@ module eh '../modules/namespaces/deploy.bicep' = {
   }
 }
 
-// 6. Create Automation Account and link it to Log Analytics Workspace (LAW - Log Collection)
+// 7. Create Automation Account and link it to Log Analytics Workspace (LAW - Log Collection)
 module aaLoga '../modules/automation/automationAccounts/deploy.bicep' = {
   name: 'aaLoga-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -381,7 +391,7 @@ module aaLoga '../modules/automation/automationAccounts/deploy.bicep' = {
   }
 }
 
-// 7. Create Automation Account and link it to Log Analytics Workspace (LAW - Sentinel)
+// 8. Create Automation Account and link it to Log Analytics Workspace (LAW - Sentinel)
 module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = {
   name: 'aaLogaSentinel-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -404,7 +414,7 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
   }
 }
 
-// 8. Create Azure Key Vault (Management Subscription)
+// 9. Create Azure Key Vault (Management Subscription)
 module akv '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akv-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -426,11 +436,12 @@ module akv '../modules/keyVault/vaults/deploy.bicep' = {
     }
 }
 
-// 8. Create Azure Key Vault (Connectivity Subscription)
+// 10. Create Azure Key Vault (Connectivity Subscription)
 module akvConnectivity '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akvConnectivity-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
   scope: resourceGroup(connsubid, mgmtRgName)
   dependsOn: [
+    mgmtRg
     eh
   ]
     params: {
@@ -448,7 +459,7 @@ module akvConnectivity '../modules/keyVault/vaults/deploy.bicep' = {
     }
 }
 
-// 9. Configure Diagnostics Settings for Subscriptions
+// 11. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'subDiagSettings-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
@@ -465,7 +476,7 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
-// 10. Configure Tags for Subscription
+// 12. Configure Tags for Subscription
 module subTags '../modules/resources/tags/subscriptions/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'subTags-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
@@ -474,7 +485,7 @@ module subTags '../modules/resources/tags/subscriptions/deploy.bicep' = [ for su
   }
 }]
 
-// 10. Configure Defender for Cloud
+// 13. Configure Defender for Cloud
 module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
@@ -488,7 +499,7 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
   }
 }]
 
-// 11. Configure Sentinel Data Connectors - Tenent Level
+// 14. Configure Sentinel Data Connectors - Tenent Level
 module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
   name: 'dataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -501,7 +512,7 @@ module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/ten
   }
 }
 
-// 11. Configure Sentinel Data Connectors - Subscription Level
+// 15. Configure Sentinel Data Connectors - Subscription Level
 module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -515,11 +526,12 @@ module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subsc
   }
 }]
 
-// 10. Create Recovery Services Vault (Management Subscription)
-module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
+// 16. Create Recovery Services Vault (Management Subscription)
+module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
   dependsOn: [
+    mgmtRg
     eh
   ]
   params: {
@@ -748,11 +760,12 @@ module rsv_mgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 11. Create Recovery Services Vault (Shared Services Subscription)
-module rsv_ssvc '../modules/recoveryServices/vaults/deploy.bicep' = {
+// 17. Create Recovery Services Vault (Shared Services Subscription)
+module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
+    mgmtRg
     eh
   ]
   params: {
@@ -985,10 +998,10 @@ module rsv_ssvc '../modules/recoveryServices/vaults/deploy.bicep' = {
 output ehnsAuthorizationId string = resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
 
 @description('Output - SIEM Resource Group Name')
-output siemRgName string = siem_rg.outputs.name
+output siemRgName string = siemRg.outputs.name
 
 @description('Output - SIEM Resource Group resourceId')
-output siemRgresourceId string = siem_rg.outputs.resourceId
+output siemRgresourceId string = siemRg.outputs.resourceId
 
 @description('Output - Log Analytics Workspce Name - resource Diagnostics Settings - Log Collection')
 output logaSentinelName string = logaSentinel.outputs.name
@@ -1046,7 +1059,7 @@ module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' =
   name: 'diagSettings-${managementGroup.name}'
 //  scope: managementGroup(managementGroup.name)
   dependsOn: [
-    siem_rg
+    siemRg
     loga
     sa
     eh
