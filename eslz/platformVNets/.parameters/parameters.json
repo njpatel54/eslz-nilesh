@@ -732,6 +732,11 @@
                                                     "port": 443
                                                 }
                                             ],
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "destinationAddresses": [],
                                             "fqdnTags": [],
                                             "webCategories": [],
                                             "targetFqdns": [],
@@ -742,40 +747,17 @@
                                                 "github.com/login*",
                                                 "github.com/Azure*",
                                                 "raw.githubusercontent.com/Azure*",
-                                                "raw.githubusercontent.com/Microsoft*"
+                                                "raw.githubusercontent.com/Microsoft*",
+                                                "github.com/ccs-az*"
                                             ],
-                                            "terminateTLS": true,
-                                            "sourceAddresses": [
-                                                "*"
-                                            ],
-                                            "destinationAddresses": [],
-                                            "sourceIpGroups": []
-                                        },
-                                        {
-                                            "ruleType": "ApplicationRule",
-                                            "name": "Allow-GitHub-Repo",
-                                            "protocols": [
-                                                {
-                                                    "protocolType": "Https",
-                                                    "port": 443
-                                                }
-                                            ],
-                                            "fqdnTags": [],
-                                            "targetFqdns": [],
-                                                "targetUrls": [
-                                                    "github.com/ccs-az*"
-                                                ],
-                                            "terminateTLS": true,
-                                            "sourceAddresses": [],
-                                            "destinationAddresses": [],
-                                            "sourceIpGroups": []
+                                            "terminateTLS": true
                                         }
                                     ],
                                     "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                                 },
                                 {
                                     "name": "deny-afwrc-ccs-test-usva-0002",
-                                    "priority": 500,
+                                    "priority": 200,
                                     "action": {
                                         "type": "Deny"
                                     },
@@ -793,6 +775,11 @@
                                                     "port": 443
                                                 }
                                             ],
+                                            "sourceAddresses": [
+                                                "*"
+                                            ],
+                                            "sourceIpGroups": [],
+                                            "destinationAddresses": [],
                                             "fqdnTags": [],
                                             "webCategories": [
                                                 "AlcoholAndTobacco",
@@ -827,12 +814,7 @@
                                             ],
                                             "targetFqdns": [],
                                             "targetUrls": [],
-                                            "terminateTLS": false,
-                                            "sourceAddresses": [
-                                                "*"
-                                            ],
-                                            "destinationAddresses": [],
-                                            "sourceIpGroups": []
+                                            "terminateTLS": false
                                         }
                                     ],
                                     "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
