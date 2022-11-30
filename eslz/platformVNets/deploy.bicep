@@ -122,9 +122,6 @@ param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-
 @description('Required. Firewall Policies array.')
 param firewallPolicies array
 
-@description('Optional. Rule collection groups.')
-param firewallPolicyRuleCollectionGroups array = []
-
 @description('Required. Firewall name.')
 param firewallName string = 'afw-${projowner}-${opscope}-${region}-0001'
 
@@ -618,15 +615,15 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     tier: firewallPolicy.tier
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
-    //certificateName: firewallPolicy.transportSecurityCertificateName
-    //keyVaultSecretId: '${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    certificateName: firewallPolicy.transportSecurityCertificateName
+    keyVaultSecretId: '${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
     mode: firewallPolicy.intrusionDetectionMode
     bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
     signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
     threatIntelMode: firewallPolicy.threatIntelMode
     fqdns: firewallPolicy.threatIntelFqdns
     ipAddresses: firewallPolicy.threatIntelIpAddresses
-    ruleCollectionGroups: firewallPolicyRuleCollectionGroups
+    ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
   }
 }]
 
