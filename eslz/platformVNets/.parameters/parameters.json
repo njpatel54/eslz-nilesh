@@ -658,7 +658,7 @@
                             "priority": 300,
                             "ruleCollections": [
                                 {
-                                    "name": "afwrc-ccs-test-usva-0002",
+                                    "name": "afwrc-ccs-test-usva-0001",
                                     "priority": 100,
                                     "action": {
                                         "type": "Allow"
@@ -773,13 +773,7 @@
                                         }
                                     ],
                                     "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "DefaultApplicationRuleCollectionGroup",
-                            "priority": 300,
-                            "ruleCollections": [
+                                },
                                 {
                                     "name": "afwrc-ccs-test-usva-0002",
                                     "priority": 500,

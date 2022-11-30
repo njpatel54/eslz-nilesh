@@ -109,7 +109,7 @@ param publicIPAllocationMethod string
 @description('Required. Firewall Public IP zones.')
 param publicIPzones array
 
-@description('Required. User Assigned Managed Identity to be used to access Key Vault Certificate for TLS Inspection configuration in Firewall Policy.')
+@description('Required. User Assigned Managed Identity to be used to assigned to Firewall Policy which it will utilize to access Key Vault Certificate for TLS Inspection configuration.')
 param userMiAfpTlsInspection string = 'id-${projowner}-${opscope}-${region}-afwp'
 
 @description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
@@ -564,20 +564,7 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-/*
-var test = loadTextContent()
-// 14. Create Key Vault Secret (Upload )
-module sslCertSecret '../modules/keyVault/vaults/secrets/deploy.bicep' = {
-  name: '${kv.name}/sslCert'
-  properties: {
-    value: sslCertValue
-    contentType: 'application/x-pkcs12'
-    attributes: {
-      enabled: true
-    }
-  }
-}
-*/
+
 // 14. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
 module roleAssignmentConnKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentConnKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
