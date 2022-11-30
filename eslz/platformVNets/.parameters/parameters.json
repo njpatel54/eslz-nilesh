@@ -522,32 +522,12 @@
                             "priority": 200,
                             "ruleCollections": [
                                 {
-                                    "name": "afwrc-ccs-test-usva-0001",
+                                    "name": "allow-afwrc-ccs-test-usva-0001",
                                     "priority": 100,
                                     "action": {
                                         "type": "Allow"
                                     },
                                     "rules": [
-                                        {
-                                            "name": "Allow-80",
-                                            "ipProtocols": [
-                                                "TCP",
-                                                "UDP"
-                                            ],
-                                            "destinationPorts": [
-                                                "80"
-                                            ],
-                                            "sourceAddresses": [
-                                                "*"
-                                            ],
-                                            "sourceIpGroups": [],
-                                            "ruleType": "NetworkRule",
-                                            "destinationIpGroups": [],
-                                            "destinationAddresses": [
-                                                "*"
-                                            ],
-                                            "destinationFqdns": []
-                                        },
                                         {
                                             "name": "Allow-ntp",
                                             "ipProtocols": [
@@ -658,7 +638,7 @@
                             "priority": 300,
                             "ruleCollections": [
                                 {
-                                    "name": "afwrc-ccs-test-usva-0001",
+                                    "name": "allow-afwrc-ccs-test-usva-0001",
                                     "priority": 100,
                                     "action": {
                                         "type": "Allow"
@@ -691,11 +671,11 @@
                                             "protocols": [
                                                 {
                                                     "protocolType": "HTTP",
-                                                    "port": "80"
+                                                    "port": 80
                                                 },
                                                 {
                                                     "protocolType": "HTTPS",
-                                                    "port": "443"
+                                                    "port": 443
                                                 }
                                             ],
                                             "sourceAddresses": [
@@ -718,11 +698,11 @@
                                             "protocols": [
                                                 {
                                                     "protocolType": "HTTP",
-                                                    "port": "80"
+                                                    "port": 80
                                                 },
                                                 {
                                                     "protocolType": "HTTPS",
-                                                    "port": "443"
+                                                    "port": 443
                                                 }
                                             ],
                                             "sourceAddresses": [
@@ -741,7 +721,7 @@
                                         },
                                         {
                                             "ruleType": "ApplicationRule",
-                                            "name": "lz50-to-github",
+                                            "name": "allow-to-github",
                                             "protocols": [
                                                 {
                                                     "protocolType": "Http",
@@ -770,12 +750,31 @@
                                             ],
                                             "destinationAddresses": [],
                                             "sourceIpGroups": []
+                                        },
+                                        {
+                                            "ruleType": "ApplicationRule",
+                                            "name": "Allow-GitHub-Repo",
+                                            "protocols": [
+                                                {
+                                                    "protocolType": "Https",
+                                                    "port": 443
+                                                }
+                                            ],
+                                            "fqdnTags": [],
+                                            "targetFqdns": [],
+                                                "targetUrls": [
+                                                    "github.com/ccs-az*"
+                                                ],
+                                            "terminateTLS": true,
+                                            "sourceAddresses": [],
+                                            "destinationAddresses": [],
+                                            "sourceIpGroups": []
                                         }
                                     ],
                                     "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                                 },
                                 {
-                                    "name": "afwrc-ccs-test-usva-0002",
+                                    "name": "deny-afwrc-ccs-test-usva-0002",
                                     "priority": 500,
                                     "action": {
                                         "type": "Deny"

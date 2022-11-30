@@ -515,6 +515,26 @@
                   "destinationPorts": [
                     "*"
                   ]
+                },
+                {
+                  "ruleType": "NetworkRule",
+                  "name": "Allow-LZ50-To-Internet",
+                  "ipProtocols": [
+                    "TCP"
+                  ],
+                  "sourceAddresses": [
+                    "10.30.64.0/24"
+                  ],
+                  "sourceIpGroups": [],
+                  "destinationAddresses": [
+                    "*"
+                  ],
+                  "destinationIpGroups": [],
+                  "destinationFqdns": [],
+                  "destinationPorts": [
+                    "80",
+                    "443"
+                  ]
                 }
               ],
               "ruleCollectionType": "FirewallPolicyFilterRuleCollection"

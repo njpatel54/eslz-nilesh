@@ -534,7 +534,7 @@ module userMiAfwp '../modules/managedIdentity/userAssignedIdentities/deploy.bice
     tags: ccsCombinedTags
   }
 }
-
+/*
 // 12. Retrieve an existing Key Vault resource (Connectivity Subscription)
 resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvConnectivityName
@@ -564,14 +564,15 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-
+*/
 // 14. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
-module roleAssignmentConnKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentConnKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
-  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
+module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     userMiAfwp
-    akvConnectivity
+    akv
+    akvPe
   ]
   params: {
     roleDefinitionIdOrName: 'Key Vault Secrets User'
@@ -588,7 +589,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
-    roleAssignmentConnKeyVault
+    roleAssignmentKeyVault
   ]
   params: {
     name: '${firewallPolicyNamePrefix}${i + 1}'
@@ -603,7 +604,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
     certificateName: firewallPolicy.transportSecurityCertificateName
-    keyVaultSecretId: '${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    keyVaultSecretId: '${akv.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
     mode: firewallPolicy.intrusionDetectionMode
     bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
     signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
