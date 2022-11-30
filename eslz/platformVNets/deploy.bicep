@@ -612,7 +612,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     tags: ccsCombinedTags
     userAssignedIdentities: {
       type: 'UserAssigned'
-      userAssignedIdentities: userMiAfwp.outputs.principalId
+      userAssignedIdentities: userMiAfwp.outputs.resourceId
     }    
     insightsIsEnabled: firewallPolicy.insightsIsEnabled
     defaultWorkspaceId: diagnosticWorkspaceId
@@ -630,6 +630,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     ruleCollectionGroups: firewallPolicyRuleCollectionGroups
   }
 }]
+
 
 // 16. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
