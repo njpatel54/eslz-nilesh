@@ -21,6 +21,9 @@ param vnetName string
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param vnetAddressPrefixes array
 
+@description('Optional. DNS Servers associated to the Virtual Network.')
+param dnsServers array
+
 @description('Required. Hub - Network Security Groups Array.')
 param networkSecurityGroups array
 
@@ -55,6 +58,7 @@ var params = json(loadTextContent('../.parameters/parameters.json'))
 var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 // End - Variables created to be used to attach NSG to Management Subnet
 
+
 // 1. Create Route Table (Connectivity Subscription)
 module lzRouteTable '../../modules/network//routeTables/deploy.bicep' = {
   name: 'hubRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
@@ -79,6 +83,7 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
     location: location
     tags: combinedTags
     addressPrefixes: vnetAddressPrefixes
+    dnsServers: dnsServers
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
     subscriptionId: subscriptionId

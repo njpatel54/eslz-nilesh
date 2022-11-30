@@ -99,6 +99,9 @@ param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
 @description('Optional. An Array of Routes to be established within the hub route table.')
 param routes array = []
 
+@description('Optional. DNS Servers associated to the Virtual Network.')
+param dnsServers array = []
+
 @description('Required. The Virtual Network (vNet) Name.')
 param vnetName string
 
@@ -393,6 +396,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     vnetRgName: vnetRgName
     subscriptionId: subscriptionId
     vnetAddressPrefixes: vnetAddressPrefixes
+    dnsServers: dnsServers
     subnets: subnets
     virtualNetworkPeerings: virtualNetworkPeerings
     networkSecurityGroups: networkSecurityGroups

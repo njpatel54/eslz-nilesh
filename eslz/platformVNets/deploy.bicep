@@ -599,7 +599,6 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
   dependsOn: [
     userMiAfwp
     akv
-    akvPe
   ]
   params: {
     roleDefinitionIdOrName: 'Key Vault Secrets User'
@@ -674,7 +673,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     //diagnosticEventHubName: diagnosticEventHubName
   }
 }
-/*
+
 // 19. Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'bhPip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
@@ -1024,7 +1023,7 @@ module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-*/
+
 // Start - Outputs to supress warnings - "unused parameters"
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
 output diagnosticEventHubName string = diagnosticEventHubName
