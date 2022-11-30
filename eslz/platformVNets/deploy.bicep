@@ -224,10 +224,10 @@ param mgmtSuffix string = 'mgmt'
 param ssvcSuffix string = 'ssvc'
 
 @description('Required. Name of the Azure Recovery Service Vault in Management Subscription.')
-param mgmtVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${mgmtSuffix}'
+param mgmtVaultName string = 'rsv-${projowner}-${opscope}-${region}-${mgmtSuffix}'
 
 @description('Required. Name of the Azure Recovery Service Vault in Shared Services Subscription.')
-param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffix}'
+param ssvcVaultName string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffix}'
 
 @description('Required. Subscription ID of Shared Services Subscription.')
 param ssvcsubid string
@@ -362,7 +362,7 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
     location: location
     tags: ccsCombinedTags
     securityRules: nsg.securityRules
-    roleAssignments: nsg.roleAssignments    
+    roleAssignments: nsg.roleAssignments
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
@@ -452,7 +452,7 @@ module spokeNsg '../modules/network/networkSecurityGroups/deploy.bicep' = [for (
     location: location
     tags: ccsCombinedTags
     securityRules: spokeNetworkSecurityGroups[0].securityRules
-    roleAssignments: spokeNetworkSecurityGroups[0].roleAssignments    
+    roleAssignments: spokeNetworkSecurityGroups[0].roleAssignments
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
@@ -607,15 +607,12 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     roleAssignmentConnKeyVault
   ]
   params: {
-    name:  '${firewallPolicyNamePrefix}${i + 1}'
+    name: '${firewallPolicyNamePrefix}${i + 1}'
     location: location
     tags: ccsCombinedTags
     userAssignedIdentities: {
-      type: 'UserAssigned'
-      userAssignedIdentities: {
-        id: userMiAfwp.outputs.resourceId
-      }
-    }    
+      id: userMiAfwp.outputs.resourceId
+    }
     insightsIsEnabled: firewallPolicy.insightsIsEnabled
     defaultWorkspaceId: diagnosticWorkspaceId
     tier: firewallPolicy.tier
@@ -632,7 +629,6 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     ruleCollectionGroups: firewallPolicyRuleCollectionGroups
   }
 }]
-
 
 // 16. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
@@ -710,7 +706,7 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
-    
+
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName
   }
@@ -815,7 +811,7 @@ resource aaLoga 'Microsoft.Automation/automationAccounts@2021-06-22' existing = 
 }
 
 // 26. Create Private Endpoint for Automation Account (LAW - Logs Collection)
-module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
+module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
@@ -845,7 +841,7 @@ resource aaLogaSentinel 'Microsoft.Automation/automationAccounts@2021-06-22' exi
 }
 
 // 28. Create Private Endpoint for Automation Account (LAW - Sentinel)
-module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [ for aaGroupId in aaGroupIds: {
+module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
@@ -1084,7 +1080,6 @@ output diagnosticEventHubName string = diagnosticEventHubName
 output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
 output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 // End - Outputs to supress warnings - "unused parameters"
-
 
 /*
 @description('Required. Azure Monitor Private Link Scope Name.')
