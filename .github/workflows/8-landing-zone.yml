@@ -48,6 +48,7 @@ jobs:
             --template-file ./eslz/landingZones/deploy.bicep \
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
+            --parameters ./eslz/platformVNets/.parameters/fwpolicyRuleCollectionGroups.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
@@ -79,6 +80,7 @@ jobs:
             --template-file ./eslz/landingZones/deploy.bicep \
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
+            --parameters ./eslz/platformVNets/.parameters/fwpolicyRuleCollectionGroups.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}
@@ -112,6 +114,7 @@ jobs:
             --template-file ./eslz/landingZones/deploy.bicep \
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
+            --parameters ./eslz/platformVNets/.parameters/fwpolicyRuleCollectionGroups.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }}

@@ -117,78 +117,7 @@
                                 }
                             ],
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
-                        },
-                        {
-                            "name": "allow-afwrc-lz50-usva-001",
-                            "priority": 200,
-                            "action": {
-                              "type": "Allow"
-                            },
-                            "rules": [
-                              {
-                                "ruleType": "NetworkRule",
-                                "name": "Allow-lz50-To-All-Platform-Subs",
-                                "ipProtocols": [
-                                  "Any"
-                                ],
-                                "sourceAddresses": [
-                                  "10.30.64.0/24"
-                                ],
-                                "sourceIpGroups": [],
-                                "destinationAddresses": [
-                                  "10.30.0.0/21",
-                                  "10.30.8.0/21",
-                                  "10.20.11.0/24",
-                                  "10.30.16.0/21"
-                                ],
-                                "destinationIpGroups": [],
-                                "destinationFqdns": [],
-                                "destinationPorts": [
-                                  "*"
-                                ]
-                              },
-                              {
-                                "ruleType": "NetworkRule",
-                                "name": "Allow-lz50-To-Service-Tags",
-                                "ipProtocols": [
-                                  "Any"
-                                ],
-                                "sourceAddresses": [
-                                  "10.30.64.0/24"
-                                ],
-                                "sourceIpGroups": [],
-                                "destinationAddresses": [
-                                  "AzurePortal"
-                                ],
-                                "destinationIpGroups": [],
-                                "destinationFqdns": [],
-                                "destinationPorts": [
-                                  "*"
-                                ]
-                              },
-                              {
-                                "ruleType": "NetworkRule",
-                                "name": "Allow-LZ50-To-Internet",
-                                "ipProtocols": [
-                                  "TCP"
-                                ],
-                                "sourceAddresses": [
-                                  "10.30.64.0/24"
-                                ],
-                                "sourceIpGroups": [],
-                                "destinationAddresses": [
-                                  "*"
-                                ],
-                                "destinationIpGroups": [],
-                                "destinationFqdns": [],
-                                "destinationPorts": [
-                                  "80",
-                                  "443"
-                                ]
-                              }
-                            ],
-                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
-                          }
+                        }
                     ]
                 },
                 {

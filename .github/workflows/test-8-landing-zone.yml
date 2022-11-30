@@ -42,6 +42,7 @@ jobs:
             --template-file ./eslz/landingZones/test.deploy.bicep \
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/landingZones/.parameters/policy.assignment.parameters.json \
+            --parameters ./eslz/platformVNets/.parameters/fwpolicyRuleCollectionGroups.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          connsubid=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \

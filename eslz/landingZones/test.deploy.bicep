@@ -638,7 +638,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
     //vmResourceIDs: lzVms.outputs.vmResourceIDs
   }
 }
-
+/*
 // 11. Create Firewall Policy Rule Collection Groups
 module afwrcg 'wrapperModule/firewallRules.bicep' = {
   name: 'mod-afwrcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyName}'
@@ -651,6 +651,19 @@ module afwrcg 'wrapperModule/firewallRules.bicep' = {
     connVnetRgName: connVnetRgName
   }
 }
+*/
+
+// 18. Create Firewall Policy Rule Collection Groups
+module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
+  name:  'lzAfprcg-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(connsubid, connVnetRgName)
+  params: {
+    firewallPolicyName: firewallPolicyName
+    name: firewallPolicyRuleCollectionGroup.name
+    priority: firewallPolicyRuleCollectionGroup.priority
+    ruleCollections: firewallPolicyRuleCollectionGroup.ruleCollections
+  }
+}]
 
 // 17. Create Policy Assignment and Remediation
 module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
