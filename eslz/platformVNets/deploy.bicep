@@ -647,7 +647,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
 
 // 18. Create Firewall Policy Rule Collection Groups
 module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
-  name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     afwp
