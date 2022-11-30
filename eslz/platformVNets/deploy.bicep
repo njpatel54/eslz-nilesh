@@ -483,6 +483,7 @@ module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet,
     location: location
     tags: ccsCombinedTags
     addressPrefixes: vNet.addressPrefixes
+    dnsServers: vNet.dnsServers
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     subscriptionId: vNet.subscriptionId

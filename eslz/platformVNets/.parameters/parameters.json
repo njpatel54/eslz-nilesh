@@ -260,6 +260,9 @@
                     "addressPrefixes": [
                         "10.30.8.0/21"
                     ],
+                    "dnsServers": [
+                        "10.30.0.68"
+                    ],
                     "subnets": [
                         {
                             "name": "snet-ccs-test-usva-app",
@@ -377,6 +380,9 @@
                     "addressPrefixes": [
                         "10.20.11.0/24"
                     ],
+                    "dnsServers": [
+                        "10.30.0.68"
+                    ],
                     "subnets": [
                         {
                             "name": "snet-ccs-test-usva-iden",
@@ -411,6 +417,9 @@
                     "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
                     "addressPrefixes": [
                         "10.30.16.0/21"
+                    ],
+                    "dnsServers": [
+                        "10.30.0.68"
                     ],
                     "subnets": [
                         {
