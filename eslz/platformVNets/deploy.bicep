@@ -612,7 +612,9 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     tags: ccsCombinedTags
     userAssignedIdentities: {
       type: 'UserAssigned'
-      userAssignedIdentities: userMiAfwp.outputs.resourceId
+      userAssignedIdentities: {
+        id: userMiAfwp.outputs.resourceId
+      }
     }    
     insightsIsEnabled: firewallPolicy.insightsIsEnabled
     defaultWorkspaceId: diagnosticWorkspaceId
