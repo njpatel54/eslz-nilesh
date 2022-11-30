@@ -567,7 +567,20 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-
+/*
+var test = loadTextContent()
+// 14. Create Key Vault Secret (Upload )
+module sslCertSecret '../modules/keyVault/vaults/secrets/deploy.bicep' = {
+  name: '${kv.name}/sslCert'
+  properties: {
+    value: sslCertValue
+    contentType: 'application/x-pkcs12'
+    attributes: {
+      enabled: true
+    }
+  }
+}
+*/
 // 14. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
 module roleAssignmentConnKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentConnKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
@@ -577,7 +590,7 @@ module roleAssignmentConnKeyVault '../modules/authorization/roleAssignments/reso
     akvConnectivity
   ]
   params: {
-    roleDefinitionIdOrName: 'Key Vault Certificates Officer'
+    roleDefinitionIdOrName: 'Key Vault Secrets User'
     principalType: 'ServicePrincipal'
     principalIds: [
       userMiAfwp.outputs.principalId
