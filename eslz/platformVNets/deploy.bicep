@@ -603,7 +603,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
     certificateName: firewallPolicy.transportSecurityCertificateName
-    keyVaultSecretId: '${akvConnectivity.properties.vaultUri}certificates/${firewallPolicy.transportSecurityCertificateName}'
+    keyVaultSecretId: '${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
     mode: firewallPolicy.intrusionDetectionMode
     bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
     signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
