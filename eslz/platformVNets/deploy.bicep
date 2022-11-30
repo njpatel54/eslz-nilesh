@@ -617,6 +617,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
   dependsOn: [
     hubRg
     roleAssignmentKeyVault
+    akvPe
   ]
   params: {
     name: '${firewallPolicyNamePrefix}${i + 1}'

@@ -474,7 +474,7 @@
           "priority": 200,
           "ruleCollections": [
             {
-              "name": "allow-afwrc-lz50-usva-0001",
+              "name": "allow-afwrc-lz50-usva-001",
               "priority": 200,
               "action": {
                 "type": "Allow"
