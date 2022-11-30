@@ -668,7 +668,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     hubVnet
     spokeVnet
     afwPip
-    afwp
+    afprcg
   ]
   params: {
     name: firewallName
