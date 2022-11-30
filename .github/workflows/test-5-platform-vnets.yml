@@ -40,6 +40,7 @@ jobs:
             --template-file ./eslz/platformVNets/deploy.bicep \
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
+            --parameters ./eslz/platformVNets/.parameters/fwpolicyRuleCollectionGroups.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \

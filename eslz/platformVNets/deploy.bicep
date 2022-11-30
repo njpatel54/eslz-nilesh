@@ -118,6 +118,9 @@ param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-
 @description('Required. Firewall Policies array.')
 param firewallPolicies array
 
+@description('Required. Firewall Policy Rule Collection Groups array.')
+param firewallPolicyRuleCollectionGroups array
+
 @description('Required. Firewall name.')
 param firewallName string = 'afw-${projowner}-${opscope}-${region}-0001'
 
@@ -610,14 +613,13 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
   }
 }
 
-// 17. Create Fireall Policy and Firewall Policy Rule Collection Groups
+// 17. Create Fireall Policy
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
     roleAssignmentKeyVault
-    akvPe
   ]
   params: {
     name: '${firewallPolicyNamePrefix}${i + 1}'
@@ -639,7 +641,19 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     threatIntelMode: firewallPolicy.threatIntelMode
     fqdns: firewallPolicy.threatIntelFqdns
     ipAddresses: firewallPolicy.threatIntelIpAddresses
-    ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
+    //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
+  }
+}]
+
+// 18. Create Firewall Policy Rule Collection Groups
+module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
+  name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  params: {
+    firewallPolicyName: '${firewallPolicyNamePrefix}1'
+    name: firewallPolicyRuleCollectionGroup.name
+    priority: firewallPolicyRuleCollectionGroup.priority
+    ruleCollections: firewallPolicyRuleCollectionGroup.ruleCollections
   }
 }]
 
