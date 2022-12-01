@@ -658,7 +658,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     akvConnectivityPe
   ]
   params: {
-    name: '${firewallPolicyNamePrefix}${i + 1}'
+    name: '${firewallPolicyNamePrefix}${i + 2}'
     location: location
     tags: ccsCombinedTags
     //userAssignedIdentities: {
@@ -689,7 +689,7 @@ module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.b
     afwp
   ]
   params: {
-    firewallPolicyName: '${firewallPolicyNamePrefix}1'
+    firewallPolicyName: '${firewallPolicyNamePrefix}2'
     name: firewallPolicyRuleCollectionGroup.name
     priority: firewallPolicyRuleCollectionGroup.priority
     ruleCollections: firewallPolicyRuleCollectionGroup.ruleCollections
