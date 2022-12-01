@@ -664,8 +664,8 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     //userAssignedIdentities: {
     //  '${userMiAfwp.outputs.resourceId}': {}
     //}
-    //insightsIsEnabled: firewallPolicy.insightsIsEnabled
-    //defaultWorkspaceId: diagnosticWorkspaceId
+    insightsIsEnabled: firewallPolicy.insightsIsEnabled
+    defaultWorkspaceId: diagnosticWorkspaceId
     tier: firewallPolicy.tier
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
