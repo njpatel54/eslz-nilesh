@@ -632,7 +632,7 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
 
 // 16. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
 module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivity}'
+  name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
   scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
   dependsOn: [
     userMiAfwp
