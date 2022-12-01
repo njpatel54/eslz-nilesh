@@ -625,7 +625,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     name: '${firewallPolicyNamePrefix}${i + 1}'
     location: location
     tags: ccsCombinedTags
-    tier: 'Standard'
+    tier: firewallPolicy.tier
   }
 }]
 
