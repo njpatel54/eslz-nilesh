@@ -6,14 +6,14 @@ param location string
 @description('subscriptionId for the deployment')
 param subscriptionId string = 'df3b1809-17d0-47a0-9241-d2724780bdac'
 
-@description('Required. Parameter for "Deploy-VM-Backup" policy assignment')
-param deployVMBackup object
+@description('Required. Parameter for policyAssignments')
+param policyAssignments array
 
-// Create Policy Assignment & Remediation for Exisiting Resources
-module policyAssignment 'wrapperModule/polAssignment.bicep' = {
+// 20. Create Policy Assignment and Remediation
+module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
   params: {
     subscriptionId: subscriptionId
-    deployVMBackup: deployVMBackup
+    policyAssignments: policyAssignments
   }
 }
