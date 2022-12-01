@@ -463,7 +463,7 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
     logaSentinel
   ]
   params: {
-    scope: subscriptionResourceId('Microsoft.Subscription', subscription.subscriptionId)             //'/subscriptions/${subscription.subscriptionId}' 
+    scope: '/subscriptions/${subscription.subscriptionId}'
     workspaceId: logaSentinel.outputs.resourceId
     securityContactProperties: defenderSecurityContactProperties
   }
