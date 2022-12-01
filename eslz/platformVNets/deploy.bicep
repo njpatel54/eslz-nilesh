@@ -661,22 +661,22 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     name: '${firewallPolicyNamePrefix}${i + 2}'
     location: location
     tags: ccsCombinedTags
-    //userAssignedIdentities: {
-    //  '${userMiAfwp.outputs.resourceId}': {}
-    //}
+    userAssignedIdentities: {
+      '${userMiAfwp.outputs.resourceId}': {}
+    }
     insightsIsEnabled: firewallPolicy.insightsIsEnabled
     defaultWorkspaceId: diagnosticWorkspaceId
     tier: firewallPolicy.tier
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
-    //certificateName: firewallPolicy.transportSecurityCertificateName
-    //keyVaultSecretId: 'https://kv-ccs-test-usva-conn.vault.usgovcloudapi.net/secrets/tlsInspection/4ea36cf22b9c454ba6c40577f8c86990'    //'${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
-    //mode: firewallPolicy.intrusionDetectionMode
-    //bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
-    //signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
-    //threatIntelMode: firewallPolicy.threatIntelMode
-    //fqdns: firewallPolicy.threatIntelFqdns
-    //ipAddresses: firewallPolicy.threatIntelIpAddresses
+    certificateName: firewallPolicy.transportSecurityCertificateName
+    keyVaultSecretId: '${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    mode: firewallPolicy.intrusionDetectionMode
+    bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
+    signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
+    threatIntelMode: firewallPolicy.threatIntelMode
+    fqdns: firewallPolicy.threatIntelFqdns
+    ipAddresses: firewallPolicy.threatIntelIpAddresses
     //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
   }
 }]
