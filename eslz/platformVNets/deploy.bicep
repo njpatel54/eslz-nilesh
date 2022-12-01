@@ -669,8 +669,8 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     tier: firewallPolicy.tier
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
-    certificateName: firewallPolicy.transportSecurityCertificateName
-    keyVaultSecretId: 'https://kv-ccs-test-usva-conn.vault.usgovcloudapi.net/secrets/tlsInspection'    //'${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    //certificateName: firewallPolicy.transportSecurityCertificateName
+    //keyVaultSecretId: 'https://kv-ccs-test-usva-conn.vault.usgovcloudapi.net/secrets/tlsInspection'    //'${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
     mode: firewallPolicy.intrusionDetectionMode
     bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
     signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
