@@ -630,57 +630,6 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-/*
-// 18. Create Role Assignment for User Assignment Managed Identity to Key Vault (Management Subscription)
-module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
-  scope: resourceGroup(mgmtsubid, siemRgName)
-  dependsOn: [
-    userMiAfwp
-    akv
-  ]
-  params: {
-    roleDefinitionIdOrName: 'Key Vault Secrets User'
-    principalType: 'ServicePrincipal'
-    principalIds: [
-      userMiAfwp.outputs.principalId
-    ]
-  }
-}
-
-// 19. Create Fireall Policy
-module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
-  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
-  dependsOn: [
-    hubRg
-    roleAssignmentKeyVault
-    akvPe
-  ]
-  params: {
-    name: '${firewallPolicyNamePrefix}${i + 2}'
-    location: location
-    tags: ccsCombinedTags
-    userAssignedIdentities: {
-      '${userMiAfwp.outputs.resourceId}': {}
-    }
-    insightsIsEnabled: firewallPolicy.insightsIsEnabled
-    defaultWorkspaceId: diagnosticWorkspaceId
-    tier: firewallPolicy.tier
-    enableProxy: firewallPolicy.enableDnsProxy
-    servers: firewallPolicy.customDnsServers
-    certificateName: firewallPolicy.transportSecurityCertificateName
-    keyVaultSecretId: '${akv.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
-    mode: firewallPolicy.intrusionDetectionMode
-    bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
-    signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
-    threatIntelMode: firewallPolicy.threatIntelMode
-    fqdns: firewallPolicy.threatIntelFqdns
-    ipAddresses: firewallPolicy.threatIntelIpAddresses
-    //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
-  }
-}]
-*/
 
 // 18. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
 module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
