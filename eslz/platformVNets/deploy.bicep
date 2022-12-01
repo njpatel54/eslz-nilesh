@@ -628,19 +628,19 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
    // userAssignedIdentities: {
    //   '${userMiAfwp.outputs.resourceId}': {}
    // }
-    insightsIsEnabled: firewallPolicy.insightsIsEnabled
-    defaultWorkspaceId: diagnosticWorkspaceId
+   // insightsIsEnabled: firewallPolicy.insightsIsEnabled
+   //defaultWorkspaceId: diagnosticWorkspaceId
     tier: firewallPolicy.tier
-    enableProxy: firewallPolicy.enableDnsProxy
-    servers: firewallPolicy.customDnsServers
+   // enableProxy: firewallPolicy.enableDnsProxy
+   // servers: firewallPolicy.customDnsServers
     //certificateName: firewallPolicy.transportSecurityCertificateName
     //keyVaultSecretId: '${akv.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
-    mode: firewallPolicy.intrusionDetectionMode
-    bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
-    signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
-    threatIntelMode: firewallPolicy.threatIntelMode
-    fqdns: firewallPolicy.threatIntelFqdns
-    ipAddresses: firewallPolicy.threatIntelIpAddresses
+   // mode: firewallPolicy.intrusionDetectionMode
+   // bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
+   // signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
+   // threatIntelMode: firewallPolicy.threatIntelMode
+   // fqdns: firewallPolicy.threatIntelFqdns
+   // ipAddresses: firewallPolicy.threatIntelIpAddresses
     //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
   }
 }]
