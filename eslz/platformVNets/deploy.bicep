@@ -616,6 +616,11 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+    roleAssignmentKeyVault
+    akvPe
+  ]
   params: {
     name: '${firewallPolicyNamePrefix}${i + 1}'
     location: location
