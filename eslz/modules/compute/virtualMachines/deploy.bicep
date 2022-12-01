@@ -200,6 +200,11 @@ param extensionNetworkWatcherAgentConfig object = {
   enabled: false
 }
 
+@description('Optional. The configuration for the [Key Vault] extension. Must at least contain the ["enabled": true] property to be executed.')
+param extensionKeyVaultConfig object = {
+  enabled: false
+}
+
 @description('Optional. The configuration for the [Disk Encryption] extension. Must at least contain the ["enabled": true] property to be executed.')
 param extensionDiskEncryptionConfig object = {
   enabled: false
@@ -553,6 +558,29 @@ module vm_networkWatcherAgentExtension 'extensions/deploy.bicep' = if (extension
   }
 }
 
+
+module vm_KeyVaultExtension 'extensions/deploy.bicep' = if (extensionKeyVaultConfig.enabled) {
+  name: '${uniqueString(deployment().name, location)}-VM-KeyVaultExtension'
+  params: {
+    virtualMachineName: vm.name
+    location: location
+    name: osType == 'Windows' ? 'KeyVaultForWindows' : 'KeyVaultForLinux'
+    publisher: 'Microsoft.Azure.KeyVault'
+    type: osType == 'Windows' ? 'KeyVaultForWindows' : 'KeyVaultForLinux'
+    typeHandlerVersion: contains(extensionDependencyAgentConfig, 'typeHandlerVersion') ? extensionDependencyAgentConfig.typeHandlerVersion : '1.0'
+    autoUpgradeMinorVersion: contains(extensionDependencyAgentConfig, 'autoUpgradeMinorVersion') ? extensionDependencyAgentConfig.autoUpgradeMinorVersion : true
+    enableAutomaticUpgrade: false
+    settings: {
+      secretsManagementSettings: {
+        pollingIntervalInS: 3600
+        certificateStoreName: osType == 'Windows' ? 'MY' : null
+        certificateStoreLocation: osType == 'Windows' ? 'LocalMachine' : '/var/lib/waagent/Microsoft.Azure.KeyVault'
+        observedCertificates: extensionKeyVaultConfig.keyVaultSecretId
+      }
+    }
+  }
+}
+
 module vm_desiredStateConfigurationExtension 'extensions/deploy.bicep' = if (extensionDSCConfig.enabled) {
   name: '${uniqueString(deployment().name, location)}-VM-DesiredStateConfiguration'
   params: {
@@ -667,3 +695,5 @@ output systemAssignedPrincipalId string = systemAssignedIdentity && contains(vm.
 
 @description('The location the resource was deployed into.')
 output location string = vm.location
+
+

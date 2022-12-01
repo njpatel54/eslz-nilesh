@@ -1,0 +1,94 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaultName": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "VMName": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "tenantId": {
+            "type": "string",
+            "defaultValue": "[subscription().tenantId]"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": ""
+        }
+    },
+    "resources": [{
+            "name": "[parameters('VMName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2020-06-01",
+            "location": "[parameters('location')]",
+            "identity": {
+                "type": "SystemAssigned"
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "nestedTemplate1",
+            "resourceGroup": "<key vault resource group>",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines/', parameters('VMName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [{
+                            "type": "Microsoft.KeyVault/vaults/accessPolicies",
+                            "name": "[concat(parameters('vaultName'), '/add')]",
+
+                            "apiVersion": "2019-09-01",
+                            "properties": {
+                                "accessPolicies": [{
+                                        "tenantId": "[parameters('tenantId')]",
+                                        "objectId": "[reference(resourceId('Microsoft.Compute/virtualMachines/', parameters('VMName')), '2020-06-01', 'full').identity.principalId]",
+                                        "permissions": {
+                                            "keys": ["all"],
+                                            "secrets": ["all"],
+                                            "certificates": ["all"],
+                                            "storage": ["all"]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VMName'), '/KeyVaultForWindows')]",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "nestedTemplate1"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Azure.KeyVault",
+                "type": "KeyVaultForWindows",
+                "typeHandlerVersion": "1.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "secretsManagementSettings": {
+                        "pollingIntervalInS": "3600",
+                        "certificateStoreName": "MY",
+                        "linkOnRenewal": false,
+                        "certificateStoreLocation": "LocalMachine",
+                        "observedCertificates": [""]
+                    }
+                }
+            }
+        }
+
+    ],
+    "outputs": {}
+}

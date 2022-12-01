@@ -24,6 +24,12 @@ param monitoringWorkspaceId string = ''
 @description('Optional. Specifies the time zone of the virtual machine. e.g. \'Pacific Standard Time\'. Possible values can be `TimeZoneInfo.id` value from time zones returned by `TimeZoneInfo.GetSystemTimeZones`.')
 param timeZone string = 'Eastern Standard Time'
 
+/*
+@description('Optional. The configuration for the [Key Vault] extension. Must at least contain the ["enabled": true] property to be executed.')
+param extensionKeyVaultConfig object = {
+  enabled: false
+}
+*/
 var operatingSystemValues = {
   Server2012R2: {
     publisher: 'MicrosoftWindowsServer'
@@ -176,6 +182,14 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
     extensionNetworkWatcherAgentConfig: {
       enabled: false
     }
+    /*
+    extensionKeyVaultConfig: {
+      enabled: extensionKeyVaultConfig.enabled
+      keyVaultSecretId: [
+        '${akv.properties.vaultUri}secrets/${extensionKeyVaultConfig.keyVaultRootCertSecretName}'
+      ]
+    }
+    */
     extensionAntiMalwareConfig: virtualMachine.osType == 'Windows' ? {
       enabled: true
       settings: {

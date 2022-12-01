@@ -61,7 +61,7 @@ var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 
 // 1. Create Route Table (Connectivity Subscription)
 module lzRouteTable '../../modules/network//routeTables/deploy.bicep' = {
-  name: 'hubRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
+  name: 'lzRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   params: {
     name: defaultRouteTableName
@@ -93,8 +93,8 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
 }
 
 // 3. Create Network Security Group(s)
-module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
-  name: 'nsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+module lzNsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
+  name: 'lzNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
     lzVnet
@@ -112,12 +112,12 @@ module nsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 
 // 4. Attach NSG & Route Table to Subnets
 @batchSize(1)
-module attachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
-  name: 'attachNsgRtToSubnets-${subnet.name}'
+module lzAttachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/subnets/deploy.bicep' = [for (subnet, index) in subnets: {
+  name: 'lzAttachNsgRouteTableToSubnets-${subnet.name}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   dependsOn: [
     lzVnet
-    nsgs
+    lzNsgs
   ]
   params: {
     name: subnet.name
@@ -132,11 +132,11 @@ module attachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/subne
 }]
 
 // 5. Update Virtual Network Links on Provate DNS Zones
-module vnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
-  name: 'vnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
+module lzVnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
+  name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
   dependsOn: [
-    attachNsgRouteTableToSubnets
+    lzAttachNsgRouteTableToSubnets
   ]
   params: {
     location: 'global'
@@ -160,10 +160,10 @@ output subnetResourceIds array = lzVnet.outputs.subnetResourceIds
 
 @description('Output - NSG "name" Array')
 output nsgsNames array = [for (nsg, index) in networkSecurityGroups: {
-  name: nsgs[index].outputs.name
+  name: lzNsgs[index].outputs.name
 }]
 
 @description('Output - NSG "resoruceId" Array')
 output nsgsResourceIds array = [for (nsg, index) in networkSecurityGroups: {
-  resoruceId: nsgs[index].outputs.resourceId
+  resoruceId: lzNsgs[index].outputs.resourceId
 }]
