@@ -696,6 +696,7 @@ module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.b
   }
 }]
 
+/*
 // 18. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
@@ -1083,7 +1084,7 @@ module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-
+*/
 // Start - Outputs to supress warnings - "unused parameters"
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
 output diagnosticEventHubName string = diagnosticEventHubName
