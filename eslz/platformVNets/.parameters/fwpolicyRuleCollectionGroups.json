@@ -149,7 +149,7 @@
                                 },
                                 {
                                     "ruleType": "NetworkRule",
-                                    "name": "Allow-lz50-To-Service-Tags",
+                                    "name": "Allow-lz50-To-Azure-Service-Tags",
                                     "ipProtocols": [
                                         "Any"
                                     ],
@@ -158,32 +158,51 @@
                                     ],
                                     "sourceIpGroups": [],
                                     "destinationAddresses": [
-                                        "AzurePortal"
+                                        "AzurePortal",
+                                        "ApiManagement",
+                                        "AzureActiveDirectory",
+                                        "AzureMonitor",
+                                        "BatchNodeManagement",
+                                        "AzureActiveDirectoryDomainServices",
+                                        "ServiceFabric",
+                                        "SqlManagement",
+                                        "AzureFrontDoor.Backend",
+                                        "AzurePlatformDNS",
+                                        "AzurePlatformIMDS",
+                                        "AzurePlatformLKM",
+                                        "Storage",
+                                        "Sql",
+                                        "AzureKeyVault",
+                                        "AzureCosmosDB",
+                                        "EventHub",
+                                        "ServiceBus",
+                                        "AzureCloud",
+                                        "AzureContainerRegistry",
+                                        "MicrosoftContainerRegistry",
+                                        "AppService",
+                                        "AzureConnectors",
+                                        "AzureMachineLearning",
+                                        "ActionGroup",
+                                        "ApplicationInsightsAvailability",
+                                        "AppConfiguration",
+                                        "AzureAdvancedThreatProtection",
+                                        "AzureCognitiveSearch",
+                                        "AzureEventGrid",
+                                        "AzureIoTHub",
+                                        "AzureResourceManager",
+                                        "AzureSiteRecovery",
+                                        "DataFactory",
+                                        "DataFactoryManagement",
+                                        "GuestAndHybridManagement",
+                                        "LogicApps",
+                                        "LogicAppsManagement",
+                                        "AzureSignalR",
+                                        "StorageSyncService"
                                     ],
                                     "destinationIpGroups": [],
                                     "destinationFqdns": [],
                                     "destinationPorts": [
                                         "*"
-                                    ]
-                                },
-                                {
-                                    "ruleType": "NetworkRule",
-                                    "name": "Allow-LZ50-To-Internet",
-                                    "ipProtocols": [
-                                        "TCP"
-                                    ],
-                                    "sourceAddresses": [
-                                        "10.30.64.0/24"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "destinationAddresses": [
-                                        "*"
-                                    ],
-                                    "destinationIpGroups": [],
-                                    "destinationFqdns": [],
-                                    "destinationPorts": [
-                                        "80",
-                                        "443"
                                     ]
                                 }
                             ],
