@@ -611,6 +611,7 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
   scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
   dependsOn: [
+    akvConnectivity
     priDNSZones
   ]
   params: {
@@ -669,7 +670,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
     certificateName: firewallPolicy.transportSecurityCertificateName
-    keyVaultSecretId: '${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    keyVaultSecretId: 'https://kv-ccs-test-usva-conn.vault.usgovcloudapi.net/secrets/tlsInspection'    //'${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
     mode: firewallPolicy.intrusionDetectionMode
     bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
     signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
@@ -788,6 +789,7 @@ module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
   name: 'saMgmtPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
+    saMgmt
     priDNSZones
   ]
   params: {
@@ -849,6 +851,7 @@ module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGrou
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
+    aaLoga
     priDNSZones
   ]
   params: {
@@ -879,6 +882,7 @@ module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [fo
   name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
+    aaLogaSentinel
     priDNSZones
   ]
   params: {
@@ -968,6 +972,7 @@ module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
     roleAssignmentContributor_mgmt
     hubVnet
     spokeVnet
+    priDNSZones
   ]
   params: {
     name: '${mgmtVaultName}-AzureBackup-pe'
@@ -1058,6 +1063,7 @@ module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
     roleAssignmentContributor_ssvc
     hubVnet
     spokeVnet
+    priDNSZones
   ]
   params: {
     name: '${mgmtVaultName}-AzureBackup-pe'
