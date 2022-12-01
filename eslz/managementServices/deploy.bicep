@@ -405,7 +405,7 @@ module akvManagement '../modules/keyVault/vaults/deploy.bicep' = {
       //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
     }
 }
-
+/*
 // 10. Create Azure Key Vault (Connectivity Subscription)
 module akvConnectivity '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akvConnectivity-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
@@ -428,7 +428,7 @@ module akvConnectivity '../modules/keyVault/vaults/deploy.bicep' = {
       //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
     }
 }
-
+*/
 // 11. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'subDiagSettings-${subscription.subscriptionId}'
@@ -1008,7 +1008,7 @@ output akvManagementResoruceId string = akvManagement.outputs.resourceId
 
 @description('Output - Key Vault "resoruceId"')
 output akvManagementUri string = akvManagement.outputs.uri
-
+/*
 @description('Output - Key Vault "name"')
 output akvConnectivityName string = akvConnectivity.outputs.name
 
@@ -1017,7 +1017,7 @@ output akvConnectivityResoruceId string = akvConnectivity.outputs.resourceId
 
 @description('Output - Key Vault "resoruceId"')
 output akvConnectivityUri string = akvConnectivity.outputs.uri
-
+*/
 // Start - Outputs to supress warnings - "unused parameters"
 output onboardmg string = onboardmg
 output requireAuthorizationForGroupCreation bool = requireAuthorizationForGroupCreation
