@@ -613,6 +613,18 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
   }
 }
 
+module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
+  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  params: {
+    name: '${firewallPolicyNamePrefix}${i + 1}'
+    location: location
+    tags: ccsCombinedTags
+    tier: firewallPolicy.tier
+  }
+}]
+
+/*
 // 17. Create Fireall Policy
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
@@ -645,7 +657,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
   }
 }]
-
+*/
 // 18. Create Firewall Policy Rule Collection Groups
 module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
