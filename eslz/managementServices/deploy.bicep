@@ -481,7 +481,7 @@ module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/ten
     dataConnectors: dataConnectorsTenant
   }
 }
-
+/*
 // 15. Configure Sentinel Data Connectors - Subscription Level
 module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
@@ -495,7 +495,7 @@ module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subsc
     dataConnectors: dataConnectorsSubs
   }
 }]
-
+*/
 // 16. Create Recovery Services Vault (Management Subscription)
 module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
