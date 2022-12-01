@@ -207,6 +207,10 @@ param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmen
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
+@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
+@maxLength(24)
+param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
+
 @description('Required. Automation Account subresource IDs (groupId).')
 var aaGroupIds = [
   'Webhook'
@@ -596,10 +600,6 @@ module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
-@maxLength(24)
-param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
-
 // 12. Retrieve an existing Key Vault resource (Connectivity Subscription)
 resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvConnectivityName
@@ -696,7 +696,6 @@ module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.b
   }
 }]
 
-/*
 // 18. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
@@ -1084,7 +1083,7 @@ module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-*/
+
 // Start - Outputs to supress warnings - "unused parameters"
 output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
 output diagnosticEventHubName string = diagnosticEventHubName
