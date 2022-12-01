@@ -617,7 +617,7 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
     name: '${akvConnectivityName}-vault-pe'
     location: location
     tags: ccsCombinedTags
-    serviceResourceId: akv.id
+    serviceResourceId: akvConnectivity.id
     groupIds: [
       'vault'
     ]
@@ -669,7 +669,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
     certificateName: firewallPolicy.transportSecurityCertificateName
-    keyVaultSecretId: '${akv.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    keyVaultSecretId: '${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
     mode: firewallPolicy.intrusionDetectionMode
     bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
     signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
@@ -1123,7 +1123,7 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
     name: '${akvConnectivityName}-vault-pe'
     location: location
     tags: ccsCombinedTags
-    serviceResourceId: akv.id
+    serviceResourceId: akvConnectivity.id
     groupIds: [
       'vault'
     ]
