@@ -636,7 +636,7 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
   scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
   dependsOn: [
     userMiAfwp
-    akv
+    akvConnectivity
   ]
   params: {
     roleDefinitionIdOrName: 'Key Vault Secrets User'
@@ -654,7 +654,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
   dependsOn: [
     hubRg
     roleAssignmentKeyVault
-    akvPe
+    akvConnectivityPe
   ]
   params: {
     name: '${firewallPolicyNamePrefix}${i + 1}'
