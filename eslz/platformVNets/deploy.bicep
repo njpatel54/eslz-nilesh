@@ -596,10 +596,44 @@ module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
+@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
+@maxLength(24)
+param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
+
+// 12. Retrieve an existing Key Vault resource (Connectivity Subscription)
+resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: akvConnectivityName
+  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
+}
+
+// 13. Create Private Endpoint for Key Vault (Connectivity Subscription)
+module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
+  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
+  dependsOn: [
+    priDNSZones
+  ]
+  params: {
+    name: '${akvConnectivityName}-vault-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: akv.id
+    groupIds: [
+      'vault'
+    ]
+    subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
 // 16. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
 module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
-  scope: resourceGroup(mgmtsubid, siemRgName)
+  name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivity}'
+  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
   dependsOn: [
     userMiAfwp
     akv
@@ -613,6 +647,7 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
   }
 }
 
+// 17. Create Fireall Policy
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -645,40 +680,6 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
   }
 }]
 
-/*
-// 17. Create Fireall Policy
-module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
-  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
-  dependsOn: [
-    hubRg
-    roleAssignmentKeyVault
-    akvPe
-  ]
-  params: {
-    name: '${firewallPolicyNamePrefix}${i + 1}'
-    location: location
-    tags: ccsCombinedTags
-    userAssignedIdentities: {
-      '${userMiAfwp.outputs.resourceId}': {}
-    }
-    insightsIsEnabled: firewallPolicy.insightsIsEnabled
-    defaultWorkspaceId: diagnosticWorkspaceId
-    tier: firewallPolicy.tier
-    enableProxy: firewallPolicy.enableDnsProxy
-    servers: firewallPolicy.customDnsServers
-    //certificateName: firewallPolicy.transportSecurityCertificateName
-    //keyVaultSecretId: '${akv.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
-    mode: firewallPolicy.intrusionDetectionMode
-    bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
-    signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
-    threatIntelMode: firewallPolicy.threatIntelMode
-    fqdns: firewallPolicy.threatIntelFqdns
-    ipAddresses: firewallPolicy.threatIntelIpAddresses
-    //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
-  }
-}]
-*/
 // 18. Create Firewall Policy Rule Collection Groups
 module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
