@@ -664,13 +664,13 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     //userAssignedIdentities: {
     //  '${userMiAfwp.outputs.resourceId}': {}
     //}
-    insightsIsEnabled: firewallPolicy.insightsIsEnabled
-    defaultWorkspaceId: diagnosticWorkspaceId
+    //insightsIsEnabled: firewallPolicy.insightsIsEnabled
+    //defaultWorkspaceId: diagnosticWorkspaceId
     tier: firewallPolicy.tier
     enableProxy: firewallPolicy.enableDnsProxy
     servers: firewallPolicy.customDnsServers
     //certificateName: firewallPolicy.transportSecurityCertificateName
-    //keyVaultSecretId: 'https://kv-ccs-test-usva-conn.vault.usgovcloudapi.net/secrets/tlsInspection'    //'${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    //keyVaultSecretId: 'https://kv-ccs-test-usva-conn.vault.usgovcloudapi.net/secrets/tlsInspection/4ea36cf22b9c454ba6c40577f8c86990'    //'${akvConnectivity.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
     //mode: firewallPolicy.intrusionDetectionMode
     //bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
     //signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
