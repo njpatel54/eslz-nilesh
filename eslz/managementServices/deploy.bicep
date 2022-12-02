@@ -143,10 +143,6 @@ param stgPublicNetworkAccess string = 'Disabled'
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
-@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
-@maxLength(24)
-param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
-
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 param kvPublicNetworkAccess string = 'Enabled'
 
@@ -406,30 +402,7 @@ module akvManagement '../modules/keyVault/vaults/deploy.bicep' = {
     }
 }
 
-// 10. Create Azure Key Vault (Connectivity Subscription)
-module akvConnectivity '../modules/keyVault/vaults/deploy.bicep' = {
-  name: 'akvConnectivity-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
-  scope: resourceGroup(connsubid, mgmtRgName)
-  dependsOn: [
-    mgmtRg
-    eh
-  ]
-    params: {
-      name: akvConnectivityName
-      location: location
-      tags: ccsCombinedTags
-      vaultSku: 'premium'
-      publicNetworkAccess: kvPublicNetworkAccess
-      roleAssignments: kvRoleAssignments
-      diagnosticSettingsName: diagSettingName
-      diagnosticStorageAccountId: saMgmt.outputs.resourceId
-      diagnosticWorkspaceId: loga.outputs.resourceId
-      //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
-      //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
-    }
-}
-
-// 11. Configure Diagnostics Settings for Subscriptions
+// 10. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'subDiagSettings-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
@@ -446,7 +419,7 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
-// 12. Configure Tags for Subscription
+// 11. Configure Tags for Subscription
 module subTags '../modules/resources/tags/subscriptions/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'subTags-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
@@ -455,7 +428,7 @@ module subTags '../modules/resources/tags/subscriptions/deploy.bicep' = [ for su
   }
 }]
 
-// 13. Configure Defender for Cloud
+// 12. Configure Defender for Cloud
 module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for subscription in subscriptions: {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: subscription(subscription.subscriptionId)
@@ -469,7 +442,7 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
   }
 }]
 
-// 14. Configure Sentinel Data Connectors - Tenent Level
+// 13. Configure Sentinel Data Connectors - Tenent Level
 module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
   name: 'dataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -482,7 +455,7 @@ module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/ten
   }
 }
 
-// 15. Configure Sentinel Data Connectors - Subscription Level
+// 14. Configure Sentinel Data Connectors - Subscription Level
 module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
   name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -496,7 +469,7 @@ module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subsc
   }
 }]
 
-// 16. Create Recovery Services Vault (Management Subscription)
+// 15. Create Recovery Services Vault (Management Subscription)
 module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -730,7 +703,7 @@ module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 17. Create Recovery Services Vault (Shared Services Subscription)
+// 16. Create Recovery Services Vault (Shared Services Subscription)
 module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -1008,16 +981,7 @@ output akvManagementResoruceId string = akvManagement.outputs.resourceId
 
 @description('Output - Key Vault "resoruceId"')
 output akvManagementUri string = akvManagement.outputs.uri
-/*
-@description('Output - Key Vault "name"')
-output akvConnectivityName string = akvConnectivity.outputs.name
 
-@description('Output - Key Vault "resoruceId"')
-output akvConnectivityResoruceId string = akvConnectivity.outputs.resourceId
-
-@description('Output - Key Vault "resoruceId"')
-output akvConnectivityUri string = akvConnectivity.outputs.uri
-*/
 // Start - Outputs to supress warnings - "unused parameters"
 output onboardmg string = onboardmg
 output requireAuthorizationForGroupCreation bool = requireAuthorizationForGroupCreation
@@ -1031,7 +995,71 @@ output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthoriz
 output diagnosticEventHubName string = diagnosticEventHubName
 // End - Outputs to supress warnings - "unused parameters"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
+@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
+@maxLength(24)
+param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
+
+// 10. Create Azure Key Vault (Connectivity Subscription)
+module akvConnectivity '../modules/keyVault/vaults/deploy.bicep' = {
+  name: 'akvConnectivity-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
+  scope: resourceGroup(connsubid, mgmtRgName)
+  dependsOn: [
+    mgmtRg
+    eh
+  ]
+    params: {
+      name: akvConnectivityName
+      location: location
+      tags: ccsCombinedTags
+      vaultSku: 'premium'
+      publicNetworkAccess: kvPublicNetworkAccess
+      roleAssignments: kvRoleAssignments
+      diagnosticSettingsName: diagSettingName
+      diagnosticStorageAccountId: saMgmt.outputs.resourceId
+      diagnosticWorkspaceId: loga.outputs.resourceId
+      //diagnosticEventHubName: eventHubs[0].name    //First Event Hub name from eventHubs object in parameter file.
+      //diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
+    }
+}
+
+
+@description('Output - Key Vault "name"')
+output akvConnectivityName string = akvConnectivity.outputs.name
+
+@description('Output - Key Vault "resoruceId"')
+output akvConnectivityResoruceId string = akvConnectivity.outputs.resourceId
+
+@description('Output - Key Vault "resoruceId"')
+output akvConnectivityUri string = akvConnectivity.outputs.uri
+
 // Currently DiagnosticSettings at Management Group level is supported in Azure US Gov - (Reference - https://github.com/Azure/azure-powershell/issues/17717)
 // Configure Diagnostics Settings for Management Groups
 module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' = [ for managementGroup in managementGroups: {
@@ -1052,10 +1080,6 @@ module mgDiagSettings '../modules/insights/diagnosticSettings/mg.deploy.bicep' =
     diagnosticEventHubAuthorizationRuleId: resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
   }
 }]
-
-
-
-
 
 module mgmt_mgmt_rg '../modules/resources/resourceGroups/deploy.bicep'= {
   name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${mgmtRgName}'
