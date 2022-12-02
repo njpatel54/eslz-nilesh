@@ -295,7 +295,7 @@ param dataConnectorsSubs array = [
 param actionGroups array
 
 @description('Required. Firewall Policy name.')
-param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-0001'
+param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-pol1'
 
 @description('Optional. Rule collection groups.')
 param firewallPolicyRuleCollectionGroups array

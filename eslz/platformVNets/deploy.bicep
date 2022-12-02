@@ -113,7 +113,7 @@ param publicIPzones array
 param userMiAfpTlsInspection string = 'id-${projowner}-${opscope}-${region}-afwp'
 
 @description('Required. Firewall Policy name prefix.')
-param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-000'
+param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-pol'
 
 @description('Required. Firewall Policies array.')
 param firewallPolicies array
