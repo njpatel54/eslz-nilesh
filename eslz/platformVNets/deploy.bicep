@@ -630,7 +630,7 @@ module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
     }
   }
 }
-/*
+
 // 18. Create Role Assignment for User Assignment Managed Identity to Key Vault (Management Subscription)
 module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
@@ -680,8 +680,8 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
   }
 }]
-*/
 
+/*
 // 18. Create Role Assignment for User Assignment Managed Identity to Key Vault (Connectivity Subscription)
 module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
@@ -731,6 +731,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
   }
 }]
+*/
 
 // 20. Create Firewall Policy Rule Collection Groups
 module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
