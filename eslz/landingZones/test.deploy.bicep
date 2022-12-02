@@ -315,7 +315,7 @@ resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 /*
-// 4. Create Subscription
+// 3. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {
@@ -329,7 +329,7 @@ module sub 'wrapperModule/createSub.bicep' = {
   }
 }
 */
-// 5. Create Resource Groups
+// 4. Create Resource Groups
 module lzRgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -344,7 +344,7 @@ module lzRgs './wrapperModule/resourceGroup.bicep' = {
   }
 }
 
-// 6. Create Log Analytics Workspace
+// 5. Create Log Analytics Workspace
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
   dependsOn: [
@@ -365,7 +365,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   }
 }
 
-// 7. Configure Subscription
+// 6. Configure Subscription
 module lzSubConfig 'wrapperModule/subconfig.bicep' = {
   name: 'mod-subConfig-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
@@ -381,7 +381,7 @@ module lzSubConfig 'wrapperModule/subconfig.bicep' = {
   }
 }
 
-// 8. Create Virtual Network
+// 7. Create Virtual Network
 module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   dependsOn: [
@@ -408,7 +408,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
   }
 }
 
-// 9. Create Storage Account
+// 8. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
@@ -432,7 +432,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   }
 }
 
-// 10. Create Azure Key Vault
+// 9. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -456,7 +456,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   }
 }
 
-// 11. Create SQL Server(s)
+// 10. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -479,7 +479,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   }
 }
 
-// 12. Create Virtual Machine(s)
+// 11. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -512,7 +512,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
   }
 }
 
-// 13. Create Recovery Services Vault
+// 12. Create Recovery Services Vault
 module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
@@ -536,7 +536,7 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-// 14. Create Software Update Management Configuration
+// 13. Create Software Update Management Configuration
 module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
   name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -553,7 +553,7 @@ module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
   }
 }
 
-// 15. Create Disk Accesses Resource
+// 14. Create Disk Accesses Resource
 module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   name: 'mod-diskAccess-${take(uniqueString(deployment().name, location), 4)}-${diskAccessName}'
   dependsOn: [
@@ -573,7 +573,7 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   }
 }
 
-// 16. Cconfigure Defender for Cloud
+// 15. Cconfigure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'mod-lzDefender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)
@@ -589,7 +589,7 @@ module lzDefender 'wrapperModule/defender.bicep' = {
   }
 }
 
-// 11. Configure Sentinel Data Connectors - Subscription Level
+// 16. Configure Sentinel Data Connectors - Subscription Level
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
   name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -603,7 +603,7 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
   }
 }
 
-// 18. Create Action Group(s)
+// 17. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -639,7 +639,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   }
 }
 
-// 18. Create Firewall Policy Rule Collection Groups
+// 19. Create Firewall Policy Rule Collection Groups
 module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'mod-lzAfprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(connsubid, connVnetRgName)
@@ -651,7 +651,9 @@ module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy
   }
 }]
 
-// 17. Create Policy Assignment and Remediation
+
+/*
+// 20. Create Policy Assignment and Remediation
 module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -665,8 +667,6 @@ module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   }
 }
 
-
-/*
 @description('Required. The administrator username for the virtual machine.')
 @secure()
 param vmAdmin string = ''
