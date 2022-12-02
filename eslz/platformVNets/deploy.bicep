@@ -734,6 +734,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
 */
 
 // 20. Create Firewall Policy Rule Collection Groups
+@batchSize(1)
 module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -955,17 +956,17 @@ module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [fo
 }]
 
 // 32. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
-resource rsv_mgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
+resource rsvMgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   name: mgmtVaultName
   scope: resourceGroup(mgmtsubid, mgmtRgName)
 }
 
 // 33. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
-module roleAssignmentPriDNSAContributor_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentPriDNSAContributorMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
   dependsOn: [
-    rsv_mgmt
+    rsvMgmt
     hubRg
     spokeRg
   ]
@@ -973,17 +974,17 @@ module roleAssignmentPriDNSAContributor_mgmt '../modules/authorization/roleAssig
     roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
     principalType: 'ServicePrincipal'
     principalIds: [
-      rsv_mgmt.identity.principalId
+      rsvMgmt.identity.principalId
     ]
   }
 }
 
 // 34. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - VNet RG)
-module roleAssignmentNetworkingPerms_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentNetworkingPermsMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, vnetRgName)
   dependsOn: [
-    rsv_mgmt
+    rsvMgmt
     hubRg
     spokeRg
   ]
@@ -991,17 +992,17 @@ module roleAssignmentNetworkingPerms_mgmt '../modules/authorization/roleAssignme
     roleDefinitionIdOrName: networkingPermsRoleDefintionId
     principalType: 'ServicePrincipal'
     principalIds: [
-      rsv_mgmt.identity.principalId
+      rsvMgmt.identity.principalId
     ]
   }
 }
 
 // 35. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - MGMT RG)
-module roleAssignmentContributor_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentContributorMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
   dependsOn: [
-    rsv_mgmt
+    rsvMgmt
     hubRg
     spokeRg
   ]
@@ -1009,19 +1010,19 @@ module roleAssignmentContributor_mgmt '../modules/authorization/roleAssignments/
     roleDefinitionIdOrName: 'Contributor'
     principalType: 'ServicePrincipal'
     principalIds: [
-      rsv_mgmt.identity.principalId
+      rsvMgmt.identity.principalId
     ]
   }
 }
 
 // 36. Create Private Endpoint for Recovery Services Vault (Management Subscription)
-module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'rsvPe_mgmt-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
+module rsvPeMgmt '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'rsvPeMgmt-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
   dependsOn: [
-    roleAssignmentPriDNSAContributor_mgmt
-    roleAssignmentNetworkingPerms_mgmt
-    roleAssignmentContributor_mgmt
+    roleAssignmentPriDNSAContributorMgmt
+    roleAssignmentNetworkingPermsMgmt
+    roleAssignmentContributorMgmt
     hubVnet
     spokeVnet
     priDNSZones
@@ -1030,7 +1031,7 @@ module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
     name: '${mgmtVaultName}-AzureBackup-pe'
     location: location
     tags: ccsCombinedTags
-    serviceResourceId: rsv_mgmt.id
+    serviceResourceId: rsvMgmt.id
     groupIds: [
       'AzureBackup'
     ]
@@ -1046,17 +1047,17 @@ module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
 }
 
 // 37. Retrieve an existing Recovery Services Vault Resource (Shared Services Subscription)
-resource rsv_ssvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
+resource rsvSsvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   name: ssvcVaultName
   scope: resourceGroup(ssvcsubid, mgmtRgName)
 }
 
 // 38. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
-module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentPriDNSAContributorSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
   dependsOn: [
-    rsv_mgmt
+    rsvSsvc
     hubRg
     spokeRg
   ]
@@ -1064,17 +1065,17 @@ module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssig
     roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
     principalType: 'ServicePrincipal'
     principalIds: [
-      rsv_ssvc.identity.principalId
+      rsvSsvc.identity.principalId
     ]
   }
 }
 
 // 39. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
-module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentNetworkingPermsSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, vnetRgName)
   dependsOn: [
-    rsv_mgmt
+    rsvSsvc
     hubRg
     spokeRg
   ]
@@ -1082,17 +1083,17 @@ module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignme
     roleDefinitionIdOrName: networkingPermsRoleDefintionId
     principalType: 'ServicePrincipal'
     principalIds: [
-      rsv_ssvc.identity.principalId
+      rsvSsvc.identity.principalId
     ]
   }
 }
 
 // 40. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
-module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+module roleAssignmentContributorSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
-    rsv_mgmt
+    rsvSsvc
     hubRg
     spokeRg
   ]
@@ -1100,19 +1101,19 @@ module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/
     roleDefinitionIdOrName: 'Contributor'
     principalType: 'ServicePrincipal'
     principalIds: [
-      rsv_ssvc.identity.principalId
+      rsvSsvc.identity.principalId
     ]
   }
 }
 
 // 41. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
-module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'rsvPe_ssvc-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
+module rsvPeSsvc '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'rsvPeSsvc-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
-    roleAssignmentPriDNSAContributor_ssvc
-    roleAssignmentNetworkingPerms_ssvc
-    roleAssignmentContributor_ssvc
+    roleAssignmentPriDNSAContributorSsvc
+    roleAssignmentNetworkingPermsSsvc
+    roleAssignmentContributorSsvc
     hubVnet
     spokeVnet
     priDNSZones
@@ -1121,7 +1122,7 @@ module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
     name: '${mgmtVaultName}-AzureBackup-pe'
     location: location
     tags: ccsCombinedTags
-    serviceResourceId: rsv_ssvc.id
+    serviceResourceId: rsvSsvc.id
     groupIds: [
       'AzureBackup'
     ]
