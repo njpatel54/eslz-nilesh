@@ -56,7 +56,7 @@
                     "displayName": "CMMC Level 3",
                     "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/b5629c75-5c77-4422-87b9-2509e680f8de",
                     "parameters": {
-                        "logAnalyticsWorkspaceId": {
+                        "logAnalyticsWorkspaceId-f47b5582-33ec-4c5c-87c0-b010a6b2e917": {
                             "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
                         }
                     },
