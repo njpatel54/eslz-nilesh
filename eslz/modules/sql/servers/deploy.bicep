@@ -140,7 +140,7 @@ module server_databases 'databases/deploy.bicep' = [for (database, index) in dat
     readScale: contains(database, 'readScale') ? database.readScale : 'Disabled'
     requestedBackupStorageRedundancy: contains(database, 'requestedBackupStorageRedundancy') ? database.requestedBackupStorageRedundancy : ''
     sampleName: contains(database, 'sampleName') ? database.sampleName : ''
-    tags: contains(database, 'tags') ? database.tags : {}
+    tags: contains(database, 'tags') ? database.tags : tags
     diagnosticWorkspaceId: contains(database, 'diagnosticWorkspaceId') ? database.diagnosticWorkspaceId : ''
     zoneRedundant: contains(database, 'zoneRedundant') ? database.zoneRedundant : false
   }

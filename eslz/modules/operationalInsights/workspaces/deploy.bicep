@@ -225,6 +225,7 @@ module logAnalyticsWorkspace_solutions '../../operationsManagement/solutions/dep
   params: {
     name: gallerySolution.name
     location: location
+    tags: tags
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
     product: contains(gallerySolution, 'product') ? gallerySolution.product : 'OMSGallery'
     publisher: contains(gallerySolution, 'publisher') ? gallerySolution.publisher : 'Microsoft'

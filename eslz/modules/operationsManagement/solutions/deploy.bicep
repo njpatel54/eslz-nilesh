@@ -7,6 +7,9 @@ param logAnalyticsWorkspaceName string
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Optional. Tags of the resource.')
+param tags object = {}
+
 @description('Optional. The product of the deployed solution. For Microsoft published gallery solution it should be `OMSGallery` and the target solution resource product will be composed as `OMSGallery/{name}`. For third party solution, it can be anything. This is case sensitive.')
 param product string = 'OMSGallery'
 
@@ -33,6 +36,7 @@ resource solution 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' 
     product: solutionProduct
     publisher: publisher
   }
+  tags: tags
 }
 
 @description('The name of the deployed solution.')
