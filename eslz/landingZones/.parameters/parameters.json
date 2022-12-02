@@ -58,7 +58,7 @@
           "description": "Backup Contributor",
           "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b",
           "principalIds": [
-            "d7f417ae-0e94-4c0b-b526-a604853fa315"
+            "1989443b-73fd-4053-8574-9378d7747a35"
           ]
         }
       ]
