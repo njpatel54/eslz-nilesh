@@ -216,8 +216,72 @@
                     "priority": 300,
                     "ruleCollections": [
                         {
-                            "name": "allow-afwrc-ccs-test-usva-0001",
+                            "name": "deny-afwrc-ccs-test-usva-0002",
                             "priority": 100,
+                            "action": {
+                                "type": "Deny"
+                            },
+                            "rules": [
+                                {
+                                    "ruleType": "ApplicationRule",
+                                    "name": "Deny-Web-Categories",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "destinationAddresses": [],
+                                    "fqdnTags": [],
+                                    "webCategories": [
+                                        "AlcoholAndTobacco",
+                                        "ChildAbuseImages",
+                                        "ChildInappropriate",
+                                        "CriminalActivity",
+                                        "DatingAndPersonals",
+                                        "Gambling",
+                                        "Hacking",
+                                        "HateAndIntolerance",
+                                        "IllegalDrug",
+                                        "IllegalSoftware",
+                                        "LingerieAndSwimsuits",
+                                        "Marijuana",
+                                        "Nudity",
+                                        "PornographyAndSexuallyExplicit",
+                                        "SchoolCheating",
+                                        "SelfHarm",
+                                        "SexEducation",
+                                        "Tasteless",
+                                        "Violence",
+                                        "Weapons",
+                                        "PeerToPeer",
+                                        "Chat",
+                                        "Cults",
+                                        "Games",
+                                        "InstantMessaging",
+                                        "SocialNetworking",
+                                        "Shopping",
+                                        "AdvertisementsAndPopUps",
+                                        "StreamingMediaAndDownloads"
+                                    ],
+                                    "targetFqdns": [],
+                                    "targetUrls": [],
+                                    "terminateTLS": false
+                                }
+                            ],
+                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+                        },
+                        {
+                            "name": "allow-afwrc-ccs-test-usva-0001",
+                            "priority": 200,
                             "action": {
                                 "type": "Allow"
                             },
@@ -329,20 +393,10 @@
                                         "github.com/ccs-az*"
                                     ],
                                     "terminateTLS": true
-                                }
-                            ],
-                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
-                        },
-                        {
-                            "name": "deny-afwrc-ccs-test-usva-0002",
-                            "priority": 200,
-                            "action": {
-                                "type": "Deny"
-                            },
-                            "rules": [
+                                },
                                 {
                                     "ruleType": "ApplicationRule",
-                                    "name": "Deny-Web-Categories",
+                                    "name": "allow-to-azure-portal",
                                     "protocols": [
                                         {
                                             "protocolType": "Http",
@@ -359,44 +413,26 @@
                                     "sourceIpGroups": [],
                                     "destinationAddresses": [],
                                     "fqdnTags": [],
-                                    "webCategories": [
-                                        "AlcoholAndTobacco",
-                                        "ChildAbuseImages",
-                                        "ChildInappropriate",
-                                        "CriminalActivity",
-                                        "DatingAndPersonals",
-                                        "Gambling",
-                                        "Hacking",
-                                        "HateAndIntolerance",
-                                        "IllegalDrug",
-                                        "IllegalSoftware",
-                                        "LingerieAndSwimsuits",
-                                        "Marijuana",
-                                        "Nudity",
-                                        "PornographyAndSexuallyExplicit",
-                                        "SchoolCheating",
-                                        "SelfHarm",
-                                        "SexEducation",
-                                        "Tasteless",
-                                        "Violence",
-                                        "Weapons",
-                                        "PeerToPeer",
-                                        "Chat",
-                                        "Cults",
-                                        "Games",
-                                        "InstantMessaging",
-                                        "SocialNetworking",
-                                        "Shopping",
-                                        "AdvertisementsAndPopUps",
-                                        "StreamingMediaAndDownloads"
-                                    ],
+                                    "webCategories": [],
                                     "targetFqdns": [],
-                                    "targetUrls": [],
-                                    "terminateTLS": false
+                                    "targetUrls": [
+                                        "*.applicationinsights.us",
+                                        "*.azure.us",
+                                        "*.loganalytics.us",
+                                        "*.microsoft.us",
+                                        "*.microsoftonline.us",
+                                        "*.msauth.net",
+                                        "*.usgovcloudapi.net",
+                                        "*.usgovtrafficmanager.net",
+                                        "*.windowsazure.us",
+                                        "graph.microsoftazure.us"
+                                    ],
+                                    "terminateTLS": true
                                 }
                             ],
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                         }
+
                     ]
                 }
             ]
