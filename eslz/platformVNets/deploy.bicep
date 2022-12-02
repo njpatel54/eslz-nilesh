@@ -649,6 +649,7 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
 }
 
 // 19. Create Fireall Policy
+@batchSize(1)
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -735,8 +736,8 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
 
 // 20. Create Firewall Policy Rule Collection Groups
 @batchSize(1)
-module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
-  name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
+module afwprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
+  name:  'afwprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     afwp
@@ -757,7 +758,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
     hubVnet
     spokeVnet
     afwPip
-    afprcg
+    afwprcg
   ]
   params: {
     name: firewallName
