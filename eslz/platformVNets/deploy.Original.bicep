@@ -113,7 +113,7 @@ param publicIPzones array
 param userMiAfpTlsInspection string = 'id-${projowner}-${opscope}-${region}-afwp'
 
 @description('Required. Firewall Policy name prefix.')
-param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-00'
+param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-pol'
 
 @description('Required. Firewall Policies array.')
 param firewallPolicies array
@@ -576,7 +576,7 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 15. Create Private Endpoint for Key Vault
+// 15. Create Private Endpoint for Key Vault (Management Subscription)
 module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -600,6 +600,489 @@ module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
+// 16. Create Role Assignment for User Assignment Managed Identity to Key Vault (Management Subscription)
+module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    userMiAfwp
+    akv
+  ]
+  params: {
+    roleDefinitionIdOrName: 'Key Vault Secrets User'
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      userMiAfwp.outputs.principalId
+    ]
+  }
+}
+
+// 17. Create Fireall Policy
+@batchSize(1)
+module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
+  name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+    roleAssignmentKeyVault
+    akvPe
+  ]
+  params: {
+    name: '${firewallPolicyNamePrefix}${i + 1}'
+    location: location
+    tags: ccsCombinedTags
+    userAssignedIdentities: {
+      '${userMiAfwp.outputs.resourceId}': {}
+    }
+    insightsIsEnabled: firewallPolicy.insightsIsEnabled
+    defaultWorkspaceId: diagnosticWorkspaceId
+    tier: firewallPolicy.tier
+    enableProxy: firewallPolicy.enableDnsProxy
+    servers: firewallPolicy.customDnsServers
+    certificateName: firewallPolicy.transportSecurityCertificateName
+    keyVaultSecretId: '${akv.properties.vaultUri}secrets/${firewallPolicy.transportSecurityCertificateName}'
+    mode: firewallPolicy.intrusionDetectionMode
+    bypassTrafficSettings: firewallPolicy.intrusionDetectionBypassTrafficSettings
+    signatureOverrides: firewallPolicy.intrusionDetectionSignatureOverrides
+    threatIntelMode: firewallPolicy.threatIntelMode
+    fqdns: firewallPolicy.threatIntelFqdns
+    ipAddresses: firewallPolicy.threatIntelIpAddresses
+    //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
+  }
+}]
+
+// 18. Create Firewall Policy Rule Collection Groups
+@batchSize(1)
+module afwprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
+  name:  'afwprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    afwp
+  ]
+  params: {
+    firewallPolicyName: '${firewallPolicyNamePrefix}1'
+    name: firewallPolicyRuleCollectionGroup.name
+    priority: firewallPolicyRuleCollectionGroup.priority
+    ruleCollections: firewallPolicyRuleCollectionGroup.ruleCollections
+  }
+}]
+
+// 19. Create Firewall
+module afw '../modules/network/azureFirewalls/deploy.bicep' = {
+  name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubVnet
+    spokeVnet
+    afwPip
+    afwprcg
+  ]
+  params: {
+    name: firewallName
+    location: location
+    tags: ccsCombinedTags
+    azureSkuTier: firewallSkuTier
+    zones: firewallZones
+    ipConfigurations: [
+      {
+        name: 'ipConfig01'
+        publicIPAddressResourceId: afwPip.outputs.resourceId
+        subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureFirewallSubnet')
+      }
+    ]
+    firewallPolicyId: afwp[0].outputs.resourceId
+    roleAssignments: firewallRoleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}
+
+// 20. Create Public IP Address for Azure Bastion Host
+module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
+  name: 'bhPip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+  ]
+  params: {
+    name: bastionHostPublicIPName
+    location: location
+    tags: ccsCombinedTags
+    publicIPAllocationMethod: publicIPAllocationMethod
+    skuName: publicIPSkuName
+    zones: publicIPzones
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName    
+  }
+}
+
+// 21. Create Azure Bastion Host
+module bas '../modules/network/bastionHosts/deploy.bicep' = {
+  name: 'bas-${take(uniqueString(deployment().name, location), 4)}-${bastionHostName}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubVnet
+    spokeVnet
+    bhPip
+  ]
+  params: {
+    name: bastionHostName
+    location: location
+    tags: ccsCombinedTags
+    vNetId: hubVnet.outputs.resourceId
+    azureBastionSubnetPublicIpId: bhPip.outputs.resourceId
+    skuType: bastionHostSkuType
+    scaleUnits: bastionHostScaleUnits
+    roleAssignments: bastionHostRoleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}
+
+// 22. Retrieve an existing Storage Account resource (Management Subscription)
+resource saMgmt 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: stgAcctName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 23. Create Private Endpoint for Storage Account (Management Subscription)
+module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
+  name: 'saMgmtPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    saMgmt
+    priDNSZones
+  ]
+  params: {
+    name: '${stgAcctName}-${stgGroupId}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: saMgmt.id
+    groupIds: [
+      stgGroupId
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
+      ]
+    }
+  }
+}]
+
+// 24. Retrieve an existing Storage Account resource (Shared Services Subscription)
+resource saSsvc 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: stgAcctSsvcName
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+}
+
+// 25. Create Private Endpoint for Storage Account (Shared Services Subscription)
+module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
+  name: 'saSsvcPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    priDNSZones
+    saMgmtPe
+  ]
+  params: {
+    name: '${stgAcctSsvcName}-${stgGroupId}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: saSsvc.id
+    groupIds: [
+      stgGroupId
+    ]
+    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', ssvcVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
+      ]
+    }
+  }
+}]
+
+// 26. Retrieve an existing Automation Account resource (LAW - Logs Collection)
+resource aaLoga 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
+  name: logAutomationAcctName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 27. Create Private Endpoint for Automation Account (LAW - Logs Collection)
+module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
+  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    aaLoga
+    priDNSZones
+  ]
+  params: {
+    name: '${logAutomationAcctName}-${aaGroupId}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: aaLoga.id
+    groupIds: [
+      aaGroupId
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.azure-automation.us')
+      ]
+    }
+  }
+}]
+
+// 28. Retrieve an existing Automation Account resource (LAW - Sentinel)
+resource aaLogaSentinel 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
+  name: sentinelAutomationAcctName
+  scope: resourceGroup(mgmtsubid, siemRgName)
+}
+
+// 29. Create Private Endpoint for Automation Account (LAW - Sentinel)
+module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
+  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    aaLogaSentinel
+    priDNSZones
+  ]
+  params: {
+    name: '${sentinelAutomationAcctName}-${aaGroupId}-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: aaLogaSentinel.id
+    groupIds: [
+      aaGroupId
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.azure-automation.us')
+      ]
+    }
+  }
+}]
+
+// 30. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
+resource rsvMgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
+  name: mgmtVaultName
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+}
+
+// 31. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+module roleAssignmentPriDNSAContributorMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
+  scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
+  dependsOn: [
+    rsvMgmt
+    hubRg
+    spokeRg
+  ]
+  params: {
+    roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsvMgmt.identity.principalId
+    ]
+  }
+}
+
+// 32. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - VNet RG)
+module roleAssignmentNetworkingPermsMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
+  scope: resourceGroup(mgmtsubid, vnetRgName)
+  dependsOn: [
+    rsvMgmt
+    hubRg
+    spokeRg
+  ]
+  params: {
+    roleDefinitionIdOrName: networkingPermsRoleDefintionId
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsvMgmt.identity.principalId
+    ]
+  }
+}
+
+// 33. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - MGMT RG)
+module roleAssignmentContributorMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  dependsOn: [
+    rsvMgmt
+    hubRg
+    spokeRg
+  ]
+  params: {
+    roleDefinitionIdOrName: 'Contributor'
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsvMgmt.identity.principalId
+    ]
+  }
+}
+
+// 34. Create Private Endpoint for Recovery Services Vault (Management Subscription)
+module rsvPeMgmt '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'rsvPeMgmt-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  dependsOn: [
+    roleAssignmentPriDNSAContributorMgmt
+    roleAssignmentNetworkingPermsMgmt
+    roleAssignmentContributorMgmt
+    hubVnet
+    spokeVnet
+    priDNSZones
+  ]
+  params: {
+    name: '${mgmtVaultName}-AzureBackup-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: rsvMgmt.id
+    groupIds: [
+      'AzureBackup'
+    ]
+    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', privatelinkBackup)
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.queue.core.usgovcloudapi.net')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+// 35. Retrieve an existing Recovery Services Vault Resource (Shared Services Subscription)
+resource rsvSsvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
+  name: ssvcVaultName
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+}
+
+// 36. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+module roleAssignmentPriDNSAContributorSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
+  scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
+  dependsOn: [
+    rsvSsvc
+    hubRg
+    spokeRg
+  ]
+  params: {
+    roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsvSsvc.identity.principalId
+    ]
+  }
+}
+
+// 37. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
+module roleAssignmentNetworkingPermsSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
+  scope: resourceGroup(ssvcsubid, vnetRgName)
+  dependsOn: [
+    rsvSsvc
+    hubRg
+    spokeRg
+  ]
+  params: {
+    roleDefinitionIdOrName: networkingPermsRoleDefintionId
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsvSsvc.identity.principalId
+    ]
+  }
+}
+
+// 38. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
+module roleAssignmentContributorSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    rsvSsvc
+    hubRg
+    spokeRg
+  ]
+  params: {
+    roleDefinitionIdOrName: 'Contributor'
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      rsvSsvc.identity.principalId
+    ]
+  }
+}
+
+// 39. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
+module rsvPeSsvc '../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'rsvPeSsvc-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    roleAssignmentPriDNSAContributorSsvc
+    roleAssignmentNetworkingPermsSsvc
+    roleAssignmentContributorSsvc
+    hubVnet
+    spokeVnet
+    priDNSZones
+  ]
+  params: {
+    name: '${mgmtVaultName}-AzureBackup-pe'
+    location: location
+    tags: ccsCombinedTags
+    serviceResourceId: rsvSsvc.id
+    groupIds: [
+      'AzureBackup'
+    ]
+    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', ssvcVnetName, peSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', privatelinkBackup)
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.queue.core.usgovcloudapi.net')
+        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+// Start - Outputs to supress warnings - "unused parameters"
+output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
+output diagnosticEventHubName string = diagnosticEventHubName
+output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
+output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
+// End - Outputs to supress warnings - "unused parameters"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 // 16. Retrieve an existing Key Vault resource (Connectivity Subscription)
 resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvConnectivityName
@@ -658,7 +1141,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     akvConnectivityPe
   ]
   params: {
-    name: '${firewallPolicyNamePrefix}${i + 2}'
+    name: '${firewallPolicyNamePrefix}${i + 1}'
     location: location
     tags: ccsCombinedTags
     userAssignedIdentities: {
@@ -680,468 +1163,6 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
     //ruleCollectionGroups: firewallPolicy.firewallPolicyRuleCollectionGroups
   }
 }]
-
-// 20. Create Firewall Policy Rule Collection Groups
-module afprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
-  name:  'afprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
-  dependsOn: [
-    afwp
-  ]
-  params: {
-    firewallPolicyName: '${firewallPolicyNamePrefix}2'
-    name: firewallPolicyRuleCollectionGroup.name
-    priority: firewallPolicyRuleCollectionGroup.priority
-    ruleCollections: firewallPolicyRuleCollectionGroup.ruleCollections
-  }
-}]
-
-// 21. Create Firewall
-module afw '../modules/network/azureFirewalls/deploy.bicep' = {
-  name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
-  dependsOn: [
-    hubVnet
-    spokeVnet
-    afwPip
-    afprcg
-  ]
-  params: {
-    name: firewallName
-    location: location
-    tags: ccsCombinedTags
-    azureSkuTier: firewallSkuTier
-    zones: firewallZones
-    ipConfigurations: [
-      {
-        name: 'ipConfig01'
-        publicIPAddressResourceId: afwPip.outputs.resourceId
-        subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, 'AzureFirewallSubnet')
-      }
-    ]
-    firewallPolicyId: afwp[0].outputs.resourceId
-    roleAssignments: firewallRoleAssignments
-    diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName
-  }
-}
-
-// 22. Create Public IP Address for Azure Bastion Host
-module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
-  name: 'bhPip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
-  dependsOn: [
-    hubRg
-  ]
-  params: {
-    name: bastionHostPublicIPName
-    location: location
-    tags: ccsCombinedTags
-    publicIPAllocationMethod: publicIPAllocationMethod
-    skuName: publicIPSkuName
-    zones: publicIPzones
-    diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName    
-  }
-}
-
-// 23. Create Azure Bastion Host
-module bas '../modules/network/bastionHosts/deploy.bicep' = {
-  name: 'bas-${take(uniqueString(deployment().name, location), 4)}-${bastionHostName}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
-  dependsOn: [
-    hubVnet
-    spokeVnet
-    bhPip
-  ]
-  params: {
-    name: bastionHostName
-    location: location
-    tags: ccsCombinedTags
-    vNetId: hubVnet.outputs.resourceId
-    azureBastionSubnetPublicIpId: bhPip.outputs.resourceId
-    skuType: bastionHostSkuType
-    scaleUnits: bastionHostScaleUnits
-    roleAssignments: bastionHostRoleAssignments
-    diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName
-  }
-}
-
-// 24. Retrieve an existing Storage Account resource (Management Subscription)
-resource saMgmt 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: stgAcctName
-  scope: resourceGroup(mgmtsubid, siemRgName)
-}
-
-// 25. Create Private Endpoint for Storage Account (Management Subscription)
-module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
-  name: 'saMgmtPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
-  scope: resourceGroup(mgmtsubid, siemRgName)
-  dependsOn: [
-    saMgmt
-    priDNSZones
-  ]
-  params: {
-    name: '${stgAcctName}-${stgGroupId}-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: saMgmt.id
-    groupIds: [
-      stgGroupId
-    ]
-    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
-      ]
-    }
-  }
-}]
-
-// 26. Retrieve an existing Storage Account resource (Shared Services Subscription)
-resource saSsvc 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: stgAcctSsvcName
-  scope: resourceGroup(ssvcsubid, mgmtRgName)
-}
-
-// 27. Create Private Endpoint for Storage Account (Shared Services Subscription)
-module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
-  name: 'saSsvcPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
-  scope: resourceGroup(ssvcsubid, mgmtRgName)
-  dependsOn: [
-    priDNSZones
-    saMgmtPe
-  ]
-  params: {
-    name: '${stgAcctSsvcName}-${stgGroupId}-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: saSsvc.id
-    groupIds: [
-      stgGroupId
-    ]
-    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', ssvcVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
-      ]
-    }
-  }
-}]
-
-// 28. Retrieve an existing Automation Account resource (LAW - Logs Collection)
-resource aaLoga 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
-  name: logAutomationAcctName
-  scope: resourceGroup(mgmtsubid, siemRgName)
-}
-
-// 29. Create Private Endpoint for Automation Account (LAW - Logs Collection)
-module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
-  scope: resourceGroup(mgmtsubid, siemRgName)
-  dependsOn: [
-    aaLoga
-    priDNSZones
-  ]
-  params: {
-    name: '${logAutomationAcctName}-${aaGroupId}-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: aaLoga.id
-    groupIds: [
-      aaGroupId
-    ]
-    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.azure-automation.us')
-      ]
-    }
-  }
-}]
-
-// 30. Retrieve an existing Automation Account resource (LAW - Sentinel)
-resource aaLogaSentinel 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
-  name: sentinelAutomationAcctName
-  scope: resourceGroup(mgmtsubid, siemRgName)
-}
-
-// 31. Create Private Endpoint for Automation Account (LAW - Sentinel)
-module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
-  scope: resourceGroup(mgmtsubid, siemRgName)
-  dependsOn: [
-    aaLogaSentinel
-    priDNSZones
-  ]
-  params: {
-    name: '${sentinelAutomationAcctName}-${aaGroupId}-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: aaLogaSentinel.id
-    groupIds: [
-      aaGroupId
-    ]
-    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.azure-automation.us')
-      ]
-    }
-  }
-}]
-
-// 32. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
-resource rsv_mgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
-  name: mgmtVaultName
-  scope: resourceGroup(mgmtsubid, mgmtRgName)
-}
-
-// 33. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
-module roleAssignmentPriDNSAContributor_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
-  scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
-  dependsOn: [
-    rsv_mgmt
-    hubRg
-    spokeRg
-  ]
-  params: {
-    roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
-    principalType: 'ServicePrincipal'
-    principalIds: [
-      rsv_mgmt.identity.principalId
-    ]
-  }
-}
-
-// 34. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - VNet RG)
-module roleAssignmentNetworkingPerms_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
-  scope: resourceGroup(mgmtsubid, vnetRgName)
-  dependsOn: [
-    rsv_mgmt
-    hubRg
-    spokeRg
-  ]
-  params: {
-    roleDefinitionIdOrName: networkingPermsRoleDefintionId
-    principalType: 'ServicePrincipal'
-    principalIds: [
-      rsv_mgmt.identity.principalId
-    ]
-  }
-}
-
-// 35. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - MGMT RG)
-module roleAssignmentContributor_mgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
-  scope: resourceGroup(mgmtsubid, mgmtRgName)
-  dependsOn: [
-    rsv_mgmt
-    hubRg
-    spokeRg
-  ]
-  params: {
-    roleDefinitionIdOrName: 'Contributor'
-    principalType: 'ServicePrincipal'
-    principalIds: [
-      rsv_mgmt.identity.principalId
-    ]
-  }
-}
-
-// 36. Create Private Endpoint for Recovery Services Vault (Management Subscription)
-module rsvPe_mgmt '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'rsvPe_mgmt-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
-  scope: resourceGroup(mgmtsubid, mgmtRgName)
-  dependsOn: [
-    roleAssignmentPriDNSAContributor_mgmt
-    roleAssignmentNetworkingPerms_mgmt
-    roleAssignmentContributor_mgmt
-    hubVnet
-    spokeVnet
-    priDNSZones
-  ]
-  params: {
-    name: '${mgmtVaultName}-AzureBackup-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: rsv_mgmt.id
-    groupIds: [
-      'AzureBackup'
-    ]
-    subnetResourceId: resourceId(mgmtsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', mgmtVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', privatelinkBackup)
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.queue.core.usgovcloudapi.net')
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
-      ]
-    }
-  }
-}
-
-// 37. Retrieve an existing Recovery Services Vault Resource (Shared Services Subscription)
-resource rsv_ssvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
-  name: ssvcVaultName
-  scope: resourceGroup(ssvcsubid, mgmtRgName)
-}
-
-// 38. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
-module roleAssignmentPriDNSAContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
-  scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
-  dependsOn: [
-    rsv_mgmt
-    hubRg
-    spokeRg
-  ]
-  params: {
-    roleDefinitionIdOrName: priDNSAContributorRoleDefintionId
-    principalType: 'ServicePrincipal'
-    principalIds: [
-      rsv_ssvc.identity.principalId
-    ]
-  }
-}
-
-// 39. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
-module roleAssignmentNetworkingPerms_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
-  scope: resourceGroup(ssvcsubid, vnetRgName)
-  dependsOn: [
-    rsv_mgmt
-    hubRg
-    spokeRg
-  ]
-  params: {
-    roleDefinitionIdOrName: networkingPermsRoleDefintionId
-    principalType: 'ServicePrincipal'
-    principalIds: [
-      rsv_ssvc.identity.principalId
-    ]
-  }
-}
-
-// 40. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
-module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
-  name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
-  scope: resourceGroup(ssvcsubid, mgmtRgName)
-  dependsOn: [
-    rsv_mgmt
-    hubRg
-    spokeRg
-  ]
-  params: {
-    roleDefinitionIdOrName: 'Contributor'
-    principalType: 'ServicePrincipal'
-    principalIds: [
-      rsv_ssvc.identity.principalId
-    ]
-  }
-}
-
-// 41. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
-module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'rsvPe_mgmt-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
-  scope: resourceGroup(ssvcsubid, mgmtRgName)
-  dependsOn: [
-    roleAssignmentPriDNSAContributor_ssvc
-    roleAssignmentNetworkingPerms_ssvc
-    roleAssignmentContributor_ssvc
-    hubVnet
-    spokeVnet
-    priDNSZones
-  ]
-  params: {
-    name: '${mgmtVaultName}-AzureBackup-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: rsv_ssvc.id
-    groupIds: [
-      'AzureBackup'
-    ]
-    subnetResourceId: resourceId(ssvcsubid, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', ssvcVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', privatelinkBackup)
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.queue.core.usgovcloudapi.net')
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net')
-      ]
-    }
-  }
-}
-
-// Start - Outputs to supress warnings - "unused parameters"
-output diagnosticEventHubAuthorizationRuleId string = diagnosticEventHubAuthorizationRuleId
-output diagnosticEventHubName string = diagnosticEventHubName
-output vNetRgCustomRbacRoles array = vNetRgCustomRbacRoles
-output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
-// End - Outputs to supress warnings - "unused parameters"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
-@maxLength(24)
-param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
-
-// 12. Retrieve an existing Key Vault resource (Connectivity Subscription)
-resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
-  name: akvConnectivityName
-  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
-}
-
-// 13. Create Private Endpoint for Key Vault (Connectivity Subscription)
-module akvConnectivityPe '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvConnectivityName}'
-  scope: resourceGroup(hubVnetSubscriptionId, mgmtRgName)
-  dependsOn: [
-    priDNSZones
-  ]
-  params: {
-    name: '${akvConnectivityName}-vault-pe'
-    location: location
-    tags: ccsCombinedTags
-    serviceResourceId: akvConnectivity.id
-    groupIds: [
-      'vault'
-    ]
-    subnetResourceId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', hubVnetName, peSubnetName)
-    privateDnsZoneGroup: {
-      privateDNSResourceIds: [
-        resourceId(hubVnetSubscriptionId, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.usgovcloudapi.net')
-      ]
-    }
-  }
-}
-
 
 @description('Required. Azure Monitor Private Link Scope Name.')
 param amplsName string = 'ampls-${projowner}-${opscope}-${region}-hub'
