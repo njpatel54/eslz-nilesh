@@ -113,13 +113,18 @@ param siemRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
 param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
-
+/*
+@description('Optional. The configuration for the [Custom Script] extension. Must at least contain the ["enabled": true] property to be executed.')
+param extensionCustomScriptConfig object = {
+  enabled: false
+  fileData: []
+}
+*/
 // 1. Retrieve an exisiting Key Vault (From Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-
 
 module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtualMachine, i) in virtualMachines: {
   name: 'lzVm-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
@@ -189,6 +194,7 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
         '${akv.properties.vaultUri}secrets/${extensionKeyVaultConfig.keyVaultRootCertSecretName}'
       ]
     }
+    extensionCustomScriptConfig: extensionCustomScriptConfig
     */
     extensionAntiMalwareConfig: virtualMachine.osType == 'Windows' ? {
       enabled: true
@@ -217,7 +223,6 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
 output vmResourceIDs array = [for (virtualMachine, i) in virtualMachines: {
   vmResourceId: lzVm[i].outputs.resourceId
 }]
-
 
 /*
 @description('Required. Administrator username.')

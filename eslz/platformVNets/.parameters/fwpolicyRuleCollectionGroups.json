@@ -119,7 +119,7 @@
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                         },
                         {
-                            "name": "allow-afwrc-lz50-usva-001",
+                            "name": "allow-afwrc-lz50-usva-0001",
                             "priority": 200,
                             "action": {
                                 "type": "Allow"
@@ -428,6 +428,42 @@
                                         "graph.microsoftazure.us"
                                     ],
                                     "terminateTLS": true
+                                }
+                            ],
+                            "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
+                        },
+                        {
+                            "name": "allow-afwrc-lz50-usva-0001",
+                            "priority": 300,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "ruleType": "ApplicationRule",
+                                    "name": "allow-lz50-to-internet",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "sourceAddresses": [
+                                        "10.30.64.0/24"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "destinationAddresses": [],
+                                    "fqdnTags": [
+                                        "*"
+                                    ],
+                                    "webCategories": [],
+                                    "targetFqdns": [],
+                                    "targetUrls": [],
+                                    "terminateTLS": false
                                 }
                             ],
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
