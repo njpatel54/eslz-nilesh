@@ -51,6 +51,26 @@
                     "managementGroupId": "mg-A2g"
                 },
                 {
+                    "name": "CMMC-Level-3",
+                    "description": "This initiative includes policies that address a subset of Cybersecurity Maturity Model Certification (CMMC) Level 3 requirements. Additional policies will be added in upcoming releases. For more information, visit https://aka.ms/cmmc-initiative.",
+                    "displayName": "CMMC Level 3",
+                    "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/b5629c75-5c77-4422-87b9-2509e680f8de",
+                    "parameters": {
+                        "logAnalyticsWorkspaceId": {
+                            "value": "/subscriptions/aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889/resourcegroups/rg-ccs-test-usva-siem/providers/microsoft.operationalinsights/workspaces/log-ccs-test-usva-siem"
+                        }
+                    },
+                    "nonComplianceMessage": "Cybersecurity Maturity Model Certification (CMMC) Level 3 requirements must be met.",
+                    "enforcementMode": "Default",
+                    "metadata": {},
+                    "scope": null,
+                    "notScopes": [],
+                    "location": "",
+                    "identity": "None",
+                    "roleDefinitionIds": [],
+                    "managementGroupId": "mg-A2g"
+                },
+                {
                     "name": "Deny-Privatelink-Zones",
                     "description": "This policy restricts creation of private DNS zones with the `privatelink` prefix",
                     "displayName": "Deny creation of Private DNS Zone with the 'privatelink' prefix",
