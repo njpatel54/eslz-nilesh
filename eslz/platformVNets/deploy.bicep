@@ -1107,7 +1107,7 @@ module roleAssignmentContributor_ssvc '../modules/authorization/roleAssignments/
 
 // 41. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
 module rsvPe_ssvc '../modules/network/privateEndpoints/deploy.bicep' = {
-  name: 'rsvPe_mgmt-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
+  name: 'rsvPe_ssvc-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
     roleAssignmentPriDNSAContributor_ssvc
