@@ -3,15 +3,18 @@ name: Az Login with OpenID Connect
 on: 
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
+#permissions:
+# id-token: write
+# contents: read
 
 jobs: 
 
   build-and-deploy:
     runs-on: ubuntu-latest
     environment: Production
+    permissions: 
+      id-token: write
+      contents: read
     steps:
     - name: 'Az Login with OpenID Connect'
       uses: azure/login@v1
