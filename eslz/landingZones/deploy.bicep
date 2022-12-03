@@ -281,6 +281,9 @@ param sentinelAutomationAcctName string = 'aa-${platformProjOwner}-${platformOpS
 @description('Required. Load content from json file to iterate over any array in the parameters file')
 var params = json(loadTextContent('.parameters/parameters.json'))
 
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
+var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+
 @description('Required. Iterate over each "subnets" and build variable to store "lzVMsSubnetName".')
 var lzVMsSubnetName = params.parameters.vNets.value[0].subnets[2].name
 
@@ -396,7 +399,7 @@ module lzSubConfig 'wrapperModule/subconfig.bicep' = {
 }
 
 // 7. Create Virtual Network
-module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, index) in vNets: {
+module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, i) in vNets: {
   name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   dependsOn: [
     lzLoga
@@ -422,7 +425,23 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, index) in vNets
   }
 }]
 
-// 8. Create Storage Account
+// 8. Update Virtual Network Links on Private DNS Zones
+module priDNSZones 'wrapperModule/virtualNetworkLinks.bicep' = [for (vNetResourceId, i) in vNetResourceIds: {
+  name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(connsubid, priDNSZonesRgName)
+  dependsOn: [
+    lzVnet
+  ]
+  params: {    
+    combinedTags: combinedTags
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    privateDnsZones: privateDnsZones
+    virtualNetworkResourceId: vNetResourceId
+  }
+}]
+
+// 9. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
@@ -450,7 +469,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   }
 }
 
-// 9. Create Azure Key Vault
+// 10. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -474,7 +493,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   }
 }
 
-// 10. Create SQL Server(s)
+// 11. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -497,7 +516,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   }
 }
 
-// 11. Create Virtual Machine(s)
+// 12. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -521,7 +540,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
   }
 }
 
-// 12. Create Recovery Services Vault
+// 13. Create Recovery Services Vault
 module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
@@ -545,7 +564,7 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-// 13. Create Software Update Management Configuration
+// 14. Create Software Update Management Configuration
 module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
   name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -562,7 +581,7 @@ module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
   }
 }
 
-// 14. Create Disk Accesses Resource
+// 15. Create Disk Accesses Resource
 module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   name: 'mod-diskAccess-${take(uniqueString(deployment().name, location), 4)}-${diskAccessName}'
   dependsOn: [
@@ -582,7 +601,7 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   }
 }
 
-// 15. Cconfigure Defender for Cloud
+// 16. Cconfigure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'mod-lzDefender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)
@@ -598,7 +617,7 @@ module lzDefender 'wrapperModule/defender.bicep' = {
   }
 }
 
-// 16. Configure Sentinel Data Connectors - Subscription Level
+// 17. Configure Sentinel Data Connectors - Subscription Level
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
   name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -612,7 +631,7 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
   }
 }
 
-// 17. Create Action Group(s)
+// 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -626,7 +645,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   }
 }
 
-// 18. Create Alerts
+// 19. Create Alerts
 module lzAlerts 'wrapperModule/alerts.bicep' = {
   name: 'mod-lzAlerts--${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -646,7 +665,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   }
 }
 
-// 19. Create Firewall Policy Rule Collection Groups
+// 20. Create Firewall Policy Rule Collection Groups
 module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'mod-lzAfprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(connsubid, connVnetRgName)

@@ -58,9 +58,6 @@ var params = json(loadTextContent('../.parameters/parameters.json'))
 var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 // End - Variables created to be used to attach NSG to Management Subnet
 
-@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
-var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
-
 // 1. Create Route Table (Connectivity Subscription)
 module lzRouteTable '../../modules/network//routeTables/deploy.bicep' = {
   name: 'lzRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
@@ -133,25 +130,28 @@ module lzAttachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/sub
   }
 }]
 
+
+
+/*
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
+var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+
 // 5. Update Virtual Network Links on Provate DNS Zones
-module priDNSZones '../../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
-  name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
+module priDNSZones 'virtualNetworkLinks.bicep' = [for (vNetResourceId, i) in vNetResourceIds: {
+  name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${i}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
   dependsOn: [
     lzAttachNsgRouteTableToSubnets
   ]
   params: {
-    name: privateDnsZone
-    location: 'Global'
-    tags: combinedTags
-    virtualNetworkLinks: [for vNetResourceId in vNetResourceIds: {
-      virtualNetworkResourceId: vNetResourceId
-      registrationEnabled: false
-    }]
+    virtualNetworkResourceId: vNetResourceId
+    combinedTags: combinedTags
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    privateDnsZones: privateDnsZones
   }
 }]
 
-/*
 // 5. Update Virtual Network Links on Provate DNS Zones
 module lzVnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
@@ -167,7 +167,6 @@ module lzVnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/de
   }
 }]
 */
-
 
 @description('Output - Virtual Network "name"')
 output vNetName string = lzVnet.outputs.name
