@@ -58,8 +58,6 @@ var params = json(loadTextContent('../.parameters/parameters.json'))
 var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
 // End - Variables created to be used to attach NSG to Management Subnet
 
-@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
-var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
 // 1. Create Route Table (Connectivity Subscription)
 module lzRouteTable '../../modules/network//routeTables/deploy.bicep' = {
@@ -134,25 +132,6 @@ module lzAttachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/sub
 }]
 
 // 5. Update Virtual Network Links on Provate DNS Zones
-module priDNSZones '../../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
-  name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
-  scope: resourceGroup(connsubid, priDNSZonesRgName)
-  dependsOn: [
-    lzAttachNsgRouteTableToSubnets
-  ]
-  params: {
-    name: privateDnsZone
-    location: 'Global'
-    tags: combinedTags
-    virtualNetworkLinks: [for vNetResourceId in vNetResourceIds: {
-      virtualNetworkResourceId: vNetResourceId
-      registrationEnabled: false
-    }]
-  }
-}]
-
-/*
-// 5. Update Virtual Network Links on Provate DNS Zones
 module lzVnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${privateDnsZone}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
@@ -160,14 +139,12 @@ module lzVnetLinks '../../modules/network/privateDnsZones/virtualNetworkLinks/de
     lzAttachNsgRouteTableToSubnets
   ]
   params: {
-    privateDnsZoneName: privateDnsZone
     location: 'global'
-    tags: combinedTags
+    privateDnsZoneName: privateDnsZone
     virtualNetworkResourceId: lzVnet.outputs.resourceId
+    tags: combinedTags
   }
 }]
-*/
-
 
 @description('Output - Virtual Network "name"')
 output vNetName string = lzVnet.outputs.name

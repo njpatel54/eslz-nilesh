@@ -457,11 +457,11 @@
                                     ],
                                     "sourceIpGroups": [],
                                     "destinationAddresses": [],
-                                    "fqdnTags": [
+                                    "fqdnTags": [],
+                                    "webCategories": [],
+                                    "targetFqdns": [
                                         "*"
                                     ],
-                                    "webCategories": [],
-                                    "targetFqdns": [],
                                     "targetUrls": [],
                                     "terminateTLS": false
                                 }

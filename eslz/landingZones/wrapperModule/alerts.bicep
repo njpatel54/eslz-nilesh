@@ -234,6 +234,29 @@ module budget '../../modules/consumption/budgets/deploy.bicep' = [for (budget, i
 */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 @description('Output - Resource Group Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
 param rgResoruceIds array

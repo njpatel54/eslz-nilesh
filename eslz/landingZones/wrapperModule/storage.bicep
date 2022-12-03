@@ -18,6 +18,18 @@ param stgAcctName string
 @description('Required. Storage Account SKU.')
 param storageaccount_sku string
 
+@description('Optional. Blob service and containers to deploy')
+param blobServices object
+
+@description('Optional. File service and shares to deploy')
+param fileServices object
+
+@description('Optional. Queue service and queues to create.')
+param queueServices object
+
+@description('Optional. Table service and tables to create.')
+param tableServices object
+
 @description('Required. Name of the resourceGroup, where networking components will be.')
 param vnetRgName string
 
@@ -66,6 +78,10 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
     location: location
     tags: combinedTags
     storageSKU: storageaccount_sku
+    blobServices: blobServices
+    fileServices: fileServices
+    queueServices: queueServices
+    tableServices: tableServices
     publicNetworkAccess: 'Disabled'
     diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId

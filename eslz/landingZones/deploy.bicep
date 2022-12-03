@@ -99,6 +99,10 @@ param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
 @description('Optional. An Array of Routes to be established within the hub route table.')
 param routes array = []
 
+@description('Optional. Hub Virtual Network configurations.')
+param vNets array = []
+
+/*
 @description('Optional. DNS Servers associated to the Virtual Network.')
 param dnsServers array = []
 
@@ -113,6 +117,7 @@ param subnets array = []
 
 @description('Optional. Virtual Network Peerings configurations')
 param virtualNetworkPeerings array = []
+*/
 
 @description('Required. Hub - Network Security Groups Array.')
 param networkSecurityGroups array = []
@@ -145,6 +150,18 @@ param stgAcctName string = toLower(take('st${projowner}${billingAccountShort}${r
 
 @description('Required. Storage Account SKU.')
 param storageaccount_sku string
+
+@description('Optional. Blob service and containers to deploy')
+param blobServices object
+
+@description('Optional. File service and shares to deploy')
+param fileServices object
+
+@description('Optional. Queue service and queues to create.')
+param queueServices object
+
+@description('Optional. Table service and tables to create.')
+param tableServices object
 
 @description('Required. Storage Account Subresource(s) (aka "groupIds").')
 @allowed([
@@ -265,7 +282,7 @@ param sentinelAutomationAcctName string = 'aa-${platformProjOwner}-${platformOpS
 var params = json(loadTextContent('.parameters/parameters.json'))
 
 @description('Required. Iterate over each "subnets" and build variable to store "lzVMsSubnetName".')
-var lzVMsSubnetName = params.parameters.subnets.value[2].name
+var lzVMsSubnetName = params.parameters.vNets.value[0].subnets[2].name
 
 @description('Required. Name of the Azure Recovery Service Vault.')
 param vaultName string = 'rsv-${projowner}-${region}'
@@ -379,23 +396,23 @@ module lzSubConfig 'wrapperModule/subconfig.bicep' = {
 }
 
 // 7. Create Virtual Network
-module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
-  name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
+module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, index) in vNets: {
+  name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   dependsOn: [
     lzLoga
   ]
   params: {
-    vnetName: vnetName
+    vnetName: vNet.name
     location: location
     combinedTags: combinedTags
     defaultRouteTableName: defaultRouteTableName
     routes: routes
     vnetRgName: vnetRgName
     subscriptionId: subscriptionId
-    vnetAddressPrefixes: vnetAddressPrefixes
-    dnsServers: dnsServers
-    subnets: subnets
-    virtualNetworkPeerings: virtualNetworkPeerings
+    vnetAddressPrefixes: vNet.addressPrefixes
+    dnsServers: vNet.dnsServers
+    subnets: vNet.subnets
+    virtualNetworkPeerings: vNet.virtualNetworkPeerings
     networkSecurityGroups: networkSecurityGroups
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -403,7 +420,7 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
-}
+}]
 
 // 8. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
@@ -417,10 +434,14 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
     combinedTags: combinedTags
     wlRgName: wlRgName
     storageaccount_sku: storageaccount_sku
+    blobServices: blobServices
+    fileServices: fileServices
+    queueServices: queueServices
+    tableServices: tableServices
     stgGroupIds: stgGroupIds
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -444,7 +465,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
     publicNetworkAccess: publicNetworkAccess
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -489,7 +510,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     wlRgName: wlRgName
     mgmtsubid: mgmtsubid
     siemRgName: siemRgName
-    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)    
+    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', lzVnet[0].outputs.vNetName, lzVMsSubnetName)    
     virtualMachineNamePrefix: virtualMachineNamePrefix
     virtualMachines: virtualMachines
     platformProjOwner: platformProjOwner
@@ -497,15 +518,6 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     region: region
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
     monitoringWorkspaceId: logaSentinel.id
-    //name: '${virtualMachineNamePrefix}${i + 1}'
-    //adminUsername: akv.getSecret(vmAdmin)
-    //adminPassword: akv.getSecret(vmAdminPassword)
-    //osType: virtualMachine.osType
-    //virtualMachineSize: virtualMachineSize
-    //licenseType: virtualMachine.licenseType
-    //availabilityZone: virtualMachine.availabilityZone
-    //operatingSystem: virtualMachine.operatingSystem
-    //dataDisks: virtualMachine.dataDisks
   }
 }
 
@@ -524,7 +536,7 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
     mgmtRgName: mgmtRgName
     rpcRgName: rpcRgName
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -563,7 +575,7 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
     wlRgName: wlRgName
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -631,8 +643,6 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
     suffix: suffix
     actionGroups: actionGroups
     budgets: budgets
-    //rgResoruceIds: lzRgs.outputs.rgResoruceIds
-    //vmResourceIDs: lzVms.outputs.vmResourceIDs
   }
 }
 
