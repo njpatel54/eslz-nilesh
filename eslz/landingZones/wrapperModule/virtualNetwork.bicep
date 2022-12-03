@@ -131,7 +131,6 @@ module lzAttachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/sub
 }]
 
 
-
 /*
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
 var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
