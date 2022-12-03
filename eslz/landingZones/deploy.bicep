@@ -195,7 +195,7 @@ param lzAkvName string = toLower(take('kv-${projowner}-${region}', 24))
 param publicNetworkAccess string = 'Disabled'
 
 @description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
-param networkAcls object
+param keyVaultNetworkAcls object
 // End - 'akv' Module Parameters
 
 @description('Required. BillingAccount used for subscription billing')
@@ -426,8 +426,8 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, i) in vNets: {
 }]
 
 // 8. Update Virtual Network Links on Private DNS Zones
-module priDNSZones 'wrapperModule/virtualNetworkLinks.bicep' = [for (vNetResourceId, i) in vNetResourceIds: {
-  name: 'lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${i}'
+module lzVnetLinks 'wrapperModule/virtualNetworkLinks.bicep' = [for (vNetResourceId, i) in vNetResourceIds: {
+  name: 'mod-lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${i}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
   dependsOn: [
     lzVnet
@@ -480,7 +480,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
     location: location
     combinedTags: combinedTags
     wlRgName: wlRgName
-    networkAcls: networkAcls
+    keyVaultNetworkAcls: keyVaultNetworkAcls
     publicNetworkAccess: publicNetworkAccess
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName

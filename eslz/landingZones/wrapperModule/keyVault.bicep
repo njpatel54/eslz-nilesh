@@ -22,7 +22,7 @@ param akvName string
 param publicNetworkAccess string = 'Disabled'
 
 @description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
-param networkAcls object
+param keyVaultNetworkAcls object
 
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string
@@ -58,7 +58,7 @@ module akv '../../modules/keyVault/vaults/deploy.bicep' = {
     tags: combinedTags
     vaultSku: 'premium'
     publicNetworkAccess: publicNetworkAccess
-    networkAcls: networkAcls
+    networkAcls: keyVaultNetworkAcls
     diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
   }

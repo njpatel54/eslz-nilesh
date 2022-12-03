@@ -323,7 +323,7 @@
     "publicNetworkAccessForQuery": {
       "value": "Enabled"
     },
-    "networkAcls": {
+    "keyVaultNetworkAcls": {
       "value": {
         "bypass": "AzureServices",
         "defaultAction": "Deny",
