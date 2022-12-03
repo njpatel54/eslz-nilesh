@@ -207,10 +207,6 @@ param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmen
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
 
-@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
-@maxLength(24)
-param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
-
 @description('Required. Automation Account subresource IDs (groupId).')
 var aaGroupIds = [
   'Webhook'
@@ -1083,6 +1079,10 @@ output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 
 
 /*
+@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
+@maxLength(24)
+param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
+
 // 16. Retrieve an existing Key Vault resource (Connectivity Subscription)
 resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvConnectivityName

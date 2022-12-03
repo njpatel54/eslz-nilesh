@@ -601,7 +601,7 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   }
 }
 
-// 16. Cconfigure Defender for Cloud
+// 16. Configure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'mod-lzDefender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)
