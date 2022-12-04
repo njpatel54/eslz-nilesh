@@ -25,7 +25,7 @@ param subscriptionWorkload string
 @description('Required. Management Group target for the subscription')
 param managementGroupId string
 
-// 1. Creat Subscription
+// 1. Create Subscription
 module sub '../../modules/subscription/alias/new.deploy.bicep' = {
   name: 'sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   params: {

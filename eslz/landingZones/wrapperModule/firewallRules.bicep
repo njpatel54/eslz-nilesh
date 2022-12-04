@@ -14,7 +14,7 @@ param firewallPolicyName string
 @description('Optional. Rule collection groups.')
 param firewallPolicyRuleCollectionGroups array
 
-// 1. Firewall Policy Rule Collection Groups
+// 1. Update Firewall Policy Rule Collection Groups
 module afwp '../../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(connsubid, connVnetRgName)

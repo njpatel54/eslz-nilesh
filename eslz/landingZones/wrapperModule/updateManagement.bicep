@@ -21,6 +21,7 @@ param sentinelAutomationAcctName string
 @description('Required. Suffix to be used in resource naming with 4 characters.')
 param suffix string
 
+// 1. Create Automation Account Software Update Configuration
 module automationAccount_softwareUpdateConfigurations '../../modules/automation/automationAccounts/softwareUpdateConfigurations/deploy.bicep' = [for (softwareUpdateConfiguration, index) in softwareUpdateConfigurations: {
   name: '${uniqueString(deployment().name, location)}-AutoAccount-SwUpdateConfig-${index}'
   scope: resourceGroup(mgmtsubid, siemRgName)

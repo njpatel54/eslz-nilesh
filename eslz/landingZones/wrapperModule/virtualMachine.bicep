@@ -125,7 +125,7 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-
+// 2. Create Virtual Machines
 module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtualMachine, i) in virtualMachines: {
   name: 'lzVm-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
   scope: resourceGroup(subscriptionId, wlRgName)

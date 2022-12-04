@@ -346,7 +346,7 @@ module hubRg '../modules/resources/resourceGroups/deploy.bicep' = {
   }
 }
 
-// 2. Create Hub Network Security Group(s) (Connectivity Subscription)
+// 2. Create Network Security Group(s) (Connectivity Subscription)
 module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in hubNetworkSecurityGroups: {
   name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -368,7 +368,7 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
 }]
 
 // 3. Create Route Table (Connectivity Subscription)
-module hubRouteTable '../modules/network//routeTables/deploy.bicep' = {
+module hubRouteTable '../modules/network/routeTables/deploy.bicep' = {
   name: 'hubRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
@@ -436,7 +436,7 @@ module spokeRg '../modules/resources/resourceGroups/deploy.bicep' = [for (vNet, 
   }
 }]
 
-// 7. Create Hub Network Security Group(s) (Spoke Subscriptions)
+// 7. Create Network Security Group(s) (Spoke Subscriptions)
 module spokeNsg '../modules/network/networkSecurityGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'spokeNsg-${take(uniqueString(deployment().name, location), 4)}-${spokeNetworkSecurityGroups[0].name}'
   scope: resourceGroup(vNet.subscriptionId, vnetRgName)
@@ -815,7 +815,7 @@ resource aaLoga 'Microsoft.Automation/automationAccounts@2021-06-22' existing = 
 
 // 27. Create Private Endpoint for Automation Account (LAW - Logs Collection)
 module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
+  name: 'aaLogaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     aaLoga
@@ -846,7 +846,7 @@ resource aaLogaSentinel 'Microsoft.Automation/automationAccounts@2021-06-22' exi
 
 // 29. Create Private Endpoint for Automation Account (LAW - Sentinel)
 module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
+  name: 'aaLogaSentinelPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     aaLogaSentinel
@@ -875,7 +875,7 @@ resource rsvMgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   scope: resourceGroup(mgmtsubid, mgmtRgName)
 }
 
-// 31. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 31. Create Role Assignment for Recovery Services Vault's System Managed Identity (Connectivity - PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributorMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -966,7 +966,7 @@ resource rsvSsvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   scope: resourceGroup(ssvcsubid, mgmtRgName)
 }
 
-// 36. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 36. Create Role Assignment for Recovery Services Vault's System Managed Identity (Connectivity - PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributorSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)

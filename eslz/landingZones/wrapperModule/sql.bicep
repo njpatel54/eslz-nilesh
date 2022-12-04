@@ -123,7 +123,7 @@ module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database 
 }]
 
 // 4. Create Azure SQL Server Failover Group
-module sqlfailovergrp '../../modules//sql/servers/failoverGroups/deploy.bicep' = {
+module sqlfailovergrp '../../modules/sql/servers/failoverGroups/deploy.bicep' = {
   name: 'sqlfailovergrp-${take(uniqueString(deployment().name, location), 4)}-${sqlFailOverGroupName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [

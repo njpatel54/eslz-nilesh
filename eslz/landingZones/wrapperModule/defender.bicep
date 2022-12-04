@@ -15,6 +15,7 @@ param workspaceId string
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
+// 1. Configure Defender for Cloud
 module defender '../../modules/security/azureSecurityCenter/deploy.bicep' = {
   name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)

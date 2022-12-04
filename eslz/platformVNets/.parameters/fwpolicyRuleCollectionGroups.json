@@ -208,7 +208,6 @@
                             ],
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                         }
-
                     ]
                 },
                 {
@@ -468,7 +467,6 @@
                             ],
                             "ruleCollectionType": "FirewallPolicyFilterRuleCollection"
                         }
-
                     ]
                 }
             ]

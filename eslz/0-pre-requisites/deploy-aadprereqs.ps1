@@ -118,6 +118,13 @@ Pause
 
 write-host -ForegroundColor Blue "Completing Script Execution"
 
+# Add Security Administrator and Global Reader Role to 
+
+# Security Administrator
+Add-AzureADDirectoryRoleMember -ObjectId 7036bc44-5fa5-4c41-84e8-7048c50dfdec -RefObjectId $($az_ad_service_principal.Id)
+
+# Global Reader
+Add-AzureADDirectoryRoleMember -ObjectId 764f48f1-d103-4bfa-9409-a1758198847e -RefObjectId $($az_ad_service_principal.Id)
 
 #Quick Object Removal for Testing Only
 #Get-AzADApplication -DisplayName $azure_ad_app_name | remove-AzADApplication -force

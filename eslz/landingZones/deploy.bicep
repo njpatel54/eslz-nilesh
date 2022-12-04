@@ -327,7 +327,7 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 }
 
 // 2. Retrieve an existing Log Analytics Workspace (Sentinel - From Management Subscription)
-resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource logaSentinel 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
@@ -665,7 +665,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   }
 }
 
-// 20. Create Firewall Policy Rule Collection Groups
+// 20. Update Firewall Policy Rule Collection Groups
 module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'mod-lzAfprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(connsubid, connVnetRgName)
