@@ -417,11 +417,11 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, i) in vNets: {
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     networkSecurityGroups: networkSecurityGroups
-    connsubid: connsubid
-    priDNSZonesRgName: priDNSZonesRgName
-    privateDnsZones: privateDnsZones
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    //connsubid: connsubid
+    //priDNSZonesRgName: priDNSZonesRgName
+    //privateDnsZones: privateDnsZones
   }
 }]
 
@@ -542,7 +542,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
 
 // 13. Create Recovery Services Vault
 module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
-  name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
+  name: 'mod-lzRsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
     lzVnet
   ]
@@ -608,12 +608,12 @@ module lzDefender 'wrapperModule/defender.bicep' = {
   //dependsOn: [
   //  sub
   //]
-    params: {
-      location: location
-      subscriptionAlias: subscriptionAlias
-      subscriptionId: subscriptionId
-      workspaceId: resourceId(mgmtsubid, siemRgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
-      defenderSecurityContactProperties: defenderSecurityContactProperties
+  params: {
+    location: location
+    subscriptionAlias: subscriptionAlias
+    subscriptionId: subscriptionId
+    workspaceId: logaSentinel.id
+    defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }
 
@@ -647,7 +647,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
 
 // 19. Create Alerts
 module lzAlerts 'wrapperModule/alerts.bicep' = {
-  name: 'mod-lzAlerts--${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzRgs

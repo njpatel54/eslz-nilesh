@@ -33,20 +33,22 @@ param subnets array = []
 @description('Optional. Virtual Network Peerings configurations')
 param virtualNetworkPeerings array = []
 
+/*
+@description('Required. Subscription ID of Connectivity Subscription')
+param connsubid string
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string
+
 @description('Required. Array of Private DNS Zones (Azure US Govrenment).')
 param privateDnsZones array
+*/
 
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string = ''
 
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
-
-@description('Required. Subscription ID of Connectivity Subscription')
-param connsubid string
-
-@description('Required. Resource Group name for Private DNS Zones.')
-param priDNSZonesRgName string
 
 @description('Required. Resource Group name.')
 param vnetRgName string
