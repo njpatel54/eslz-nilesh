@@ -972,7 +972,6 @@
           "excludeUpdates": [
             "icacls"
           ],
-
           "includeUpdates": [
             "kernel"
           ]
@@ -1105,6 +1104,49 @@
         },
         "phone": "+12345678"
       }
+    },
+    "actionGroups": {
+      "value": [
+        {
+          "name": "ag-ccs-test-usva-001",
+          "groupShortName": "aglz50001",
+          "emailReceivers": [
+            {
+              "name": "Administrators_email",
+              "emailAddress": "foo@contoso.com",
+              "useCommonAlertSchema": true
+            }
+          ],
+          "smsReceivers": [
+            {
+              "name": "Administrators_sms",
+              "countryCode": "1",
+              "phoneNumber": "6094681972"
+            }
+          ]
+        }
+      ]
+    },
+    "budgets": {
+      "value": [
+        {
+          "amount": 1000,
+          "category": "Cost",
+          "resetPeriod": "Monthly",
+          "thresholds": [
+            "50",
+            "75",
+            "90",
+            "100",
+            "110"
+          ],
+          "contactEmails": {
+            "value": [
+              "foo@contoso.com"
+            ]
+          }
+        }
+      ]
     },
     "projowner": {
       "value": "ccs"

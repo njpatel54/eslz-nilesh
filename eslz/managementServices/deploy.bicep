@@ -27,9 +27,6 @@ param mgmtsubid string
 @description('Required. Subscription ID of Shared Services Subscription.')
 param ssvcsubid string
 
-@description('Required. Subscription ID of Connectivity Subscription.')
-param connsubid string
-
 @description('Required. Default Management Group where newly created Subscription will be added to.')
 param onboardmg string
 
@@ -215,6 +212,12 @@ param dataConnectorsTenant array = []
   'AzureSecurityCenter'
 ])
 param dataConnectorsSubs array = []
+
+@description('Required. Array of Action Groups')
+param actionGroups array
+
+@description('Required. Array containing Budgets.')
+param budgets array = []
 
 // 1. Create Resoruce Group (siem - Management Subscription)
 module siemRg '../modules/resources/resourceGroups/deploy.bicep'= {
@@ -940,6 +943,53 @@ module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
+// 18. Create Action Group(s)
+module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for subscription in subscriptions: {
+  name: 'actionGroup-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
+  scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
+  dependsOn: [
+    mgmtRg
+  ]
+  params: {
+    location: location
+    tags: ccsCombinedTags
+    actionGroups: actionGroups
+  }
+}]
+
+// 19. Create Alerts
+module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription in subscriptions: {
+  name: 'alerts-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
+  scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
+  dependsOn: [
+    mgmtRg
+    actionGroup
+  ]
+  params: {
+    subscriptionId: subscription.subscriptionId
+    wlRgName: mgmtRgName
+    tags: ccsCombinedTags    
+    suffix: subscription.suffix
+    actionGroups: actionGroups
+  }
+}]
+
+/*
+// 20. Create Budgets
+module budget '../landingZones/wrapperModule/budgets.bicep' = [ for subscription in subscriptions: {
+  name: 'budgets-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
+  scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
+  dependsOn: [
+    actionGroup
+  ]
+  params: {
+    location: location
+    subscriptionId: subscription.subscriptionId
+    budgets: budgets
+  }
+}]
+*/
+
 @description('Output - Name of Event Hub')
 output ehnsAuthorizationId string = resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')
 
@@ -1026,6 +1076,9 @@ output diagnosticEventHubName string = diagnosticEventHubName
 
 
 /*
+@description('Required. Subscription ID of Connectivity Subscription.')
+param connsubid string
+
 @description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
 @maxLength(24)
 param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
