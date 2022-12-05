@@ -555,10 +555,10 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
     name: hubVnetName
     location: location
     tags: ccsCombinedTags
+    subscriptionId: hubVnetSubscriptionId
     addressPrefixes: hubVnetAddressPrefixes
     subnets: hubVnetSubnets
     virtualNetworkPeerings: hubVnetVirtualNetworkPeerings
-    subscriptionId: hubVnetSubscriptionId
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
