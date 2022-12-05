@@ -45,6 +45,8 @@ jobs:
                          hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
+                         idensubid=${{ secrets.AZURE_IDENSUBSCRIPTIONID }} \
+                         sandsubid=${{ secrets.AZURE_SANDSUBSCRIPTIONID }} \
                          diagnosticWorkspaceId=${{ secrets.AZURE_LAWORKSPACEID }} \
                          diagnosticStorageAccountId=${{ secrets.AZURE_DIAGSTORAGEACCTID }} \
                          diagnosticEventHubName=${{ secrets.AZURE_DIAGEHNAME }} \
