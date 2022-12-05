@@ -181,18 +181,15 @@
             "value": [
                 {
                     "name": "GatewaySubnet",
-                    "addressPrefix": "10.30.0.0/26",
-                    "networkSecurityGroupId": ""
+                    "addressPrefix": "10.30.0.0/26"
                 },
                 {
                     "name": "AzureFirewallSubnet",
-                    "addressPrefix": "10.30.0.64/26",
-                    "networkSecurityGroupId": ""
+                    "addressPrefix": "10.30.0.64/26"
                 },
                 {
                     "name": "AzureFirewallManagementSubnet",
-                    "addressPrefix": "10.30.0.128/26",
-                    "networkSecurityGroupId": ""
+                    "addressPrefix": "10.30.0.128/26"
                 },
                 {
                     "name": "AzureBastionSubnet",
@@ -212,8 +209,7 @@
                     ],
                     "privateEndpointNetworkPolicies": "Disabled",
                     "privateLinkServiceNetworkPolicies": "Enabled",
-                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                    "networkSecurityGroupId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-abh"
+                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001"
                 },
                 {
                     "name": "snet-ccs-test-usva-data",
@@ -228,8 +224,7 @@
                     ],
                     "privateEndpointNetworkPolicies": "Disabled",
                     "privateLinkServiceNetworkPolicies": "Enabled",
-                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                    "networkSecurityGroupId": ""
+                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001"
                 },
                 {
                     "name": "snet-ccs-test-usva-mgmt",
@@ -244,8 +239,7 @@
                     ],
                     "privateEndpointNetworkPolicies": "Disabled",
                     "privateLinkServiceNetworkPolicies": "Enabled",
-                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                    "networkSecurityGroupId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-abh"
+                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001"
                 },
                 {
                     "name": "snet-ccs-test-usva-web",
@@ -260,8 +254,7 @@
                     ],
                     "privateEndpointNetworkPolicies": "Disabled",
                     "privateLinkServiceNetworkPolicies": "Enabled",
-                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                    "networkSecurityGroupId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-abh"
+                    "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001"
                 }
             ]
         },
