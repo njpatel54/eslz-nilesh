@@ -26,16 +26,16 @@
     "suffix": {
       "value": "lz50"
     },
-    "lzSqlDeploy": {
-      "value": true
-    },
-    "lzVmsDeploy": {
-      "value": true
-    },
     "lzSaDeploy": {
       "value": true
     },
     "lzAkvDeploy": {
+      "value": true
+    },
+    "lzSqlDeploy": {
+      "value": true
+    },
+    "lzVmsDeploy": {
       "value": true
     },
     "subRoleAssignments": {
@@ -109,6 +109,23 @@
     "diagSettingName": {
       "value": "logging-diagSetting-local"
     },
+    "routeTables": {
+      "value": [
+        {
+          "name": "rt-lz50-usva-0001",
+          "routes": [
+            {
+              "name": "default",
+              "properties": {
+                "addressPrefix": "0.0.0.0/0",
+                "nextHopIpAddress": "10.30.0.68",
+                "nextHopType": "VirtualAppliance"
+              }
+            }
+          ]
+        }
+      ]
+    },
     "networkSecurityGroups": {
       "value": [
         {
@@ -133,18 +150,6 @@
             }
           ],
           "roleAssignments": []
-        }
-      ]
-    },
-    "routes": {
-      "value": [
-        {
-          "name": "default",
-          "properties": {
-            "addressPrefix": "0.0.0.0/0",
-            "nextHopIpAddress": "10.30.0.68",
-            "nextHopType": "VirtualAppliance"
-          }
         }
       ]
     },
@@ -180,7 +185,9 @@
                 }
               ],
               "privateEndpointNetworkPolicies": "Disabled",
-              "privateLinkServiceNetworkPolicies": "Enabled"
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "routeTableName": "rt-lz50-usva-0001",
+              "networkSecurityGroupName": "nsg-lz50-usva-vms"
             },
             {
               "name": "snet-lz50-usva-data",
@@ -203,7 +210,9 @@
                 }
               ],
               "privateEndpointNetworkPolicies": "Disabled",
-              "privateLinkServiceNetworkPolicies": "Enabled"
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "routeTableName": "rt-lz50-usva-0001",
+              "networkSecurityGroupName": "nsg-lz50-usva-vms"
             },
             {
               "name": "snet-lz50-usva-mgmt",
@@ -226,7 +235,9 @@
                 }
               ],
               "privateEndpointNetworkPolicies": "Disabled",
-              "privateLinkServiceNetworkPolicies": "Enabled"
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "routeTableName": "rt-lz50-usva-0001",
+              "networkSecurityGroupName": "nsg-lz50-usva-vms"
             },
             {
               "name": "snet-lz50-usva-web",
@@ -249,7 +260,9 @@
                 }
               ],
               "privateEndpointNetworkPolicies": "Disabled",
-              "privateLinkServiceNetworkPolicies": "Enabled"
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "routeTableName": "rt-lz50-usva-0001",
+              "networkSecurityGroupName": "nsg-lz50-usva-vms"
             }
           ],
           "virtualNetworkPeerings": [

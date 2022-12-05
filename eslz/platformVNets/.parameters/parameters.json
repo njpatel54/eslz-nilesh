@@ -2,6 +2,23 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "routeTables": {
+            "value": [
+                {
+                    "name": "rt-ccs-test-usva-0001",
+                    "routes": [
+                        {
+                            "name": "default",
+                            "properties": {
+                                "addressPrefix": "0.0.0.0/0",
+                                "nextHopIpAddress": "10.30.0.68",
+                                "nextHopType": "VirtualAppliance"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
         "hubNetworkSecurityGroups": {
             "value": [
                 {
@@ -125,20 +142,30 @@
                 }
             ]
         },
-        "routeTables": {
+        "spokeNetworkSecurityGroups": {
             "value": [
                 {
-                    "name": "rt-ccs-test-usva-0001",
-                    "routes": [
+                    "name": "nsg-ccs-test-usva-vms",
+                    "securityRules": [
                         {
-                            "name": "default",
+                            "name": "AllowInboundBastionHostTraffic",
+                            "description": "Controls inboud traffic from Bastion Host",
                             "properties": {
-                                "addressPrefix": "0.0.0.0/0",
-                                "nextHopIpAddress": "10.30.0.68",
-                                "nextHopType": "VirtualAppliance"
+                                "access": "Allow",
+                                "direction": "Inbound",
+                                "priority": 120,
+                                "sourceAddressPrefix": "10.30.0.192/26",
+                                "destinationAddressPrefix": "*",
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "destinationPortRanges": [
+                                    "3389",
+                                    "22"
+                                ]
                             }
                         }
-                    ]
+                    ],
+                    "roleAssignments": []
                 }
             ]
         },
@@ -235,33 +262,6 @@
                     "privateLinkServiceNetworkPolicies": "Enabled",
                     "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
                     "networkSecurityGroupId": ""
-                }
-            ]
-        },
-        "spokeNetworkSecurityGroups": {
-            "value": [
-                {
-                    "name": "nsg-ccs-test-usva-vms",
-                    "securityRules": [
-                        {
-                            "name": "AllowInboundBastionHostTraffic",
-                            "description": "Controls inboud traffic from Bastion Host",
-                            "properties": {
-                                "access": "Allow",
-                                "direction": "Inbound",
-                                "priority": 120,
-                                "sourceAddressPrefix": "10.30.0.192/26",
-                                "destinationAddressPrefix": "*",
-                                "protocol": "Tcp",
-                                "sourcePortRange": "*",
-                                "destinationPortRanges": [
-                                    "3389",
-                                    "22"
-                                ]
-                            }
-                        }
-                    ],
-                    "roleAssignments": []
                 }
             ]
         },

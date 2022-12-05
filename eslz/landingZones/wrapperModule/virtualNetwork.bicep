@@ -9,11 +9,8 @@ param location string
 @description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
 param combinedTags object
 
-@description('Required. Default Route Table name.')
-param defaultRouteTableName string
-
-@description('Optional. An Array of Routes to be established within the hub route table.')
-param routes array
+@description('Optional. An Array of Route Tables.')
+param routeTables array
 
 @description('Required. The Virtual Network (vNet) Name.')
 param vnetName string
@@ -33,17 +30,6 @@ param subnets array = []
 @description('Optional. Virtual Network Peerings configurations')
 param virtualNetworkPeerings array = []
 
-/*
-@description('Required. Subscription ID of Connectivity Subscription')
-param connsubid string
-
-@description('Required. Resource Group name for Private DNS Zones.')
-param priDNSZonesRgName string
-
-@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
-param privateDnsZones array
-*/
-
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string = ''
 
@@ -53,32 +39,38 @@ param diagnosticWorkspaceId string = ''
 @description('Required. Resource Group name.')
 param vnetRgName string
 
-// Start - Variables created to be used to attach NSG to Management Subnet
-var params = json(loadTextContent('../.parameters/parameters.json'))
 
-@description('Required. Iterate over each "networkSecurityGroups" and build variable to store NSG for Managemet Subnet.')
-var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
-// End - Variables created to be used to attach NSG to Management Subnet
-
-// 1. Create Route Table (Connectivity Subscription)
-module lzRouteTable '../../modules/network//routeTables/deploy.bicep' = {
-  name: 'lzRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
+// 1. Create Route Table(s)
+module lzRouteTables '../../modules/network//routeTables/deploy.bicep' = [for (routeTable, index) in routeTables: {
+  name: 'lzRouteTables-${take(uniqueString(deployment().name, location), 4)}-${routeTable.name}'
   scope: resourceGroup(subscriptionId, vnetRgName)
   params: {
-    name: defaultRouteTableName
+    name: routeTable.name
     location: location
     tags: combinedTags
-    routes: routes
+    routes: routeTable.routes
   }
-}
+}]
 
-// 2. Create Virtual Network
+// 2. Create Network Security Group(s)
+module lzNsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
+  name: 'lzNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(subscriptionId, vnetRgName)
+  params: {
+    name: nsg.name
+    location: location
+    tags: combinedTags
+    securityRules: nsg.securityRules
+    roleAssignments: nsg.roleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+  }
+}]
+
+// 3. Create Virtual Network
 module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
   scope: resourceGroup(subscriptionId, vnetRgName)
-  dependsOn: [
-    lzRouteTable
-  ]
   params: {
     name: vnetName
     location: location
@@ -92,24 +84,6 @@ module lzVnet '../../modules/network/virtualNetworks/deploy.bicep' = {
     diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }
-
-// 3. Create Network Security Group(s)
-module lzNsgs '../../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in networkSecurityGroups: {
-  name: 'lzNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
-  scope: resourceGroup(subscriptionId, vnetRgName)
-  dependsOn: [
-    lzVnet
-  ]
-  params: {
-    name: nsg.name
-    location: location
-    tags: combinedTags
-    securityRules: nsg.securityRules
-    roleAssignments: nsg.roleAssignments
-    diagnosticSettingsName: diagSettingName
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-  }
-}]
 
 // 4. Attach NSG & Route Table to Subnets
 @batchSize(1)
@@ -127,10 +101,43 @@ module lzAttachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/sub
     serviceEndpoints: subnet.serviceEndpoints
     privateEndpointNetworkPolicies: subnet.privateEndpointNetworkPolicies
     privateLinkServiceNetworkPolicies: subnet.privateLinkServiceNetworkPolicies
-    networkSecurityGroupId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)
-    routeTableId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/routeTables', defaultRouteTableName)
+    networkSecurityGroupId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', subnet.networkSecurityGroupName)
+    routeTableId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/routeTables', subnet.routeTableName)
   }
 }]
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+@description('Required. Subscription ID of Connectivity Subscription')
+param connsubid string
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string
+
+@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
+param privateDnsZones array
+
+
+// Start - Variables created to be used to attach NSG to Management Subnet
+var params = json(loadTextContent('../.parameters/parameters.json'))
+
+@description('Required. Iterate over each "networkSecurityGroups" and build variable to store NSG for Managemet Subnet.')
+var bastionNsg = params.parameters.networkSecurityGroups.value[0].name
+// End - Variables created to be used to attach NSG to Management Subnet
+
+*/
+
 
 
 /*

@@ -93,34 +93,14 @@ param rgRoleAssignments array = []
 // End - 'rgs' Module Parameters
 
 // Start - 'virtualNetwork' Module Parameters
-@description('Required. Default Route Table name.')
-param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
-
-@description('Optional. An Array of Routes to be established within the hub route table.')
-param routes array = []
-
-@description('Optional. Hub Virtual Network configurations.')
-param vNets array = []
-
-/*
-@description('Optional. DNS Servers associated to the Virtual Network.')
-param dnsServers array = []
-
-@description('Required. The Virtual Network (vNet) Name.')
-param vnetName string
-
-@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param vnetAddressPrefixes array
-
-@description('Optional. An Array of subnets to deploy to the Virtual Network.')
-param subnets array = []
-
-@description('Optional. Virtual Network Peerings configurations')
-param virtualNetworkPeerings array = []
-*/
+@description('Optional. An Array of Route Tables.')
+param routeTables array = []
 
 @description('Required. Hub - Network Security Groups Array.')
 param networkSecurityGroups array = []
+
+@description('Optional. Hub Virtual Network configurations.')
+param vNets array = []
 
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
@@ -408,20 +388,16 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, i) in vNets: {
     vnetName: vNet.name
     location: location
     combinedTags: combinedTags
-    defaultRouteTableName: defaultRouteTableName
-    routes: routes
     vnetRgName: vnetRgName
     subscriptionId: subscriptionId
     vnetAddressPrefixes: vNet.addressPrefixes
     dnsServers: vNet.dnsServers
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
+    routeTables: routeTables
     networkSecurityGroups: networkSecurityGroups
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
-    //connsubid: connsubid
-    //priDNSZonesRgName: priDNSZonesRgName
-    //privateDnsZones: privateDnsZones
   }
 }]
 
@@ -621,9 +597,9 @@ module lzDefender 'wrapperModule/defender.bicep' = {
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
   name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
-  dependsOn: [
-    lzRgs
-  ]
+  //dependsOn: [
+  //  sub
+  //]
   params: {
     subscriptionId: subscriptionId
     workspaceName: sentinelLawName
@@ -709,7 +685,27 @@ module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy
 
 
 
+
+
 /*
+@description('Required. Default Route Table name.')
+param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
+
+@description('Optional. DNS Servers associated to the Virtual Network.')
+param dnsServers array = []
+
+@description('Required. The Virtual Network (vNet) Name.')
+param vnetName string
+
+@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
+param vnetAddressPrefixes array
+
+@description('Optional. An Array of subnets to deploy to the Virtual Network.')
+param subnets array = []
+
+@description('Optional. Virtual Network Peerings configurations')
+param virtualNetworkPeerings array = []
+
 @description('Required. Parameter for policyAssignments')
 param policyAssignments array
 

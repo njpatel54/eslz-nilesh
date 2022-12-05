@@ -112,6 +112,17 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGro
   }
 }]
 
+@description('Output - Storage Account "name"')
+output saName string = sa.outputs.name
+
+@description('Output - Storage Account "resoruceId"')
+output saResoruceId string = sa.outputs.resourceId
+
+
+
+
+
+
 /*
 // 3. Create Azure File Share
 module fileShare '../../modules/storageAccounts/fileServices/shares/deploy.bicep' = {
@@ -123,9 +134,3 @@ module fileShare '../../modules/storageAccounts/fileServices/shares/deploy.bicep
   }
 }
 */
-
-@description('Output - Storage Account "name"')
-output saName string = sa.outputs.name
-
-@description('Output - Storage Account "resoruceId"')
-output saResoruceId string = sa.outputs.resourceId
