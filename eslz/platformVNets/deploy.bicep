@@ -522,7 +522,7 @@ module idenNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (
   }
 }]
 
-// 12. Create Network Security Group(s) (Identity Subscription)
+// 12. Create Network Security Group(s) (Sandbox Subscription)
 module sandNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in spokeNetworkSecurityGroups: {
   name: 'sandNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(sandsubid, vnetRgName)
