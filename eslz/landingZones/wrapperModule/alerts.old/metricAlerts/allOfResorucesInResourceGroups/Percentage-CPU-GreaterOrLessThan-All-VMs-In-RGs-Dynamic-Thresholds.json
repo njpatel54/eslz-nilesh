@@ -1,0 +1,26 @@
+{
+    "name": "Percentage CPU GreaterOrLessThan Dynamic Thresholds - All VMs in Resource Groups",
+    "windowSize": "PT15M",
+    "targetResourceType": "microsoft.compute/virtualmachines",
+    "targetResourceRegion": "usgovvirginia",
+    "alertCriteriaType": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
+    "criterias": {
+      "value": [
+        {
+          "criterionType": "DynamicThresholdCriterion",
+          "dimensions": [],
+          "metricName": "Percentage CPU",
+          "metricNamespace": "microsoft.compute/virtualmachines",
+          "name": "DynamicCPUThreshold",
+          "operator": "GreaterOrLessThan",
+          "timeAggregation": "Average",
+          "alertSensitivity": "Medium",
+          "failingPeriods": {
+            "minFailingPeriodsToAlert": "3",
+            "numberOfEvaluationPeriods": "4"
+          },
+          "ignoreDataBefore": ""
+        }
+      ]
+    }
+  }

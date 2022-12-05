@@ -1,0 +1,23 @@
+{
+    "alertName": "Resoruce Diagnostics Settings Deleted",
+    "alertDescription": "This activity log alert fires when Resoruce Diagnostics Settings is deleted.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Insights/DiagnosticSettings/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
+            }
+        ]
+    }
+}

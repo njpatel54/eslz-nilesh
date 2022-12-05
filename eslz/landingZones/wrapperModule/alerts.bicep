@@ -4,9 +4,6 @@ param subscriptionId string
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string
 
-@description('Location for the deployments and the resources')
-param location string
-
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
@@ -16,156 +13,153 @@ param suffix string
 @description('Required - Action Groups Array')
 param actionGroups array
 
-@description('Required. Array containing Budgets.')
-param budgets array
-
 @description('Variable containing all Activity Log Alert Rules.')
 var activityLogAlertRulesVar = [
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-Cost-Recommendations.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Azure-Advisor-Cost-Recommendations.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-HighAvailability-Recommendations.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Azure-Advisor-HighAvailability-Recommendations.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Azure-Advisor-Performance-Recommendations.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Azure-Advisor-Performance-Recommendations.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Policy-Definition-Created.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Custom-Policy-Definition-Created.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Policy-Definition-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Custom-Policy-Definition-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Policy-Set-Definition-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Custom-Policy-Set-Definition-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Policy-Set-Definition-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Custom-Policy-Set-Definition-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Role-Definition-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Custom-Role-Definition-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Custom-Role-Definition-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Custom-Role-Definition-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Disk-Accesses-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Disk-Accesses-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Disk-Accesses-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Disk-Accesses-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Certificate-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Certificate-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Certificate-Purged.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Certificate-Purged.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Key-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Key-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Key-Purged.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Key-Purged.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Secret-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Secret-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Key-Vault-Secret-Purged.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Key-Vault-Secret-Purged.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Network-Security-Group-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Network-Security-Group-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Network-Security-Group-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Network-Security-Group-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Network-Security-Group-Security-Rule-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Network-Security-Group-Security-Rule-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Network-Security-Group-Security-Rule-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Network-Security-Group-Security-Rule-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Policy-Assignment-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Policy-Assignment-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Policy-Assignment-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Policy-Assignment-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Policy-Assignment-Exemption-Created.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Policy-Assignment-Exemption-Created.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Policy-Exemption-Created.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Policy-Exemption-Created.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Policy-Exemption-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Policy-Exemption-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Private-DNS-Zone-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Private-DNS-Zone-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Resource-Diagnostics-Settings-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Resource-Diagnostics-Settings-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Resource-Diagnostics-Settings-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Resource-Diagnostics-Settings-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Role-Assignment-Created.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Role-Assignment-Created.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Role-Assignment-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Role-Assignment-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Virtual-Network-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Virtual-Network-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Virtual-Network-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Virtual-Network-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Virtual-Network-Peering-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Virtual-Network-Peering-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Virtual-Network-Peering-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Virtual-Network-Peering-Deleted.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Virtual-Network-Subnet-Created-Updated.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Virtual-Network-Subnet-Created-Updated.json'))
   }
   {
-    rule: json(loadTextContent('alerts/activityLogAlerts/Virtual-Network-Subnet-Deleted.json'))
+    rule: json(loadTextContent('../../alerts/activityLogAlerts/Virtual-Network-Subnet-Deleted.json'))
   }  
 ]
 
 @description('Variable containing all Service Health Alert Rules.')
 var serviceHealthAlertRulesVar = [
   {
-    rule: json(loadTextContent('alerts/serviceHealthAlerts/Health-Advisories-Selected-Regions.json'))
+    rule: json(loadTextContent('../../alerts/serviceHealthAlerts/Health-Advisories-Selected-Regions.json'))
   }
   {
-    rule: json(loadTextContent('alerts/serviceHealthAlerts/Planned-Maintenance-Selected-Regions.json'))
+    rule: json(loadTextContent('../../alerts/serviceHealthAlerts/Planned-Maintenance-Selected-Regions.json'))
   }
   {
-    rule: json(loadTextContent('alerts/serviceHealthAlerts/Security-Advisory-Selected-Regions.json'))
+    rule: json(loadTextContent('../../alerts/serviceHealthAlerts/Security-Advisory-Selected-Regions.json'))
   }
   {
-    rule: json(loadTextContent('alerts/serviceHealthAlerts/Service-Issue-Selected-Regions.json'))
+    rule: json(loadTextContent('../../alerts/serviceHealthAlerts/Service-Issue-Selected-Regions.json'))
   }  
 ]
 
 @description('Variable containing Metric Alert Rules for All Resoruces in Subscription.')
 var metricAlertRules = [
   {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterOrLessThan-Dynamic-Thresholds.json'))
+    rule: json(loadTextContent('../../alerts/metricAlerts/Percentage-CPU-GreaterOrLessThan-Dynamic-Thresholds.json'))
   }
   {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-GreaterThan-80-Percent-Static-Thresholds.json'))
+    rule: json(loadTextContent('../../alerts/metricAlerts/Percentage-CPU-GreaterThan-80-Percent-Static-Thresholds.json'))
   }
   {
-    rule: json(loadTextContent('alerts/metricAlerts/Percentage-CPU-LessThan-30-Percent-Static-Thresholds.json'))
+    rule: json(loadTextContent('../../alerts/metricAlerts/Percentage-CPU-LessThan-30-Percent-Static-Thresholds.json'))
   }
 ]
 
@@ -217,28 +211,14 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
   }
 }]
 
+
+
+
+
 /*
-// 4. Create Budget
-module budget '../../modules/consumption/budgets/deploy.bicep' = [for (budget, i) in budgets: {
-  name: 'budget-${take(uniqueString(deployment().name, location), 4)}-${i}'
-  scope: subscription(subscriptionId)
-  params: {
-    name: '${budget.resetPeriod}-${budget.category}-Budget'
-    amount: budget.amount
-    category: budget.category
-    resetPeriod: budget.resetPeriod
-    thresholds: budget.thresholds
-    actionGroups: actionGroups
-  }
-}]
+@description('Location for the deployments and the resources')
+param location string
 */
-
-
-
-
-
-
-
 
 
 

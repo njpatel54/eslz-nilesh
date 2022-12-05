@@ -1,0 +1,23 @@
+{
+    "alertName": "Network Security Group Security Rule Deleted",
+    "alertDescription": "This activity log alert fires when Network Security Group Security Rule is deleted.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Network/networkSecurityGroups/securityRules/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
+            }
+        ]
+    }
+}

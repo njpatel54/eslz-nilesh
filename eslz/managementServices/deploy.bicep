@@ -199,20 +199,22 @@ param ssvcVaultName  string = 'rsv-${projowner}-${opscope}-${region}-${ssvcSuffi
 param defenderSecurityContactProperties object
 
 @description('The kind of data connectors that can be deployed via ARM templates at Tenent level: ["AmazonWebServicesCloudTrail",  "AzureAdvancedThreatProtection", "MicrosoftCloudAppSecurity", "MicrosoftDefenderAdvancedThreatProtection", "Office365", "ThreatIntelligence"]')
-param dataConnectorsTenant array = [
-  // 'AmazonWebServicesCloudTrail'
-  // 'AzureActiveDirectory'
-  // 'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
-  // 'MicrosoftCloudAppSecurity'
-  // 'MicrosoftDefenderAdvancedThreatProtection'                       
-  // 'Office365'
-  // 'ThreatIntelligence'
-]
+@allowed([
+  'AmazonWebServicesCloudTrail'
+  'AzureActiveDirectory'
+  'AzureAdvancedThreatProtection'                                   // Requires Azure Active Directory Premium P2 License
+  'MicrosoftCloudAppSecurity'
+  'MicrosoftDefenderAdvancedThreatProtection'                       
+  'Office365'
+  'ThreatIntelligence'
+])
+param dataConnectorsTenant array = []
 
-@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureActivityLog", "AzureSecurityCenter"]')
-param dataConnectorsSubs array = [
-  // 'AzureSecurityCenter'
-]
+@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureSecurityCenter"]')
+@allowed([
+  'AzureSecurityCenter'
+])
+param dataConnectorsSubs array = []
 
 // 1. Create Resoruce Group (siem - Management Subscription)
 module siemRg '../modules/resources/resourceGroups/deploy.bicep'= {

@@ -1,0 +1,23 @@
+{
+    "alertName": "Network Security Group Deleted",
+    "alertDescription": "This activity log alert fires when Network Security Group is deleted.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Network/networkSecurityGroups/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
+            }
+        ]
+    }
+}

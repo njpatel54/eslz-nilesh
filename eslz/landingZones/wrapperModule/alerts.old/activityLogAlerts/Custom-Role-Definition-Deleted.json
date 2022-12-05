@@ -1,0 +1,23 @@
+{
+    "alertName": "Custom Role Definition Deleted",
+    "alertDescription": "This activity log alert fires when Custom Role Definition is deleted.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Authorization/roleDefinitions/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
+            }
+        ]
+    }
+}

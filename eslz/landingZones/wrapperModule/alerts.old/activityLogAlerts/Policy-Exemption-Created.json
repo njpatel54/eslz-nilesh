@@ -1,0 +1,25 @@
+{
+    "alertName": "Azure Policy Exemption Created",
+    "alertDescription": "This activity log alert fires when Azure Policy Exemption is created.",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Authorization/policyExemptions/write"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
+            }
+        ]
+    }
+}
+
+

@@ -90,22 +90,6 @@
         }
       ]
     },
-    "budgets": {
-      "value": [
-        {
-          "amount": 1000,
-          "category": "Cost",
-          "resetPeriod": "Monthly",
-          "thresholds": [
-            "50",
-            "75",
-            "90",
-            "100",
-            "110"
-          ]
-        }
-      ]
-    },
     "diagSettingName": {
       "value": "logging-diagSetting-local"
     },
@@ -517,7 +501,7 @@
           "emailReceivers": [
             {
               "name": "Administrators_email",
-              "emailAddress": "nileshpa@microsoft.com",
+              "emailAddress": "foo@contoso.com",
               "useCommonAlertSchema": true
             }
           ],
@@ -528,6 +512,27 @@
               "phoneNumber": "6094681972"
             }
           ]
+        }
+      ]
+    },
+    "budgets": {
+      "value": [
+        {
+          "amount": 1000,
+          "category": "Cost",
+          "resetPeriod": "Monthly",
+          "thresholds": [
+            "50",
+            "75",
+            "90",
+            "100",
+            "110"
+          ],
+          "contactEmails": {
+            "value": [
+              "foo@contoso.com"
+            ]
+          }
         }
       ]
     },

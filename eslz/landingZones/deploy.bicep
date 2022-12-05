@@ -286,10 +286,11 @@ param diskAccessName string = 'da-${projowner}-${region}-01'
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
-@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureActivityLog", "AzureSecurityCenter"]')
-param dataConnectorsSubs array = [
-  // 'AzureSecurityCenter'
-]
+@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureSecurityCenter"]')
+@allowed([
+  'AzureSecurityCenter'
+])
+param dataConnectorsSubs array = []
 
 @description('Required. Array of Action Groups')
 param actionGroups array
@@ -633,15 +634,29 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   params: {
     subscriptionId: subscriptionId
     wlRgName: wlRgName
-    location: location
     tags: combinedTags    
     suffix: suffix
     actionGroups: actionGroups
-    budgets: budgets
   }
 }
 
-// 20. Update Firewall Policy Rule Collection Groups
+/*
+// 20. Create Budgets
+module lzBudgets 'wrapperModule/budgets.bicep' = {
+  name: 'mod-lzBudgets-${take(uniqueString(deployment().name, location), 4)}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    lzActionGroup
+  ]
+  params: {
+    location: location
+    subscriptionId: subscriptionId
+    budgets: budgets
+  }
+}
+*/
+
+// 21. Update Firewall Policy Rule Collection Groups
 module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'mod-lzAfprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(connsubid, connVnetRgName)

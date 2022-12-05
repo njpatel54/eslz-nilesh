@@ -1,0 +1,23 @@
+{
+    "alertName": "Disk Accesses Resource Deleted",
+    "alertDescription": "This activity log alert fires when Disk Accesses Resource is deleted",
+    "condition": {
+        "value": [
+            {
+                "field": "category",
+                "equals": "Administrative"
+            },
+            {
+                "field": "operationName",
+                "equals": "Microsoft.Compute/diskAccesses/delete"
+            },
+            {
+                "field": "status",
+                "containsAny": [
+                    "failed",
+                    "succeeded"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "name": "Percentage CPU Less Than 30 Percent",
+    "windowSize": "PT15M",
+    "targetResourceType": "microsoft.compute/virtualmachines",
+    "targetResourceRegion": "usgovvirginia",
+    "alertCriteriaType": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
+    "criterias": {
+        "value": [
+            {
+                "criterionType": "StaticThresholdCriterion",
+                "metricName": "Percentage CPU",
+                "metricNamespace": "microsoft.compute/virtualmachines",
+                "name": "LowCPU",
+                "operator": "LessThan",
+                "threshold": "30",
+                "timeAggregation": "Average"
+            }
+        ]
+    }
+}
