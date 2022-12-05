@@ -213,7 +213,7 @@
                     "privateEndpointNetworkPolicies": "Disabled",
                     "privateLinkServiceNetworkPolicies": "Enabled",
                     "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                    "networkSecurityGroupId": ""
+                    "networkSecurityGroupId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-abh"
                 },
                 {
                     "name": "snet-ccs-test-usva-data",
@@ -245,7 +245,7 @@
                     "privateEndpointNetworkPolicies": "Disabled",
                     "privateLinkServiceNetworkPolicies": "Enabled",
                     "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                    "networkSecurityGroupId": ""
+                    "networkSecurityGroupId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-abh"
                 },
                 {
                     "name": "snet-ccs-test-usva-web",
@@ -261,7 +261,7 @@
                     "privateEndpointNetworkPolicies": "Disabled",
                     "privateLinkServiceNetworkPolicies": "Enabled",
                     "routeTableId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                    "networkSecurityGroupId": ""
+                    "networkSecurityGroupId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-abh"
                 }
             ]
         },
