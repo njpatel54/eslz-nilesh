@@ -493,31 +493,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   }
 }
 
-// 12. Create Virtual Machine(s)
-module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
-  name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}'
-  dependsOn: [
-    lzVnet
-  ]
-  params: {
-    location: location
-    combinedTags: combinedTags
-    subscriptionId: subscriptionId
-    wlRgName: wlRgName
-    mgmtsubid: mgmtsubid
-    siemRgName: siemRgName
-    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', lzVnet[0].outputs.vNetName, lzVMsSubnetName)    
-    virtualMachineNamePrefix: virtualMachineNamePrefix
-    virtualMachines: virtualMachines
-    platformProjOwner: platformProjOwner
-    platformOpScope: platformOpScope
-    region: region
-    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
-    monitoringWorkspaceId: logaSentinel.id
-  }
-}
-
-// 13. Create Recovery Services Vault
+// 12. Create Recovery Services Vault
 module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   name: 'mod-lzRsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
@@ -538,6 +514,34 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
     priDNSZonesRgName: priDNSZonesRgName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+  }
+}
+
+// 13. Create Virtual Machine(s)
+module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
+  name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}'
+  dependsOn: [
+    lzVnet
+    lzRsv
+  ]
+  params: {
+    location: location
+    combinedTags: combinedTags
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName
+    mgmtsubid: mgmtsubid
+    siemRgName: siemRgName
+    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', lzVnet[0].outputs.vNetName, lzVMsSubnetName)    
+    virtualMachineNamePrefix: virtualMachineNamePrefix
+    virtualMachines: virtualMachines
+    vaultName: vaultName
+    vaultRgName: mgmtRgName
+    backupPolicyName: '${suffix}vmBackupPolicy'
+    platformProjOwner: platformProjOwner
+    platformOpScope: platformOpScope
+    region: region
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    monitoringWorkspaceId: logaSentinel.id
   }
 }
 

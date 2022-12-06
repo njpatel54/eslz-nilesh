@@ -15,6 +15,15 @@ param wlRgName string
 @description('Required. Subnet resoruceId for Network Interface Card.')
 param subnetResourceId string
 
+@description('Resource group where the Recovery Services Vault is located. This can be different than resource group of the Virtual Machines.')
+param vaultRgName string
+
+@description('Name of the Recovery Services Vault')
+param vaultName string
+
+@description('Name of the Backup policy to be used to backup VMs. Backup Policy defines the schedule of the backup and how long to retain backup copies. By default every vault comes with a \'DefaultPolicy\' which canbe used here.')
+param backupPolicyName string
+
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
@@ -216,6 +225,24 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
     } : {
       enabled: false
     }
+  }
+}]
+
+// 3. Configure Virtual Machine Backup
+module vmBackup '../../modules/recoveryServices/vaults/vmBackup/deploy.bicep' = [for (virtualMachine, i) in virtualMachines: {
+  name: 'vmBackup-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    lzVm
+  ]
+  params: {
+    location: location
+    subscriptionId: subscriptionId
+    vmRgName: wlRgName
+    vmName: '${virtualMachineNamePrefix}${i + 1}'    
+    vaultRgName: vaultRgName
+    vaultName: vaultName
+    backupPolicyName: backupPolicyName
   }
 }]
 

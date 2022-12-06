@@ -93,29 +93,14 @@ param rgRoleAssignments array = []
 // End - 'rgs' Module Parameters
 
 // Start - 'virtualNetwork' Module Parameters
-@description('Required. Default Route Table name.')
-param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
-
-@description('Optional. An Array of Routes to be established within the hub route table.')
-param routes array = []
-
-@description('Optional. DNS Servers associated to the Virtual Network.')
-param dnsServers array = []
-
-@description('Required. The Virtual Network (vNet) Name.')
-param vnetName string
-
-@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param vnetAddressPrefixes array
-
-@description('Optional. An Array of subnets to deploy to the Virtual Network.')
-param subnets array = []
-
-@description('Optional. Virtual Network Peerings configurations')
-param virtualNetworkPeerings array = []
+@description('Optional. An Array of Route Tables.')
+param routeTables array = []
 
 @description('Required. Hub - Network Security Groups Array.')
 param networkSecurityGroups array = []
+
+@description('Optional. Hub Virtual Network configurations.')
+param vNets array = []
 
 @description('Required. Subscription ID of Connectivity Subscription')
 param connsubid string
@@ -145,6 +130,18 @@ param stgAcctName string = toLower(take('st${projowner}${billingAccountShort}${r
 
 @description('Required. Storage Account SKU.')
 param storageaccount_sku string
+
+@description('Optional. Blob service and containers to deploy')
+param blobServices object
+
+@description('Optional. File service and shares to deploy')
+param fileServices object
+
+@description('Optional. Queue service and queues to create.')
+param queueServices object
+
+@description('Optional. Table service and tables to create.')
+param tableServices object
 
 @description('Required. Storage Account Subresource(s) (aka "groupIds").')
 @allowed([
@@ -178,7 +175,7 @@ param lzAkvName string = toLower(take('kv-${projowner}-${region}', 24))
 param publicNetworkAccess string = 'Disabled'
 
 @description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
-param networkAcls object
+param keyVaultNetworkAcls object
 // End - 'akv' Module Parameters
 
 @description('Required. BillingAccount used for subscription billing')
@@ -264,8 +261,11 @@ param sentinelAutomationAcctName string = 'aa-${platformProjOwner}-${platformOpS
 @description('Required. Load content from json file to iterate over any array in the parameters file')
 var params = json(loadTextContent('.parameters/parameters.json'))
 
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
+var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+
 @description('Required. Iterate over each "subnets" and build variable to store "lzVMsSubnetName".')
-var lzVMsSubnetName = params.parameters.subnets.value[2].name
+var lzVMsSubnetName = params.parameters.vNets.value[0].subnets[2].name
 
 @description('Required. Name of the Azure Recovery Service Vault.')
 param vaultName string = 'rsv-${projowner}-${region}'
@@ -277,9 +277,6 @@ param rpcRgName string = 'rg-${projowner}-${region}-rpc'
 @maxLength(24)
 param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
 
-@description('Required. Parameter for policyAssignments')
-param policyAssignments array
-
 @description('Optional. List of softwareUpdateConfigurations to be created in the automation account.')
 param softwareUpdateConfigurations array = []
 
@@ -289,16 +286,17 @@ param diskAccessName string = 'da-${projowner}-${region}-01'
 @description('Optional. Security contact data.')
 param defenderSecurityContactProperties object
 
-@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureActivityLog", "AzureSecurityCenter"]')
-param dataConnectorsSubs array = [
-  // 'AzureSecurityCenter'
-]
+@description('The kind of data connectors that can be deployed via ARM templates at Subscription level: ["AzureSecurityCenter"]')
+@allowed([
+  'AzureSecurityCenter'
+])
+param dataConnectorsSubs array = []
 
 @description('Required. Array of Action Groups')
 param actionGroups array
 
 @description('Required. Firewall Policy name.')
-param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-pol1'
+param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-01'
 
 @description('Optional. Rule collection groups.')
 param firewallPolicyRuleCollectionGroups array
@@ -310,7 +308,7 @@ resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 }
 
 // 2. Retrieve an existing Log Analytics Workspace (Sentinel - From Management Subscription)
-resource logaSentinel 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource logaSentinel 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
@@ -382,33 +380,45 @@ module lzSubConfig 'wrapperModule/subconfig.bicep' = {
 }
 
 // 7. Create Virtual Network
-module lzVnet 'wrapperModule/virtualNetwork.bicep' = {
-  name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vnetName}'
+module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, i) in vNets: {
+  name: 'mod-lzVnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   dependsOn: [
     lzLoga
   ]
   params: {
-    vnetName: vnetName
+    vnetName: vNet.name
     location: location
     combinedTags: combinedTags
-    defaultRouteTableName: defaultRouteTableName
-    routes: routes
     vnetRgName: vnetRgName
     subscriptionId: subscriptionId
-    vnetAddressPrefixes: vnetAddressPrefixes
-    dnsServers: dnsServers
-    subnets: subnets
-    virtualNetworkPeerings: virtualNetworkPeerings
+    vnetAddressPrefixes: vNet.addressPrefixes
+    dnsServers: vNet.dnsServers
+    subnets: vNet.subnets
+    virtualNetworkPeerings: vNet.virtualNetworkPeerings
+    routeTables: routeTables
     networkSecurityGroups: networkSecurityGroups
-    connsubid: connsubid
-    priDNSZonesRgName: priDNSZonesRgName
-    privateDnsZones: privateDnsZones
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
-}
+}]
 
-// 8. Create Storage Account
+// 8. Update Virtual Network Links on Private DNS Zones
+module lzVnetLinks 'wrapperModule/virtualNetworkLinks.bicep' = [for (vNetResourceId, i) in vNetResourceIds: {
+  name: 'mod-lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(connsubid, priDNSZonesRgName)
+  dependsOn: [
+    lzVnet
+  ]
+  params: {    
+    combinedTags: combinedTags
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    privateDnsZones: privateDnsZones
+    virtualNetworkResourceId: vNetResourceId
+  }
+}]
+
+// 9. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
@@ -420,10 +430,14 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
     combinedTags: combinedTags
     wlRgName: wlRgName
     storageaccount_sku: storageaccount_sku
+    blobServices: blobServices
+    fileServices: fileServices
+    queueServices: queueServices
+    tableServices: tableServices
     stgGroupIds: stgGroupIds
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -432,7 +446,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   }
 }
 
-// 9. Create Azure Key Vault
+// 10. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -443,11 +457,11 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
     location: location
     combinedTags: combinedTags
     wlRgName: wlRgName
-    networkAcls: networkAcls
+    keyVaultNetworkAcls: keyVaultNetworkAcls
     publicNetworkAccess: publicNetworkAccess
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -456,7 +470,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   }
 }
 
-// 10. Create SQL Server(s)
+// 11. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -479,7 +493,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   }
 }
 
-// 11. Create Virtual Machine(s)
+// 12. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -492,7 +506,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     wlRgName: wlRgName
     mgmtsubid: mgmtsubid
     siemRgName: siemRgName
-    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, lzVMsSubnetName)    
+    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', lzVnet[0].outputs.vNetName, lzVMsSubnetName)    
     virtualMachineNamePrefix: virtualMachineNamePrefix
     virtualMachines: virtualMachines
     platformProjOwner: platformProjOwner
@@ -500,21 +514,12 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     region: region
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
     monitoringWorkspaceId: logaSentinel.id
-    //name: '${virtualMachineNamePrefix}${i + 1}'
-    //adminUsername: akv.getSecret(vmAdmin)
-    //adminPassword: akv.getSecret(vmAdminPassword)
-    //osType: virtualMachine.osType
-    //virtualMachineSize: virtualMachineSize
-    //licenseType: virtualMachine.licenseType
-    //availabilityZone: virtualMachine.availabilityZone
-    //operatingSystem: virtualMachine.operatingSystem
-    //dataDisks: virtualMachine.dataDisks
   }
 }
 
-// 12. Create Recovery Services Vault
+// 13. Create Recovery Services Vault
 module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
-  name: 'mod-rsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
+  name: 'mod-lzRsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
     lzVnet
   ]
@@ -527,7 +532,7 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
     mgmtRgName: mgmtRgName
     rpcRgName: rpcRgName
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
@@ -536,7 +541,7 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-// 13. Create Software Update Management Configuration
+// 14. Create Software Update Management Configuration
 module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
   name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -553,7 +558,7 @@ module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
   }
 }
 
-// 14. Create Disk Accesses Resource
+// 15. Create Disk Accesses Resource
 module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
   name: 'mod-diskAccess-${take(uniqueString(deployment().name, location), 4)}-${diskAccessName}'
   dependsOn: [
@@ -566,36 +571,36 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
     wlRgName: wlRgName
     subscriptionId: subscriptionId
     vnetRgName: vnetRgName
-    vnetName: vnetName
+    vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
   }
 }
 
-// 15. Cconfigure Defender for Cloud
+// 16. Configure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'mod-lzDefender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: subscription(subscriptionId)
   //dependsOn: [
   //  sub
   //]
-    params: {
-      location: location
-      subscriptionAlias: subscriptionAlias
-      subscriptionId: subscriptionId
-      workspaceId: resourceId(mgmtsubid, siemRgName, 'Microsoft.OperationalInsights/workspaces', sentinelLawName)
-      defenderSecurityContactProperties: defenderSecurityContactProperties
+  params: {
+    location: location
+    subscriptionAlias: subscriptionAlias
+    subscriptionId: subscriptionId
+    workspaceId: logaSentinel.id
+    defenderSecurityContactProperties: defenderSecurityContactProperties
   }
 }
 
-// 16. Configure Sentinel Data Connectors - Subscription Level
+// 17. Configure Sentinel Data Connectors - Subscription Level
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
   name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
-  dependsOn: [
-    lzRgs
-  ]
+  //dependsOn: [
+  //  sub
+  //]
   params: {
     subscriptionId: subscriptionId
     workspaceName: sentinelLawName
@@ -603,7 +608,7 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
   }
 }
 
-// 17. Create Action Group(s)
+// 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -617,9 +622,9 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   }
 }
 
-// 18. Create Alerts
+// 19. Create Alerts
 module lzAlerts 'wrapperModule/alerts.bicep' = {
-  name: 'mod-lzAlerts--${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzRgs
@@ -629,17 +634,29 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   params: {
     subscriptionId: subscriptionId
     wlRgName: wlRgName
-    location: location
     tags: combinedTags    
     suffix: suffix
     actionGroups: actionGroups
-    budgets: budgets
-    //rgResoruceIds: lzRgs.outputs.rgResoruceIds
-    //vmResourceIDs: lzVms.outputs.vmResourceIDs
   }
 }
 
-// 19. Create Firewall Policy Rule Collection Groups
+/*
+// 20. Create Budgets
+module lzBudgets 'wrapperModule/budgets.bicep' = {
+  name: 'mod-lzBudgets-${take(uniqueString(deployment().name, location), 4)}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    lzActionGroup
+  ]
+  params: {
+    location: location
+    subscriptionId: subscriptionId
+    budgets: budgets
+  }
+}
+*/
+
+// 21. Update Firewall Policy Rule Collection Groups
 module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'mod-lzAfprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
   scope: resourceGroup(connsubid, connVnetRgName)
@@ -652,7 +669,61 @@ module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy
 }]
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
+@description('Required. Default Route Table name.')
+param defaultRouteTableName string = 'rt-${projowner}-${region}-0001'
+
+@description('Optional. DNS Servers associated to the Virtual Network.')
+param dnsServers array = []
+
+@description('Required. The Virtual Network (vNet) Name.')
+param vnetName string
+
+@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
+param vnetAddressPrefixes array
+
+@description('Optional. An Array of subnets to deploy to the Virtual Network.')
+param subnets array = []
+
+@description('Optional. Virtual Network Peerings configurations')
+param virtualNetworkPeerings array = []
+
+@description('Required. Parameter for policyAssignments')
+param policyAssignments array
+
 // 20. Create Policy Assignment and Remediation
 module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
   name: 'mod-policyAssignment-${take(uniqueString(deployment().name, location), 4)}'
@@ -666,6 +737,8 @@ module lzPolicyAssignment 'wrapperModule/polAssignment.bicep' = {
     policyAssignments: policyAssignments
   }
 }
+
+
 
 @description('Required. The administrator username for the virtual machine.')
 @secure()
