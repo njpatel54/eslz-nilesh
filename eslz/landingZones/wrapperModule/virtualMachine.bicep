@@ -231,7 +231,7 @@ module lzVm '../../modules/compute/virtualMachines/deploy.bicep' = [for (virtual
 // 3. Configure Virtual Machine Backup
 module vmBackup '../../modules/recoveryServices/vaults/vmBackup/deploy.bicep' = [for (virtualMachine, i) in virtualMachines: {
   name: 'vmBackup-${take(uniqueString(deployment().name, location), 4)}-${virtualMachineNamePrefix}${i + 1}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  scope: resourceGroup(subscriptionId, vaultRgName)
   dependsOn: [
     lzVm
   ]
