@@ -632,7 +632,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzRgs
-    lzVms
+    //lzVms
     lzActionGroup
   ]
   params: {
