@@ -58,7 +58,7 @@ var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', 
 var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
 
 // var actionGroupIds = json(replace(replace(replace(string(actionGroups), '[{"actionGroupId":"', '"'), '"},', '",'), '"}]', '"')) ---> Working only for 1 Action Group
-var actionGroupIds = json(replace(replace(replace(string(actionGroups),    '[{"actionGroupId":"', '\\"'), '"},', '\\",'), '"}]', '\\"'))
+var actionGroupIds = json(replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\\"'), '"},', '\\",'), '"}', '\\"'))
 
 
 
