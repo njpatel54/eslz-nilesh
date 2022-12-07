@@ -1002,7 +1002,7 @@ module fileShareBackupSsvc '../modules/recoveryServices/vaults/fileShareBackup/d
     stgAcctName: stgAcctSsvcName
     fileShareName: share.name 
     vaultRgName: mgmtRgName
-    vaultName: mgmtVaultName
+    vaultName: ssvcVaultName
     backupPolicyName: '${mgmtSuffix}fileShareBackupPolicy'
   }
 }]
