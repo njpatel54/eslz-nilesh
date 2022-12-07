@@ -47,7 +47,7 @@ param actionType string
 
 
 var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
-var test2 = json(replace(replace(string(actionGroups), '[{"actionGroupId":"', ''), '"}]', ''))
+var test2 = replace(replace(string(actionGroups), '[{"actionGroupId":"', ''), '"}]', '')
 
 var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
