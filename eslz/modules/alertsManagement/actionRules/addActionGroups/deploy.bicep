@@ -47,6 +47,7 @@ param actionType string
 
 
 var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
+var test2 = json(replace(replace(string(actionGroups), '[{"actionGroupId":"', ''), '"}]', ''))
 
 var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
@@ -75,4 +76,18 @@ resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08'
 output alertProcessingRuleId string = alertProcessingRule.id
 //output testArray array = test
 output testObject object = test
+output test2object object = test2
 //output testString string = test
+
+param testObject array = [
+  {
+    actionGroupId: '/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/ag-lz50-usva-001'
+  }
+  {
+    actionGroupId: '/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/ag-lz50-usva-002'
+  }
+]
+
+
+
+var test1 = replace(replace(string('testObject'), '[{"actionGroupId":"', ''), '"}]', '')
