@@ -341,7 +341,7 @@ module lzRgs './wrapperModule/resourceGroup.bicep' = {
     subscriptionId: subscriptionId
   }
 }
-/*
+
 // 5. Create Log Analytics Workspace
 module lzLoga 'wrapperModule/logAnalytics.bicep' = {
   name: 'mod-lzLoga-${take(uniqueString(deployment().name, location), 4)}-${logsLawName}'
@@ -611,7 +611,7 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
     dataConnectors: dataConnectorsSubs
   }
 }
-*/
+
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
