@@ -722,7 +722,7 @@ module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/depl
 }
 
 // 18. Configure Azure File Share Backup (Management Subscription)
-module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.value.shares:{
+module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.shares:{
   name: 'fileShareBackupMgmt-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
   dependsOn: [
@@ -988,7 +988,7 @@ module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/depl
 }
 
 // 21. Configure Azure File Share Backup (Shared Services Subscription)
-module fileShareBackupSsvc '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.value.shares:{
+module fileShareBackupSsvc '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.shares:{
   name: 'fileShareBackupSsvc-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
