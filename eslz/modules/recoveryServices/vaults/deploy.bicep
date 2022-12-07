@@ -143,7 +143,7 @@ resource rsv 'Microsoft.RecoveryServices/vaults@2022-09-30-preview' = {
         alertsForAllJobFailures: 'Enabled'
       }
       classicAlertSettings: {
-        alertsForCriticalOperations: 'Enabled'
+        alertsForCriticalOperations: 'Disabled'
       }
     }
     publicNetworkAccess: 'Disabled'
