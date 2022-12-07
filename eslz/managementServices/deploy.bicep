@@ -721,6 +721,7 @@ module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/depl
   }
 }
 
+// 18. Configure Azure File Share Backup (Management Subscription)
 module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.value.shares:{
   name: 'fileShareBackupMgmt-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -740,7 +741,7 @@ module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/d
   }
 }]
 
-// 18. Create Recovery Services Vault (Shared Services Subscription)
+// 19. Create Recovery Services Vault (Shared Services Subscription)
 module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -974,7 +975,7 @@ module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 19. Create Recovery Services Vault's Backup Configuration (Shared Services Subscription)
+// 20. Create Recovery Services Vault's Backup Configuration (Shared Services Subscription)
 module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfigSsvc-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -986,7 +987,27 @@ module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/depl
   }
 }
 
-// 20. Create Action Group(s)
+// 21. Configure Azure File Share Backup (Shared Services Subscription)
+module fileShareBackupSsvc '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.value.shares:{
+  name: 'fileShareBackupSsvc-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    rsvSsvc
+    rsvBackupConfigSsvc
+    saSsvc
+  ]
+  params: {
+    subscriptionId: ssvcsubid
+    stgAcctRgName: mgmtRgName
+    stgAcctName: stgAcctSsvcName
+    fileShareName: share.name 
+    vaultRgName: mgmtRgName
+    vaultName: mgmtVaultName
+    backupPolicyName: '${mgmtSuffix}fileShareBackupPolicy'
+  }
+}]
+
+// 22. Create Action Group(s)
 module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for subscription in subscriptions: {
   name: 'actionGroup-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
@@ -1000,7 +1021,7 @@ module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for sub
   }
 }]
 
-// 21. Create Alerts
+// 23. Create Alerts
 module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription in subscriptions: {
   name: 'alerts-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
