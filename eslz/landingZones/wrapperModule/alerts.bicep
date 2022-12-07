@@ -269,11 +269,6 @@ module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/a
 
 
 
-
-
-
-
-
 /*
 @description('Output - Resource Group Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
 param rgResoruceIds array

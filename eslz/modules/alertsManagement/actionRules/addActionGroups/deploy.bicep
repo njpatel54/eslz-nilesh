@@ -45,6 +45,9 @@ var actions = [for actionGroupName in actionGroupNames: {
 */
 param actionType string
 
+
+var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
+
 var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
   actionGroupIds: [
@@ -70,3 +73,6 @@ resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08'
 }
 
 output alertProcessingRuleId string = alertProcessingRule.id
+output testArray array = test
+output testObject object = test
+output testString string = test
