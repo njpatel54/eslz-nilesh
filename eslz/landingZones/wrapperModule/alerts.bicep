@@ -229,7 +229,7 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
 module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
   name: 'alertProcessingRuleAddActionGroup-${i}'
   params: {
-    alertProcessingRuleName: alertProcessingRule.rule.alertProcessingRuleName
+    alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
     conditions: alertProcessingRule.rule.conditions
     actionGroupIds: [for actionGroupName in alertProcessingRule.rule.actionGroupNames: {
@@ -242,7 +242,7 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
 module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/actionRules/suppressNotifications/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesSuppressNotifications:{
   name: 'alertProcessingRuleSupperssNotification-${i}'
   params: {
-    alertProcessingRuleName: alertProcessingRule.rule.alertProcessingRuleName
+    alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
     conditions: alertProcessingRule.rule.conditions
     schedule: alertProcessingRule.rule.schedule
