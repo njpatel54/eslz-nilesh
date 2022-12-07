@@ -1,4 +1,4 @@
-name: test - 3 platform policy definitions
+name: test - 3 platform custom policy definitions
 
 on:
   #push:
