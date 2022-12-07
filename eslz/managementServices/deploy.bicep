@@ -721,6 +721,25 @@ module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/depl
   }
 }
 
+module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.value.shares:{
+  name: 'fileShareBackupMgmt-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  dependsOn: [
+    rsvMgmt
+    rsvBackupConfigMgmt
+    saMgmt
+  ]
+  params: {
+    subscriptionId: mgmtsubid
+    stgAcctRgName: siemRgName
+    stgAcctName: stgAcctName
+    fileShareName: share.name 
+    vaultRgName: mgmtRgName
+    vaultName: mgmtVaultName
+    backupPolicyName: '${mgmtSuffix}fileShareBackupPolicy'
+  }
+}]
+
 // 18. Create Recovery Services Vault (Shared Services Subscription)
 module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
