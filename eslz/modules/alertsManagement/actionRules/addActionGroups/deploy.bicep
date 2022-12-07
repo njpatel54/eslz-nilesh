@@ -42,19 +42,30 @@ var actions = [for actionGroupName in actionGroupNames: {
     resourceId(subscriptionId, actionGroupRgName, 'Microsoft.insights/actiongroups', actionGroupName)
   ]
 }]
-*/
-param actionType string
 
 
-var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
-var test2 = replace(replace(string(actionGroups), '[{"actionGroupId":"', '\''), '"}]', '\'')
-
+****** Working*******
 var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
   actionGroupIds: [
     actionGroup.actionGroupId
   ]
 }]
+*/
+param actionType string
+
+var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
+var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
+var actionGroupIds = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
+
+var actions = [
+  {
+  actionType: 'AddActionGroups'
+  actionGroupIds: [
+    actionGroupIds
+  ]
+}
+]
 
 @description('The scope of resources for which the alert processing rule will apply. You can leave this field unchanged if you wish to apply the rule for all Recovery Services vault within the subscription. If you wish to apply the rule on smaller scopes, you can specify an array of ARM URLs representing the scopes, eg. [\'/subscriptions/<sub-id>/resourceGroups/RG1\', \'/subscriptions/<sub-id>/resourceGroups/RG2\']')
 param alertProcessingRuleScope array = [
