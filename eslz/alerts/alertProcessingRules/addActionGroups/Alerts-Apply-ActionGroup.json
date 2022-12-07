@@ -10,9 +10,5 @@
             ]
         }
     ],
-    "actionType": "AddActionGroups",
-    "actionGroupNames": [
-        "ag-lz50-usva-001",
-        "test-ag"
-    ]
+    "actionType": "AddActionGroups"
 }

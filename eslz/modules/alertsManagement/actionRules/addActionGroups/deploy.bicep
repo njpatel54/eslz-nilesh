@@ -7,12 +7,23 @@ param alertProcessingRuleDescription string
 @description('Required. The condition that will cause this alert to activate. Array of objects.')
 param conditions array
 
+/*
 param actionGroups array
 
 var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
   actionGroupIds: [
     actionGroup.actionGroupId
+  ]
+}]
+*/
+@description('Optional. The list of actions to take when alert triggers.')
+param actions array = []
+
+var actionGroups = [for action in actions: {
+  actionType: 'AddActionGroups'
+  actionGroupIds: [
+    action.actionGroupId
   ]
 }]
 
@@ -29,7 +40,7 @@ resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08'
     conditions: conditions
     description: alertProcessingRuleDescription
     enabled: true
-    actions: actions
+    actions: actionGroups
   }
 }
 

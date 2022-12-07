@@ -231,9 +231,9 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
   params: {
     alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
-    conditions: alertProcessingRule.rule.conditions
-    actionGroups: [for (actionGroupName, i) in alertProcessingRule.rule.actionGroupNames: {
-      actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
+    conditions: alertProcessingRule.rule.conditions    
+    actions: [for (actionGroup, i) in actionGroups: {
+      actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroup.name)
     }]
     //actionGroupNames: alertProcessingRule.rule.actionGroupNames
     //actionType: alertProcessingRule.rule.actionType
@@ -242,6 +242,9 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
     //  actionGroupIds: [
     //    resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
     //  ]
+    //}]
+    //actionGroups: [for (actionGroupName, i) in alertProcessingRule.rule.actionGroupNames: {
+    //  actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
     //}]
   }
 }]
