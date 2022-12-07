@@ -9,9 +9,7 @@ param conditions array
 
 param actionGroups array
 
-var actionGroupsVar = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
-
-var actions = [for actionGroup in actionGroupsVar: {
+var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
   actionGroupIds: [
     actionGroup.actionGroupId
