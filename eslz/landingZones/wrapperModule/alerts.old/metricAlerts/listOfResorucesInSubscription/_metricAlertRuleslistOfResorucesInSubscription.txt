@@ -1,9 +1,0 @@
-{
-	rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-GreaterOrLessThan-List-Of-VMs-In-Sub-Dynamic-Thresholds.json'))
-}
-{
-	rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-GreaterThan-80-Percent-List-Of-VMs-In-Sub-Static-Thresholds.json'))
-}
-{
-	rule: json(loadTextContent('alerts/metricAlerts/listOfResorucesInSubscription/Percentage-CPU-LessThan-30-Percent-List-Of-VMs-In-Sub-Static-Thresholds.json'))
-}
