@@ -713,6 +713,9 @@ module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
 module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfigMgmt-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
+  dependsOn: [
+    rsvMgmt
+  ]
   params: {
     recoveryVaultName: rsvMgmt.outputs.name    
   }
@@ -956,6 +959,9 @@ module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
 module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfigSsvc-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
+  dependsOn: [
+    rsvSsvc
+  ]
   params: {
     recoveryVaultName: rsvSsvc.outputs.name    
   }
