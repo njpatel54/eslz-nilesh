@@ -146,6 +146,7 @@ resource rsv 'Microsoft.RecoveryServices/vaults@2022-09-30-preview' = {
         alertsForCriticalOperations: 'Enabled'
       }
     }
+    publicNetworkAccess: 'Disabled'
   }
 }
 

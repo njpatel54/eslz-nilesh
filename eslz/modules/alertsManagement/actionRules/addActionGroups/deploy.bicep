@@ -82,6 +82,8 @@ param actionType string
 var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
 var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
 
+[{"actionGroupId":"/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/ag-lz50-usva-001"}]
+
 // var actionGroupIds = json(replace(replace(replace(string(actionGroups), '[{"actionGroupId":"', '"'), '"},', '",'), '"}]', '"')) ---> Working only for 1 Action Group
 var actionGroupIds = replace(replace(replace(string(actionGroups), '{"actionGroupId":', ''), '"}', '"'), '"},', '')
 

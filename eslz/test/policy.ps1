@@ -102,3 +102,11 @@ Get-ChildItem -Recurse -Path "./eslz/test/policySetDefinitions" -Filter "*.json"
 $policyDefCount = Get-ChildItem -Recurse -Path "./eslz/test/policySetDefinitions" -Filter "*.json" -Exclude "*.parameters.json" | Measure-Object
 $policyDefCountString = $policyDefCount.Count
 Write-Information "====> Policy Set/Initiative Definitions Total: $policyDefCountString" -InformationAction Continue
+
+
+
+
+var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
+var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
+
+$test = "[{"actionGroupId":"/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/ag-lz50-usva-001"}]"
