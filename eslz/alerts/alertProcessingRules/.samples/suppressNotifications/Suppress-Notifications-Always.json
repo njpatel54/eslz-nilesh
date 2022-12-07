@@ -1,0 +1,14 @@
+{
+    "alertProcessingRuleName": "Recovery Services Vault Modern Alerts - Suppress notifications",
+    "alertProcessingRuleDescription": "Recovery Services Vault Modern Alerts - Suppress notifications",
+    "conditions": [
+        {
+            "field": "TargetResourceType",
+            "operator": "Equals",
+            "values": [
+                "microsoft.recoveryservices/vaults"
+            ]
+        }
+    ],
+    "actionType": "RemoveAllActionGroups"
+}

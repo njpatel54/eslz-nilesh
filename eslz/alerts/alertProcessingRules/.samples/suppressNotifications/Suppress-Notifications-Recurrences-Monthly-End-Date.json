@@ -1,0 +1,35 @@
+{
+    "alertProcessingRuleName": "Recovery Services Vault Modern Alerts - Suppress notifications",
+    "alertProcessingRuleDescription": "Recovery Services Vault Modern Alerts - Suppress notifications",
+    "conditions": [
+        {
+            "field": "TargetResourceType",
+            "operator": "Equals",
+            "values": [
+                "microsoft.recoveryservices/vaults"
+            ]
+        }
+    ],
+    "actionType": "RemoveAllActionGroups",
+    "schedule": {
+        "effectiveFrom": "2023-01-01T00:00:00",
+        "effectiveUntil": "2023-06-30T23:59:59",
+        "timeZone": "Eastern Standard Time",
+        "recurrences": [
+            {
+                "daysOfMonth": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "recurrenceType": "Monthly",
+                "startTime": "22:00:00",
+                "endTime": "01:00:00"
+            }
+        ]
+    }
+}
+

@@ -163,6 +163,20 @@ var metricAlertRules = [
   }
 ]
 
+@description('Variable containing Alert Processing Rules - Add Action Groups.')
+var alertProcessingRulesAddActionGroups = [
+  {
+    rule: json(loadTextContent('../../alerts/alertProcessingRules/addActionGroups/Alerts-Apply-ActionGroup.json'))
+  }
+]
+
+@description('Variable containing Alert Processing Rules - Suppress Notifications.')
+var alertProcessingRulesSuppressNotifications = [
+  {
+    rule: json(loadTextContent('../../alerts/alertProcessingRules/suppressNotifications/Suppress-Notifications-Weekly-No-End-Dates.json'))
+  }
+]
+
 // 1. Create Activity Log Alert Rules
 module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (activityLogAlertRule, i) in activityLogAlertRulesVar: {
   name: 'activityLogAlertRules-${i}'
@@ -211,14 +225,33 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
   }
 }]
 
+// 4. Create Alert Processing Rules (Add Action Groups)
+module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
+  name: 'alertProcessingRuleAddActionGroup-${i}'
+  params: {
+    alertProcessingRuleName: alertProcessingRule.rule.alertProcessingRuleName
+    alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
+    conditions: alertProcessingRule.rule.conditions
+    actionType: alertProcessingRule.rule.actionType
+    actionGroupIds: [for actionGroupName in alertProcessingRule.rule.actionGroupNames: {
+      actionGroupIds: [
+        resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
+      ]
+    }]
+  }
+}]
 
-
-
-
-/*
-@description('Location for the deployments and the resources')
-param location string
-*/
+// 5. Create Alert Processing Rules (Suppress Notifications)
+module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/actionRules/suppressNotifications/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesSuppressNotifications:{
+  name: 'alertProcessingRuleSupperssNotification-${i}'
+  params: {
+    alertProcessingRuleName: alertProcessingRule.rule.alertProcessingRuleName
+    alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
+    conditions: alertProcessingRule.rule.conditions
+    actionType: alertProcessingRule.rule.actionType
+    schedule: alertProcessingRule.rule.schedule
+  }
+}]
 
 
 

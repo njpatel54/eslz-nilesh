@@ -1,0 +1,17 @@
+{
+    "alertProcessingRuleName": "Recovery Services Vault Modern Alerts - Apply Action Group",
+    "alertProcessingRuleDescription": "Recovery Services Vault Modern Alerts - Apply Action Group",
+    "conditions": [
+        {
+            "field": "TargetResourceType",
+            "operator": "Equals",
+            "values": [
+                "microsoft.recoveryservices/vaults"
+            ]
+        }
+    ],
+    "actionType": "AddActionGroups",
+    "actionGroupNames": [
+        "ag-lz50-usva-001"
+    ]
+}

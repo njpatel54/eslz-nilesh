@@ -1,0 +1,19 @@
+{
+    "alertProcessingRuleName": "Recovery Services Vault Modern Alerts - Suppress notifications",
+    "alertProcessingRuleDescription": "Recovery Services Vault Modern Alerts - Suppress notifications",
+    "conditions": [
+        {
+            "field": "TargetResourceType",
+            "operator": "Equals",
+            "values": [
+                "microsoft.recoveryservices/vaults"
+            ]
+        }
+    ],
+    "actionType": "RemoveAllActionGroups",
+    "schedule": {
+        "effectiveFrom": "2022-12-06T00:00:00",
+        "effectiveUntil": "2022-12-09T00:00:00",
+        "timeZone": "Eastern Standard Time"
+    }
+}
