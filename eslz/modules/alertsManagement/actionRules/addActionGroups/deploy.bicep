@@ -9,8 +9,6 @@ param conditions array
 
 param actionGroups array
 
-var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
-
 var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
   actionGroupIds: [
@@ -31,20 +29,11 @@ resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08'
     conditions: conditions
     description: alertProcessingRuleDescription
     enabled: true
-    //actions: actions
-    actions: [
-      {
-        actionType: 'AddActionGroups'
-        actionGroupIds: [
-          test.actionGroupId
-        ]
-      }
-    ]
+    actions: actions
   }
 }
 
 output alertProcessingRuleId string = alertProcessingRule.id
-output testObject object = test
 
 /*
 @description('Optional. The list of actions to take when alert triggers.')
