@@ -232,11 +232,8 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
     alertProcessingRuleName: alertProcessingRule.rule.alertProcessingRuleName
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
     conditions: alertProcessingRule.rule.conditions
-    actionType: alertProcessingRule.rule.actionType
     actionGroupIds: [for actionGroupName in alertProcessingRule.rule.actionGroupNames: {
-      actionGroupIds: [
-        resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
-      ]
+      actionGroupIds: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
     }]
   }
 }]
@@ -248,7 +245,6 @@ module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/a
     alertProcessingRuleName: alertProcessingRule.rule.alertProcessingRuleName
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
     conditions: alertProcessingRule.rule.conditions
-    actionType: alertProcessingRule.rule.actionType
     schedule: alertProcessingRule.rule.schedule
   }
 }]

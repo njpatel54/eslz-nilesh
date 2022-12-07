@@ -7,12 +7,6 @@ param alertProcessingRuleDescription string
 @description('Required. The condition that will cause this alert to activate. Array of objects.')
 param conditions array
 
-@description('Resource group where the Action Groups are located. This can be different than resource group of the vault.')
-param actionGroupIds array = []
-
-@description('Required. Action that should be applied.')
-param actionType string
-
 @description('Required. Schedule for recurrence.')
 param schedule object
 
@@ -29,12 +23,9 @@ resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08'
     conditions: conditions
     description: alertProcessingRuleDescription
     enabled: true
-    actions: (actionType == 'AddActionGroups') ? [ {
-        actionType: actionType
-        actionGroupIds: actionGroupIds
-      }] : [
+    actions: [
       {
-        actionType: actionType
+        actionType: 'RemoveAllActionGroups'
       }
     ]
     schedule: schedule
