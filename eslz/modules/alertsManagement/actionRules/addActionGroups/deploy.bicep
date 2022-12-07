@@ -7,10 +7,35 @@ param alertProcessingRuleDescription string
 @description('Required. The condition that will cause this alert to activate. Array of objects.')
 param conditions array
 
-
-
-
 param actionGroups array
+
+var actions = [for actionGroup in actionGroups: {
+  actionType: 'AddActionGroups'
+  actionGroupIds: [
+    actionGroup.actionGroupId
+  ]
+}]
+
+@description('The scope of resources for which the alert processing rule will apply. You can leave this field unchanged if you wish to apply the rule for all Recovery Services vault within the subscription. If you wish to apply the rule on smaller scopes, you can specify an array of ARM URLs representing the scopes, eg. [\'/subscriptions/<sub-id>/resourceGroups/RG1\', \'/subscriptions/<sub-id>/resourceGroups/RG2\']')
+param alertProcessingRuleScope array = [
+  subscription().id
+]
+
+resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08' = {
+  name: alertProcessingRuleName
+  location: 'Global'
+  properties: {
+    scopes: alertProcessingRuleScope
+    conditions: conditions
+    description: alertProcessingRuleDescription
+    enabled: true
+    actions: actions
+  }
+}
+
+output alertProcessingRuleId string = alertProcessingRule.id
+
+
 /*
 @description('Optional. The list of actions to take when alert triggers.')
 param actions array = []
@@ -51,16 +76,14 @@ var actions = [for actionGroup in actionGroups: {
     actionGroup.actionGroupId
   ]
 }]
-*/
+
 param actionType string
 
 var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
 var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
 
 // var actionGroupIds = json(replace(replace(replace(string(actionGroups), '[{"actionGroupId":"', '"'), '"},', '",'), '"}]', '"')) ---> Working only for 1 Action Group
-var actionGroupIds = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '`"'), '"}', '`"'), '"},', '')
-
-
+var actionGroupIds = replace(replace(replace(string(actionGroups), '{"actionGroupId":', ''), '"}', '"'), '"},', '')
 
 
 var actions = [
@@ -72,26 +95,8 @@ var actions = [
 }
 ]
 
-@description('The scope of resources for which the alert processing rule will apply. You can leave this field unchanged if you wish to apply the rule for all Recovery Services vault within the subscription. If you wish to apply the rule on smaller scopes, you can specify an array of ARM URLs representing the scopes, eg. [\'/subscriptions/<sub-id>/resourceGroups/RG1\', \'/subscriptions/<sub-id>/resourceGroups/RG2\']')
-param alertProcessingRuleScope array = [
-  subscription().id
-]
-
-resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08' = {
-  name: alertProcessingRuleName
-  location: 'Global'
-  properties: {
-    scopes: alertProcessingRuleScope
-    conditions: conditions
-    description: alertProcessingRuleDescription
-    enabled: true
-    actions: actions
-  }
-}
-
-output alertProcessingRuleId string = alertProcessingRule.id
-
 output testObject object = test
 output test2object string = test2
 output actionGroupIds string = actionGroupIds
 
+*/
