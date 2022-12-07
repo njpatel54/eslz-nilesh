@@ -57,7 +57,7 @@ param actionType string
 var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
 var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
 
-var actionGroupIds = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '"'), '"},', '",'), '"}', '"')
+var actionGroupIds = json(replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '"'), '"},', '",'), '"}', '"'))
 
 
 
