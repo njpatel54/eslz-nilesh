@@ -225,6 +225,7 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
   }
 }]
 
+/*
 // 4. Create Alert Processing Rules (Add Action Groups)
 module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
   name: 'alertProcessingRuleAddActionGroup-${i}'
@@ -248,7 +249,17 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
     //}]
   }
 }]
-
+*/
+module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/test.deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
+  name: 'alertProcessingRuleAddActionGroup-${i}'
+  params: {
+    alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
+    alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
+    conditions: alertProcessingRule.rule.conditions  
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName
+  }
+}]
 // 5. Create Alert Processing Rules (Suppress Notifications)
 module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/actionRules/suppressNotifications/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesSuppressNotifications:{
   name: 'alertProcessingRuleSupperssNotification-${i}'
