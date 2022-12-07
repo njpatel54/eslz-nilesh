@@ -91,4 +91,5 @@ output alertProcessingRuleId string = alertProcessingRule.id
 
 output testObject object = test
 output test2object string = test2
+output actionGroupIds string = actionGroupIds
 
