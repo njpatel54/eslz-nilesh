@@ -353,6 +353,14 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
+
+module rsvBackupConfig '../../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
+  name: 'rsvBackupConfig-${take(uniqueString(deployment().name, location), 4)}-${name}'
+  scope: resourceGroup(subscriptionId, mgmtRgName)
+  params: {
+    recoveryVaultName: rsv.outputs.name    
+  }
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Grant permissions to the vault to create required private endpoints                                                                                                     //
 // https://docs.microsoft.com/en-us/azure/backup/private-endpoints#grant-permissions-to-the-vault-to-create-required-private-endpoints                                     //
