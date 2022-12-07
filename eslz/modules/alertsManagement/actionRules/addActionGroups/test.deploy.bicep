@@ -50,8 +50,10 @@ resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08'
       {
         actionType: 'AddActionGroups'
         actionGroupIds: [
-          resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', 'ag-lz50-usva-001')
-          resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', 'test-ag')
+          //resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', 'ag-lz50-usva-001')
+          //resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', 'test-ag')
+          '/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/microsoft.insights/actiongroups/ag-lz50-usva-001'
+          '/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/microsoft.insights/actiongroups/test-ag'
         ]
       }
     ]
