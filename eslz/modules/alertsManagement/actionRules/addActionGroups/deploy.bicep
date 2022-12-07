@@ -31,7 +31,15 @@ resource alertProcessingRule 'Microsoft.AlertsManagement/actionRules@2021-08-08'
     conditions: conditions
     description: alertProcessingRuleDescription
     enabled: true
-    actions: actions
+    //actions: actions
+    actions: [
+      {
+        actionType: 'AddActionGroups'
+        actionGroupIds: [
+          test.actionGroupId
+        ]
+      }
+    ]
   }
 }
 
