@@ -958,7 +958,7 @@ module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
 // 19. Create Recovery Services Vault's Backup Configuration (Shared Services Subscription)
 module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfigSsvc-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
   dependsOn: [
     rsvSsvc
   ]

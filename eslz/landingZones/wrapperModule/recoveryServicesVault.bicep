@@ -357,6 +357,9 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
 module rsvBackupConfig '../../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfig-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, mgmtRgName)
+  dependsOn: [
+    rsv
+  ]
   params: {
     recoveryVaultName: rsv.outputs.name    
   }
