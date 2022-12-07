@@ -709,7 +709,16 @@ module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 17. Create Recovery Services Vault (Shared Services Subscription)
+// 17. Create Recovery Services Vault's Backup Configuration (Management Subscription)
+module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
+  name: 'rsvBackupConfigMgmt-${take(uniqueString(deployment().name, location), 4)}'
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  params: {
+    recoveryVaultName: rsvMgmt.outputs.name    
+  }
+}
+
+// 18. Create Recovery Services Vault (Shared Services Subscription)
 module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -943,7 +952,16 @@ module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 18. Create Action Group(s)
+// 19. Create Recovery Services Vault's Backup Configuration (Shared Services Subscription)
+module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
+  name: 'rsvBackupConfigSsvc-${take(uniqueString(deployment().name, location), 4)}'
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  params: {
+    recoveryVaultName: rsvSsvc.outputs.name    
+  }
+}
+
+// 20. Create Action Group(s)
 module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for subscription in subscriptions: {
   name: 'actionGroup-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
@@ -957,7 +975,7 @@ module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for sub
   }
 }]
 
-// 19. Create Alerts
+// 21. Create Alerts
 module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription in subscriptions: {
   name: 'alerts-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
@@ -975,7 +993,7 @@ module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription 
 }]
 
 /*
-// 20. Create Budgets
+// 22. Create Budgets
 module budget '../landingZones/wrapperModule/budgets.bicep' = [ for subscription in subscriptions: {
   name: 'budgets-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: resourceGroup(subscription.subscriptionId, mgmtRgName)

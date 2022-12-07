@@ -353,7 +353,7 @@ module rsv '../../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-
+// 2. Create Recovery Services Vault's Backup Configuration
 module rsvBackupConfig '../../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfig-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, mgmtRgName)
@@ -374,7 +374,7 @@ module rsvBackupConfig '../../modules/recoveryServices/vaults/backupConfig/deplo
 // We recommend that you grant the Contributor role for those three resource groups to the vault (managed identity).                                                       //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// 2. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 3. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributor '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(connsubid, priDNSZonesRgName)
@@ -390,7 +390,7 @@ module roleAssignmentPriDNSAContributor '../../modules/authorization/roleAssignm
   }
 }
 
-// 3. Create Role Assignment for Recovery Services Vault's System Managed Identity (VNet RG)
+// 4. Create Role Assignment for Recovery Services Vault's System Managed Identity (VNet RG)
 module roleAssignmentNetworkingPerms '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, vnetRgName)
@@ -406,7 +406,7 @@ module roleAssignmentNetworkingPerms '../../modules/authorization/roleAssignment
   }
 }
 
-// 4. Create Role Assignment for Recovery Services Vault's System Managed Identity (MGMT RG)
+// 5. Create Role Assignment for Recovery Services Vault's System Managed Identity (MGMT RG)
 module roleAssignmentContributor '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, mgmtRgName)
@@ -422,7 +422,7 @@ module roleAssignmentContributor '../../modules/authorization/roleAssignments/re
   }
 }
 
-// 5. Create Private Endpoint for Recovery Services Vault
+// 6. Create Private Endpoint for Recovery Services Vault
 module rsvPe '../../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPe-${take(uniqueString(deployment().name, location), 4)}-${name}'
   scope: resourceGroup(subscriptionId, mgmtRgName)
