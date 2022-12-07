@@ -107,6 +107,10 @@ Write-Information "====> Policy Set/Initiative Definitions Total: $policyDefCoun
 
 
 var test = json(replace(replace(replace(string(actionGroups), '[{', '{'), '}]', '}'), '}},{', '},'))
-var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '"},', '')
+var test2 = replace(replace(replace(string(actionGroups), '{"actionGroupId":"', '\''), '"}', '\''), '\"},', '\'\r\n')
 
-$test = "[{"actionGroupId":"/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/ag-lz50-usva-001"}]"
+$test = '[{"actionGroupId":"/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/ag-lz50-usva-001"},{"actionGroupId":"/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/test-ag"}]'
+
+$test.Replace('[{', '{').Replace('}]', '}').Replace('}},{', '},')
+
+$test.Replace('[{"actionGroupId":"', '`'').Replace('`"},', '`'')

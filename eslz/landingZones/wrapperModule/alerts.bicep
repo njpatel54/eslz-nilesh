@@ -260,6 +260,7 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
     wlRgName: wlRgName
   }
 }]
+
 // 5. Create Alert Processing Rules (Suppress Notifications)
 module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/actionRules/suppressNotifications/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesSuppressNotifications:{
   name: 'alertProcessingRuleSupperssNotification-${i}'
