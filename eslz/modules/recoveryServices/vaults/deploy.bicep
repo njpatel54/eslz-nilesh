@@ -128,7 +128,7 @@ var identity = identityType != 'None' ? {
   userAssignedIdentities: !empty(userAssignedIdentities) ? userAssignedIdentities : null
 } : null
 
-resource rsv 'Microsoft.RecoveryServices/vaults@2022-02-01' = {
+resource rsv 'Microsoft.RecoveryServices/vaults@2022-09-30-preview' = {
   name: name
   location: location
   tags: tags
@@ -137,7 +137,16 @@ resource rsv 'Microsoft.RecoveryServices/vaults@2022-02-01' = {
     name: 'RS0'
     tier: 'Standard'
   }
-  properties: {}
+  properties: {
+    monitoringSettings: {
+      azureMonitorAlertSettings: {
+        alertsForAllJobFailures: 'Enabled'
+      }
+      classicAlertSettings: {
+        alertsForCriticalOperations: 'Enabled'
+      }
+    }
+  }
 }
 
 module rsv_replicationFabrics 'replicationFabrics/deploy.bicep' = [for (replicationFabric, index) in replicationFabrics: {
