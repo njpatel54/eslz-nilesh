@@ -501,7 +501,7 @@
           "emailReceivers": [
             {
               "name": "Administrators_email",
-              "emailAddress": "foo@contoso.com",
+              "emailAddress": "nileshpa@microsoft.com",
               "useCommonAlertSchema": true
             }
           ],
