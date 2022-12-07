@@ -12,7 +12,6 @@
     ],
     "actionType": "AddActionGroups",
     "actionGroupNames": [
-        "ag-lz50-usva-001",
-        "ActionGroup-rg-lz50-usva-mgmt"
+        "ag-lz50-usva-001"
     ]
 }

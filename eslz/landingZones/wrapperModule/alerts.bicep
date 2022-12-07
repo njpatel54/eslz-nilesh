@@ -232,6 +232,7 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
     alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
     conditions: alertProcessingRule.rule.conditions
+    actionType: alertProcessingRule.rule.actionType
     actionGroups: [for (actionGroupName, i) in alertProcessingRule.rule.actionGroupNames: {
       actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
     }]

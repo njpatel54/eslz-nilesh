@@ -43,7 +43,7 @@ var actions = [for actionGroupName in actionGroupNames: {
   ]
 }]
 */
-
+param actionType string
 
 var actions = [for actionGroup in actionGroups: {
   actionType: 'AddActionGroups'
