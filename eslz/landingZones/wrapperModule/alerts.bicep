@@ -225,7 +225,7 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
   }
 }]
 
-/*
+
 // 4. Create Alert Processing Rules (Add Action Groups)
 module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
   name: 'alertProcessingRuleAddActionGroup-${i}'
@@ -247,17 +247,6 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
     //actionGroups: [for (actionGroupName, i) in alertProcessingRule.rule.actionGroupNames: {
     //  actionGroupId: resourceId(subscriptionId, wlRgName, 'Microsoft.insights/actiongroups', actionGroupName)
     //}]
-  }
-}]
-*/
-module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/test.deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
-  name: 'alertProcessingRuleAddActionGroup-${i}'
-  params: {
-    alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
-    alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
-    conditions: alertProcessingRule.rule.conditions  
-    subscriptionId: subscriptionId
-    wlRgName: wlRgName
   }
 }]
 
@@ -284,7 +273,32 @@ module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/a
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 /*
+/*
+module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/test.deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
+  name: 'alertProcessingRuleAddActionGroup-${i}'
+  params: {
+    alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
+    alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
+    conditions: alertProcessingRule.rule.conditions  
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName
+  }
+}]
+
+
 @description('Output - Resource Group Rescoruce IDs Array to be used to create Azure Monitor Metric Alert Rules.')
 param rgResoruceIds array
 

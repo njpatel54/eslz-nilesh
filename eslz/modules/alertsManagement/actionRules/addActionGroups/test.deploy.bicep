@@ -128,13 +128,3 @@ output test2object string = test2
 output actionGroupIds string = actionGroupIds
 
 */
-
-
-param test array = [
-  {
-    actionGroupId: '/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/ag-lz50-usva-00'
-  }
-  {
-    actionGroupId: '/subscriptions/df3b1809-17d0-47a0-9241-d2724780bdac/resourceGroups/rg-lz50-usva-wl01/providers/Microsoft.insights/actiongroups/test-ag'
-  }
-]
