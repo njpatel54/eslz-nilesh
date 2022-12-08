@@ -83,6 +83,11 @@
           "subscriptionId": "c295836f-4cd3-468a-b958-cf85ae7c6d23",
           "managementGroupName": "mg-A2g-Shared-Services",
           "suffix": "SharedServices"
+        },
+        {
+          "subscriptionId": "df3b1809-17d0-47a0-9241-d2724780bdac",
+          "managementGroupName": "mg-A2g-Landing-Zones",
+          "suffix": "IRAD01"
         }
       ]
     },
