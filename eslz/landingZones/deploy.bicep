@@ -418,24 +418,52 @@ module lzVnetLinks 'wrapperModule/virtualNetworkLinks.bicep' = [for (vNetResourc
   }
 }]
 
+// 9. Create Recovery Services Vault
+module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
+  name: 'mod-lzRsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
+  dependsOn: [
+    lzVnet
+  ]
+  params: {
+    name: vaultName
+    location: location
+    combinedTags: combinedTags
+    suffix: suffix
+    subscriptionId: subscriptionId
+    mgmtRgName: mgmtRgName
+    rpcRgName: rpcRgName
+    vnetRgName: vnetRgName
+    vnetName: lzVnet[0].outputs.vNetName
+    mgmtSubnetName: mgmtSubnetName
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    diagSettingName: diagSettingName
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+  }
+}
+
 // 9. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
     lzVnet
+    lzRsv
   ]
   params: {
     stgAcctName: stgAcctName
     location: location
     combinedTags: combinedTags
+    subscriptionId: subscriptionId
     wlRgName: wlRgName
+    mgmtRgName: mgmtRgName
     storageaccount_sku: storageaccount_sku
     blobServices: blobServices
     fileServices: fileServices
     queueServices: queueServices
     tableServices: tableServices
     stgGroupIds: stgGroupIds
-    subscriptionId: subscriptionId
+    vaultName: vaultName
+    suffix: suffix
     vnetRgName: vnetRgName
     vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
@@ -488,30 +516,6 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
     administrators: administrators
     databases: databases
     sqlFailOverGroupName: sqlFailOverGroupName
-    diagSettingName: diagSettingName
-    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
-  }
-}
-
-// 12. Create Recovery Services Vault
-module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
-  name: 'mod-lzRsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
-  dependsOn: [
-    lzVnet
-  ]
-  params: {
-    name: vaultName
-    location: location
-    combinedTags: combinedTags
-    suffix: suffix
-    subscriptionId: subscriptionId
-    mgmtRgName: mgmtRgName
-    rpcRgName: rpcRgName
-    vnetRgName: vnetRgName
-    vnetName: lzVnet[0].outputs.vNetName
-    mgmtSubnetName: mgmtSubnetName
-    connsubid: connsubid
-    priDNSZonesRgName: priDNSZonesRgName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }

@@ -51,6 +51,15 @@ param diagSettingName string = ''
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
+@description('Required. Name of the resourceGroup, where centralized management components will be.')
+param mgmtRgName string
+
+@description('Required. Name of the Azure Recovery Service Vault.')
+param vaultName string
+
+@description('Required. Suffix to be used in resource naming with 4 characters.')
+param suffix string
+
 @description('Required. Storage Account Subresource(s) (aka "groupIds").')
 param stgGroupIds array
 
@@ -109,6 +118,24 @@ module saPe '../../modules/network/privateEndpoints/deploy.bicep' = [for (stgGro
         resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', contains(groupIds, stgGroupId) ? groupIds[stgGroupId] : '')
       ]
     }
+  }
+}]
+
+// 3. Configure Azure File Share Backup
+module fileShareBackup '../../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.shares:{
+  name: 'fileShareBackup-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
+  scope: resourceGroup(subscriptionId, mgmtRgName)
+  dependsOn: [
+    saPe
+  ]
+  params: {
+    subscriptionId: subscriptionId
+    stgAcctRgName: wlRgName
+    stgAcctName: stgAcctName
+    fileShareName: share.name 
+    vaultRgName: mgmtRgName
+    vaultName: vaultName
+    backupPolicyName: '${suffix}fileShareBackupPolicy'
   }
 }]
 
