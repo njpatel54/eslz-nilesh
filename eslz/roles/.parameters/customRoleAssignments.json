@@ -27,22 +27,6 @@
                     "principalIds": [
                         "d3764c55-16ee-4d59-be60-ec3b9e2fb296"
                     ]
-                },
-                {
-                    "managementGroupName": "mg-A2g",
-                    "description": "Cost Management Contributor",
-                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/434105ed-43f6-45c7-a02f-909b2ba83430",
-                    "principalIds": [
-                        "d684244c-bf57-4f0b-9e6e-e68141e540d9"
-                    ]
-                },
-                {
-                    "managementGroupName": "mg-A2g",
-                    "description": "Cost Management Reader",
-                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/72fafb9e-0641-4937-9268-a91bfd8191a3",
-                    "principalIds": [
-                        "1940dc83-26b6-470d-a651-ab1006521bb4"
-                    ]
                 }
             ]
         },

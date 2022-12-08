@@ -106,6 +106,20 @@
           "principalIds": [
             "c256e67e-b75d-4844-8dd4-25f496cbad9e"
           ]
+        },
+        {
+            "managementGroupName": "mg-A2g",
+            "roleDefinitionIdOrName": "Cost Management Contributor",
+            "principalIds": [
+                "d684244c-bf57-4f0b-9e6e-e68141e540d9"
+            ]
+        },
+        {
+            "managementGroupName": "mg-A2g",
+            "description": "Cost Management Reader",
+            "principalIds": [
+                "1940dc83-26b6-470d-a651-ab1006521bb4"
+            ]
         }
       ]
     },
