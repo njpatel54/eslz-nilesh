@@ -454,16 +454,13 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
     location: location
     combinedTags: combinedTags
     subscriptionId: subscriptionId
-    wlRgName: wlRgName
-    mgmtRgName: mgmtRgName
+    wlRgName: wlRgName  
     storageaccount_sku: storageaccount_sku
     blobServices: blobServices
     fileServices: fileServices
     queueServices: queueServices
     tableServices: tableServices
     stgGroupIds: stgGroupIds
-    vaultName: vaultName
-    suffix: suffix
     vnetRgName: vnetRgName
     vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
@@ -471,6 +468,9 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
     priDNSZonesRgName: priDNSZonesRgName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    //mgmtRgName: mgmtRgName
+    //vaultName: vaultName
+    //suffix: suffix
   }
 }
 

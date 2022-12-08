@@ -720,27 +720,7 @@ module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/depl
     recoveryVaultName: rsvMgmt.outputs.name    
   }
 }
-/*
-// 18. Configure Azure File Share Backup (Management Subscription)
-module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.shares:{
-  name: 'fileShareBackupMgmt-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
-  scope: resourceGroup(mgmtsubid, mgmtRgName)
-  dependsOn: [
-    rsvMgmt
-    rsvBackupConfigMgmt
-    saMgmt
-  ]
-  params: {
-    subscriptionId: mgmtsubid
-    stgAcctRgName: siemRgName
-    stgAcctName: stgAcctName
-    fileShareName: share.name 
-    vaultRgName: mgmtRgName
-    vaultName: mgmtVaultName
-    backupPolicyName: '${mgmtSuffix}fileShareBackupPolicy'
-  }
-}]
-*/
+
 // 19. Create Recovery Services Vault (Shared Services Subscription)
 module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsv-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
@@ -986,27 +966,7 @@ module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/depl
     recoveryVaultName: rsvSsvc.outputs.name    
   }
 }
-/*
-// 21. Configure Azure File Share Backup (Shared Services Subscription)
-module fileShareBackupSsvc '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.shares:{
-  name: 'fileShareBackupSsvc-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
-  scope: resourceGroup(ssvcsubid, mgmtRgName)
-  dependsOn: [
-    rsvSsvc
-    rsvBackupConfigSsvc
-    saSsvc
-  ]
-  params: {
-    subscriptionId: ssvcsubid
-    stgAcctRgName: mgmtRgName
-    stgAcctName: stgAcctSsvcName
-    fileShareName: share.name 
-    vaultRgName: mgmtRgName
-    vaultName: ssvcVaultName
-    backupPolicyName: '${ssvcSuffix}fileShareBackupPolicy'
-  }
-}]
-*/
+
 // 22. Create Action Group(s)
 module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for subscription in subscriptions: {
   name: 'actionGroup-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
@@ -1140,6 +1100,48 @@ output diagnosticEventHubName string = diagnosticEventHubName
 
 
 /*
+
+// 18. Configure Azure File Share Backup (Management Subscription)
+module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.shares:{
+  name: 'fileShareBackupMgmt-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
+  scope: resourceGroup(mgmtsubid, mgmtRgName)
+  dependsOn: [
+    rsvMgmt
+    rsvBackupConfigMgmt
+    saMgmt
+  ]
+  params: {
+    subscriptionId: mgmtsubid
+    stgAcctRgName: siemRgName
+    stgAcctName: stgAcctName
+    fileShareName: share.name 
+    vaultRgName: mgmtRgName
+    vaultName: mgmtVaultName
+    backupPolicyName: '${mgmtSuffix}fileShareBackupPolicy'
+  }
+}]
+
+
+// 21. Configure Azure File Share Backup (Shared Services Subscription)
+module fileShareBackupSsvc '../modules/recoveryServices/vaults/fileShareBackup/deploy.bicep' = [for share in fileServices.shares:{
+  name: 'fileShareBackupSsvc-${take(uniqueString(deployment().name, location), 4)}-${share.name}'
+  scope: resourceGroup(ssvcsubid, mgmtRgName)
+  dependsOn: [
+    rsvSsvc
+    rsvBackupConfigSsvc
+    saSsvc
+  ]
+  params: {
+    subscriptionId: ssvcsubid
+    stgAcctRgName: mgmtRgName
+    stgAcctName: stgAcctSsvcName
+    fileShareName: share.name 
+    vaultRgName: mgmtRgName
+    vaultName: ssvcVaultName
+    backupPolicyName: '${ssvcSuffix}fileShareBackupPolicy'
+  }
+}]
+
 @description('Required. Subscription ID of Connectivity Subscription.')
 param connsubid string
 
