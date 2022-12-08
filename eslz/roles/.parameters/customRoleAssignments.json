@@ -81,14 +81,6 @@
                     ]
                 },
                 {
-                    "subscriptionId": "df3b1809-17d0-47a0-9241-d2724780bdac",
-                    "description": "Subscription owner",
-                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
-                    "principalIds": [
-                        "c4beea9a-5d9d-438c-ba60-66d6238fc3d4"
-                    ]
-                },
-                {
                     "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
                     "description": "Subscription owner",
                     "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/59ddf3c6-2a74-5819-8b8e-adb4da74342a",
