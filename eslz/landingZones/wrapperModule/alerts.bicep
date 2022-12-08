@@ -225,7 +225,6 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
   }
 }]
 
-
 // 4. Create Alert Processing Rules (Add Action Groups)
 module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
   name: 'alertProcessingRuleAddActionGroup-${i}'

@@ -116,7 +116,7 @@
         },
         {
             "managementGroupName": "mg-A2g",
-            "description": "Cost Management Reader",
+            "roleDefinitionIdOrName": "Cost Management Reader",
             "principalIds": [
                 "1940dc83-26b6-470d-a651-ab1006521bb4"
             ]

@@ -442,7 +442,7 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
   }
 }
 
-// 9. Create Storage Account
+// 10. Create Storage Account
 module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
   dependsOn: [
@@ -474,7 +474,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   }
 }
 
-// 10. Create Azure Key Vault
+// 11. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -498,7 +498,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   }
 }
 
-// 11. Create SQL Server(s)
+// 12. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -630,7 +630,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   }
 }
 
-// 19. Create Alerts
+// 19. Create Alert Rules
 module lzAlerts 'wrapperModule/alerts.bicep' = {
   name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
