@@ -271,7 +271,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
     location: location
     tags: ccsCombinedTags
     gallerySolutions: logaGallerySolutions
-    dataSources: dataSources
+    //dataSources: dataSources
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
     publicNetworkAccessForQuery: publicNetworkAccessForQuery    
   }
