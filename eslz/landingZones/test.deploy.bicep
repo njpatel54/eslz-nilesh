@@ -397,6 +397,9 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, i) in vNets: {
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     routeTables: routeTables
     networkSecurityGroups: networkSecurityGroups
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    privateDnsZones: privateDnsZones
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
@@ -589,7 +592,7 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
 // 16. Configure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'mod-lzDefender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
-  scope: subscription(subscriptionId)
+  //scope: tenant()
   //dependsOn: [
   //  sub
   //]
@@ -619,13 +622,15 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  scope: tenant()
   dependsOn: [
     lzRgs
   ]
   params: {
     location: location
     tags: combinedTags
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName
     actionGroups: actionGroups
   }
 }
@@ -633,7 +638,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
 // 19. Create Alert Rules
 module lzAlerts 'wrapperModule/alerts.bicep' = {
   name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  scope: tenant()
   dependsOn: [
     lzRgs
     //lzVms

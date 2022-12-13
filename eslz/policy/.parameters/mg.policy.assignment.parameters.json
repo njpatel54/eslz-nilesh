@@ -347,7 +347,8 @@
                                 "usgovarizona",
                                 "usgoviowa",
                                 "usgovtexas",
-                                "usgovvirginia"
+                                "usgovvirginia",
+                                "global"
                             ]
                         }
                     },

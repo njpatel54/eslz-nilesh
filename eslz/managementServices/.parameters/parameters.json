@@ -1146,11 +1146,9 @@
             "100",
             "110"
           ],
-          "contactEmails": {
-            "value": [
+          "contactEmails": [
               "foo@contoso.com"
             ]
-          }
         }
       ]
     },

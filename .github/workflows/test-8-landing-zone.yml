@@ -39,7 +39,7 @@ jobs:
             --name 'Landing-Zone-Deployment' \
             --location ${{ secrets.AZURE_LOCATION }} \
             --management-group-id ${{ secrets.AZURE_MG_TOP }} \
-            --template-file ./eslz/landingZones/deploy.bicep \
+            --template-file ./eslz/landingZones/test.deploy.bicep \
             --parameters ./eslz/landingZones/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/fwpolicyRuleCollectionGroups.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \

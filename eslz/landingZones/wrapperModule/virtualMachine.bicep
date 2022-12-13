@@ -251,6 +251,24 @@ output vmResourceIDs array = [for (virtualMachine, i) in virtualMachines: {
   vmResourceId: lzVm[i].outputs.resourceId
 }]
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 @description('Required. Administrator username.')
 @secure()
