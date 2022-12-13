@@ -185,6 +185,12 @@
           ]
         },
         {
+          "name": "securityEvent",
+          "kind": "SecurityInsightsSecurityEventCollectionConfiguration",
+          "tier": "All",
+          "tierSetMethod": "Custom"
+        },
+        {
           "name": "windowsPerfCounter1",
           "kind": "WindowsPerformanceCounter",
           "objectName": "Processor",

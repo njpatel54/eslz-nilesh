@@ -29,6 +29,18 @@ param eventLogName string = ''
 @description('Optional. Windows event types to configure when kind is WindowsEvent.')
 param eventTypes array = []
 
+@description('Optional. Tier determines which security events to stream for Windows Security Event using "Security Events via Legacy Agent" Data Connector in Sentinel..')
+@allowed([
+  'All'              //All - All Windows security and AppLocker events.
+  'Recommended'      //Common - A standard set of events for auditing purposes.
+  'Minimal'          //A small set of events that might indicate potential threats. By enabling this option, you won't be able to have a full audit trail.
+  'None'             //No security or AppLocker events.
+])
+param tier string = 'All'
+
+@description('Optional. Tier set method for Windows Security Event using "Security Events via Legacy Agent" Data Connector in Sentinel.')
+param tierSetMethod string = 'Custom' 
+
 @description('Optional. Name of the object to configure when kind is WindowsPerformanceCounter or LinuxPerformanceObject.')
 param objectName string = ''
 
@@ -66,6 +78,8 @@ resource dataSource 'Microsoft.OperationalInsights/workspaces/dataSources@2020-0
     linkedResourceId: !empty(kind) && kind == 'AzureActivityLog' ? linkedResourceId : null
     eventLogName: !empty(kind) && kind == 'WindowsEvent' ? eventLogName : null
     eventTypes: !empty(kind) && kind == 'WindowsEvent' ? eventTypes : null
+    tier: !empty(kind) && kind == 'SecurityInsightsSecurityEventCollectionConfiguration' ? tier : null
+    tierSetMethod: !empty(kind) && kind == 'SecurityInsightsSecurityEventCollectionConfiguration' ? tierSetMethod : null
     objectName: !empty(kind) && (kind == 'WindowsPerformanceCounter' || kind == 'LinuxPerformanceObject') ? objectName : null
     instanceName: !empty(kind) && (kind == 'WindowsPerformanceCounter' || kind == 'LinuxPerformanceObject') ? instanceName : null
     intervalSeconds: !empty(kind) && (kind == 'WindowsPerformanceCounter' || kind == 'LinuxPerformanceObject') ? intervalSeconds : null
