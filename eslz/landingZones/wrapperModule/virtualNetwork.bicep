@@ -51,7 +51,7 @@ param privateDnsZones array
 @description('Required. Load content from json file to iterate over any array in the parameters file')
 var params = json(loadTextContent('../.parameters/parameters.json'))
 
-@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
+@description('Required. Iterate over each "vNets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
 var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
 // 1. Create Route Table(s)
