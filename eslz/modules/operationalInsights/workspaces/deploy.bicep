@@ -208,6 +208,8 @@ module logAnalyticsWorkspace_dataSources 'dataSources/deploy.bicep' = [for (data
     linkedResourceId: contains(dataSource, 'linkedResourceId') ? dataSource.linkedResourceId : ''
     eventLogName: contains(dataSource, 'eventLogName') ? dataSource.eventLogName : ''
     eventTypes: contains(dataSource, 'eventTypes') ? dataSource.eventTypes : []
+    tier: contains(dataSource, 'tier') ? dataSource.tier : ''  
+    tierSetMethod: contains(dataSource, 'tierSetMethod') ? dataSource.tierSetMethod : ''  
     objectName: contains(dataSource, 'objectName') ? dataSource.objectName : ''
     instanceName: contains(dataSource, 'instanceName') ? dataSource.instanceName : ''
     intervalSeconds: contains(dataSource, 'intervalSeconds') ? dataSource.intervalSeconds : 60
