@@ -4,7 +4,7 @@ targetScope = 'managementGroup'
 param location string
 
 @description('subscriptionId for the deployment')
-param subscriptionId string = 'df3b1809-17d0-47a0-9241-d2724780bdac'
+param subscriptionId string = ''
 
 @description('Required. Parameter for policyAssignments')
 param policyAssignments array

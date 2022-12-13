@@ -296,7 +296,7 @@ param dataConnectorsSubs array = []
 param actionGroups array
 
 @description('Required. Firewall Policy name.')
-param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-01'
+param firewallPolicyName string = 'afwp-${platformProjOwner}-${platformOpScope}-${region}-pol001'
 
 @description('Optional. Rule collection groups.')
 param firewallPolicyRuleCollectionGroups array
@@ -418,24 +418,20 @@ module lzVnetLinks 'wrapperModule/virtualNetworkLinks.bicep' = [for (vNetResourc
   }
 }]
 
-// 9. Create Storage Account
-module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
-  name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
+// 9. Create Recovery Services Vault
+module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
+  name: 'mod-lzRsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
   dependsOn: [
     lzVnet
   ]
   params: {
-    stgAcctName: stgAcctName
+    name: vaultName
     location: location
     combinedTags: combinedTags
-    wlRgName: wlRgName
-    storageaccount_sku: storageaccount_sku
-    blobServices: blobServices
-    fileServices: fileServices
-    queueServices: queueServices
-    tableServices: tableServices
-    stgGroupIds: stgGroupIds
+    suffix: suffix
     subscriptionId: subscriptionId
+    mgmtRgName: mgmtRgName
+    rpcRgName: rpcRgName
     vnetRgName: vnetRgName
     vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
@@ -446,7 +442,39 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
   }
 }
 
-// 10. Create Azure Key Vault
+// 10. Create Storage Account
+module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
+  name: 'mod-lzSa-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
+  dependsOn: [
+    lzVnet
+    lzRsv
+  ]
+  params: {
+    stgAcctName: stgAcctName
+    location: location
+    combinedTags: combinedTags
+    subscriptionId: subscriptionId
+    wlRgName: wlRgName  
+    storageaccount_sku: storageaccount_sku
+    blobServices: blobServices
+    fileServices: fileServices
+    queueServices: queueServices
+    tableServices: tableServices
+    stgGroupIds: stgGroupIds
+    vnetRgName: vnetRgName
+    vnetName: lzVnet[0].outputs.vNetName
+    mgmtSubnetName: mgmtSubnetName
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    diagSettingName: diagSettingName
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    //mgmtRgName: mgmtRgName
+    //vaultName: vaultName
+    //suffix: suffix
+  }
+}
+
+// 11. Create Azure Key Vault
 module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   name: 'mod-lzAkv-${take(uniqueString(deployment().name, location), 4)}-${lzAkvName}'
   dependsOn: [
@@ -470,7 +498,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
   }
 }
 
-// 11. Create SQL Server(s)
+// 12. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
@@ -493,11 +521,12 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   }
 }
 
-// 12. Create Virtual Machine(s)
+// 13. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
   name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
     lzVnet
+    lzRsv
   ]
   params: {
     location: location
@@ -509,35 +538,14 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', lzVnet[0].outputs.vNetName, lzVMsSubnetName)    
     virtualMachineNamePrefix: virtualMachineNamePrefix
     virtualMachines: virtualMachines
+    vaultName: vaultName
+    vaultRgName: mgmtRgName
+    backupPolicyName: '${suffix}vmBackupPolicy'
     platformProjOwner: platformProjOwner
     platformOpScope: platformOpScope
     region: region
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
     monitoringWorkspaceId: logaSentinel.id
-  }
-}
-
-// 13. Create Recovery Services Vault
-module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
-  name: 'mod-lzRsv-${take(uniqueString(deployment().name, location), 4)}-${vaultName}'
-  dependsOn: [
-    lzVnet
-  ]
-  params: {
-    name: vaultName
-    location: location
-    combinedTags: combinedTags
-    suffix: suffix
-    subscriptionId: subscriptionId
-    mgmtRgName: mgmtRgName
-    rpcRgName: rpcRgName
-    vnetRgName: vnetRgName
-    vnetName: lzVnet[0].outputs.vNetName
-    mgmtSubnetName: mgmtSubnetName
-    connsubid: connsubid
-    priDNSZonesRgName: priDNSZonesRgName
-    diagSettingName: diagSettingName
-    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
 
@@ -622,13 +630,13 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   }
 }
 
-// 19. Create Alerts
+// 19. Create Alert Rules
 module lzAlerts 'wrapperModule/alerts.bicep' = {
   name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzRgs
-    lzVms
+    //lzVms
     lzActionGroup
   ]
   params: {

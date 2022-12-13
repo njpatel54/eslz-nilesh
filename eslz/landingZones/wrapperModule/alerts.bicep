@@ -1,3 +1,5 @@
+targetScope = 'managementGroup'
+
 @description('subscriptionId for the deployment')
 param subscriptionId string
 
@@ -180,6 +182,7 @@ var alertProcessingRulesSuppressNotifications = [
 // 1. Create Activity Log Alert Rules
 module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (activityLogAlertRule, i) in activityLogAlertRulesVar: {
   name: 'activityLogAlertRules-${i}'
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     name: '${suffix} - Activity Log - ${activityLogAlertRule.rule.alertName}'
     location: 'global'
@@ -195,6 +198,7 @@ module activityLogAlertRules '../../modules/insights/activityLogAlerts/deploy.bi
 // 2. Create Service Health Alert Rules
 module serviceHealthAlertRules '../../modules/insights/activityLogAlerts/deploy.bicep' = [for (serviceHealthAlertRule, i) in serviceHealthAlertRulesVar: {
   name: 'serviceHealthAlertRules-${i}'
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     name: '${suffix} - Service Health - ${serviceHealthAlertRule.rule.alertName}'
     location: 'global'
@@ -210,6 +214,7 @@ module serviceHealthAlertRules '../../modules/insights/activityLogAlerts/deploy.
 // 3. Create Metric Alert Rules - All Resources in Subscription
 module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/deploy.bicep' = [for (metricAlertRule, i) in metricAlertRules: {
   name: 'metricAlertRulesAllResorucesinSub-${i}'
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     name: '${suffix} - Metric - ${metricAlertRule.rule.name} - All Resoruces in Subscription'
     location: 'global'
@@ -228,6 +233,7 @@ module metricAlertRulesAllResorucesinSub '../../modules/insights/metricAlerts/de
 // 4. Create Alert Processing Rules (Add Action Groups)
 module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionRules/addActionGroups/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesAddActionGroups:{
   name: 'alertProcessingRuleAddActionGroup-${i}'
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription
@@ -252,6 +258,7 @@ module alertProcessingRuleAddActionGroup '../../modules/alertsManagement/actionR
 // 5. Create Alert Processing Rules (Suppress Notifications)
 module alertProcessingRuleSupperssNotification '../../modules/alertsManagement/actionRules/suppressNotifications/deploy.bicep' = [for (alertProcessingRule, i) in alertProcessingRulesSuppressNotifications:{
   name: 'alertProcessingRuleSupperssNotification-${i}'
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     alertProcessingRuleName: '${suffix} - ${alertProcessingRule.rule.alertProcessingRuleName}'
     alertProcessingRuleDescription: alertProcessingRule.rule.alertProcessingRuleDescription

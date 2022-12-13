@@ -1,3 +1,11 @@
+targetScope = 'managementGroup'
+
+@description('subscriptionId for the deployment')
+param subscriptionId string
+
+@description('Required. Name of the resourceGroup, where application workload will be deployed.')
+param wlRgName string
+
 @description('Optional. The list of webhook receivers that are part of this action group.')
 param webhookReceivers array = []
 
@@ -34,6 +42,7 @@ param actionGroups array = []
 // 1. Create Action Group(s)
 module actionGroup '../../modules/insights/actionGroups/deploy.bicep' = [for (actionGroup, i) in actionGroups: {
   name: 'actionGroup--${take(uniqueString(deployment().name, location), 4)}-${actionGroup.name}'
+  scope: resourceGroup(subscriptionId, wlRgName)
   params: {
     name: actionGroup.name
     groupShortName: actionGroup.groupShortName

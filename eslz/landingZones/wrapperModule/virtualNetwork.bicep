@@ -39,6 +39,20 @@ param diagnosticWorkspaceId string = ''
 @description('Required. Resource Group name.')
 param vnetRgName string
 
+@description('Required. Subscription ID of Connectivity Subscription')
+param connsubid string
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string
+
+@description('Required. Array of Private DNS Zones (Azure US Govrenment).')
+param privateDnsZones array
+
+@description('Required. Load content from json file to iterate over any array in the parameters file')
+var params = json(loadTextContent('../.parameters/parameters.json'))
+
+@description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
+var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
 
 // 1. Create Route Table(s)
 module lzRouteTables '../../modules/network//routeTables/deploy.bicep' = [for (routeTable, index) in routeTables: {
@@ -106,7 +120,21 @@ module lzAttachNsgRouteTableToSubnets '../../modules/network/virtualNetworks/sub
   }
 }]
 
-
+// 5. Update Virtual Network Links on Private DNS Zones
+module lzVnetLinks 'virtualNetworkLinks.bicep' = [for (vNetResourceId, i) in vNetResourceIds: {
+  name: 'mod-lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${i}'
+  scope: resourceGroup(connsubid, priDNSZonesRgName)
+  dependsOn: [
+    lzVnet
+  ]
+  params: {    
+    combinedTags: combinedTags
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    privateDnsZones: privateDnsZones
+    virtualNetworkResourceId: vNetResourceId
+  }
+}]
 
 
 

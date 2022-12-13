@@ -4,9 +4,6 @@ targetScope = 'managementGroup'
 @description('Required. Location for all resources.')
 param location string
 
-@description('subscriptionId for the deployment')
-param subscriptionId string = 'df3b1809-17d0-47a0-9241-d2724780bdac'
-
 @description('Required. To deploy "lzSql" module or not')
 param lzSqlDeploy bool
 
@@ -260,9 +257,10 @@ param sentinelAutomationAcctName string = 'aa-${platformProjOwner}-${platformOpS
 
 @description('Required. Load content from json file to iterate over any array in the parameters file')
 var params = json(loadTextContent('.parameters/parameters.json'))
-
+/*
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
-var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+var vNetResourceIds = [for vNet in params.parameters.vNets.value: resourceId(sub.outputs.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
+*/
 
 @description('Required. Iterate over each "subnets" and build variable to store "lzVMsSubnetName".')
 var lzVMsSubnetName = params.parameters.vNets.value[0].subnets[2].name
@@ -312,7 +310,7 @@ resource logaSentinel 'Microsoft.OperationalInsights/workspaces@2022-10-01' exis
   name: sentinelLawName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
-/*
+
 // 3. Create Subscription
 module sub 'wrapperModule/createSub.bicep' = {
   name: 'mod-sub-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
@@ -326,19 +324,19 @@ module sub 'wrapperModule/createSub.bicep' = {
     managementGroupId: managementGroupId
   }
 }
-*/
+
 // 4. Create Resource Groups
 module lzRgs './wrapperModule/resourceGroup.bicep' = {
   name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
   dependsOn: [
-    //sub
+    sub
   ]
   params: {
     location: location
     combinedTags: combinedTags
     resourceGroups: resourceGroups
     rgRoleAssignments: rgRoleAssignments
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
   }
 }
 
@@ -352,7 +350,7 @@ module lzLoga 'wrapperModule/logAnalytics.bicep' = {
     logsLawName: logsLawName
     location: location
     combinedTags: combinedTags
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     logaGallerySolutions: logaGallerySolutions
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
@@ -372,7 +370,7 @@ module lzSubConfig 'wrapperModule/subconfig.bicep' = {
   params: {
     location: location
     subRoleAssignments: subRoleAssignments
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     combinedTags: combinedTags
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
@@ -390,31 +388,18 @@ module lzVnet 'wrapperModule/virtualNetwork.bicep' = [for (vNet, i) in vNets: {
     location: location
     combinedTags: combinedTags
     vnetRgName: vnetRgName
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetAddressPrefixes: vNet.addressPrefixes
     dnsServers: vNet.dnsServers
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
     routeTables: routeTables
     networkSecurityGroups: networkSecurityGroups
-    diagSettingName: diagSettingName
-    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
-  }
-}]
-
-// 8. Update Virtual Network Links on Private DNS Zones
-module lzVnetLinks 'wrapperModule/virtualNetworkLinks.bicep' = [for (vNetResourceId, i) in vNetResourceIds: {
-  name: 'mod-lzVnetLinks-${take(uniqueString(deployment().name, location), 4)}-${i}'
-  scope: resourceGroup(connsubid, priDNSZonesRgName)
-  dependsOn: [
-    lzVnet
-  ]
-  params: {    
-    combinedTags: combinedTags
     connsubid: connsubid
     priDNSZonesRgName: priDNSZonesRgName
     privateDnsZones: privateDnsZones
-    virtualNetworkResourceId: vNetResourceId
+    diagSettingName: diagSettingName
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }]
 
@@ -429,7 +414,7 @@ module lzRsv 'wrapperModule/recoveryServicesVault.bicep' = {
     location: location
     combinedTags: combinedTags
     suffix: suffix
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     mgmtRgName: mgmtRgName
     rpcRgName: rpcRgName
     vnetRgName: vnetRgName
@@ -453,7 +438,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
     stgAcctName: stgAcctName
     location: location
     combinedTags: combinedTags
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName  
     storageaccount_sku: storageaccount_sku
     blobServices: blobServices
@@ -487,7 +472,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
     wlRgName: wlRgName
     keyVaultNetworkAcls: keyVaultNetworkAcls
     publicNetworkAccess: publicNetworkAccess
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
     vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
@@ -509,7 +494,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
     combinedTags: combinedTags
     sqlPrimaryServerName: sqlPrimaryServerName
     sqlSecondaryServerName: sqlSecondaryServerName
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     administratorLogin: akv.getSecret(sqlAdministratorLogin)
     administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword)
@@ -531,11 +516,11 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
   params: {
     location: location
     combinedTags: combinedTags
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
     mgmtsubid: mgmtsubid
     siemRgName: siemRgName
-    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', lzVnet[0].outputs.vNetName, lzVMsSubnetName)    
+    subnetResourceId: resourceId(sub.outputs.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', lzVnet[0].outputs.vNetName, lzVMsSubnetName)    
     virtualMachineNamePrefix: virtualMachineNamePrefix
     virtualMachines: virtualMachines
     vaultName: vaultName
@@ -561,7 +546,7 @@ module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
     sentinelAutomationAcctName: sentinelAutomationAcctName
     siemRgName: siemRgName
     suffix: suffix
-    subscriptionId: '/subscriptions/${subscriptionId}'
+    subscriptionId: '/subscriptions/${sub.outputs.subscriptionId}'
     softwareUpdateConfigurations: softwareUpdateConfigurations
   }
 }
@@ -577,7 +562,7 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
     location: location
     combinedTags: combinedTags
     wlRgName: wlRgName
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     vnetRgName: vnetRgName
     vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
@@ -589,14 +574,14 @@ module lzDiskAccess 'wrapperModule/diskAccesses.bicep' = {
 // 16. Configure Defender for Cloud
 module lzDefender 'wrapperModule/defender.bicep' = {
   name: 'mod-lzDefender-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
-  scope: subscription(subscriptionId)
-  //dependsOn: [
-  //  sub
-  //]
+  //scope: subscription(sub.outputs.subscriptionId)
+   dependsOn: [
+    sub
+  ]
   params: {
     location: location
     subscriptionAlias: subscriptionAlias
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     workspaceId: logaSentinel.id
     defenderSecurityContactProperties: defenderSecurityContactProperties
   }
@@ -606,11 +591,11 @@ module lzDefender 'wrapperModule/defender.bicep' = {
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
   name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
-  //dependsOn: [
-  //  sub
-  //]
+  dependsOn: [
+    sub
+  ]
   params: {
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     workspaceName: sentinelLawName
     dataConnectors: dataConnectorsSubs
   }
@@ -619,13 +604,15 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  //scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzRgs
   ]
   params: {
     location: location
     tags: combinedTags
+    subscriptionId: sub.outputs.subscriptionId
+    wlRgName: wlRgName
     actionGroups: actionGroups
   }
 }
@@ -633,36 +620,35 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
 // 19. Create Alert Rules
 module lzAlerts 'wrapperModule/alerts.bicep' = {
   name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  //scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzRgs
-    //lzVms
+    lzVms
     lzActionGroup
   ]
   params: {
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
-    tags: combinedTags    
+    tags: combinedTags   
     suffix: suffix
     actionGroups: actionGroups
   }
 }
 
-/*
 // 20. Create Budgets
 module lzBudgets 'wrapperModule/budgets.bicep' = {
   name: 'mod-lzBudgets-${take(uniqueString(deployment().name, location), 4)}'
-  scope: resourceGroup(subscriptionId, wlRgName)
+  //scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
     lzActionGroup
   ]
   params: {
     location: location
-    subscriptionId: subscriptionId
+    subscriptionId: sub.outputs.subscriptionId
     budgets: budgets
   }
 }
-*/
+
 
 // 21. Update Firewall Policy Rule Collection Groups
 module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
