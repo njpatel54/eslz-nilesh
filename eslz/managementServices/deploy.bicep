@@ -970,13 +970,15 @@ module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/depl
 // 20. Create Action Group(s)
 module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for subscription in subscriptions: {
   name: 'actionGroup-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
-  scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
+  scope: tenant()
   dependsOn: [
     mgmtRg
   ]
   params: {
     location: location
     tags: ccsCombinedTags
+    subscriptionId: subscription.subscriptionId
+    wlRgName: mgmtRgName
     actionGroups: actionGroups
   }
 }]
@@ -984,7 +986,7 @@ module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for sub
 // 21. Create Alert Rules
 module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription in subscriptions: {
   name: 'alerts-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
-  scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
+  scope: tenant()
   dependsOn: [
     mgmtRg
     actionGroup
@@ -998,11 +1000,10 @@ module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription 
   }
 }]
 
-/*
 // 22. Create Budgets
 module budget '../landingZones/wrapperModule/budgets.bicep' = [ for subscription in subscriptions: {
   name: 'budgets-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
-  scope: resourceGroup(subscription.subscriptionId, mgmtRgName)
+  scope: tenant()
   dependsOn: [
     actionGroup
   ]
@@ -1012,7 +1013,7 @@ module budget '../landingZones/wrapperModule/budgets.bicep' = [ for subscription
     budgets: budgets
   }
 }]
-*/
+
 
 @description('Output - Name of Event Hub')
 output ehnsAuthorizationId string = resourceId(mgmtsubid, siemRgName, 'Microsoft.EventHub/namespaces/AuthorizationRules', eventhubNamespaceName, 'RootManageSharedAccessKey')

@@ -604,7 +604,7 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
   name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
-  //scope: resourceGroup(subscriptionId, wlRgName)
+  scope: tenant()
   dependsOn: [
     lzRgs
   ]
@@ -620,7 +620,7 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
 // 19. Create Alert Rules
 module lzAlerts 'wrapperModule/alerts.bicep' = {
   name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
-  //scope: resourceGroup(subscriptionId, wlRgName)
+  scope: tenant()
   dependsOn: [
     lzRgs
     lzVms
@@ -638,7 +638,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
 // 20. Create Budgets
 module lzBudgets 'wrapperModule/budgets.bicep' = {
   name: 'mod-lzBudgets-${take(uniqueString(deployment().name, location), 4)}'
-  //scope: resourceGroup(subscriptionId, wlRgName)
+  scope: tenant()
   dependsOn: [
     lzActionGroup
   ]

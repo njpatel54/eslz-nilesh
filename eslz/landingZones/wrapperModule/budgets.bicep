@@ -1,4 +1,4 @@
-targetScope = 'managementGroup'
+targetScope = 'tenant'
 
 @description('subscriptionId for the deployment')
 param subscriptionId string
