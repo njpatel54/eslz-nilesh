@@ -185,7 +185,7 @@
           ]
         },
         {
-          "name": "securityEvent",
+          "name": "SecurityInsightsSecurityEventCollectionConfiguration",
           "kind": "SecurityInsightsSecurityEventCollectionConfiguration",
           "tier": "All",
           "tierSetMethod": "Custom"
