@@ -9,6 +9,7 @@ param name string
   'AzureActivityLog'
   'WindowsEvent'
   'WindowsPerformanceCounter'
+  'SecurityInsightsSecurityEventCollectionConfiguration'
   'IISLogs'
   'LinuxSyslog'
   'LinuxSyslogCollection'
