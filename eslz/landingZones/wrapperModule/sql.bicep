@@ -53,6 +53,18 @@ param diagSettingName string = ''
 @description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
 
+@description('Required. Subscription ID of Management Subscription.')
+param mgmtsubid string
+
+@description('Required. SIEM Resource Group Name.')
+param siemRgName string
+
+@description('Optional. The security alert policies to create in the server.')
+param securityAlertPolicies array
+
+@description('Optional. The vulnerability assessment configuration.')
+param vulnerabilityAssessmentsObj object
+
 // 1. Create Primary Azure SQL Server
 module sqlPrimaryServer '../../modules/sql/servers/deploy.bicep' = {
   name: 'sqlPrimaryServer-${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
@@ -73,10 +85,28 @@ module sqlPrimaryServer '../../modules/sql/servers/deploy.bicep' = {
     }
     systemAssignedIdentity: true
     publicNetworkAccess: publicNetworkAccess
+    securityAlertPolicies: securityAlertPolicies
+    vulnerabilityAssessmentsObj: vulnerabilityAssessmentsObj 
   }
 }
 
-// 2. Create Secondary Azure SQL Server
+// 2. Role Assignment to Primary SQL Server's System Assigned MI (Storage Blob Data Contributor)
+module roleAssignmentBlobDataContributorPrimary '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentBlobDataContributorPrimary-${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    sqlPrimaryServer
+  ]
+  params: {
+    roleDefinitionIdOrName: 'Storage Blob Data Contributor'
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      sqlPrimaryServer.outputs.systemAssignedPrincipalId
+    ]
+  }
+}
+
+// 3. Create Secondary Azure SQL Server
 module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
   name: 'sqlSecondaryServer-${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -96,10 +126,28 @@ module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
     }
     systemAssignedIdentity: true
     publicNetworkAccess: publicNetworkAccess
+    securityAlertPolicies: securityAlertPolicies
+    vulnerabilityAssessmentsObj: vulnerabilityAssessmentsObj 
   }
 }
 
-// 3. Create Azure SQL Database
+// 4. Role Assignment to Secondary SQL Server's System Assigned MI (Storage Blob Data Contributor)
+module roleAssignmentBlobDataContributorSecondary '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
+  name: 'roleAssignmentBlobDataContributorSecondary-${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
+  scope: resourceGroup(mgmtsubid, siemRgName)
+  dependsOn: [
+    sqlSecondaryServer
+  ]
+  params: {
+    roleDefinitionIdOrName: 'Storage Blob Data Contributor'
+    principalType: 'ServicePrincipal'
+    principalIds: [
+      sqlSecondaryServer.outputs.systemAssignedPrincipalId
+    ]
+  }
+}
+
+// 4. Create Azure SQL Database
 module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database in databases: {
   name: 'sqldb-${take(uniqueString(deployment().name, location), 4)}-${database.name}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -122,7 +170,7 @@ module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database 
   }
 }]
 
-// 4. Create Azure SQL Server Failover Group
+// 5. Create Azure SQL Server Failover Group
 module sqlfailovergrp '../../modules/sql/servers/failoverGroups/deploy.bicep' = {
   name: 'sqlfailovergrp-${take(uniqueString(deployment().name, location), 4)}-${sqlFailOverGroupName}'
   scope: resourceGroup(subscriptionId, wlRgName)

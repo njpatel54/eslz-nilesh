@@ -246,6 +246,12 @@ param sqlAdministratorLogin string = ''
 @secure()
 param sqlAdministratorLoginPassword string = ''
 
+@description('Optional. The security alert policies to create in the server.')
+param securityAlertPolicies array
+
+@description('Optional. The vulnerability assessment configuration.')
+param vulnerabilityAssessmentsObj object
+
 @description('Optional. The array of Virtual Machines.')
 param virtualMachines array
 
@@ -503,6 +509,10 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
     sqlFailOverGroupName: sqlFailOverGroupName
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
+    mgmtsubid: mgmtsubid
+    siemRgName: siemRgName
+    securityAlertPolicies: securityAlertPolicies
+    vulnerabilityAssessmentsObj: vulnerabilityAssessmentsObj
   }
 }
 
