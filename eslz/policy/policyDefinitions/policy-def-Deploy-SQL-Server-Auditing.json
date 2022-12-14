@@ -120,7 +120,8 @@
                                                 "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
                                                 "FAILED_DATABASE_AUTHENTICATION_GROUP"
                                             ],
-                                            "isAzureMonitorTargetEnabled": true
+                                            "isAzureMonitorTargetEnabled": true,
+                                            "isDevopsAuditEnabled": true
                                         }
                                     }
                                 ]
