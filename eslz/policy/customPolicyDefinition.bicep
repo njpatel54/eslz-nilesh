@@ -156,6 +156,10 @@ var customPolicyDefinitions = [
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-Sql-AuditingSettings.json'))
   }
   {
+    name: 'Deploy-SqlServer-Auditing'
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-SQL-Server-Auditing.json'))
+  }
+  {
     name: 'Deploy-SQL-minTLS'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-SQL-minTLS.json'))
   }
@@ -203,7 +207,6 @@ var customPolicyDefinitions = [
     name: 'Deny-Enforce-Naming-Convention'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Enforce-Naming-Convention.json'))
   }
-
   {
     name: 'Deny-Route-NextHopVirtualAppliance'
     definition: json(loadTextContent('policyDefinitions/policy-def-Deny-Route-NextHopVirtualAppliance.json'))

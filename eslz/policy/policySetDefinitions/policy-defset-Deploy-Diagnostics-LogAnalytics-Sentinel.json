@@ -54,7 +54,31 @@
           "displayName": "Deploy Diagnostic Settings for Key Vault to Log Analytics workspace",
           "description": "Deploys the diagnostic settings for Key Vault to stream to a Log Analytics workspace when any Key Vault which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
         }
-      }
+      },
+      "SQLDBsLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Diagnostic Settings for SQL Databases to Log Analytics workspace",
+          "description": "Deploys the diagnostic settings for SQL Databases to stream to a Log Analytics workspace when any SQL Databases which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
+        }
+      },
+      "SqlServerAuditingLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Audit Settings for Azure SQL database servers to stream Audit logs to Log Analytics workspace",
+          "description": "Deploys the Audit Settings for Azure SQL database servers to stream Audit logs to a regional Log Analytics workspace when any Azure SQL Database server which is missing this diagnostic settings is created or updated."
+        }
+      }      
     },
     "policyDefinitionGroups": null,
     "metadata": {
@@ -106,8 +130,39 @@
             "value": "[[parameters('profileName')]"
           }
         }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs",
+        "policyDefinitionReferenceId": "SQLDBsDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('SQLDBsLogAnalyticsEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-SqlServer-Auditing",
+        "policyDefinitionReferenceId": "SqlServerAuditingDeployDiagnosticLogDeployLogAnalytics",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('SqlServerAuditingLogAnalyticsEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
       }
     ]
   },
   "name": "Deploy-Diagnostics-LogAnalytics-Sentinel"
 }
+
