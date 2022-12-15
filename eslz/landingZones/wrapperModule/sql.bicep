@@ -106,6 +106,7 @@ module sqlPrimaryServer '../../modules/sql/servers/deploy.bicep' = {
 }
 
 // 2. Role Assignment to Primary SQL Server's System Assigned MI (Storage Blob Data Contributor)
+// This is required for it to send Vulnerability Assessment data.
 module roleAssignmentBlobDataContributorPrimary '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentBlobDataContributorPrimary-${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -147,6 +148,7 @@ module sqlSecondaryServer '../../modules/sql/servers/deploy.bicep' = {
 }
 
 // 4. Role Assignment to Secondary SQL Server's System Assigned MI (Storage Blob Data Contributor)
+// This is required for it to send Vulnerability Assessment data.
 module roleAssignmentBlobDataContributorSecondary '../../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentBlobDataContributorSecondary-${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -253,3 +255,32 @@ module sqlSecondaryServerPe '../../modules/network/privateEndpoints/deploy.bicep
   }
 }
 
+// 8. Configure AuditSettings for Primary SQL Server
+module auditSettingsPrimary '../../modules/sql/servers//auditingSettings/deploy.bicep' = {
+  name: 'auditSettingsPrimary${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    sqldb
+    sqlPrimaryServer
+    sqlSecondaryServer
+  ]
+  params: {
+    sqlServerName: sqlPrimaryServerName
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+  }
+}
+
+// 9. Configure AuditSettings for Secondary SQL Server
+module auditSettingsSecondary '../../modules/sql/servers//auditingSettings/deploy.bicep' = {
+  name: 'auditSettingsSecondary${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    sqldb
+    sqlPrimaryServer
+    sqlSecondaryServer
+  ]
+  params: {
+    sqlServerName: sqlSecondaryServerName
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+  }
+}

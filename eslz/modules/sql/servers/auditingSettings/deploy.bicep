@@ -1,70 +1,54 @@
-@description('Name of the SQL server')
+@description('Required. The name of the parent SQL Server. Required if the template is used in a standalone deployment.')
 param sqlServerName string
 
-@description('Location for all resources.')
-param location string = resourceGroup().location
+@description('Required. Resource ID of the diagnostic log analytics workspace.')
+param diagnosticWorkspaceId string = ''
 
-@description('The administrator username of the SQL Server.')
-param sqlAdministratorLogin string
+@description('Required. The name of the diagnostic setting, if deployed.')
+param diagnosticSettingsName string = 'diagnosticSettings'
 
-@description('The administrator password of the SQL Server.')
-@secure()
-param sqlAdministratorLoginPassword string
-
-@description('Log Analytics workspace name')
-param omsWorkspaceName string = 'oms-${uniqueString(resourceGroup().id)}'
-
-@description('Specify the region for your OMS workspace')
-param workspaceRegion string
-
-@description('Select the SKU for OMS workspace')
+@description('Required. Specifies the Actions-Groups and Actions to audit.')
 @allowed([
-  'Free'
-  'Standalone'
-  'PerNode'
+  'APPLICATION_ROLE_CHANGE_PASSWORD_GROUP'
+  'BACKUP_RESTORE_GROUP'
+  'DATABASE_LOGOUT_GROUP'
+  'DATABASE_OBJECT_CHANGE_GROUP'
+  'DATABASE_OBJECT_OWNERSHIP_CHANGE_GROUP'
+  'DATABASE_OBJECT_PERMISSION_CHANGE_GROUP'
+  'DATABASE_OPERATION_GROUP'
+  'DATABASE_PERMISSION_CHANGE_GROUP'
+  'DATABASE_PRINCIPAL_CHANGE_GROUP'
+  'DATABASE_PRINCIPAL_IMPERSONATION_GROUP'
+  'DATABASE_ROLE_MEMBER_CHANGE_GROUP'
+  'FAILED_DATABASE_AUTHENTICATION_GROUP'
+  'SCHEMA_OBJECT_ACCESS_GROUP'
+  'SCHEMA_OBJECT_CHANGE_GROUP'
+  'SCHEMA_OBJECT_OWNERSHIP_CHANGE_GROUP'
+  'SCHEMA_OBJECT_PERMISSION_CHANGE_GROUP'
+  'SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP'
+  'USER_CHANGE_PASSWORD_GROUP'
+  'BATCH_STARTED_GROUP'
+  'BATCH_COMPLETED_GROUP'
+  'DBCC_GROUP'
+  'DATABASE_OWNERSHIP_CHANGE_GROUP'
+  'DATABASE_CHANGE_GROUP'
+  'LEDGER_OPERATION_GROUP'
 ])
-param omsSku string = 'Free'
+param auditActionsAndGroups array = [
+  'BATCH_COMPLETED_GROUP'
+  'SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP'
+  'FAILED_DATABASE_AUTHENTICATION_GROUP'
+]
 
-@description('Enable Auditing of Microsoft support operations (DevOps)')
-param isMSDevOpsAuditEnabled bool = false
-
-var diagnosticSettingsName = 'SQLSecurityAuditEvents_3d229c42-c7e7-4c97-9a99-ec0d0d8b86c1'
-
-resource omsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
-  name: omsWorkspaceName
-  location: workspaceRegion
-  properties: {
-    sku: {
-      name: omsSku
-    }
-  }
+resource masterDb 'Microsoft.Sql/servers/databases@2021-11-01-preview' existing = {
+  name: '${sqlServerName}/master'
 }
 
-resource sqlServer 'Microsoft.Sql/servers@2021-11-01-preview' = {
-  location: location
-  name: sqlServerName
-  properties: {
-    administratorLogin: sqlAdministratorLogin
-    administratorLoginPassword: sqlAdministratorLoginPassword
-    version: '12.0'
-  }
-  tags: {
-    DisplayName: sqlServerName
-  }
-}
-
-resource masterDb 'Microsoft.Sql/servers/databases@2021-11-01-preview' = {
-  parent: sqlServer
-  location: location
-  name: 'master'
-  properties: {}
-}
-
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+resource SqlDbDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   scope: masterDb
-  name: diagnosticSettingsName
+  name: 'master-${diagnosticSettingsName}'
   properties: {
-    workspaceId: omsWorkspace.id
+    workspaceId: !empty(diagnosticWorkspaceId) ? diagnosticWorkspaceId : null
     logs: [
       {
         category: 'SQLSecurityAuditEvents'
@@ -86,20 +70,26 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
   }
 }
 
-resource auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview' = {
-  parent: sqlServer
+resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' existing = {
+  name: sqlServerName
+}
+
+resource sqlAudit 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview'={
   name: 'default'
-  properties: {
-    state: 'Enabled'
+  parent: sqlServer
+  properties:{
     isAzureMonitorTargetEnabled: true
+    state:'Enabled'
+    auditActionsAndGroups:auditActionsAndGroups
   }
 }
 
-resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = if (isMSDevOpsAuditEnabled) {
-  parent: sqlServer
-  name: 'default'
-  properties: {
-    state: 'Enabled'
-    isAzureMonitorTargetEnabled: true
-  }
+resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
+ parent: sqlServer
+ name: 'default'
+ properties: {
+   state: 'Enabled'
+   isAzureMonitorTargetEnabled: true
+ }
 }
+
