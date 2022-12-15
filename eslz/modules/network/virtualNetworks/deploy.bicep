@@ -21,9 +21,10 @@ param ddosProtectionPlanId string = ''
 
 @description('Optional. Virtual Network Peerings configurations.')
 param virtualNetworkPeerings array = []
-
+/*
 @description('Optional. Specifies the NSG Resoruce ID')
 param networkSecurityGroupId string = ''
+*/
 
 @description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
 @minValue(0)

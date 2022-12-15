@@ -7,6 +7,70 @@ param diagnosticWorkspaceId string = ''
 @description('Required. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = 'diagnosticSettings'
 
+@description('Optional. Specifies the number of days that logs will be kept for; a value of 0 will retain data indefinitely.')
+@minValue(0)
+@maxValue(365)
+param diagnosticLogsRetentionInDays int = 365
+
+@description('Optional. The name of logs that will be streamed.')
+@allowed([
+  'SQLInsights'
+  'AutomaticTuning'
+  'QueryStoreRuntimeStatistics'
+  'QueryStoreWaitStatistics'
+  'Errors'
+  'DatabaseWaitStatistics'
+  'Timeouts'
+  'Blocks'
+  'Deadlocks'
+  'DevOpsOperationsAudit'
+  'SQLSecurityAuditEvents'
+])
+param diagnosticLogCategoriesToEnable array = [
+  'SQLInsights'
+  'AutomaticTuning'
+  'QueryStoreRuntimeStatistics'
+  'QueryStoreWaitStatistics'
+  'Errors'
+  'DatabaseWaitStatistics'
+  'Timeouts'
+  'Blocks'
+  'Deadlocks'
+  'DevOpsOperationsAudit'
+  'SQLSecurityAuditEvents'
+]
+
+@description('Optional. The name of metrics that will be streamed.')
+@allowed([
+  'Basic'
+  'InstanceAndAppAdvanced'
+  'WorkloadManagement'
+])
+param diagnosticMetricsToEnable array = [
+  'Basic'
+  'InstanceAndAppAdvanced'
+  'WorkloadManagement'
+]
+
+var diagnosticsLogs = [for category in diagnosticLogCategoriesToEnable: {
+  category: category
+  enabled: true
+  retentionPolicy: {
+    enabled: true
+    days: diagnosticLogsRetentionInDays
+  }
+}]
+
+var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
+  category: metric
+  timeGrain: null
+  enabled: true
+  retentionPolicy: {
+    enabled: true
+    days: diagnosticLogsRetentionInDays
+  }
+}]
+
 @description('Required. Specifies the Actions-Groups and Actions to audit.')
 @allowed([
   'APPLICATION_ROLE_CHANGE_PASSWORD_GROUP'
@@ -49,24 +113,8 @@ resource SqlDbDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-
   name: 'master-${diagnosticSettingsName}'
   properties: {
     workspaceId: !empty(diagnosticWorkspaceId) ? diagnosticWorkspaceId : null
-    logs: [
-      {
-        category: 'SQLSecurityAuditEvents'
-        enabled: true
-        retentionPolicy: {
-          days: 0
-          enabled: false
-        }
-      }
-      {
-        category: 'DevOpsOperationsAudit'
-        enabled: true
-        retentionPolicy: {
-          days: 0
-          enabled: false
-        }
-      }
-    ]
+    metrics: diagnosticsMetrics
+    logs: diagnosticsLogs
   }
 }
 
@@ -81,9 +129,10 @@ resource sqlAudit 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview'={
     isAzureMonitorTargetEnabled: true
     state:'Enabled'
     auditActionsAndGroups:auditActionsAndGroups
+    isDevopsAuditEnabled: true
   }
 }
-
+/*
 resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
  parent: sqlServer
  name: 'default'
@@ -92,4 +141,4 @@ resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@20
    isAzureMonitorTargetEnabled: true
  }
 }
-
+*/

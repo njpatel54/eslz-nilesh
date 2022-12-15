@@ -256,6 +256,7 @@ module sqlSecondaryServerPe '../../modules/network/privateEndpoints/deploy.bicep
 }
 
 // 8. Configure AuditSettings for Primary SQL Server
+// To enable AuditingSettings on 
 module auditSettingsPrimary '../../modules/sql/servers//auditingSettings/deploy.bicep' = {
   name: 'auditSettingsPrimary${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
   scope: resourceGroup(subscriptionId, wlRgName)
