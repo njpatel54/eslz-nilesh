@@ -78,7 +78,7 @@ param diagnosticEventHubAuthorizationRuleId string = ''
 param diagnosticEventHubName string = ''
 
 @description('Optional. Enables system assigned managed identity on the resource.')
-param systemAssignedIdentity bool = false
+param systemAssignedIdentity bool = true
 
 @description('Optional. The ID(s) to assign to the resource.')
 param userAssignedIdentities object = {}
