@@ -135,6 +135,39 @@ var diagnosticsMetrics = [for metric in diagnosticMetricsToEnable: {
   }
 }]
 
+@description('Required. Specifies the Actions-Groups and Actions to audit.')
+@allowed([
+  'APPLICATION_ROLE_CHANGE_PASSWORD_GROUP'
+  'BACKUP_RESTORE_GROUP'
+  'DATABASE_LOGOUT_GROUP'
+  'DATABASE_OBJECT_CHANGE_GROUP'
+  'DATABASE_OBJECT_OWNERSHIP_CHANGE_GROUP'
+  'DATABASE_OBJECT_PERMISSION_CHANGE_GROUP'
+  'DATABASE_OPERATION_GROUP'
+  'DATABASE_PERMISSION_CHANGE_GROUP'
+  'DATABASE_PRINCIPAL_CHANGE_GROUP'
+  'DATABASE_PRINCIPAL_IMPERSONATION_GROUP'
+  'DATABASE_ROLE_MEMBER_CHANGE_GROUP'
+  'FAILED_DATABASE_AUTHENTICATION_GROUP'
+  'SCHEMA_OBJECT_ACCESS_GROUP'
+  'SCHEMA_OBJECT_CHANGE_GROUP'
+  'SCHEMA_OBJECT_OWNERSHIP_CHANGE_GROUP'
+  'SCHEMA_OBJECT_PERMISSION_CHANGE_GROUP'
+  'SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP'
+  'USER_CHANGE_PASSWORD_GROUP'
+  'BATCH_STARTED_GROUP'
+  'BATCH_COMPLETED_GROUP'
+  'DBCC_GROUP'
+  'DATABASE_OWNERSHIP_CHANGE_GROUP'
+  'DATABASE_CHANGE_GROUP'
+  'LEDGER_OPERATION_GROUP'
+])
+param auditActionsAndGroups array = [
+  'BATCH_COMPLETED_GROUP'
+  'SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP'
+  'FAILED_DATABASE_AUTHENTICATION_GROUP'
+]
+
 @description('Optional. The storage account type to be used to store backups for this database.')
 @allowed([
   'Geo'
@@ -200,6 +233,16 @@ resource database_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021
     logs: diagnosticsLogs
   }
   scope: database
+}
+
+resource database_auditingSettings 'Microsoft.Sql/servers/databases/auditingSettings@2022-05-01-preview' = {
+  name: 'default'
+  parent: database
+  properties: {
+    auditActionsAndGroups: auditActionsAndGroups
+    isAzureMonitorTargetEnabled: true
+    state: 'Enabled'
+  }
 }
 
 @description('The name of the deployed database.')

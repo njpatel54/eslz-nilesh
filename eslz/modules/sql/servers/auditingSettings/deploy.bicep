@@ -117,7 +117,7 @@ resource masterDb 'Microsoft.Sql/servers/databases@2021-11-01-preview' existing 
   name: '${sqlServerName}/master'
 }
 
-resource SqlDbDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+resource SqlMasterDb_DiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   scope: masterDb
   name: 'master-${diagnosticSettingsName}'
   properties: {
@@ -134,22 +134,22 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' existing = {
   name: sqlServerName
 }
 
-resource sqlAudit 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview'={
+resource sqlServer_auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview'={
   name: 'default'
   parent: sqlServer
   properties:{
+    auditActionsAndGroups: auditActionsAndGroups
     isAzureMonitorTargetEnabled: true
-    state:'Enabled'
-    auditActionsAndGroups:auditActionsAndGroups
+    state: 'Enabled'
   }
 }
 
-resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
+resource sqlServer_devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
  parent: sqlServer
  name: 'default'
  properties: {
-   state: 'Enabled'
    isAzureMonitorTargetEnabled: true
+   state: 'Enabled'
  }
 }
 
