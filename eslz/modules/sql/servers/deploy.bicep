@@ -98,6 +98,23 @@ resource auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021-11-01-pre
   properties: {
     state: 'Enabled'
     isAzureMonitorTargetEnabled: true
+    auditActionsAndGroups: [
+      'BATCH_COMPLETED_GROUP'
+      'DATABASE_OBJECT_CHANGE_GROUP'
+      'SCHEMA_OBJECT_CHANGE_GROUP'
+      'BACKUP_RESTORE_GROUP'
+      'APPLICATION_ROLE_CHANGE_PASSWORD_GROUP'
+      'DATABASE_PRINCIPAL_CHANGE_GROUP'
+      'DATABASE_PRINCIPAL_IMPERSONATION_GROUP'
+      'DATABASE_ROLE_MEMBER_CHANGE_GROUP'
+      'USER_CHANGE_PASSWORD_GROUP'
+      'DATABASE_OBJECT_OWNERSHIP_CHANGE_GROUP'
+      'DATABASE_OBJECT_PERMISSION_CHANGE_GROUP'
+      'DATABASE_PERMISSION_CHANGE_GROUP'
+      'SCHEMA_OBJECT_PERMISSION_CHANGE_GROUP'
+      'SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP'
+      'FAILED_DATABASE_AUTHENTICATION_GROUP'
+    ]
   }
 }
 
@@ -109,7 +126,6 @@ resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@20
     isAzureMonitorTargetEnabled: true
   }
 }
-
 
 resource server_lock 'Microsoft.Authorization/locks@2017-04-01' = if (!empty(lock)) {
   name: '${server.name}-${lock}-lock'
