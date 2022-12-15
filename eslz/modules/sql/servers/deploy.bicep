@@ -118,7 +118,7 @@ resource auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021-11-01-pre
     ]
   }
 }
-
+/*
 resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
   parent: server
   name: 'default'
@@ -127,7 +127,7 @@ resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@20
     isAzureMonitorTargetEnabled: true
   }
 }
-
+*/
 resource server_lock 'Microsoft.Authorization/locks@2017-04-01' = if (!empty(lock)) {
   name: '${server.name}-${lock}-lock'
   properties: {
