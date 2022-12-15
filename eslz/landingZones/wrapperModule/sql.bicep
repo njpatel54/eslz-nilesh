@@ -182,8 +182,8 @@ module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database 
     skuFamily: database.skuFamily
     maxSizeBytes: database.maxSizeBytes
     licenseType: database.licenseType
-    diagnosticSettingsName: diagSettingName
-    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticSettingsName: diagSettingName
+    //diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }]
 
