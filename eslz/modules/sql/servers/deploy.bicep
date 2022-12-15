@@ -98,6 +98,7 @@ resource auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021-11-01-pre
   properties: {
     state: 'Enabled'
     isAzureMonitorTargetEnabled: true
+    isDevopsAuditEnabled: true
     auditActionsAndGroups: [
       'BATCH_COMPLETED_GROUP'
       'DATABASE_OBJECT_CHANGE_GROUP'
