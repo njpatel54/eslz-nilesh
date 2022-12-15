@@ -314,6 +314,14 @@
         "file"
       ]
     },
+    "stgAcctNetworkAcls": {
+      "value": {
+        "bypass": "AzureServices",
+        "defaultAction": "Deny",
+        "ipRules": [],
+        "virtualNetworkRules": []
+      }
+    },
     "publicNetworkAccessForIngestion": {
       "value": "Enabled"
     },

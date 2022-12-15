@@ -59,6 +59,7 @@ module akv '../../modules/keyVault/vaults/deploy.bicep' = {
     vaultSku: 'premium'
     publicNetworkAccess: publicNetworkAccess
     networkAcls: keyVaultNetworkAcls
+    enablePurgeProtection: false
     diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
   }

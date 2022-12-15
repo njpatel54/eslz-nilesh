@@ -398,7 +398,8 @@ module akvManagement '../modules/keyVault/vaults/deploy.bicep' = {
       location: location
       tags: ccsCombinedTags
       vaultSku: 'premium'
-      publicNetworkAccess: kvPublicNetworkAccess
+      publicNetworkAccess: kvPublicNetworkAccess      
+      enablePurgeProtection: false
       roleAssignments: kvRoleAssignments
       diagnosticSettingsName: diagSettingName
       diagnosticStorageAccountId: saMgmt.outputs.resourceId

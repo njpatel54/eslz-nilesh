@@ -54,6 +54,9 @@ param diagnosticWorkspaceId string = ''
 @description('Required. Storage Account Subresource(s) (aka "groupIds").')
 param stgGroupIds array
 
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param stgAcctNetworkAcls object
+
 @description('Required. Mapping Storage Account Subresource(s) with required Privaate DNS Zone(s) for Private Endpoint creation.')
 var groupIds = {
   blob: 'privatelink.blob.core.usgovcloudapi.net'
@@ -83,6 +86,7 @@ module sa '../../modules/storageAccounts/deploy.bicep' = {
     queueServices: queueServices
     tableServices: tableServices
     publicNetworkAccess: 'Disabled'
+    networkAcls: stgAcctNetworkAcls
     diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
   }

@@ -156,6 +156,9 @@ param tableServices object
   'dfs_secondary'
 ])
 param stgGroupIds array
+
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param stgAcctNetworkAcls object
 // End - 'sa' Module Parameters
 
 // Start - 'akv' Module Parameters
@@ -452,6 +455,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
     queueServices: queueServices
     tableServices: tableServices
     stgGroupIds: stgGroupIds
+    stgAcctNetworkAcls: stgAcctNetworkAcls
     vnetRgName: vnetRgName
     vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
@@ -663,7 +667,6 @@ module lzBudgets 'wrapperModule/budgets.bicep' = {
     budgets: budgets
   }
 }
-
 
 // 21. Update Firewall Policy Rule Collection Groups
 module lzAfprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
