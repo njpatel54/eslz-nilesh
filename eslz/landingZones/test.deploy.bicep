@@ -540,7 +540,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
     securityAlertPolicies: securityAlertPolicies
     vulnerabilityAssessmentsObj: vulnerabilityAssessmentsObj
     diagSettingName: diagSettingName
-    diagnosticWorkspaceId: logaSentinel.id
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
 

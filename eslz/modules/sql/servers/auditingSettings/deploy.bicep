@@ -1,8 +1,17 @@
 @description('Required. The name of the parent SQL Server. Required if the template is used in a standalone deployment.')
 param sqlServerName string
 
-@description('Required. Resource ID of the diagnostic log analytics workspace.')
+@description('Optional. Resource ID of the diagnostic storage account.')
+param diagnosticStorageAccountId string = ''
+
+@description('Optional. Resource ID of the diagnostic log analytics workspace.')
 param diagnosticWorkspaceId string = ''
+
+@description('Optional. Resource ID of the diagnostic event hub authorization rule for the Event Hubs namespace in which the event hub should be created or streamed to.')
+param diagnosticEventHubAuthorizationRuleId string = ''
+
+@description('Optional. Name of the diagnostic event hub within the namespace to which logs are streamed. Without this, an event hub is created for each log category.')
+param diagnosticEventHubName string = ''
 
 @description('Required. The name of the diagnostic setting, if deployed.')
 param diagnosticSettingsName string = 'diagnosticSettings'
@@ -112,7 +121,10 @@ resource SqlDbDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-
   scope: masterDb
   name: 'master-${diagnosticSettingsName}'
   properties: {
+    storageAccountId: !empty(diagnosticStorageAccountId) ? diagnosticStorageAccountId : null
     workspaceId: !empty(diagnosticWorkspaceId) ? diagnosticWorkspaceId : null
+    eventHubAuthorizationRuleId: !empty(diagnosticEventHubAuthorizationRuleId) ? diagnosticEventHubAuthorizationRuleId : null
+    eventHubName: !empty(diagnosticEventHubName) ? diagnosticEventHubName : null
     metrics: diagnosticsMetrics
     logs: diagnosticsLogs
   }
@@ -129,10 +141,9 @@ resource sqlAudit 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview'={
     isAzureMonitorTargetEnabled: true
     state:'Enabled'
     auditActionsAndGroups:auditActionsAndGroups
-    isDevopsAuditEnabled: true
   }
 }
-/*
+
 resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
  parent: sqlServer
  name: 'default'
@@ -141,4 +152,4 @@ resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@20
    isAzureMonitorTargetEnabled: true
  }
 }
-*/
+

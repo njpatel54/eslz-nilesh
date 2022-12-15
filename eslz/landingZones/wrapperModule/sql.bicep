@@ -182,8 +182,8 @@ module sqldb '../../modules/sql/servers/databases/deploy.bicep' = [for database 
     skuFamily: database.skuFamily
     maxSizeBytes: database.maxSizeBytes
     licenseType: database.licenseType
-    //diagnosticSettingsName: diagSettingName
-    //diagnosticWorkspaceId: diagnosticWorkspaceId
+    diagnosticSettingsName: diagSettingName
+    diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }]
 
@@ -255,8 +255,14 @@ module sqlSecondaryServerPe '../../modules/network/privateEndpoints/deploy.bicep
   }
 }
 
-// 8. Configure AuditSettings for Primary SQL Server
-// To enable AuditingSettings on 
+// 8. Configure AuditingSettings at Primary SQL Server Level
+// To enable AuditingSettings on Azure SQL Server Level you need to configure following ...
+// 8.1 - Configure Diagnostics Settings for "master" database - at MINIMUM for following Log Categories. 
+//           'SQLSecurityAuditEvents'
+//           'DevOpsOperationsAudit'
+// 8.2 - Configure AuditingSettings at Azure SQL Server Level of forllowing two types ...
+//          'Microsoft.Sql/servers/auditingSettings'
+//          'Microsoft.Sql/servers/devOpsAuditingSettings'
 module auditSettingsPrimary '../../modules/sql/servers//auditingSettings/deploy.bicep' = {
   name: 'auditSettingsPrimary${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -267,11 +273,12 @@ module auditSettingsPrimary '../../modules/sql/servers//auditingSettings/deploy.
   ]
   params: {
     sqlServerName: sqlPrimaryServerName
+    diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }
 
-// 9. Configure AuditSettings for Secondary SQL Server
+// 9. Configure AuditingSettings at Secondary SQL Server Level
 module auditSettingsSecondary '../../modules/sql/servers//auditingSettings/deploy.bicep' = {
   name: 'auditSettingsSecondary${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
   scope: resourceGroup(subscriptionId, wlRgName)
@@ -282,6 +289,7 @@ module auditSettingsSecondary '../../modules/sql/servers//auditingSettings/deplo
   ]
   params: {
     sqlServerName: sqlSecondaryServerName
+    diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: diagnosticWorkspaceId
   }
 }
