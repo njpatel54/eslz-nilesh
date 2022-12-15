@@ -162,6 +162,9 @@ param queueServices object
 @description('Optional. Table service and tables to create.')
 param tableServices object
 
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param stgAcctNetworkAcls object
+
 @description('Required. Name for the Diagnostics Setting Configuration.')
 param diagSettingName string
 
@@ -286,16 +289,17 @@ module saMgmt '../modules/storageAccounts/deploy.bicep' = {
     logaSentinel
   ]
   params: {
-    location: location
+    location: location    
+    tags: ccsCombinedTags
     storageAccountName: stgAcctName
     storageSKU: storageaccount_sku
     blobServices: blobServices
     fileServices: fileServices
     queueServices: queueServices
     tableServices: tableServices
+    networkAcls: stgAcctNetworkAcls
     diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: loga.outputs.resourceId
-    tags: ccsCombinedTags
     publicNetworkAccess: stgPublicNetworkAccess
   }
 }

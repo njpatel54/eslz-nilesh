@@ -997,7 +997,7 @@
       "value": {
         "containers": [
           {
-            "name": "test",
+            "name": "vulnerability-assessment",
             "publicAccess": "None",
             "roleAssignments": []
           }
@@ -1032,6 +1032,14 @@
             "roleAssignments": []
           }
         ]
+      }
+    },
+    "stgAcctNetworkAcls": {
+      "value": {
+        "bypass": "AzureServices",
+        "defaultAction": "Deny",
+        "ipRules": [],
+        "virtualNetworkRules": []
       }
     },
     "authorizationRules": {
