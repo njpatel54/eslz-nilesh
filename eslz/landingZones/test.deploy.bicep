@@ -159,6 +159,9 @@ param tableServices object
   'dfs_secondary'
 ])
 param stgGroupIds array
+
+@description('Optional. Service endpoint object information. For security reasons, it is recommended to set the DefaultAction Deny.')
+param stgAcctNetworkAcls object
 // End - 'sa' Module Parameters
 
 // Start - 'akv' Module Parameters
@@ -248,6 +251,13 @@ param sqlAdministratorLogin string = ''
 @description('Required. The administrator login password. Required if no `administrators` object for AAD authentication is provided.')
 @secure()
 param sqlAdministratorLoginPassword string = ''
+
+
+@description('Optional. The security alert policies to create in the server.')
+param securityAlertPolicies array
+
+@description('Optional. The vulnerability assessment configuration.')
+param vulnerabilityAssessmentsObj object
 
 @description('Optional. The array of Virtual Machines.')
 param virtualMachines array
@@ -464,6 +474,7 @@ module lzSa 'wrapperModule/storage.bicep' = if (lzSaDeploy) {
     queueServices: queueServices
     tableServices: tableServices
     stgGroupIds: stgGroupIds
+    stgAcctNetworkAcls: stgAcctNetworkAcls
     vnetRgName: vnetRgName
     vnetName: lzVnet[0].outputs.vNetName
     mgmtSubnetName: mgmtSubnetName
@@ -510,15 +521,24 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   params: {
     location: location
     combinedTags: combinedTags
-    sqlPrimaryServerName: sqlPrimaryServerName
-    sqlSecondaryServerName: sqlSecondaryServerName
     subscriptionId: subscriptionId
     wlRgName: wlRgName
+    mgmtsubid: mgmtsubid
+    siemRgName: siemRgName
+    vnetRgName: vnetRgName
+    vnetName: lzVnet[0].outputs.vNetName
+    mgmtSubnetName: mgmtSubnetName
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    sqlPrimaryServerName: sqlPrimaryServerName
+    sqlSecondaryServerName: sqlSecondaryServerName
     administratorLogin: akv.getSecret(sqlAdministratorLogin)
     administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword)
     administrators: administrators
     databases: databases
     sqlFailOverGroupName: sqlFailOverGroupName
+    securityAlertPolicies: securityAlertPolicies
+    vulnerabilityAssessmentsObj: vulnerabilityAssessmentsObj
     diagSettingName: diagSettingName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
