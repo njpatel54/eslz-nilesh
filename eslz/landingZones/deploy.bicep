@@ -498,21 +498,26 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
   params: {
     location: location
     combinedTags: combinedTags
-    sqlPrimaryServerName: sqlPrimaryServerName
-    sqlSecondaryServerName: sqlSecondaryServerName
     subscriptionId: sub.outputs.subscriptionId
     wlRgName: wlRgName
+    mgmtsubid: mgmtsubid
+    siemRgName: siemRgName
+    vnetRgName: vnetRgName
+    vnetName: lzVnet[0].outputs.vNetName
+    mgmtSubnetName: mgmtSubnetName
+    connsubid: connsubid
+    priDNSZonesRgName: priDNSZonesRgName
+    sqlPrimaryServerName: sqlPrimaryServerName
+    sqlSecondaryServerName: sqlSecondaryServerName
     administratorLogin: akv.getSecret(sqlAdministratorLogin)
     administratorLoginPassword: akv.getSecret(sqlAdministratorLoginPassword)
     administrators: administrators
     databases: databases
     sqlFailOverGroupName: sqlFailOverGroupName
-    diagSettingName: diagSettingName
-    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
-    mgmtsubid: mgmtsubid
-    siemRgName: siemRgName
     securityAlertPolicies: securityAlertPolicies
     vulnerabilityAssessmentsObj: vulnerabilityAssessmentsObj
+    diagSettingName: diagSettingName
+    diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
   }
 }
 

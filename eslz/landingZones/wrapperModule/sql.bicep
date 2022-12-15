@@ -12,6 +12,21 @@ param combinedTags object
 @description('Required. Name of the resourceGroup, where application workload will be deployed.')
 param wlRgName string
 
+@description('Required. Name of the resourceGroup, where networking components will be.')
+param vnetRgName string
+
+@description('Required. Virtual Network name in Landing Zone Subscription.')
+param vnetName string
+
+@description('Required. Subnet name to be used for Private Endpoint.')
+param mgmtSubnetName string
+
+@description('Required. Subscription ID of Connectivity Subscription')
+param connsubid string
+
+@description('Required. Resource Group name for Private DNS Zones.')
+param priDNSZonesRgName string
+
 @description('Required. Azure SQL Server Name (Primary)')
 param sqlPrimaryServerName string
 
@@ -189,3 +204,52 @@ module sqlfailovergrp '../../modules/sql/servers/failoverGroups/deploy.bicep' = 
     sqlPrimaryServerName: sqlPrimaryServerName
   }
 }
+
+// 6. Create Private Endpoint for Primary Azure SQL Server
+module sqlPrimaryServerPe '../../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'sqlPrimaryServerPe-${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    sqlPrimaryServer
+  ]
+  params: {
+    name: '${sqlPrimaryServerName}-sqlServer-pe'
+    location: location
+    tags: combinedTags
+    serviceResourceId: sqlPrimaryServer.outputs.resourceId
+    groupIds: [
+      'sqlServer'
+    ]
+    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, mgmtSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.database.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+
+// 7. Create Private Endpoint for Secondary Azure SQL Server
+module sqlSecondaryServerPe '../../modules/network/privateEndpoints/deploy.bicep' = {
+  name: 'sqlSecondaryServerPe-${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
+  scope: resourceGroup(subscriptionId, wlRgName)
+  dependsOn: [
+    sqlSecondaryServer
+  ]
+  params: {
+    name: '${sqlSecondaryServerName}-sqlServer-pe'
+    location: location
+    tags: combinedTags
+    serviceResourceId: sqlSecondaryServer.outputs.resourceId
+    groupIds: [
+      'sqlServer'
+    ]
+    subnetResourceId: resourceId(subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, mgmtSubnetName)
+    privateDnsZoneGroup: {
+      privateDNSResourceIds: [
+        resourceId(connsubid, priDNSZonesRgName, 'Microsoft.Network/privateDnsZones', 'privatelink.database.usgovcloudapi.net')
+      ]
+    }
+  }
+}
+

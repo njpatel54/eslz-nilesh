@@ -92,6 +92,25 @@ resource server 'Microsoft.Sql/servers@2021-05-01-preview' = {
   }
 }
 
+resource auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview' = {
+  parent: server
+  name: 'default'
+  properties: {
+    state: 'Enabled'
+    isAzureMonitorTargetEnabled: true
+  }
+}
+
+resource devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
+  parent: server
+  name: 'default'
+  properties: {
+    state: 'Enabled'
+    isAzureMonitorTargetEnabled: true
+  }
+}
+
+
 resource server_lock 'Microsoft.Authorization/locks@2017-04-01' = if (!empty(lock)) {
   name: '${server.name}-${lock}-lock'
   properties: {
