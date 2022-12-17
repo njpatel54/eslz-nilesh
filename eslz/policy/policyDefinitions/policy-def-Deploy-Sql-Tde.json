@@ -15,21 +15,21 @@
           "displayName": "Effect",
           "description": "Enable or disable the execution of the policy"
         }
-      }
-    },
-    "excludedDatabases": {
-      "type": "Array",
-      "metadata": {
-        "displayName": "Excluded Databases",
-        "description": "Array of databases that are excluded from this policy"
       },
-      "defaultValue": [
-        "master",
-        "model",
-        "tempdb",
-        "msdb",
-        "resource"
-      ]
+      "excludedDatabases": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Excluded Databases",
+          "description": "Array of databases that are excluded from this policy"
+        },
+        "defaultValue": [
+          "master",
+          "model",
+          "tempdb",
+          "msdb",
+          "resource"
+        ]
+      }
     },
     "metadata": {
       "version": "1.0.0",
