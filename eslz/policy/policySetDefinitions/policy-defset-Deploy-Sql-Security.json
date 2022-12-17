@@ -71,7 +71,7 @@
         "metadata": {
           "description": "The storage account ID to store vulnerability assessments",
           "displayName": "The storage account ID to store vulnerability assessments",
-          "strongType": "omsWorkspace"
+          "strongType": "Microsoft.Storage/StorageAccounts"
         },
         "type": "String"
       },
