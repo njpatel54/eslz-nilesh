@@ -60,6 +60,9 @@
                   },
                   "sqlServerDataBaseName": {
                     "type": "String"
+                  },
+                  "SqlDbSecurityAlertPoliciesEmail": {
+                    "type": "String"
                   }
                 },
                 "variables": {},
@@ -94,6 +97,9 @@
                 },
                 "sqlServerDataBaseName": {
                   "value": "[field('name')]"
+                },
+                "SqlDbSecurityAlertPoliciesEmail": {
+                  "value": "[parameters('SqlDbSecurityAlertPoliciesEmail')]"
                 }
               }
             }

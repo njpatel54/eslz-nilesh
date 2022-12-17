@@ -1,7 +1,7 @@
 {
   "properties": {
-    "description": "Deploy auditing, Alert, TDE and SQL vulnerability to SQL Databases when it not exist in the deployment",
-    "displayName": "Deploy SQL Database built-in SQL security configuration",
+    "description": "Deploy Azure SQL Server Level Auditing Settings, Azure SQL Database Security Alerts, Azure SQL Database Transparent Data Encryption and Azure SQL Database Vulnerability Scans when it does not exist in the deployment",
+    "displayName": "Deploy Azure SQL Server Level Auditing Settings, Azure SQL Database Security Alerts, Azure SQL Database TDE and Azure SQL Database Vulnerability Scans",
     "parameters": {
       "SqlDbTdeDeploySqlSecurityEffect": {
         "type": "String",
