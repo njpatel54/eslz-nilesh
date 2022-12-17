@@ -370,6 +370,9 @@
       "value": [
         {
           "emailAccountAdmins": true,
+          "emailAddresses": [
+            "nileshpa@microsoft.com"
+          ],
           "name": "Default",
           "state": "Enabled"
         }
