@@ -26,6 +26,13 @@
           "displayName": "Deploy SQL Database security Alert Policies configuration with email admin accounts",
           "description": "Deploy the security Alert Policies configuration with email admin accounts when it not exist in current configuration"
         }
+      },      
+      "SqlDbSecurityAlertPoliciesEmail": {
+        "metadata": {
+          "description": "The email address to SQL Database Security Alerts.",
+          "displayName": "The email address to SQL Database Security Alerts."
+        },
+        "type": "String"
       },
       "SqlDbVulnerabilityAssessmentsDeploySqlSecurityEffect": {
         "type": "String",
@@ -103,6 +110,9 @@
         "parameters": {
           "effect": {
             "value": "[[parameters('SqlDbSecurityAlertPoliciesDeploySqlSecurityEffect')]"
+          },
+          "SqlDbSecurityAlertPoliciesEmail": {
+            "value": "[[parameters('SqlDbSecurityAlertPoliciesEmail')]"
           }
         }
       },

@@ -15,6 +15,13 @@
           "displayName": "Effect",
           "description": "Enable or disable the execution of the policy"
         }
+      },
+      "SqlDbSecurityAlertPoliciesEmail": {
+        "type": "String",
+        "metadata": {
+          "description": "The email address to SQL Database Security Alerts.",
+          "displayName": "The email address to SQL Database Security Alerts."
+        }
       }
     },
     "metadata": {
@@ -67,7 +74,7 @@
                         ""
                       ],
                       "emailAddresses": [
-                        "admin@contoso.com"
+                        "[parameters('SqlDbSecurityAlertPoliciesEmail')]"
                       ],
                       "emailAccountAdmins": true,
                       "storageEndpoint": null,
