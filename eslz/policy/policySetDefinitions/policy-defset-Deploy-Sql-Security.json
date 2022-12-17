@@ -56,7 +56,8 @@
       "vulnerabilityAssessmentsStorageID": {
         "metadata": {
           "description": "The storage account ID to store vulnerability assessments",
-          "displayName": "The storage account ID to store vulnerability assessments"
+          "displayName": "The storage account ID to store vulnerability assessments",
+          "strongType": "omsWorkspace"
         },
         "type": "String"
       },
