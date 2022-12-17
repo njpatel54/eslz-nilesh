@@ -139,7 +139,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' existing = {
   name: sqlServerName
 }
 
-resource sqlServer_auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021-11-01-preview'={
+resource sqlServer_auditingSettings 'Microsoft.Sql/servers/auditingSettings@2022-05-01-preview'={
   name: 'default'
   parent: sqlServer
   properties:{
@@ -149,7 +149,7 @@ resource sqlServer_auditingSettings 'Microsoft.Sql/servers/auditingSettings@2021
   }
 }
 
-resource sqlServer_devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2021-11-01-preview' = {
+resource sqlServer_devOpsAuditingSettings 'Microsoft.Sql/servers/devOpsAuditingSettings@2022-05-01-preview' = {
  parent: sqlServer
  name: 'default'
  properties: {

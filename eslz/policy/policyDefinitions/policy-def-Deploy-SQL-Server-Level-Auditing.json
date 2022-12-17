@@ -283,7 +283,7 @@
                                 "resources": [
                                     {
                                         "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
-                                        "apiVersion": "2017-05-01-preview",
+                                        "apiVersion": "2021-05-01-preview",
                                         "name": "[concat(parameters('serverName'),'/master/microsoft.insights/',parameters('profileName'))]",
                                         "location": "[parameters('location')]",
                                         "dependsOn": [],
@@ -351,7 +351,7 @@
                                     {
                                         "name": "[concat(parameters('serverName'), '/Default')]",
                                         "type": "Microsoft.Sql/servers/auditingSettings",
-                                        "apiVersion": "2017-03-01-preview",
+                                        "apiVersion": "2022-05-01-preview",
                                         "dependsOn": [
                                             "[concat('Microsoft.Sql/servers/', parameters('serverName'),'/databases/master/providers/microsoft.insights/diagnosticSettings/', parameters('profileName'))]"
                                         ],
@@ -368,7 +368,7 @@
                                     {
                                         "name": "[concat(parameters('serverName'), '/Default')]",
                                         "type": "Microsoft.Sql/servers/devOpsAuditingSettings",
-                                        "apiVersion": "2017-03-01-preview",
+                                        "apiVersion": "2022-05-01-preview",
                                         "dependsOn": [
                                             "[concat('Microsoft.Sql/servers/', parameters('serverName'),'/databases/master/providers/microsoft.insights/diagnosticSettings/', parameters('profileName'))]"
                                         ],
