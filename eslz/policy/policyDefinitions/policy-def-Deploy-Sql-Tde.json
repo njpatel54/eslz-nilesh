@@ -17,14 +17,36 @@
         }
       }
     },
+    "excludedDatabases": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "Excluded Databases",
+        "description": "Array of databases that are excluded from this policy"
+      },
+      "defaultValue": [
+        "master",
+        "model",
+        "tempdb",
+        "msdb",
+        "resource"
+      ]
+    },
     "metadata": {
       "version": "1.0.0",
       "category": "SQL"
     },
     "policyRule": {
       "if": {
-        "field": "type",
-        "equals": "Microsoft.Sql/servers/databases"
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Sql/servers/databases"
+          },
+          {
+            "field": "name",
+            "notIn": "[parameters('excludedDatabases')]"
+          }
+        ]
       },
       "then": {
         "effect": "[parameters('effect')]",
