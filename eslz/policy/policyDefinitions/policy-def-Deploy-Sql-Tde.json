@@ -1,7 +1,7 @@
 {
   "properties": {
     "description": "Deploy the Transparent Data Encryption when it is not enabled in the deployment",
-    "displayName": "Deploy SQL Database Transparent Data Encryption ",
+    "displayName": "Deploy SQL Database Transparent Data Encryption",
     "mode": "Indexed",
     "parameters": {
       "effect": {
