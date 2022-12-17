@@ -153,18 +153,6 @@
                 ],
                 "defaultValue": "True"
             },
-            "DevOpsOperationsAuditEnabled": {
-                "type": "String",
-                "metadata": {
-                    "displayName": "DevOpsOperationsAudit - Enabled",
-                    "description": "Whether to stream DevOpsOperationsAudit logs to the Log Analytics workspace - True or False"
-                },
-                "allowedValues": [
-                    "True",
-                    "False"
-                ],
-                "defaultValue": "True"
-            },
             "Basic": {
                 "type": "String",
                 "metadata": {
@@ -281,9 +269,6 @@
                                     "SQLSecurityAuditEventsEnabled": {
                                         "type": "string"
                                     },
-                                    "DevOpsOperationsAuditEnabled": {
-                                        "type": "string"
-                                    },
                                     "Basic": {
                                         "type": "string"
                                     },
@@ -359,10 +344,6 @@
                                                 {
                                                     "category": "SQLSecurityAuditEvents",
                                                     "enabled": "[parameters('SQLSecurityAuditEventsEnabled')]"
-                                                },
-                                                {
-                                                    "category": "DevOpsOperationsAuditEnabled",
-                                                    "enabled": "[parameters('DevOpsOperationsAuditEnabled')]"
                                                 }
                                             ]
                                         }
@@ -440,9 +421,6 @@
                                 },
                                 "SQLSecurityAuditEventsEnabled": {
                                     "value": "[parameters('SQLSecurityAuditEventsEnabled')]"
-                                },
-                                "DevOpsOperationsAuditEnabled": {
-                                    "value": "[parameters('DevOpsOperationsAuditEnabled')]"
                                 },
                                 "Basic": {
                                     "value": "[parameters('Basic')]"
