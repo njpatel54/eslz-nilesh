@@ -157,7 +157,7 @@ var customPolicyDefinitions = [
   }
   {
     name: 'Deploy-SqlServer-Auditing'
-    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-SQL-Server-Auditing.json'))
+    definition: json(loadTextContent('policyDefinitions/policy-def-Deploy-SQL-Server-Level-Auditing.json'))
   }
   {
     name: 'Deploy-SQL-minTLS'
@@ -293,9 +293,9 @@ var customPolicySetDefinitions = [
     setDefinition: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Sql-Security.json'))
     setChildDefinitions: [
       {
-        definitionReferenceId: 'SqlDbAuditingSettingsDeploySqlSecurity'
-        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-AuditingSettings'
-        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Sql-Security.parameters.json')).SqlDbAuditingSettingsDeploySqlSecurity.parameters
+        definitionReferenceId: 'SqlDbTdeDeploySqlSecurity'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-Tde'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Sql-Security.parameters.json')).SqlDbTdeDeploySqlSecurity.parameters
       }
       {
         definitionReferenceId: 'SqlDbSecurityAlertPoliciesDeploySqlSecurity'
@@ -303,14 +303,14 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Sql-Security.parameters.json')).SqlDbSecurityAlertPoliciesDeploySqlSecurity.parameters
       }
       {
-        definitionReferenceId: 'SqlDbTdeDeploySqlSecurity'
-        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-Tde'
-        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Sql-Security.parameters.json')).SqlDbTdeDeploySqlSecurity.parameters
-      }
-      {
         definitionReferenceId: 'SqlDbVulnerabilityAssessmentsDeploySqlSecurity'
         definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-vulnerabilityAssessments'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Sql-Security.parameters.json')).SqlDbVulnerabilityAssessmentsDeploySqlSecurity.parameters
+      }    
+      {
+        definitionReferenceId: 'SqlServerAuditing'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-SqlServer-Auditing'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Sql-Security.parameters.json')).SqlServerAuditing.parameters
       }
     ]
   }

@@ -263,7 +263,7 @@ module sqlSecondaryServerPe '../../modules/network/privateEndpoints/deploy.bicep
 // 8.2 - Configure AuditingSettings at Azure SQL Server Level of forllowing two types ...
 //          'Microsoft.Sql/servers/auditingSettings'
 //          'Microsoft.Sql/servers/devOpsAuditingSettings'
-module auditSettingsPrimary '../../modules/sql/servers//auditingSettings/deploy.bicep' = {
+module auditSettingsPrimary '../../modules/sql/servers/auditingSettings/deploy.bicep' = {
   name: 'auditSettingsPrimary${take(uniqueString(deployment().name, location), 4)}-${sqlPrimaryServerName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [
@@ -279,7 +279,7 @@ module auditSettingsPrimary '../../modules/sql/servers//auditingSettings/deploy.
 }
 
 // 9. Configure AuditingSettings at Secondary SQL Server Level
-module auditSettingsSecondary '../../modules/sql/servers//auditingSettings/deploy.bicep' = {
+module auditSettingsSecondary '../../modules/sql/servers/auditingSettings/deploy.bicep' = {
   name: 'auditSettingsSecondary${take(uniqueString(deployment().name, location), 4)}-${sqlSecondaryServerName}'
   scope: resourceGroup(subscriptionId, wlRgName)
   dependsOn: [

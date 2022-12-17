@@ -1,0 +1,464 @@
+{
+    "properties": {
+        "description": "Deploys the Azure SQL Server Level Auditing Settings when any Azure SQL Server is missing Auditing Settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled for MASTER Database and enables Auditing Settings on Azure SQL Server",
+        "displayName": "Deploy Azure SQL Server Level Auditing Settings",      
+        "mode": "Indexed",
+        "parameters": {
+            "effect": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Effect",
+                    "description": "Enable or disable the execution of the policy"
+                },
+                "allowedValues": [
+                    "DeployIfNotExists",
+                    "Disabled"
+                ],
+                "defaultValue": "DeployIfNotExists"
+            },
+            "profileName": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Setting name",
+                    "description": "Name of the diagnostic settings."
+                },
+                "defaultValue": "SQLDatabaseDiagnosticsLogsToWorkspace"
+            },
+            "logAnalytics": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Log Analytics workspace",
+                    "description": "Select the Log Analytics workspace from dropdown list",
+                    "strongType": "omsWorkspace",
+                    "assignPermissions": true
+                }
+            },
+            "SQLInsightsEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "SQLInsights - Enabled",
+                    "description": "Whether to stream SQLInsights logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "AutomaticTuningEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "AutomaticTuning - Enabled",
+                    "description": "Whether to stream AutomaticTuning logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "QueryStoreRuntimeStatisticsEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "QueryStoreRuntimeStatistics - Enabled",
+                    "description": "Whether to stream QueryStoreRuntimeStatistics logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "QueryStoreWaitStatisticsEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "QueryStoreWaitStatistics - Enabled",
+                    "description": "Whether to stream QueryStoreWaitStatistics logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "ErrorsEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Errors - Enabled",
+                    "description": "Whether to stream Errors logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "DatabaseWaitStatisticsEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "DatabaseWaitStatistics - Enabled",
+                    "description": "Whether to stream DatabaseWaitStatistics logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "TimeoutsEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Timeouts - Enabled",
+                    "description": "Whether to stream Timeouts logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "BlocksEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Blocks - Enabled",
+                    "description": "Whether to stream Blocks logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "DeadlocksEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Deadlocks - Enabled",
+                    "description": "Whether to stream Deadlocks logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "SQLSecurityAuditEventsEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "SQLSecurityAuditEvents - Enabled",
+                    "description": "Whether to stream SQLSecurityAuditEvents logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "DevOpsOperationsAuditEnabled": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "DevOpsOperationsAudit - Enabled",
+                    "description": "Whether to stream DevOpsOperationsAudit logs to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "Basic": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Basic (metric) - Enabled",
+                    "description": "Whether to stream Basic metrics to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "InstanceAndAppAdvanced": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "InstanceAndAppAdvanced (metric) - Enabled",
+                    "description": "Whether to stream InstanceAndAppAdvanced metrics to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            },
+            "WorkloadManagement": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "WorkloadManagement (metric) - Enabled",
+                    "description": "Whether to stream WorkloadManagement metrics to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                    "True",
+                    "False"
+                ],
+                "defaultValue": "True"
+            }
+        },
+        "metadata": {
+            "version": "1.0.0",
+            "category": "Monitoring"
+        },
+        "policyRule": {
+            "if": {
+                "field": "type",
+                "equals": "Microsoft.Sql/servers"
+            },
+            "then": {
+                "effect": "[parameters('effect')]",
+                "details": {
+                    "type": "Microsoft.Sql/servers/auditingSettings",
+                    "name": "Default",
+                    "existenceCondition": {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Sql/servers/auditingSettings/state",
+                                "equals": "enabled"
+                            },
+                            {
+                                "field": "Microsoft.Sql/servers/auditingSettings/isAzureMonitorTargetEnabled",
+                                "equals": "true"
+                            }
+                        ]
+                    },
+                    "roleDefinitionIds": [
+                        "/providers/Microsoft.Authorization/roleDefinitions/056cd41c-7e88-42e1-933e-88ba6a50c9c3",
+                        "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                    ],
+                    "deployment": {
+                        "properties": {
+                            "mode": "incremental",
+                            "template": {
+                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                "contentVersion": "1.0.0.0",
+                                "parameters": {
+                                    "serverName": {
+                                        "type": "string"
+                                    },
+                                    "profileName": {
+                                        "type": "string"
+                                    },
+                                    "logAnalytics": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "SQLInsightsEnabled": {
+                                        "type": "string"
+                                    },
+                                    "AutomaticTuningEnabled": {
+                                        "type": "string"
+                                    },
+                                    "QueryStoreRuntimeStatisticsEnabled": {
+                                        "type": "string"
+                                    },
+                                    "QueryStoreWaitStatisticsEnabled": {
+                                        "type": "string"
+                                    },
+                                    "ErrorsEnabled": {
+                                        "type": "string"
+                                    },
+                                    "DatabaseWaitStatisticsEnabled": {
+                                        "type": "string"
+                                    },
+                                    "TimeoutsEnabled": {
+                                        "type": "string"
+                                    },
+                                    "BlocksEnabled": {
+                                        "type": "string"
+                                    },
+                                    "DeadlocksEnabled": {
+                                        "type": "string"
+                                    },
+                                    "SQLSecurityAuditEventsEnabled": {
+                                        "type": "string"
+                                    },
+                                    "DevOpsOperationsAuditEnabled": {
+                                        "type": "string"
+                                    },
+                                    "Basic": {
+                                        "type": "string"
+                                    },
+                                    "InstanceAndAppAdvanced": {
+                                        "type": "string"
+                                    },
+                                    "WorkloadManagement": {
+                                        "type": "string"
+                                    }
+                                },
+                                "variables": {},
+                                "resources": [
+                                    {
+                                        "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+                                        "apiVersion": "2017-05-01-preview",
+                                        "name": "[concat(parameters('serverName'),'/master/microsoft.insights/',parameters('profileName'))]",
+                                        "location": "[parameters('location')]",
+                                        "dependsOn": [],
+                                        "properties": {
+                                            "name": "[parameters('profileName')]",
+                                            "workspaceId": "[parameters('logAnalytics')]",
+                                            "metrics": [
+                                                {
+                                                    "category": "Basic",
+                                                    "enabled": "[parameters('Basic')]"
+                                                },
+                                                {
+                                                    "category": "InstanceAndAppAdvanced",
+                                                    "enabled": "[parameters('InstanceAndAppAdvanced')]"
+                                                },
+                                                {
+                                                    "category": "WorkloadManagement",
+                                                    "enabled": "[parameters('WorkloadManagement')]"
+                                                }
+                                            ],
+                                            "logs": [
+                                                {
+                                                    "category": "SQLInsights",
+                                                    "enabled": "[parameters('SQLInsightsEnabled')]"
+                                                },
+                                                {
+                                                    "category": "AutomaticTuning",
+                                                    "enabled": "[parameters('AutomaticTuningEnabled')]"
+                                                },
+                                                {
+                                                    "category": "QueryStoreRuntimeStatistics",
+                                                    "enabled": "[parameters('QueryStoreRuntimeStatisticsEnabled')]"
+                                                },
+                                                {
+                                                    "category": "QueryStoreWaitStatistics",
+                                                    "enabled": "[parameters('QueryStoreWaitStatisticsEnabled')]"
+                                                },
+                                                {
+                                                    "category": "Errors",
+                                                    "enabled": "[parameters('ErrorsEnabled')]"
+                                                },
+                                                {
+                                                    "category": "DatabaseWaitStatistics",
+                                                    "enabled": "[parameters('DatabaseWaitStatisticsEnabled')]"
+                                                },
+                                                {
+                                                    "category": "Timeouts",
+                                                    "enabled": "[parameters('TimeoutsEnabled')]"
+                                                },
+                                                {
+                                                    "category": "Blocks",
+                                                    "enabled": "[parameters('BlocksEnabled')]"
+                                                },
+                                                {
+                                                    "category": "Deadlocks",
+                                                    "enabled": "[parameters('DeadlocksEnabled')]"
+                                                },
+                                                {
+                                                    "category": "SQLSecurityAuditEvents",
+                                                    "enabled": "[parameters('SQLSecurityAuditEventsEnabled')]"
+                                                },
+                                                {
+                                                    "category": "DevOpsOperationsAuditEnabled",
+                                                    "enabled": "[parameters('DevOpsOperationsAuditEnabled')]"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "[concat(parameters('serverName'), '/Default')]",
+                                        "type": "Microsoft.Sql/servers/auditingSettings",
+                                        "apiVersion": "2017-03-01-preview",
+                                        "dependsOn": [
+                                            "[concat('Microsoft.Sql/servers/', parameters('serverName'),'/databases/master/providers/microsoft.insights/diagnosticSettings/', parameters('profileName'))]"
+                                        ],
+                                        "properties": {
+                                            "state": "Enabled",
+                                            "auditActionsAndGroups": [
+                                                "BATCH_COMPLETED_GROUP",
+                                                "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+                                                "FAILED_DATABASE_AUTHENTICATION_GROUP"
+                                            ],
+                                            "isAzureMonitorTargetEnabled": true
+                                        }
+                                    },
+                                    {
+                                        "name": "[concat(parameters('serverName'), '/Default')]",
+                                        "type": "Microsoft.Sql/servers/devOpsAuditingSettings",
+                                        "apiVersion": "2017-03-01-preview",
+                                        "dependsOn": [
+                                            "[concat('Microsoft.Sql/servers/', parameters('serverName'),'/databases/master/providers/microsoft.insights/diagnosticSettings/', parameters('profileName'))]"
+                                        ],
+                                        "properties": {
+                                            "state": "Enabled",
+                                            "isAzureMonitorTargetEnabled": true
+                                        }
+                                    }
+                                ]
+                            },
+                            "parameters": {
+                                "serverName": {
+                                    "value": "[field('name')]"
+                                },
+                                "profileName": {
+                                    "value": "[parameters('profileName')]"
+                                },
+                                "logAnalytics": {
+                                    "value": "[parameters('logAnalytics')]"
+                                },
+                                "location": {
+                                    "value": "[field('location')]"
+                                },
+                                "SQLInsightsEnabled": {
+                                    "value": "[parameters('SQLInsightsEnabled')]"
+                                },
+                                "AutomaticTuningEnabled": {
+                                    "value": "[parameters('AutomaticTuningEnabled')]"
+                                },
+                                "QueryStoreRuntimeStatisticsEnabled": {
+                                    "value": "[parameters('QueryStoreRuntimeStatisticsEnabled')]"
+                                },
+                                "QueryStoreWaitStatisticsEnabled": {
+                                    "value": "[parameters('QueryStoreWaitStatisticsEnabled')]"
+                                },
+                                "ErrorsEnabled": {
+                                    "value": "[parameters('ErrorsEnabled')]"
+                                },
+                                "DatabaseWaitStatisticsEnabled": {
+                                    "value": "[parameters('DatabaseWaitStatisticsEnabled')]"
+                                },
+                                "TimeoutsEnabled": {
+                                    "value": "[parameters('TimeoutsEnabled')]"
+                                },
+                                "BlocksEnabled": {
+                                    "value": "[parameters('BlocksEnabled')]"
+                                },
+                                "DeadlocksEnabled": {
+                                    "value": "[parameters('DeadlocksEnabled')]"
+                                },
+                                "SQLSecurityAuditEventsEnabled": {
+                                    "value": "[parameters('SQLSecurityAuditEventsEnabled')]"
+                                },
+                                "DevOpsOperationsAuditEnabled": {
+                                    "value": "[parameters('DevOpsOperationsAuditEnabled')]"
+                                },
+                                "Basic": {
+                                    "value": "[parameters('Basic')]"
+                                },
+                                "InstanceAndAppAdvanced": {
+                                    "value": "[parameters('InstanceAndAppAdvanced')]"
+                                },
+                                "WorkloadManagement": {
+                                    "value": "[parameters('WorkloadManagement')]"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "name": "Deploy-SqlServer-Auditing"
+}

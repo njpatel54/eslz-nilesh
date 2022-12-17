@@ -1,8 +1,8 @@
 {
-  "SqlDbAuditingSettingsDeploySqlSecurity": {
+  "SqlDbTdeDeploySqlSecurity": {
     "parameters": {
       "effect": {
-        "value": "[[parameters('SqlDbAuditingSettingsDeploySqlSecurityEffect')]"
+        "value": "[[parameters('SqlDbTdeDeploySqlSecurityEffect')]"
       }
     }
   },
@@ -10,13 +10,6 @@
     "parameters": {
       "effect": {
         "value": "[[parameters('SqlDbSecurityAlertPoliciesDeploySqlSecurityEffect')]"
-      }
-    }
-  },
-  "SqlDbTdeDeploySqlSecurity": {
-    "parameters": {
-      "effect": {
-        "value": "[[parameters('SqlDbTdeDeploySqlSecurityEffect')]"
       }
     }
   },
@@ -30,6 +23,19 @@
       },
       "vulnerabilityAssessmentsStorageID": {
         "value": "[[parameters('vulnerabilityAssessmentsStorageID')]"
+      }
+    }
+  },
+  "SqlServerAuditing": {
+    "parameters": {
+      "logAnalytics": {
+        "value": "[[parameters('logAnalytics')]"
+      },
+      "effect": {
+        "value": "[[parameters('SqlServerAuditingLogAnalyticsEffect')]"
+      },
+      "profileName": {
+        "value": "[[parameters('profileName')]"
       }
     }
   }

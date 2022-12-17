@@ -505,11 +505,6 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).SignalRDeployDiagnosticLogDeployLogAnalytics.parameters
       }
       {
-        definitionReferenceId: 'SQLDatabaseDeployDiagnosticLogDeployLogAnalytics'
-        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs'
-        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).SQLDatabaseDeployDiagnosticLogDeployLogAnalytics.parameters
-      }
-      {
         definitionReferenceId: 'SQLElasticPoolsDeployDiagnosticLogDeployLogAnalytics'
         definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLElasticPools'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics.parameters.json')).SQLElasticPoolsDeployDiagnosticLogDeployLogAnalytics.parameters
@@ -614,6 +609,11 @@ var customPolicySetDefinitions = [
         definitionReferenceId: 'KeyVaultDeployDiagnosticLogDeployLogAnalytics'
         definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-KeyVault'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics-Sentinel.parameters.json')).KeyVaultDeployDiagnosticLogDeployLogAnalytics.parameters
+      }
+      {
+        definitionReferenceId: 'SqlServerAuditing'
+        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-SqlServer-Auditing'
+        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-LogAnalytics-Sentinel.parameters.json')).SqlServerAuditing.parameters
       }
     ]
   }

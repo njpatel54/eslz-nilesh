@@ -503,11 +503,6 @@ var customPolicySetDefinitions = [
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SignalRDeployDiagnosticLogDeployStorageAcct.parameters
       }
       {
-        definitionReferenceId: 'SQLDBsDeployDiagnosticLogDeployStorageAcct'
-        definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs-StgAcct'
-        definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SQLDBsDeployDiagnosticLogDeployStorageAcct.parameters
-      }
-      {
         definitionReferenceId: 'SQLElasticPoolsDeployDiagnosticLogDeployStorageAcct'
         definitionId: '${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLElasticPools-StgAcct'
         definitionParameters: json(loadTextContent('policySetDefinitions/policy-defset-Deploy-Diagnostics-StorageAcct.parameters.json')).SQLElasticPoolsDeployDiagnosticLogDeployStorageAcct.parameters

@@ -130,6 +130,11 @@ resource SqlMasterDb_DiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2
   }
 }
 
+// Define server-level vs. database-level auditing policy (https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-overview?view=azuresql#server-vs-database-level)
+// You should avoid enabling both server auditing and database blob auditing together, unless:
+// 1. You want to use a different storage account, retention period or Log Analytics Workspace for a specific database.
+// 2. You want to audit event types or categories for a specific database that differ from the rest of the databases on the server. For example, you might have table inserts that need to be audited only for a specific database.
+// Otherwise, we recommended that you enable only server-level auditing and leave the database-level auditing disabled for all databases.
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' existing = {
   name: sqlServerName
 }

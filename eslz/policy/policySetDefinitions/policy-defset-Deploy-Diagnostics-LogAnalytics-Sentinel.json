@@ -54,7 +54,19 @@
           "displayName": "Deploy Diagnostic Settings for Key Vault to Log Analytics workspace",
           "description": "Deploys the diagnostic settings for Key Vault to stream to a Log Analytics workspace when any Key Vault which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
         }
-      }      
+      },
+      "SqlServerAuditingLogAnalyticsEffect": {
+        "type": "String",
+        "defaultValue": "DeployIfNotExists",
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "metadata": {
+          "displayName": "Deploy Azure SQL Server Level Auditing Settings",
+          "description": "Deploys the Azure SQL Server Level Auditing Settings when any Azure SQL Server is missing Auditing Settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled for MASTER Database and enables Auditing Settings on Azure SQL Server"
+        }
+      }   
     },
     "policyDefinitionGroups": null,
     "metadata": {
@@ -101,6 +113,21 @@
           },
           "effect": {
             "value": "[[parameters('KeyVaultLogAnalyticsEffect')]"
+          },
+          "profileName": {
+            "value": "[[parameters('profileName')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-SqlServer-Auditing",
+        "policyDefinitionReferenceId": "SqlServerAuditing",
+        "parameters": {
+          "logAnalytics": {
+            "value": "[[parameters('logAnalytics')]"
+          },
+          "effect": {
+            "value": "[[parameters('SqlServerAuditingLogAnalyticsEffect')]"
           },
           "profileName": {
             "value": "[[parameters('profileName')]"
