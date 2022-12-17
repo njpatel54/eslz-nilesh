@@ -29,8 +29,8 @@
       },      
       "SqlDbSecurityAlertPoliciesEmail": {
         "metadata": {
-          "description": "The email address to SQL Database Security Alerts.",
-          "displayName": "The email address to SQL Database Security Alerts."
+          "description": "The email address to send SQL Database Security Alerts",
+          "displayName": "The email address to send SQL Database Security Alerts"
         },
         "type": "String"
       },
@@ -48,15 +48,15 @@
       },
       "vulnerabilityAssessmentsEmail": {
         "metadata": {
-          "description": "The email address to send alerts",
-          "displayName": "The email address to send alerts"
+          "description": "The email address to send vulnerability assessment scan emails",
+          "displayName": "The email address to send vulnerability assessment scan emails"
         },
         "type": "String"
       },
       "vulnerabilityAssessmentsStorageID": {
         "metadata": {
-          "description": "The storage account ID to store assessments",
-          "displayName": "The storage account ID to store assessments"
+          "description": "The storage account ID to store vulnerability assessments",
+          "displayName": "The storage account ID to store vulnerability assessments"
         },
         "type": "String"
       },
@@ -70,7 +70,7 @@
       },
       "profileName": {
         "type": "String",
-        "defaultValue": "logging-diagSetting-sentinel",
+        "defaultValue": "masterDB-diagSetting",
         "metadata": {
           "displayName": "Profile name",
           "description": "The diagnostic settings profile name"

@@ -19,8 +19,8 @@
       "SqlDbSecurityAlertPoliciesEmail": {
         "type": "String",
         "metadata": {
-          "description": "The email address to SQL Database Security Alerts.",
-          "displayName": "The email address to SQL Database Security Alerts."
+          "description": "The email address to send SQL Database Security Alerts.",
+          "displayName": "The email address to send SQL Database Security Alerts."
         }
       }
     },

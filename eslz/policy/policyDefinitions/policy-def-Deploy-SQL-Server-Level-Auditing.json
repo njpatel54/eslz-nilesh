@@ -22,7 +22,7 @@
                     "displayName": "Setting name",
                     "description": "Name of the diagnostic settings."
                 },
-                "defaultValue": "SQLDatabaseDiagnosticsLogsToWorkspace"
+                "defaultValue": "masterDB-diagSetting"
             },
             "logAnalytics": {
                 "type": "String",
