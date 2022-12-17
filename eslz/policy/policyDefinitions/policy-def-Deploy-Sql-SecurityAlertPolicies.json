@@ -93,7 +93,7 @@
                   "value": "[field('location')]"
                 },
                 "sqlServerName": {
-                  "value": "[[first(split(field('fullname'),'/'))]"
+                  "value": "[split(field('id'),'/')[8]]"
                 },
                 "sqlServerDataBaseName": {
                   "value": "[field('name')]"
