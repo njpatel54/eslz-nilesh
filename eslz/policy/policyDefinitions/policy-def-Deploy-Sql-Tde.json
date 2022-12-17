@@ -52,6 +52,10 @@
         "effect": "[parameters('effect')]",
         "details": {
           "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+          "name": "current",
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/9b7fa17d-e63e-47b0-bb0a-15c516ac86ec"
+        ],
           "existenceCondition": {
             "allOf": [
               {
@@ -67,20 +71,14 @@
                 "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                 "contentVersion": "1.0.0.0",
                 "parameters": {
-                  "location": {
-                    "type": "String"
-                  },
-                  "sqlServerName": {
-                    "type": "String"
-                  },
-                  "sqlServerDataBaseName": {
-                    "type": "String"
-                  }
+                  "fullDbName": {
+                    "type": "string"
+                }
                 },
                 "variables": {},
                 "resources": [
                   {
-                    "name": "[[concat( parameters('sqlServerName'),'/',parameters('sqlServerDataBaseName'),'/current')]",
+                    "name": "[concat(parameters('fullDbName'), '/current')]",
                     "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
                     "apiVersion": "2014-04-01",
                     "properties": {
@@ -91,21 +89,12 @@
                 "outputs": {}
               },
               "parameters": {
-                "location": {
-                  "value": "[field('location')]"
-                },
-                "sqlServerName": {
-                  "value": "[[first(split(field('fullname'),'/'))]"
-                },
-                "sqlServerDataBaseName": {
-                  "value": "[field('name')]"
+                "fullDbName": {
+                  "value": "[field('fullName')]"
                 }
               }
             }
-          },
-          "roleDefinitionIds": [
-            "/providers/Microsoft.Authorization/roleDefinitions/056cd41c-7e88-42e1-933e-88ba6a50c9c3"
-          ]
+          }
         }
       }
     }
