@@ -15,6 +15,20 @@
           "description": "Deploy the Transparent Data Encryption when it is not enabled in the deployment"
         }
       },
+      "SqlDbTdeDeploySqlSecurityExcludedDatabases": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Excluded Databases",
+          "description": "Array of databases that are excluded from this policy"
+        },
+        "defaultValue": [
+          "master",
+          "model",
+          "tempdb",
+          "msdb",
+          "resource"
+        ]
+      },
       "SqlDbSecurityAlertPoliciesDeploySqlSecurityEffect": {
         "type": "String",
         "defaultValue": "DeployIfNotExists",
@@ -26,7 +40,7 @@
           "displayName": "Deploy SQL Database security Alert Policies configuration with email admin accounts",
           "description": "Deploy the security Alert Policies configuration with email admin accounts when it not exist in current configuration"
         }
-      },      
+      },
       "SqlDbSecurityAlertPoliciesEmail": {
         "metadata": {
           "description": "The email address to send SQL Database Security Alerts",
@@ -102,6 +116,9 @@
         "parameters": {
           "effect": {
             "value": "[[parameters('SqlDbTdeDeploySqlSecurityEffect')]"
+          },
+          "excludedDatabases": {
+            "value": "[[parameters('SqlDbTdeDeploySqlSecurityExcludedDatabases')]"
           }
         }
       },

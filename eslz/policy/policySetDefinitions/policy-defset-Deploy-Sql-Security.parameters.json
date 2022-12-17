@@ -3,6 +3,9 @@
     "parameters": {
       "effect": {
         "value": "[[parameters('SqlDbTdeDeploySqlSecurityEffect')]"
+      },
+      "excludedDatabases": {
+        "value": "[[parameters('SqlDbTdeDeploySqlSecurityExcludedDatabases')]"
       }
     }
   },
