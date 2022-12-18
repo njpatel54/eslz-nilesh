@@ -32,7 +32,7 @@ param diagnosticLogsRetentionInDays int = 365
   'Timeouts'
   'Blocks'
   'Deadlocks'
-  //'DevOpsOperationsAudit'
+  'DevOpsOperationsAudit'
   'SQLSecurityAuditEvents'
 ])
 param diagnosticLogCategoriesToEnable array = [
@@ -45,7 +45,7 @@ param diagnosticLogCategoriesToEnable array = [
   'Timeouts'
   'Blocks'
   'Deadlocks'
-  //'DevOpsOperationsAudit'
+  'DevOpsOperationsAudit'
   'SQLSecurityAuditEvents'
 ]
 
