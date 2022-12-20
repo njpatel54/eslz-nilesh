@@ -1,0 +1,95 @@
+{
+    "properties": {
+        "displayName": "Assign Contributor RBAC role for an AD group",
+        "policyType": "Custom",
+        "mode": "All",
+        "description": "Assigns Contributor RBAC role for AD group resource groups with Tag 'RbacAssignment = true' and name prefix 'my-rg-prefix'. Existing resource groups can be remediated by triggering a remediation task.",
+        "metadata": {
+            "category": "Role Assignments",
+        },
+        "parameters": {},
+        "policyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.Storage/StorageAccounts"
+                    }
+                ]
+            },
+            "then": {
+                "effect": "deployIfNotExists",
+                "details": {
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "roleDefinitionIds": [
+                        "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+                    ],
+                    "existenceCondition": {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Authorization/roleAssignments/roleDefinitionId",
+                                "like": "*/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+                            },
+                            {
+                                "field": "Microsoft.Authorization/roleAssignments/principalId",
+                                "equals": "d3e968d0-586a-4058-8f0e-d54ca380a61f"
+                            },
+                            {
+                                "field": "Microsoft.Authorization/roleAssignments/scope",
+                                "equals": "[field('id')]"
+                            }
+                        ]
+                    },
+                    "deployment": {
+                        "properties": {
+                            "mode": "incremental",
+                            "parameters": {
+                                "saId": {
+                                    "value": "[field('id')]"
+                                }
+                            },
+                            "template": {
+                                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                "contentVersion": "1.0.0.0",
+                                "parameters": {
+                                    "saId": {
+                                        "type": "string",
+                                        "metadata": {
+                                            "description": "Full Id of the storage account"
+                                        }
+                                    },
+                                    "adGroupId": {
+                                        "type": "string",
+                                        "defaultValue": "d3e968d0-586a-4058-8f0e-d54ca380a61f",
+                                        "metadata": {
+                                            "description": "ObjectId of an AD group"
+                                        }
+                                    },
+                                    "ownerRbacRole": {
+                                        "type": "string",
+                                        "defaultValue": "[concat(parameters('saId'),'/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+                                        "metadata": {
+                                            "description": "Owner RBAC role definition ID"
+                                        }
+                                    }
+                                },
+                                "resources": [
+                                    {
+                                        "type": "Microsoft.Authorization/roleAssignments",
+                                        "apiVersion": "2018-09-01-preview",
+                                        "name": "[guid(resourceGroup().id, deployment().name)]",
+                                        "scope": "[parameters('saId')]",
+                                        "properties": {
+                                            "roleDefinitionId": "[parameters('ownerRbacRole')]",
+                                            "principalId": "[parameters('adGroupId')]"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

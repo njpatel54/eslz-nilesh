@@ -1,0 +1,76 @@
+{    
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+          "counter": {
+              "type": "int",
+              "defaultValue": 5
+          }
+      },
+      "variables": {
+          "locationSettings": {
+              "westeurope": {
+                  "abbreviation": "weu"
+              },
+              "switzerlandnorth": {
+                  "abbreviation": "chn"
+              },
+              "eastus2": {
+                  "abbreviation": "eus2"
+              },
+              "eastasia": {
+                  "abbreviation": "ea"
+              }
+          },
+          "rgName": "[concat('rg-delay-', variables('locationSettings')[resourceGroup().location].abbreviation)]"
+      },
+      "resources": [
+          {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2021-04-01",
+              "name": "[concat('DelayDeployment--', variables('rgName'))]",
+              "resourceGroup": "[variables('rgName')]",
+              "properties": {
+                  "mode": "Incremental",
+                  "expressionEvaluationOptions": {
+                      "scope": "Inner"
+                  },
+                  "template": {
+                      "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                      "contentVersion": "1.0.0.0",
+                      "parameters": {
+                          "counter": {
+                              "type": "int"
+                          }
+                      },
+                      "resources": [
+                          {
+                              "type": "Microsoft.Resources/deployments",
+                              "apiVersion": "2021-04-01",
+                              "copy": {
+                                  "count": "[parameters('counter')]",
+                                  "name": "delayLoop",
+                                  "mode": "Serial",
+                                  "batchSize": 1
+                              },
+                              "name": "[concat('Delay-Loop-', copyIndex('delayLoop'))]",
+                              "properties": {
+                                  "mode": "Incremental",
+                                  "template": {
+                                      "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                      "contentVersion": "1.0.0.0",
+                                      "resources": []
+                                  }
+                              }
+                          }
+                      ]
+                  },
+                  "parameters": {
+                      "counter": {
+                          "value": "[parameters('counter')]"
+                      }
+                  }
+              }
+          }
+      ]
+  }

@@ -57,7 +57,7 @@ module mgRbac '../modules/authorization/roleAssignments/managementGroup/deploy.b
 
 // 3. Move Subscriptions to Management Groups
 module moveSubs '../modules/management/moveSubs/deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'movesubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
+  name: 'movesubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: tenant()
   dependsOn: [
     mg

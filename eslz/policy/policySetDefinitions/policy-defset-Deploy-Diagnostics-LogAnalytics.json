@@ -583,18 +583,6 @@
           "description": "Deploys the diagnostic settings for SignalR to stream to a Log Analytics workspace when any SignalR which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
         }
       },
-      "SQLDBsLogAnalyticsEffect": {
-        "type": "String",
-        "defaultValue": "DeployIfNotExists",
-        "allowedValues": [
-          "DeployIfNotExists",
-          "Disabled"
-        ],
-        "metadata": {
-          "displayName": "Deploy Diagnostic Settings for SQL Databases  to Log Analytics workspace",
-          "description": "Deploys the diagnostic settings for SQL Databases to stream to a Log Analytics workspace when any SQL Databases  which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
-        }
-      },
       "SQLElasticPoolsLogAnalyticsEffect": {
         "type": "String",
         "defaultValue": "DeployIfNotExists",
@@ -1652,21 +1640,6 @@
           },
           "effect": {
             "value": "[[parameters('SignalRLogAnalyticsEffect')]"
-          },
-          "profileName": {
-            "value": "[[parameters('profileName')]"
-          }
-        }
-      },
-      {
-        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs",
-        "policyDefinitionReferenceId": "SQLDatabaseDeployDiagnosticLogDeployLogAnalytics",
-        "parameters": {
-          "logAnalytics": {
-            "value": "[[parameters('logAnalytics')]"
-          },
-          "effect": {
-            "value": "[[parameters('SQLDBsLogAnalyticsEffect')]"
           },
           "profileName": {
             "value": "[[parameters('profileName')]"

@@ -95,10 +95,6 @@ param opscope string
   'usaz'
 ])
 param region string
-
-@description('Required. Last four digits of Enrollment Number.')
-param enrollmentID string
-
 // Build param values using string interpolation
 @description('Required. SIEM Resource Group Name.')
 param siemRgName string = 'rg-${projowner}-${opscope}-${region}-siem'
@@ -128,10 +124,10 @@ param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-
 param softwareUpdateConfigurations array = []
 
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection - Management Subscription.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
+param stgAcctMgmtName string = toLower(take('st${projowner}${opscope}plat${region}logs', 24))
 
 @description('Required. Storage Account Name for Storing Shared data managed by platform team - Shared Services Subscription.')
-param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}ssvc', 24))
+param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}plat${region}ssvc', 24))
 
 @description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set.')
 param stgPublicNetworkAccess string = 'Disabled'
@@ -282,7 +278,7 @@ module loga '../modules/operationalInsights/workspaces/deploy.bicep' = {
 
 // 5. Create Storage Account (Management Subscription)
 module saMgmt '../modules/storageAccounts/deploy.bicep' = {
-  name: 'saMgmt-${take(uniqueString(deployment().name, location), 4)}-${stgAcctName}'
+  name: 'saMgmt-${take(uniqueString(deployment().name, location), 4)}-${stgAcctMgmtName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     loga
@@ -291,7 +287,7 @@ module saMgmt '../modules/storageAccounts/deploy.bicep' = {
   params: {
     location: location    
     tags: ccsCombinedTags
-    storageAccountName: stgAcctName
+    storageAccountName: stgAcctMgmtName
     storageSKU: storageaccount_sku
     blobServices: blobServices
     fileServices: fileServices
@@ -320,6 +316,7 @@ module saSsvc '../modules/storageAccounts/deploy.bicep' = {
     fileServices: fileServices
     queueServices: queueServices
     tableServices: tableServices
+    networkAcls: stgAcctNetworkAcls
     diagnosticSettingsName: diagSettingName
     diagnosticWorkspaceId: loga.outputs.resourceId
     tags: ccsCombinedTags
@@ -381,7 +378,6 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
     tags: ccsCombinedTags
     publicNetworkAccess: automationAcctPublicNetworkAccess
     linkedWorkspaceResourceId: logaSentinel.outputs.resourceId
-    softwareUpdateConfigurations: softwareUpdateConfigurations
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: saMgmt.outputs.resourceId
     diagnosticWorkspaceId: loga.outputs.resourceId
@@ -390,7 +386,25 @@ module aaLogaSentinel '../modules/automation/automationAccounts/deploy.bicep' = 
   }
 }
 
-// 10. Create Azure Key Vault (Management Subscription)
+// 10. Create Software Update Management Configuration
+module lzUpdateMgmt '../landingZones/wrapperModule/updateManagement.bicep' = [ for subscription in subscriptions: {
+  name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
+  scope: tenant()
+  dependsOn: [
+    aaLogaSentinel
+  ]
+  params: {
+    location: location
+    mgmtsubid: mgmtsubid
+    sentinelAutomationAcctName: sentinelAutomationAcctName
+    siemRgName: siemRgName
+    suffix: subscription.suffix
+    subscriptionId: '/subscriptions/${subscription.subscriptionId}'
+    softwareUpdateConfigurations: softwareUpdateConfigurations
+  }
+}]
+
+// 11. Create Azure Key Vault (Management Subscription)
 module akvManagement '../modules/keyVault/vaults/deploy.bicep' = {
   name: 'akvManagement-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -413,9 +427,9 @@ module akvManagement '../modules/keyVault/vaults/deploy.bicep' = {
     }
 }
 
-// 11. Configure Diagnostics Settings for Subscriptions
+// 12. Configure Diagnostics Settings for Subscriptions
 module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'subDiagSettings-${subscription.subscriptionId}'
+  name: 'subDiagSettings-${subscription.suffix}'
   scope: subscription(subscription.subscriptionId)
   dependsOn: [
     eh
@@ -430,18 +444,18 @@ module subDiagSettings '../modules/insights/diagnosticSettings/sub.deploy.bicep'
   }
 }]
 
-// 12. Configure Tags for Subscriptions
+// 13. Configure Tags for Subscriptions
 module subTags '../modules/resources/tags/subscriptions/deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'subTags-${subscription.subscriptionId}'
+  name: 'subTags-${subscription.suffix}'
   scope: subscription(subscription.subscriptionId)
     params: {
     tags: ccsCombinedTags
   }
 }]
 
-// 13. Configure Defender for Cloud
+// 14. Configure Defender for Cloud
 module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
+  name: 'defender-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: subscription(subscription.subscriptionId)
   dependsOn: [
     logaSentinel
@@ -453,7 +467,7 @@ module defender '../modules/security/azureSecurityCenter/deploy.bicep' = [ for s
   }
 }]
 
-// 14. Configure Sentinel Data Connectors - Tenent Level
+// 15. Configure Sentinel Data Connectors - Tenent Level
 module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/tenant.deploy.bicep' = {
   name: 'dataConnectorsTenant-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -466,9 +480,9 @@ module dataConnectorsTenantScope '../modules/securityInsights/dataConnectors/ten
   }
 }
 
-// 15. Configure Sentinel Data Connectors - Subscription Level
+// 16. Configure Sentinel Data Connectors - Subscription Level
 module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = [ for subscription in subscriptions: {
-  name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.subscriptionId}'
+  name: 'dataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     logaSentinel 
@@ -480,7 +494,7 @@ module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subsc
   }
 }]
 
-// 16. Create Recovery Services Vault (Management Subscription)
+// 17. Create Recovery Services Vault (Management Subscription)
 module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsvMgmt-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -714,7 +728,7 @@ module rsvMgmt '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 17. Create Recovery Services Vault's Backup Configuration (Management Subscription)
+// 18. Create Recovery Services Vault's Backup Configuration (Management Subscription)
 module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfigMgmt-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -726,7 +740,7 @@ module rsvBackupConfigMgmt '../modules/recoveryServices/vaults/backupConfig/depl
   }
 }
 
-// 18. Create Recovery Services Vault (Shared Services Subscription)
+// 19. Create Recovery Services Vault (Shared Services Subscription)
 module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   name: 'rsvSsvc-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -960,7 +974,7 @@ module rsvSsvc '../modules/recoveryServices/vaults/deploy.bicep' = {
   }
 }
 
-// 19. Create Recovery Services Vault's Backup Configuration (Shared Services Subscription)
+// 20. Create Recovery Services Vault's Backup Configuration (Shared Services Subscription)
 module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/deploy.bicep' = {
   name: 'rsvBackupConfigSsvc-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -972,7 +986,7 @@ module rsvBackupConfigSsvc '../modules/recoveryServices/vaults/backupConfig/depl
   }
 }
 
-// 20. Create Action Group(s)
+// 21. Create Action Group(s)
 module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for subscription in subscriptions: {
   name: 'actionGroup-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: tenant()
@@ -988,7 +1002,7 @@ module actionGroup '../landingZones/wrapperModule/actionGroup.bicep' = [ for sub
   }
 }]
 
-// 21. Create Alert Rules
+// 22. Create Alert Rules
 module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription in subscriptions: {
   name: 'alerts-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: tenant()
@@ -1005,7 +1019,7 @@ module alerts '../landingZones/wrapperModule/alerts.bicep' = [ for subscription 
   }
 }]
 
-// 22. Create Budgets
+// 23. Create Budgets
 module budget '../landingZones/wrapperModule/budgets.bicep' = [ for subscription in subscriptions: {
   name: 'budgets-${take(uniqueString(deployment().name, location), 4)}-${subscription.suffix}'
   scope: tenant()
@@ -1119,7 +1133,7 @@ module fileShareBackupMgmt '../modules/recoveryServices/vaults/fileShareBackup/d
   params: {
     subscriptionId: mgmtsubid
     stgAcctRgName: siemRgName
-    stgAcctName: stgAcctName
+    stgAcctMgmtName: stgAcctMgmtName
     fileShareName: share.name 
     vaultRgName: mgmtRgName
     vaultName: mgmtVaultName
@@ -1140,7 +1154,7 @@ module fileShareBackupSsvc '../modules/recoveryServices/vaults/fileShareBackup/d
   params: {
     subscriptionId: ssvcsubid
     stgAcctRgName: mgmtRgName
-    stgAcctName: stgAcctSsvcName
+    stgAcctMgmtName: stgAcctSsvcName
     fileShareName: share.name 
     vaultRgName: mgmtRgName
     vaultName: ssvcVaultName

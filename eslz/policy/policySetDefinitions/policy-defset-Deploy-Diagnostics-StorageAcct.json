@@ -571,18 +571,6 @@
           "description": "Deploys the diagnostic settings for SignalR to stream to a Storage Account when any SignalR which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
         }
       },
-      "SQLDBsstorageAccountIdEffect": {
-        "type": "String",
-        "defaultValue": "DeployIfNotExists",
-        "allowedValues": [
-          "DeployIfNotExists",
-          "Disabled"
-        ],
-        "metadata": {
-          "displayName": "Deploy Diagnostic Settings for SQL Databases  to Storage Account",
-          "description": "Deploys the diagnostic settings for SQL Databases to stream to a Storage Account when any SQL Databases  which is missing this diagnostic settings is created or updated. The Policy will set the diagnostic with all metrics and category enabled"
-        }
-      },
       "SQLElasticPoolsstorageAccountIdEffect": {
         "type": "String",
         "defaultValue": "DeployIfNotExists",
@@ -1454,21 +1442,6 @@
           },
           "effect": {
             "value": "[[parameters('SignalRstorageAccountIdEffect')]"
-          },
-          "profileName": {
-            "value": "[[parameters('profileName')]"
-          }
-        }
-      },
-      {
-        "policyDefinitionId": "${targetMgResourceId}/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-SQLDBs-StgAcct",
-        "policyDefinitionReferenceId": "SQLDBsDeployDiagnosticLogDeployStorageAcct",
-        "parameters": {
-          "storageAccountId": {
-            "value": "[[parameters('storageAccountId')]"
-          },
-          "effect": {
-            "value": "[[parameters('SQLDBsstorageAccountIdEffect')]"
           },
           "profileName": {
             "value": "[[parameters('profileName')]"

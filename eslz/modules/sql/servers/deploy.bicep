@@ -89,9 +89,17 @@ resource server 'Microsoft.Sql/servers@2021-05-01-preview' = {
     version: '12.0'
     minimalTlsVersion: minimalTlsVersion
     publicNetworkAccess: publicNetworkAccess
+
   }
 }
 
+resource server_advancedThreatProtectionSettings 'Microsoft.Sql/servers/advancedThreatProtectionSettings@2022-05-01-preview' = {
+  name: 'Default'
+  parent: server
+  properties: {
+    state: 'Enabled'
+  }
+}
 resource server_lock 'Microsoft.Authorization/locks@2017-04-01' = if (!empty(lock)) {
   name: '${server.name}-${lock}-lock'
   properties: {

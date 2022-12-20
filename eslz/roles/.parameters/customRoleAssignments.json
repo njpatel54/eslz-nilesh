@@ -122,6 +122,15 @@
                     ]
                 },
                 {
+                    "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
+                    "resourceGroupName": "rg-ccs-test-usva-vnet",
+                    "description": "Deploy Private Endpoint - Networking Permissions",
+                    "roleDefinitionIdOrName": "/providers/Microsoft.Authorization/roleDefinitions/2e0d2a95-e00d-52ee-9da2-4afcc839bbb2",
+                    "principalIds": [
+                        "c0f38eff-4a74-4e1e-a174-e3a71820b1ea"
+                    ]
+                },
+                {
                     "subscriptionId": "e6c61ac5-feea-4459-93fc-7131f8352553",
                     "resourceGroupName": "rg-ccs-test-usva-vnet",
                     "description": "Bastion Host Reader",

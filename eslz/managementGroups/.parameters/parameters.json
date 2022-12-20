@@ -120,6 +120,13 @@
             "principalIds": [
                 "1940dc83-26b6-470d-a651-ab1006521bb4"
             ]
+        },
+        {
+          "managementGroupName": "mg-A2g",
+          "roleDefinitionIdOrName": "Backup Contributor",
+          "principalIds": [
+            "fe58beb9-f023-494d-9d48-0bf8115c3bf1"
+          ]
         }
       ]
     },

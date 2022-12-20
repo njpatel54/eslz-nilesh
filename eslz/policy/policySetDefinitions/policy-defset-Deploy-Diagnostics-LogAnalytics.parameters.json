@@ -678,19 +678,6 @@
       }
     }
   },
-  "SQLDatabaseDeployDiagnosticLogDeployLogAnalytics": {
-    "parameters": {
-      "logAnalytics": {
-        "value": "[[parameters('logAnalytics')]"
-      },
-      "effect": {
-        "value": "[[parameters('SQLDBsLogAnalyticsEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
   "SQLElasticPoolsDeployDiagnosticLogDeployLogAnalytics": {
     "parameters": {
       "logAnalytics": {

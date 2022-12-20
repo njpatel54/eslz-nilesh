@@ -53,8 +53,7 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-                         tenantid=${{ secrets.AZURE_TENANTID }} \
-                         enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}
+                         tenantid=${{ secrets.AZURE_TENANTID }}
 
   preview:
     runs-on: ubuntu-latest
@@ -85,8 +84,7 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-                         tenantid=${{ secrets.AZURE_TENANTID }} \
-                         enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}
+                         tenantid=${{ secrets.AZURE_TENANTID }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -118,5 +116,4 @@ jobs:
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
                          ssvcsubid=${{ secrets.AZURE_SSVCSUBSCRIPTIONID }} \
-                         tenantid=${{ secrets.AZURE_TENANTID }} \
-                         enrollmentID=${{ secrets.AZURE_ENROLLMENTID}}
+                         tenantid=${{ secrets.AZURE_TENANTID }}

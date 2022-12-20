@@ -336,7 +336,7 @@ module sub 'wrapperModule/createSub.bicep' = {
 
 // 4. Create Resource Groups
 module lzRgs './wrapperModule/resourceGroup.bicep' = {
-  name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-rgs-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
     sub
   ]
@@ -495,7 +495,7 @@ module lzAkv 'wrapperModule/keyVault.bicep' = if (lzAkvDeploy) {
 
 // 12. Create SQL Server(s)
 module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
-  name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzSql-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
     lzVnet
   ]
@@ -527,7 +527,7 @@ module lzSql 'wrapperModule/sql.bicep' = if (lzSqlDeploy) {
 
 // 13. Create Virtual Machine(s)
 module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
-  name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzVms-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   dependsOn: [
     lzVnet
     lzRsv
@@ -548,6 +548,7 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
     platformProjOwner: platformProjOwner
     platformOpScope: platformOpScope
     region: region
+    akvName: akvName
     diagnosticWorkspaceId: lzLoga.outputs.logaResoruceId
     monitoringWorkspaceId: logaSentinel.id
   }
@@ -555,7 +556,8 @@ module lzVms 'wrapperModule/virtualMachine.bicep' = if (lzVmsDeploy) {
 
 // 14. Create Software Update Management Configuration
 module lzUpdateMgmt 'wrapperModule/updateManagement.bicep' = {
-  name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzUpdateMgmt-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
+  scope: tenant()
   dependsOn: [
     lzVnet
   ]
@@ -608,7 +610,7 @@ module lzDefender 'wrapperModule/defender.bicep' = {
 
 // 17. Configure Sentinel Data Connectors - Subscription Level
 module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subscription.deploy.bicep' = {
-  name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzDataConnectorsSubs-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     sub
@@ -622,7 +624,7 @@ module lzDataConnectorsSubsScope '../modules/securityInsights/dataConnectors/sub
 
 // 18. Create Action Group(s)
 module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
-  name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzActionGroup-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: tenant()
   dependsOn: [
     lzRgs
@@ -631,14 +633,14 @@ module lzActionGroup 'wrapperModule/actionGroup.bicep' = {
     location: location
     tags: combinedTags
     subscriptionId: sub.outputs.subscriptionId
-    wlRgName: wlRgName
+    wlRgName: mgmtRgName
     actionGroups: actionGroups
   }
 }
 
 // 19. Create Alert Rules
 module lzAlerts 'wrapperModule/alerts.bicep' = {
-  name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzAlerts-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: tenant()
   dependsOn: [
     lzRgs
@@ -647,7 +649,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
   ]
   params: {
     subscriptionId: sub.outputs.subscriptionId
-    wlRgName: wlRgName
+    wlRgName: mgmtRgName
     tags: combinedTags   
     suffix: suffix
     actionGroups: actionGroups
@@ -656,7 +658,7 @@ module lzAlerts 'wrapperModule/alerts.bicep' = {
 
 // 20. Create Budgets
 module lzBudgets 'wrapperModule/budgets.bicep' = {
-  name: 'mod-lzBudgets-${take(uniqueString(deployment().name, location), 4)}'
+  name: 'mod-lzBudgets-${take(uniqueString(deployment().name, location), 4)}-${subscriptionAlias}'
   scope: tenant()
   dependsOn: [
     lzActionGroup

@@ -261,6 +261,46 @@
         "spokeVnets": {
             "value": [
                 {
+                    "name": "vnet-ccs-test-usva-iden",
+                    "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+                    "addressPrefixes": [
+                        "10.20.11.0/24"
+                    ],
+                    "dnsServers": [
+                        "10.30.0.68"
+                    ],
+                    "subnets": [
+                        {
+                            "name": "snet-ccs-test-usva-iden",
+                            "addressPrefix": "10.20.11.0/26",
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled",
+                            "routeTableId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
+                            "networkSecurityGroupId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
+                        },
+                        {
+                            "name": "snet-ccs-test-usva-mgmt",
+                            "addressPrefix": "10.20.11.64/26",
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled",
+                            "routeTableId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
+                            "networkSecurityGroupId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
+                        }
+                    ],
+                    "virtualNetworkPeerings": [
+                        {
+                            "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-test-usva-conn",
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "useRemoteGateways": false,
+                            "remotePeeringEnabled": true,
+                            "remotePeeringAllowVirtualNetworkAccess": true,
+                            "remotePeeringAllowForwardedTraffic": true
+                        }
+                    ]
+                },
+                {
                     "name": "vnet-ccs-test-usva-mgmt",
                     "subscriptionId": "aa2a513a-47e2-4a0d-8d39-0a3d5dd0f889",
                     "addressPrefixes": [
@@ -383,32 +423,80 @@
                             "remotePeeringAllowForwardedTraffic": true
                         }
                     ]
-                },
+                },                
                 {
-                    "name": "vnet-ccs-test-usva-iden",
-                    "subscriptionId": "3862f646-cc8b-4260-ba2b-24380c6979da",
+                    "name": "vnet-ccs-test-usva-sand",
+                    "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
                     "addressPrefixes": [
-                        "10.20.11.0/24"
+                        "10.31.0.0/24"
                     ],
                     "dnsServers": [
                         "10.30.0.68"
                     ],
                     "subnets": [
                         {
-                            "name": "snet-ccs-test-usva-iden",
-                            "addressPrefix": "10.20.11.0/26",
+                            "name": "snet-ccs-test-usva-app",
+                            "addressPrefix": "10.31.0.0/26",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage"
+                                },
+                                {
+                                    "service": "Microsoft.Sql"
+                                }
+                            ],
                             "privateEndpointNetworkPolicies": "Disabled",
                             "privateLinkServiceNetworkPolicies": "Enabled",
-                            "routeTableId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                            "networkSecurityGroupId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
+                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
+                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
+                        },
+                        {
+                            "name": "snet-ccs-test-usva-data",
+                            "addressPrefix": "10.31.0.64/26",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage"
+                                },
+                                {
+                                    "service": "Microsoft.Sql"
+                                }
+                            ],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled",
+                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
+                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
                         },
                         {
                             "name": "snet-ccs-test-usva-mgmt",
-                            "addressPrefix": "10.20.11.64/26",
+                            "addressPrefix": "10.31.0.128/26",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage"
+                                },
+                                {
+                                    "service": "Microsoft.Sql"
+                                }
+                            ],
                             "privateEndpointNetworkPolicies": "Disabled",
                             "privateLinkServiceNetworkPolicies": "Enabled",
-                            "routeTableId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                            "networkSecurityGroupId": "/subscriptions/3862f646-cc8b-4260-ba2b-24380c6979da/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
+                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
+                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
+                        },
+                        {
+                            "name": "snet-ccs-test-usva-web",
+                            "addressPrefix": "10.31.0.192/26",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage"
+                                },
+                                {
+                                    "service": "Microsoft.Sql"
+                                }
+                            ],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled",
+                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
+                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
                         }
                     ],
                     "virtualNetworkPeerings": [
@@ -497,94 +585,6 @@
                             "privateLinkServiceNetworkPolicies": "Enabled",
                             "routeTableId": "/subscriptions/c295836f-4cd3-468a-b958-cf85ae7c6d23/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
                             "networkSecurityGroupId": "/subscriptions/c295836f-4cd3-468a-b958-cf85ae7c6d23/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
-                        }
-                    ],
-                    "virtualNetworkPeerings": [
-                        {
-                            "remoteVirtualNetworkId": "/subscriptions/e6c61ac5-feea-4459-93fc-7131f8352553/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/virtualNetworks/vnet-ccs-test-usva-conn",
-                            "allowForwardedTraffic": true,
-                            "allowGatewayTransit": false,
-                            "allowVirtualNetworkAccess": true,
-                            "useRemoteGateways": false,
-                            "remotePeeringEnabled": true,
-                            "remotePeeringAllowVirtualNetworkAccess": true,
-                            "remotePeeringAllowForwardedTraffic": true
-                        }
-                    ]
-                },
-                {
-                    "name": "vnet-ccs-test-usva-sand",
-                    "subscriptionId": "fa8dcb2f-02cf-4138-b887-e19132b7857b",
-                    "addressPrefixes": [
-                        "10.31.0.0/24"
-                    ],
-                    "dnsServers": [
-                        "10.30.0.68"
-                    ],
-                    "subnets": [
-                        {
-                            "name": "snet-ccs-test-usva-app",
-                            "addressPrefix": "10.31.0.0/26",
-                            "serviceEndpoints": [
-                                {
-                                    "service": "Microsoft.Storage"
-                                },
-                                {
-                                    "service": "Microsoft.Sql"
-                                }
-                            ],
-                            "privateEndpointNetworkPolicies": "Disabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled",
-                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
-                        },
-                        {
-                            "name": "snet-ccs-test-usva-data",
-                            "addressPrefix": "10.31.0.64/26",
-                            "serviceEndpoints": [
-                                {
-                                    "service": "Microsoft.Storage"
-                                },
-                                {
-                                    "service": "Microsoft.Sql"
-                                }
-                            ],
-                            "privateEndpointNetworkPolicies": "Disabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled",
-                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
-                        },
-                        {
-                            "name": "snet-ccs-test-usva-mgmt",
-                            "addressPrefix": "10.31.0.128/26",
-                            "serviceEndpoints": [
-                                {
-                                    "service": "Microsoft.Storage"
-                                },
-                                {
-                                    "service": "Microsoft.Sql"
-                                }
-                            ],
-                            "privateEndpointNetworkPolicies": "Disabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled",
-                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
-                        },
-                        {
-                            "name": "snet-ccs-test-usva-web",
-                            "addressPrefix": "10.31.0.192/26",
-                            "serviceEndpoints": [
-                                {
-                                    "service": "Microsoft.Storage"
-                                },
-                                {
-                                    "service": "Microsoft.Sql"
-                                }
-                            ],
-                            "privateEndpointNetworkPolicies": "Disabled",
-                            "privateLinkServiceNetworkPolicies": "Enabled",
-                            "routeTableId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/routeTables/rt-ccs-test-usva-0001",
-                            "networkSecurityGroupId": "/subscriptions/fa8dcb2f-02cf-4138-b887-e19132b7857b/resourceGroups/rg-ccs-test-usva-vnet/providers/Microsoft.Network/networkSecurityGroups/nsg-ccs-test-usva-vms"
                         }
                     ],
                     "virtualNetworkPeerings": [

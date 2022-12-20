@@ -194,14 +194,11 @@ param logAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 @description('Required. Automation Account Name - LAW - Sentinel')
 param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
 
-@description('Required. Last four digits of Enrollment Number.')
-param enrollmentID string
-
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection - Management Subscription.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
+param stgAcctName string = toLower(take('st${projowner}${opscope}plat${region}logs', 24))
 
 @description('Required. Storage Account Name for Storing Shared data managed by platform team - Shared Services Subscription.')
-param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}ssvc', 24))
+param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}plat${region}ssvc', 24))
 
 @description('Required. Name of the Key Vault. Must be globally unique - Management Subscription.')
 @maxLength(24)
@@ -464,7 +461,7 @@ module mgmtNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (
   name: 'mgmtNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(mgmtsubid, vnetRgName)
   dependsOn: [
-    hubRg
+    spokeRg
   ]
   params: {
     name: nsg.name
@@ -485,7 +482,7 @@ module ssvcNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (
   name: 'ssvcNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(ssvcsubid, vnetRgName)
   dependsOn: [
-    hubRg
+    spokeRg
   ]
   params: {
     name: nsg.name
@@ -506,7 +503,7 @@ module idenNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (
   name: 'idenNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(idensubid, vnetRgName)
   dependsOn: [
-    hubRg
+    spokeRg
   ]
   params: {
     name: nsg.name
@@ -527,7 +524,7 @@ module sandNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (
   name: 'sandNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(sandsubid, vnetRgName)
   dependsOn: [
-    hubRg
+    spokeRg
   ]
   params: {
     name: nsg.name

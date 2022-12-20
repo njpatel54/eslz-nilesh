@@ -36,6 +36,27 @@
                                     "destinationFqdns": []
                                 },
                                 {
+                                    "name": "Allow-Identity-To-Other-Platform-Subs",
+                                    "ipProtocols": [
+                                        "Any"
+                                    ],
+                                    "destinationPorts": [
+                                        "*"
+                                    ],
+                                    "sourceAddresses": [
+                                        "10.20.11.0/24"
+                                    ],
+                                    "sourceIpGroups": [],
+                                    "ruleType": "NetworkRule",
+                                    "destinationIpGroups": [],
+                                    "destinationAddresses": [
+                                        "10.30.8.0/21",
+                                        "10.31.0.0/24",
+                                        "10.30.16.0/21"
+                                    ],
+                                    "destinationFqdns": []
+                                },
+                                {
                                     "name": "Allow-Management-To-Other-Platform-Subs",
                                     "ipProtocols": [
                                         "Any"
@@ -51,12 +72,13 @@
                                     "destinationIpGroups": [],
                                     "destinationAddresses": [
                                         "10.20.11.0/24",
+                                        "10.31.0.0/24",
                                         "10.30.16.0/21"
                                     ],
                                     "destinationFqdns": []
                                 },
                                 {
-                                    "name": "Allow-Identity-To-Other-Platform-Subs",
+                                    "name": "Allow-Sandbox-To-Other-Platform-Subs",
                                     "ipProtocols": [
                                         "Any"
                                     ],
@@ -64,12 +86,13 @@
                                         "*"
                                     ],
                                     "sourceAddresses": [
-                                        "10.20.11.0/24"
+                                        "10.31.0.0/24"
                                     ],
                                     "sourceIpGroups": [],
                                     "ruleType": "NetworkRule",
                                     "destinationIpGroups": [],
                                     "destinationAddresses": [
+                                        "10.20.11.0/24",
                                         "10.30.8.0/21",
                                         "10.30.16.0/21"
                                     ],
@@ -90,28 +113,9 @@
                                     "ruleType": "NetworkRule",
                                     "destinationIpGroups": [],
                                     "destinationAddresses": [
+                                        "10.20.11.0/24",
                                         "10.30.8.0/21",
-                                        "10.20.11.0/24"
-                                    ],
-                                    "destinationFqdns": []
-                                },
-                                {
-                                    "name": "Allow-Sandbox-To-Other-Platform-Subs",
-                                    "ipProtocols": [
-                                        "Any"
-                                    ],
-                                    "destinationPorts": [
-                                        "*"
-                                    ],
-                                    "sourceAddresses": [
-                                        "10.30.16.0/21"
-                                    ],
-                                    "sourceIpGroups": [],
-                                    "ruleType": "NetworkRule",
-                                    "destinationIpGroups": [],
-                                    "destinationAddresses": [
-                                        "10.30.8.0/21",
-                                        "10.20.11.0/24"
+                                        "10.31.0.0/24"
                                     ],
                                     "destinationFqdns": []
                                 }
@@ -136,9 +140,8 @@
                                     ],
                                     "sourceIpGroups": [],
                                     "destinationAddresses": [
-                                        "10.30.0.0/21",
-                                        "10.30.8.0/21",
                                         "10.20.11.0/24",
+                                        "10.30.8.0/21",
                                         "10.30.16.0/21"
                                     ],
                                     "destinationIpGroups": [],

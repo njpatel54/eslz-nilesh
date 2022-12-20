@@ -121,7 +121,7 @@ param siemRgName string = 'rg-${platformProjOwner}-${platformOpScope}-${region}-
 
 @description('Required. Name of the Key Vault. Must be globally unique.')
 @maxLength(24)
-param akvName string = toLower(take('kv-${platformProjOwner}-${platformOpScope}-${region}-siem', 24))
+param akvName string
 /*
 @description('Optional. The configuration for the [Custom Script] extension. Must at least contain the ["enabled": true] property to be executed.')
 param extensionCustomScriptConfig object = {

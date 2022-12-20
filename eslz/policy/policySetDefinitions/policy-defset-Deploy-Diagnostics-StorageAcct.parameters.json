@@ -623,19 +623,6 @@
       }
     }
   },
-  "SQLDBsDeployDiagnosticLogDeployStorageAcct": {
-    "parameters": {
-      "storageAccountId": {
-        "value": "[[parameters('storageAccountId')]"
-      },
-      "effect": {
-        "value": "[[parameters('SQLDBsstorageAccountIdEffect')]"
-      },
-      "profileName": {
-        "value": "[[parameters('profileName')]"
-      }
-    }
-  },
   "SQLElasticPoolsDeployDiagnosticLogDeployStorageAcct": {
     "parameters": {
       "storageAccountId": {
