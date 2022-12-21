@@ -1149,6 +1149,20 @@ module rsvPeSsvc '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
+@description('Required. Default Management Group where newly created Subscription will be added to.')
+param onboardmg string
+
+@description('Required. Indicates whether RBAC access is required upon group creation under the root Management Group. If set to true, user will require Microsoft.Management/managementGroups/write action on the root Management Group scope in order to create new Groups directly under the root. .')
+param requireAuthorizationForGroupCreation bool
+
+@description('Required. Array of Management Groups objects.')
+param managementGroups array
+
+@description('Required. Array of role assignment objects to define RBAC on management groups.')
+param mgRoleAssignments array = []
+
+@description('Required. Array of role assignment objects to define RBAC on subscriptions.')
+param subRoleAssignments array = []
 
 @description('Required. Array of Subscription objects.')
 param subscriptions array
@@ -1228,7 +1242,11 @@ module dataConnectorsSubsScope '../modules/securityInsights/dataConnectors/subsc
     dataConnectors: dataConnectorsSubs
   }
 }]
-
+output onboardmg string = onboardmg
+output requireAuthorizationForGroupCreation bool = requireAuthorizationForGroupCreation
+output managementGroups array = managementGroups
+output mgRoleAssignments array = mgRoleAssignments
+output subRoleAssignments array = subRoleAssignments
 
 
 
