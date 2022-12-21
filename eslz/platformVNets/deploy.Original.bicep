@@ -5,12 +5,12 @@ param hubNetworkSecurityGroups array
 
 @description('Required. Subscription ID.')
 param hubVnetSubscriptionId string
-
+/*
 @description('Required. Default Route Table name.')
 param defaultRouteTableName string = 'rt-${projowner}-${opscope}-${region}-0001'
-
-@description('Optional. An Array of Routes to be established within the hub route table.')
-param routes array = []
+*/
+@description('Optional. An Array of Route Tables.')
+param routeTables array = []
 
 @description('Required. The Virtual Network (vNet) Name.')
 param hubVnetName string
@@ -61,7 +61,7 @@ param dynamictags object = ({
 
 var tags = json(loadTextContent('../tags.json'))
 
-@description('Required. Combine Tags in dynamoctags object with Tags from parameter file.')
+@description('Required. Combine Tags in dynamictags object with Tags from parameter file.')
 var ccsCombinedTags = union(dynamictags, tags.ccsTags.value)
 //var lzCombinedTags = union(dynamictags, tags.lz01Tags.value)
 
@@ -113,7 +113,7 @@ param publicIPzones array
 param userMiAfpTlsInspection string = 'id-${projowner}-${opscope}-${region}-afwp'
 
 @description('Required. Firewall Policy name prefix.')
-param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-pol'
+param firewallPolicyNamePrefix string = 'afwp-${projowner}-${opscope}-${region}-pol0'
 
 @description('Required. Firewall Policies array.')
 param firewallPolicies array
@@ -156,7 +156,7 @@ param privateDnsZones array
 
 @description('Required. Load content from json file to iterate over virtual networks in "hubVnet" and "spokeVnets"')
 var params = json(loadTextContent('.parameters/parameters.json'))
-
+/*
 // Start - Variables created to be used to attach NSG to AzureBastionSubnet
 @description('Required. Iterate over each "hubVnetSubnets" and build variable to store "AzureBastionSubnet".')
 var AzureBastionSubnet = params.parameters.hubVnetSubnets.value[3]
@@ -164,7 +164,7 @@ var AzureBastionSubnet = params.parameters.hubVnetSubnets.value[3]
 @description('Required. Iterate over each "hubNetworkSecurityGroups" and build variable to store NSG for "AzureBastionSubnet".')
 var bastionNsg = params.parameters.hubNetworkSecurityGroups.value[0].name
 // End - Variables created to be used to attach NSG to AzureBastionSubnet
-
+*/
 // Start - Variables created to be used to configure 'virtualNetworkLinks' for Private DNS Zone(s)
 @description('Required. Iterate over each "spokeVnets" and build "resourceId" of each Virtual Networks using "subscriptionId", "vnetRgName" and "vNet.name".')
 var spokeVNetsResourceIds = [for vNet in params.parameters.spokeVnets.value: resourceId(vNet.subscriptionId, vnetRgName, 'Microsoft.Network/virtualNetworks', vNet.name)]
@@ -194,22 +194,15 @@ param logAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-logs'
 @description('Required. Automation Account Name - LAW - Sentinel')
 param sentinelAutomationAcctName string = 'aa-${projowner}-${opscope}-${region}-siem'
 
-@description('Required. Last four digits of Enrollment Number.')
-param enrollmentID string
-
 @description('Required. Storage Account Name for resource Diagnostics Settings - Log Collection - Management Subscription.')
-param stgAcctName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}logs', 24))
+param stgAcctName string = toLower(take('st${projowner}${opscope}plat${region}logs', 24))
 
 @description('Required. Storage Account Name for Storing Shared data managed by platform team - Shared Services Subscription.')
-param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}${enrollmentID}${region}ssvc', 24))
+param stgAcctSsvcName string = toLower(take('st${projowner}${opscope}plat${region}ssvc', 24))
 
 @description('Required. Name of the Key Vault. Must be globally unique - Management Subscription.')
 @maxLength(24)
 param akvName string = toLower(take('kv-${projowner}-${opscope}-${region}-siem', 24))
-
-@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
-@maxLength(24)
-param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
 
 @description('Required. Automation Account subresource IDs (groupId).')
 var aaGroupIds = [
@@ -237,6 +230,12 @@ param ssvcVnetName string = 'vnet-${projowner}-${opscope}-${region}-ssvc'
 
 @description('Required. Name of the resourceGroup, where centralized management components will be.')
 param mgmtRgName string = 'rg-${projowner}-${opscope}-${region}-mgmt'
+
+@description('Required. Subscription ID of Identity Subscription.')
+param idensubid string
+
+@description('Required. Subscription ID of Sandbox Subscription.')
+param sandsubid string
 
 @description('Required. Load content from json file to iterate over "rgRoleAssignments".')
 var paramsRoles = json(loadTextContent('../roles/.parameters/customRoleAssignments.json'))
@@ -341,7 +340,7 @@ var privatelinkBackup = replace('privatelink.<geoCode>.backup.windowsazure.us', 
 
 // 1. Create Hub Resoruce Group
 module hubRg '../modules/resources/resourceGroups/deploy.bicep' = {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
+  name: 'hubRg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
   scope: subscription(hubVnetSubscriptionId)
   params: {
     name: vnetRgName
@@ -350,9 +349,95 @@ module hubRg '../modules/resources/resourceGroups/deploy.bicep' = {
   }
 }
 
-// 2. Create Hub Network Security Group(s) (Connectivity Subscription)
-module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in hubNetworkSecurityGroups: {
-  name: 'hubNsg-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+// 2. Create Spoke Resoruce Group(s)
+module spokeRg '../modules/resources/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
+  name: 'spokeRg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
+  scope: subscription(vNet.subscriptionId)
+  params: {
+    name: vnetRgName
+    location: location
+    tags: ccsCombinedTags
+  }
+}]
+
+// 3. Create Route Tables (Connectivity Subscription)
+module connRouteTables '../modules/network/routeTables/deploy.bicep' = [for (routeTable, index) in routeTables: {
+  name: 'connRouteTables-${take(uniqueString(deployment().name, location), 4)}-${routeTable.name}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+  ]
+  params: {
+    name: routeTable.name
+    location: location
+    tags: ccsCombinedTags
+    routes: routeTable.routes
+  }
+}]
+
+// 4. Create Route Tables (Management Subscription)
+module mgmtRouteTables '../modules/network/routeTables/deploy.bicep' = [for (routeTable, index) in routeTables: {
+  name: 'mgmtRouteTables-${take(uniqueString(deployment().name, location), 4)}-${routeTable.name}'
+  scope: resourceGroup(mgmtsubid, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: routeTable.name
+    location: location
+    tags: ccsCombinedTags
+    routes: routeTable.routes
+  }
+}]
+
+// 5. Create Route Tables (Shared Services Subscription)
+module ssvcRouteTables '../modules/network/routeTables/deploy.bicep' = [for (routeTable, index) in routeTables: {
+  name: 'ssvcRouteTables-${take(uniqueString(deployment().name, location), 4)}-${routeTable.name}'
+  scope: resourceGroup(ssvcsubid, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: routeTable.name
+    location: location
+    tags: ccsCombinedTags
+    routes: routeTable.routes
+  }
+}]
+
+// 6. Create Route Tables (Identity Subscription)
+module idenRouteTables '../modules/network/routeTables/deploy.bicep' = [for (routeTable, index) in routeTables: {
+  name: 'idenRouteTables-${take(uniqueString(deployment().name, location), 4)}-${routeTable.name}'
+  scope: resourceGroup(idensubid, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: routeTable.name
+    location: location
+    tags: ccsCombinedTags
+    routes: routeTable.routes
+  }
+}]
+
+// 7. Create Route Tables (Sandbox Subscription)
+module sandRouteTables '../modules/network/routeTables/deploy.bicep' = [for (routeTable, index) in routeTables: {
+  name: 'sandRouteTables-${take(uniqueString(deployment().name, location), 4)}-${routeTable.name}'
+  scope: resourceGroup(sandsubid, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: routeTable.name
+    location: location
+    tags: ccsCombinedTags
+    routes: routeTable.routes
+  }
+}]
+
+// 8. Create Network Security Group(s) (Connectivity Subscription)
+module connNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in hubNetworkSecurityGroups: {
+  name: 'connNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     hubRg
@@ -371,37 +456,106 @@ module hubNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (n
   }
 }]
 
-// 3. Create Route Table (Connectivity Subscription)
-module hubRouteTable '../modules/network//routeTables/deploy.bicep' = {
-  name: 'hubRouteTable-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+// 9. Create Network Security Group(s) (Management Subscription)
+module mgmtNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in spokeNetworkSecurityGroups: {
+  name: 'mgmtNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(mgmtsubid, vnetRgName)
   dependsOn: [
-    hubRg
+    spokeRg
   ]
   params: {
-    name: defaultRouteTableName
+    name: nsg.name
     location: location
     tags: ccsCombinedTags
-    routes: routes
+    securityRules: nsg.securityRules
+    roleAssignments: nsg.roleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
   }
-}
+}]
 
-// 4. Create Hub Virtual Network
+// 10. Create Network Security Group(s) (Shared Services Subscription)
+module ssvcNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in spokeNetworkSecurityGroups: {
+  name: 'ssvcNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(ssvcsubid, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: nsg.name
+    location: location
+    tags: ccsCombinedTags
+    securityRules: nsg.securityRules
+    roleAssignments: nsg.roleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}]
+
+// 11. Create Network Security Group(s) (Identity Subscription)
+module idenNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in spokeNetworkSecurityGroups: {
+  name: 'idenNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(idensubid, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: nsg.name
+    location: location
+    tags: ccsCombinedTags
+    securityRules: nsg.securityRules
+    roleAssignments: nsg.roleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}]
+
+// 12. Create Network Security Group(s) (Sandbox Subscription)
+module sandNsgs '../modules/network/networkSecurityGroups/deploy.bicep' = [for (nsg, index) in spokeNetworkSecurityGroups: {
+  name: 'sandNsgs-${take(uniqueString(deployment().name, location), 4)}-${nsg.name}'
+  scope: resourceGroup(sandsubid, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: nsg.name
+    location: location
+    tags: ccsCombinedTags
+    securityRules: nsg.securityRules
+    roleAssignments: nsg.roleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}]
+
+// 13. Create Hub Virtual Network
 module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${hubVnetName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
-    hubNsgs
-    hubRouteTable
+    connRouteTables
+    connNsgs
   ]
   params: {
     name: hubVnetName
     location: location
     tags: ccsCombinedTags
+    subscriptionId: hubVnetSubscriptionId
     addressPrefixes: hubVnetAddressPrefixes
     subnets: hubVnetSubnets
     virtualNetworkPeerings: hubVnetVirtualNetworkPeerings
-    subscriptionId: hubVnetSubscriptionId
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
@@ -410,100 +564,40 @@ module hubVnet '../modules/network/virtualNetworks/deploy.bicep' = {
   }
 }
 
-// 5. Attach NSG to AzureBastionSubnet
-module attachNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets/deploy.bicep' = {
-  name: 'attachNsgToAzureBastionSubnet-${AzureBastionSubnet.name}'
-  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
-  dependsOn: [
-    hubNsgs
-    hubVnet
-  ]
-  params: {
-    name: AzureBastionSubnet.name
-    virtualNetworkName: hubVnetName
-    addressPrefix: AzureBastionSubnet.addressPrefix
-    networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)
-    //serviceEndpoints: AzureBastionSubnet.serviceEndpoints
-    //privateEndpointNetworkPolicies: AzureBastionSubnet.privateEndpointNetworkPolicies
-    //privateLinkServiceNetworkPolicies: AzureBastionSubnet.privateLinkServiceNetworkPolicies
-  }
-}
-
-// 6. Create Spoke Resoruce Group(s)
-module spokeRg '../modules/resources/resourceGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
-  name: 'rg-${take(uniqueString(deployment().name, location), 4)}-${vnetRgName}'
-  scope: subscription(vNet.subscriptionId)
-  params: {
-    name: vnetRgName
-    location: location
-    tags: ccsCombinedTags
-  }
-}]
-
-// 7. Create Hub Network Security Group(s) (Spoke Subscriptions)
-module spokeNsg '../modules/network/networkSecurityGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
-  name: 'spokeNsg-${take(uniqueString(deployment().name, location), 4)}-${spokeNetworkSecurityGroups[0].name}'
-  scope: resourceGroup(vNet.subscriptionId, vnetRgName)
-  dependsOn: [
-    hubRg
-  ]
-  params: {
-    name: spokeNetworkSecurityGroups[0].name
-    location: location
-    tags: ccsCombinedTags
-    securityRules: spokeNetworkSecurityGroups[0].securityRules
-    roleAssignments: spokeNetworkSecurityGroups[0].roleAssignments
-    diagnosticSettingsName: diagSettingName
-    diagnosticStorageAccountId: diagnosticStorageAccountId
-    diagnosticWorkspaceId: diagnosticWorkspaceId
-    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
-    //diagnosticEventHubName: diagnosticEventHubName
-  }
-}]
-
-// 8. Create Route Table (Spoke Subscriptions)
-module spokeRouteTables '../modules/network//routeTables/deploy.bicep' = [for (vNet, index) in spokeVnets: {
-  name: 'spokeRouteTables-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
-  scope: resourceGroup(vNet.subscriptionId, vnetRgName)
-  dependsOn: [
-    spokeRg
-  ]
-  params: {
-    name: defaultRouteTableName
-    location: location
-    tags: ccsCombinedTags
-    routes: routes
-  }
-}]
-
-// 9. Create Spoke Virtual Network(s)
+// 14. Create Spoke Virtual Network(s)
 module spokeVnet '../modules/network/virtualNetworks/deploy.bicep' = [for (vNet, index) in spokeVnets: {
   name: 'vnet-${take(uniqueString(deployment().name, location), 4)}-${vNet.name}'
   scope: resourceGroup(vNet.subscriptionId, vnetRgName)
   dependsOn: [
-    spokeRg
+    mgmtRouteTables
+    ssvcRouteTables
+    idenRouteTables
+    sandRouteTables
+    mgmtNsgs
+    ssvcNsgs
+    idenNsgs
+    sandNsgs
     hubVnet
-    spokeRouteTables
   ]
   params: {
     name: vNet.name
     location: location
     tags: ccsCombinedTags
+    subscriptionId: vNet.subscriptionId
     addressPrefixes: vNet.addressPrefixes
     dnsServers: vNet.dnsServers
     subnets: vNet.subnets
     virtualNetworkPeerings: vNet.virtualNetworkPeerings
-    subscriptionId: vNet.subscriptionId
-    networkSecurityGroupId: resourceId(vNet.subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', spokeNetworkSecurityGroups[0].name)
     diagnosticSettingsName: diagSettingName
     diagnosticStorageAccountId: diagnosticStorageAccountId
     diagnosticWorkspaceId: diagnosticWorkspaceId
+    //networkSecurityGroupId: resourceId(vNet.subscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', spokeNetworkSecurityGroups[0].name)
     //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
     //diagnosticEventHubName: diagnosticEventHubName    
   }
 }]
 
-// 10. Create Resource Group for Private DNS Zones
+// 15. Create Resource Group for Private DNS Zones
 module priDNSZonesRg '../modules/resources/resourceGroups/deploy.bicep' = {
   name: 'priDNSZonesRg-${take(uniqueString(deployment().name, location), 4)}-${priDNSZonesRgName}'
   scope: subscription(hubVnetSubscriptionId)
@@ -514,7 +608,7 @@ module priDNSZonesRg '../modules/resources/resourceGroups/deploy.bicep' = {
   }
 }
 
-// 11. Create Private DNS Zones
+// 16. Create Private DNS Zones
 module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for privateDnsZone in privateDnsZones: {
   name: 'priDNSZones-${privateDnsZone}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -534,7 +628,7 @@ module priDNSZones '../modules/network/privateDnsZones/deploy.bicep' = [for priv
   }
 }]
 
-// 12. Create Public IP Address for Azure Firewall
+// 17. Create Public IP Address for Azure Firewall
 module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'fwpip-${take(uniqueString(deployment().name, location), 4)}-${firewallPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -556,7 +650,7 @@ module afwPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// 13. Create User Assigned Managed Identity (Firewall Policy - TLS Inspection/KeyVault Secret)
+// 18. Create User Assigned Managed Identity (Firewall Policy - TLS Inspection/KeyVault Secret)
 module userMiAfwp '../modules/managedIdentity/userAssignedIdentities/deploy.bicep' = {
   name: 'userMiAfwp-${take(uniqueString(deployment().name, location), 4)}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -570,13 +664,13 @@ module userMiAfwp '../modules/managedIdentity/userAssignedIdentities/deploy.bice
   }
 }
 
-// 14. Retrieve an existing Key Vault resource (Management Subscription)
+// 19. Retrieve an existing Key Vault resource (Management Subscription)
 resource akv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 15. Create Private Endpoint for Key Vault (Management Subscription)
+// 20. Create Private Endpoint for Key Vault (Management Subscription)
 module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'akvPe-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -600,7 +694,7 @@ module akvPe '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 16. Create Role Assignment for User Assignment Managed Identity to Key Vault (Management Subscription)
+// 21. Create Role Assignment for User Assignment Managed Identity to Key Vault (Management Subscription)
 module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentKeyVault-${take(uniqueString(deployment().name, location), 4)}-${akvName}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -617,7 +711,7 @@ module roleAssignmentKeyVault '../modules/authorization/roleAssignments/resource
   }
 }
 
-// 17. Create Fireall Policy
+// 22. Create Fireall Policy
 @batchSize(1)
 module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallPolicy, i) in firewallPolicies: {
   name: 'afwp-${take(uniqueString(deployment().name, location), 4)}-${i}'
@@ -651,7 +745,7 @@ module afwp '../modules/network/firewallPolicies/deploy.bicep' = [for (firewallP
   }
 }]
 
-// 18. Create Firewall Policy Rule Collection Groups
+// 23. Create Firewall Policy Rule Collection Groups
 @batchSize(1)
 module afwprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.bicep' = [for (firewallPolicyRuleCollectionGroup, i) in firewallPolicyRuleCollectionGroups: {
   name:  'afwprcg-${take(uniqueString(deployment().name, location), 4)}-${firewallPolicyRuleCollectionGroup.name}'
@@ -667,7 +761,7 @@ module afwprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.
   }
 }]
 
-// 19. Create Firewall
+// 24. Create Firewall
 module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   name: 'afw-${take(uniqueString(deployment().name, location), 4)}-${firewallName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -700,7 +794,7 @@ module afw '../modules/network/azureFirewalls/deploy.bicep' = {
   }
 }
 
-// 20. Create Public IP Address for Azure Bastion Host
+// 25. Create Public IP Address for Azure Bastion Host
 module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   name: 'bhPip-${take(uniqueString(deployment().name, location), 4)}-${bastionHostPublicIPName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -722,7 +816,7 @@ module bhPip '../modules/network/publicIPAddresses/deploy.bicep' = {
   }
 }
 
-// 21. Create Azure Bastion Host
+// 26. Create Azure Bastion Host
 module bas '../modules/network/bastionHosts/deploy.bicep' = {
   name: 'bas-${take(uniqueString(deployment().name, location), 4)}-${bastionHostName}'
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
@@ -749,13 +843,13 @@ module bas '../modules/network/bastionHosts/deploy.bicep' = {
   }
 }
 
-// 22. Retrieve an existing Storage Account resource (Management Subscription)
+// 27. Retrieve an existing Storage Account resource (Management Subscription)
 resource saMgmt 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: stgAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 23. Create Private Endpoint for Storage Account (Management Subscription)
+// 28. Create Private Endpoint for Storage Account (Management Subscription)
 module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
   name: 'saMgmtPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
@@ -780,13 +874,13 @@ module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
   }
 }]
 
-// 24. Retrieve an existing Storage Account resource (Shared Services Subscription)
+// 29. Retrieve an existing Storage Account resource (Shared Services Subscription)
 resource saSsvc 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
   name: stgAcctSsvcName
   scope: resourceGroup(ssvcsubid, mgmtRgName)
 }
 
-// 25. Create Private Endpoint for Storage Account (Shared Services Subscription)
+// 30. Create Private Endpoint for Storage Account (Shared Services Subscription)
 module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGroupId, index) in stgGroupIds: if (!empty(stgGroupIds)) {
   name: 'saSsvcPe-${take(uniqueString(deployment().name, location), 4)}-${stgGroupId}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -811,15 +905,15 @@ module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
   }
 }]
 
-// 26. Retrieve an existing Automation Account resource (LAW - Logs Collection)
+// 31. Retrieve an existing Automation Account resource (LAW - Logs Collection)
 resource aaLoga 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
   name: logAutomationAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 27. Create Private Endpoint for Automation Account (LAW - Logs Collection)
+// 32. Create Private Endpoint for Automation Account (LAW - Logs Collection)
 module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
+  name: 'aaLogaPe-${take(uniqueString(deployment().name, location), 4)}-${logAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     aaLoga
@@ -842,15 +936,15 @@ module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGrou
   }
 }]
 
-// 28. Retrieve an existing Automation Account resource (LAW - Sentinel)
+// 33. Retrieve an existing Automation Account resource (LAW - Sentinel)
 resource aaLogaSentinel 'Microsoft.Automation/automationAccounts@2021-06-22' existing = {
   name: sentinelAutomationAcctName
   scope: resourceGroup(mgmtsubid, siemRgName)
 }
 
-// 29. Create Private Endpoint for Automation Account (LAW - Sentinel)
+// 34. Create Private Endpoint for Automation Account (LAW - Sentinel)
 module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGroupId in aaGroupIds: {
-  name: 'aaPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
+  name: 'aaLogaSentinelPe-${take(uniqueString(deployment().name, location), 4)}-${sentinelAutomationAcctName}-${aaGroupId}'
   scope: resourceGroup(mgmtsubid, siemRgName)
   dependsOn: [
     aaLogaSentinel
@@ -873,13 +967,13 @@ module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [fo
   }
 }]
 
-// 30. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
+// 35. Retrieve an existing Recovery Services Vault Resource (Management Subscription)
 resource rsvMgmt 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   name: mgmtVaultName
   scope: resourceGroup(mgmtsubid, mgmtRgName)
 }
 
-// 31. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 36. Create Role Assignment for Recovery Services Vault's System Managed Identity (Connectivity - PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributorMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -897,7 +991,7 @@ module roleAssignmentPriDNSAContributorMgmt '../modules/authorization/roleAssign
   }
 }
 
-// 32. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - VNet RG)
+// 37. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - VNet RG)
 module roleAssignmentNetworkingPermsMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, vnetRgName)
@@ -915,7 +1009,7 @@ module roleAssignmentNetworkingPermsMgmt '../modules/authorization/roleAssignmen
   }
 }
 
-// 33. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - MGMT RG)
+// 38. Create Role Assignment for Recovery Services Vault's System Managed Identity (Management - MGMT RG)
 module roleAssignmentContributorMgmt '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -933,7 +1027,7 @@ module roleAssignmentContributorMgmt '../modules/authorization/roleAssignments/r
   }
 }
 
-// 34. Create Private Endpoint for Recovery Services Vault (Management Subscription)
+// 39. Create Private Endpoint for Recovery Services Vault (Management Subscription)
 module rsvPeMgmt '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPeMgmt-${take(uniqueString(deployment().name, location), 4)}-${mgmtVaultName}'
   scope: resourceGroup(mgmtsubid, mgmtRgName)
@@ -964,13 +1058,13 @@ module rsvPeMgmt '../modules/network/privateEndpoints/deploy.bicep' = {
   }
 }
 
-// 35. Retrieve an existing Recovery Services Vault Resource (Shared Services Subscription)
+// 40. Retrieve an existing Recovery Services Vault Resource (Shared Services Subscription)
 resource rsvSsvc 'Microsoft.RecoveryServices/vaults@2022-04-01' existing = {
   name: ssvcVaultName
   scope: resourceGroup(ssvcsubid, mgmtRgName)
 }
 
-// 36. Create Role Assignment for Recovery Services Vault's System Managed Identity (PrivateDNSZones RG)
+// 41. Create Role Assignment for Recovery Services Vault's System Managed Identity (Connectivity - PrivateDNSZones RG)
 module roleAssignmentPriDNSAContributorSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentPriDNSAContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(hubVnetSubscriptionId, priDNSZonesRgName)
@@ -988,7 +1082,7 @@ module roleAssignmentPriDNSAContributorSsvc '../modules/authorization/roleAssign
   }
 }
 
-// 37. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
+// 42. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - VNet RG)
 module roleAssignmentNetworkingPermsSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentNetworkingPerms-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, vnetRgName)
@@ -1006,7 +1100,7 @@ module roleAssignmentNetworkingPermsSsvc '../modules/authorization/roleAssignmen
   }
 }
 
-// 38. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
+// 43. Create Role Assignment for Recovery Services Vault's System Managed Identity (Shared Services - MGMT RG)
 module roleAssignmentContributorSsvc '../modules/authorization/roleAssignments/resourceGroup/deploy.bicep' = {
   name: 'roleAssignmentContributor-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -1024,7 +1118,7 @@ module roleAssignmentContributorSsvc '../modules/authorization/roleAssignments/r
   }
 }
 
-// 39. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
+// 44. Create Private Endpoint for Recovery Services Vault (Shared Services Subscription)
 module rsvPeSsvc '../modules/network/privateEndpoints/deploy.bicep' = {
   name: 'rsvPeSsvc-${take(uniqueString(deployment().name, location), 4)}-${ssvcVaultName}'
   scope: resourceGroup(ssvcsubid, mgmtRgName)
@@ -1078,11 +1172,72 @@ output priDNSZonesRgCustomRbacRoles array = priDNSZonesRgCustomRbacRoles
 
 
 
+/*
+// 5. Attach NSG to AzureBastionSubnet
+module attachNsgToAzureBastionSubnet '../modules/network/virtualNetworks/subnets/deploy.bicep' = {
+  name: 'attachNsgToAzureBastionSubnet-${AzureBastionSubnet.name}'
+  scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
+  dependsOn: [
+    hubNsgs
+    hubVnet
+  ]
+  params: {
+    name: AzureBastionSubnet.name
+    virtualNetworkName: hubVnetName
+    addressPrefix: AzureBastionSubnet.addressPrefix
+    networkSecurityGroupId: resourceId(hubVnetSubscriptionId, vnetRgName, 'Microsoft.Network/networkSecurityGroups', bastionNsg)
+    //serviceEndpoints: AzureBastionSubnet.serviceEndpoints
+    //privateEndpointNetworkPolicies: AzureBastionSubnet.privateEndpointNetworkPolicies
+    //privateLinkServiceNetworkPolicies: AzureBastionSubnet.privateLinkServiceNetworkPolicies
+  }
+}
+
+// 7. Create Network Security Group(s) (Spoke Subscriptions)
+module spokeNsg '../modules/network/networkSecurityGroups/deploy.bicep' = [for (vNet, index) in spokeVnets: {
+  name: 'spokeNsg-${take(uniqueString(deployment().name, location), 4)}-${spokeNetworkSecurityGroups[0].name}'
+  scope: resourceGroup(vNet.subscriptionId, vnetRgName)
+  dependsOn: [
+    hubRg
+  ]
+  params: {
+    name: spokeNetworkSecurityGroups[0].name
+    location: location
+    tags: ccsCombinedTags
+    securityRules: spokeNetworkSecurityGroups[0].securityRules
+    roleAssignments: spokeNetworkSecurityGroups[0].roleAssignments
+    diagnosticSettingsName: diagSettingName
+    diagnosticStorageAccountId: diagnosticStorageAccountId
+    diagnosticWorkspaceId: diagnosticWorkspaceId
+    //diagnosticEventHubAuthorizationRuleId: diagnosticEventHubAuthorizationRuleId
+    //diagnosticEventHubName: diagnosticEventHubName
+  }
+}]
+
+// 8. Create Route Table (Spoke Subscriptions)
+module spokeRouteTables '../modules/network//routeTables/deploy.bicep' = [for (vNet, index) in spokeVnets: {
+  name: 'spokeRouteTables-${take(uniqueString(deployment().name, location), 4)}-${defaultRouteTableName}'
+  scope: resourceGroup(vNet.subscriptionId, vnetRgName)
+  dependsOn: [
+    spokeRg
+  ]
+  params: {
+    name: defaultRouteTableName
+    location: location
+    tags: ccsCombinedTags
+    routes: routes
+  }
+}]
+*/
+
 
 
 
 
 /*
+@description('Required. Name of the Key Vault. Must be globally unique - Connectivity Subscription.')
+@maxLength(24)
+param akvConnectivityName string = toLower(take('kv-${projowner}-${opscope}-${region}-conn', 24))
+
 // 16. Retrieve an existing Key Vault resource (Connectivity Subscription)
 resource akvConnectivity 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: akvConnectivityName

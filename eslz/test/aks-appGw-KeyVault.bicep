@@ -61,16 +61,13 @@ param aksClusterOutboundType string = 'loadBalancer'
 param aksClusterSkuTier string = 'Paid'
 
 @description('Specifies the version of Kubernetes specified when creating the managed cluster.')
-param aksClusterKubernetesVersion string = '1.20.5'
+param aksClusterKubernetesVersion string = '1.20.2'
 
 @description('Specifies the administrator username of Linux virtual machines.')
-param aksClusterAdminUsername string
+param aksClusterAdminUsername string = 'azureuser'
 
 @description('Specifies the SSH RSA public key string for the Linux nodes.')
-param aksClusterSshPublicKey string
-
-@description('Specifies whether enabling AAD integration.')
-param aadEnabled bool = false
+param aksClusterSshPublicKey string = null
 
 @description('Specifies the tenant id of the Azure Active Directory used by the AKS cluster for authentication.')
 param aadProfileTenantId string = subscription().tenantId
@@ -79,19 +76,19 @@ param aadProfileTenantId string = subscription().tenantId
 param aadProfileAdminGroupObjectIDs array = []
 
 @description('Specifies whether to create the cluster as a private cluster or not.')
-param aksClusterEnablePrivateCluster bool = false
+param aksClusterEnablePrivateCluster bool = true
 
 @description('Specifies whether to enable managed AAD integration.')
-param aadProfileManaged bool = false
+param aadProfileManaged bool = true
 
 @description('Specifies whether to  to enable Azure RBAC for Kubernetes authorization.')
-param aadProfileEnableAzureRBAC bool = false
+param aadProfileEnableAzureRBAC bool = true
 
 @description('Specifies the unique name of of the system node pool profile in the context of the subscription and resource group.')
-param systemNodePoolName string = 'system'
+param systemNodePoolName string = 'nodepool1'
 
 @description('Specifies the vm size of nodes in the system node pool.')
-param systemNodePoolVmSize string = 'Standard_D16s_v3'
+param systemNodePoolVmSize string = 'Standard_DS5_v2'
 
 @description('Specifies the OS Disk Size in GB to be used to specify the disk size for every machine in the system agent pool. If you specify 0, it will apply the default osDisk size according to the vmSize specified..')
 param systemNodePoolOsDiskSizeGB int = 100
@@ -147,13 +144,17 @@ param systemNodePoolNodeTaints array = []
 param systemNodePoolType string = 'VirtualMachineScaleSets'
 
 @description('Specifies the availability zones for the agent nodes in the system node pool. Requirese the use of VirtualMachineScaleSets as node pool type.')
-param systemNodePoolAvailabilityZones array = []
+param systemNodePoolAvailabilityZones array = [
+  '1'
+  '2'
+  '3'
+]
 
 @description('Specifies the unique name of of the user node pool profile in the context of the subscription and resource group.')
-param userNodePoolName string = 'user'
+param userNodePoolName string = 'nodepool2'
 
 @description('Specifies the vm size of nodes in the user node pool.')
-param userNodePoolVmSize string = 'Standard_D16s_v3'
+param userNodePoolVmSize string = 'Standard_DS5_v2'
 
 @description('Specifies the OS Disk Size in GB to be used to specify the disk size for every machine in the system agent pool. If you specify 0, it will apply the default osDisk size according to the vmSize specified..')
 param userNodePoolOsDiskSizeGB int = 100
@@ -209,7 +210,11 @@ param userNodePoolNodeTaints array = []
 param userNodePoolType string = 'VirtualMachineScaleSets'
 
 @description('Specifies the availability zones for the agent nodes in the user node pool. Requirese the use of VirtualMachineScaleSets as node pool type.')
-param userNodePoolAvailabilityZones array = []
+param userNodePoolAvailabilityZones array = [
+  '1'
+  '2'
+  '3'
+]
 
 @description('Specifies whether the httpApplicationRouting add-on is enabled or not.')
 param httpApplicationRoutingEnabled bool = false
@@ -224,7 +229,7 @@ param azurePolicyEnabled bool = true
 param kubeDashboardEnabled bool = false
 
 @description('Specifies whether the pod identity addon is enabled..')
-param podIdentityProfileEnabled bool = false
+param podIdentityProfileEnabled bool = true
 
 @description('Specifies the scan interval of the auto-scaler of the AKS cluster.')
 param autoScalerProfileScanInterval string = '10s'
@@ -257,7 +262,7 @@ param virtualNetworkName string = '${aksClusterName}Vnet'
 param virtualNetworkAddressPrefixes string = '10.0.0.0/8'
 
 @description('Specifies the name of the subnet hosting the system node pool of the AKS cluster.')
-param aksSubnetName string = 'AksSubnet'
+param aksSubnetName string = 'AksSystemSubnet'
 
 @description('Specifies the address prefix of the subnet hosting the system node pool of the AKS cluster.')
 param aksSubnetAddressPrefix string = '10.0.0.0/16'
@@ -272,7 +277,7 @@ param logAnalyticsWorkspaceName string = '${aksClusterName}Workspace'
   'PerNode'
   'PerGB2018'
 ])
-param logAnalyticsSku string = 'PerGB2018'
+param logAnalyticsSku string = 'PerNode'
 
 @description('Specifies the workspace data retention in days. -1 means Unlimited retention for the Unlimited Sku. 730 days is the maximum allowed for all other Skus.')
 param logAnalyticsRetentionInDays int = 60
@@ -284,7 +289,7 @@ param vmSubnetName string = 'VmSubnet'
 param vmSubnetAddressPrefix string = '10.1.0.0/16'
 
 @description('Specifies the name of the subnet which contains the the Application Gateway.')
-param applicationGatewaySubnetName string = 'AppGatewaySubnet'
+param applicationGatewaySubnetName string = 'ApplicationGatewaySubnet'
 
 @description('Specifies the address prefix of the subnet which contains the Application Gateway.')
 param applicationGatewaySubnetAddressPrefix string = '10.2.0.0/24'
@@ -293,7 +298,7 @@ param applicationGatewaySubnetAddressPrefix string = '10.2.0.0/24'
 param vmName string = 'TestVm'
 
 @description('Specifies the size of the virtual machine.')
-param vmSize string = 'Standard_D4s_v3'
+param vmSize string = 'Standard_DS3_v2'
 
 @description('Specifies the image publisher of the disk image used to create the virtual machine.')
 param imagePublisher string = 'Canonical'
@@ -320,11 +325,14 @@ param vmAdminPasswordOrKey string
 
 @description('Specifies the storage account type for OS and data disk.')
 @allowed([
+  'Standard_LRS'
+  'Standard_GRS'
+  'Standard_RAGRS'
+  'Standard_ZRS'
   'Premium_LRS'
   'Premium_ZRS'
-  'StandardSSD_LRS'
-  'StandardSSD_ZRS'
-  'Standard_LRS'
+  'Standard_GZRS'
+  'Standard_RAGZRS'
 ])
 param diskStorageAccounType string = 'Premium_LRS'
 
@@ -373,6 +381,32 @@ param acrNetworkRuleSetDefaultAction string = 'Deny'
 ])
 param acrPublicNetworkAccess string = 'Enabled'
 
+@description('For Azure resources that support native geo-redunancy, provide the location the redundant service will have its secondary. Should be different than the location parameter and ideally should be a paired region - https://docs.microsoft.com/azure/best-practices-availability-paired-regions. This region does not need to support availability zones.')
+@allowed([
+  'australiasoutheast'
+  'canadaeast'
+  'eastus2'
+  'westus'
+  'centralus'
+  'westcentralus'
+  'francesouth'
+  'germanynorth'
+  'westeurope'
+  'ukwest'
+  'northeurope'
+  'japanwest'
+  'southafricawest'
+  'northcentralus'
+  'eastasia'
+  'eastus'
+  'westus2'
+  'francecentral'
+  'uksouth'
+  'japaneast'
+  'southeastasia'
+])
+param acrGeoReplicationLocation string = 'eastus'
+
 @description('Tier of your Azure Container Registry.')
 @allowed([
   'Basic'
@@ -404,7 +438,11 @@ param keyVaultNetworkRuleSetDefaultAction string = 'Deny'
 param applicationGatewayName string = 'appgw-${uniqueString(resourceGroup().id)}'
 
 @description('Specifies the availability zones of the Application Gateway.')
-param applicationGatewayZones array = []
+param applicationGatewayZones array = [
+  '1'
+  '2'
+  '3'
+]
 
 @description('Specifies the name of the WAF policy')
 param wafPolicyName string = '${applicationGatewayName}WafPolicy'
@@ -486,12 +524,12 @@ var bastionSubnetName = 'AzureBastionSubnet'
 var bastionSubnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, bastionSubnetName)
 var bastionHostId = bastionHost.id
 var workspaceId = logAnalyticsWorkspace.id
-var readerRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', readerRoleDefinitionName)
-var contributorRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', contributorRoleDefinitionName)
-var acrPullRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleDefinitionName)
-var aksContributorRoleAssignmentName = guid(concat(resourceGroup().id, aksClusterUserDefinedManagedIdentityName, aksClusterName))
+var readerRoleId = '${subscription().id}/providers/Microsoft.Authorization/roleDefinitions/${readerRoleDefinitionName}'
+var contributorRoleId = '${subscription().id}/providers/Microsoft.Authorization/roleDefinitions/${contributorRoleDefinitionName}'
+var acrPullRoleId = '${subscription().id}/providers/Microsoft.Authorization/roleDefinitions/${acrPullRoleDefinitionName}'
+var aksContributorRoleAssignmentName = guid('${resourceGroup().id}${aksClusterUserDefinedManagedIdentityName}ContributorRoleAssignment')
 var aksContributorRoleAssignmentId = aksContributorRoleAssignment.id
-var appGwContributorRoleAssignmentName = guid(concat(resourceGroup().id, applicationGatewayUserDefinedManagedIdentityName, applicationGatewayName))
+var appGwContributorRoleAssignmentName = guid('${resourceGroup().id}${applicationGatewayUserDefinedManagedIdentityName}ContributorRoleAssignment')
 var acrPullRoleAssignmentName = 'Microsoft.Authorization/${guid('${resourceGroup().id}acrPullRoleAssignment')}'
 var containerInsightsSolutionName = 'ContainerInsights(${logAnalyticsWorkspaceName})'
 var acrPublicDNSZoneForwarder = ((toLower(environment().name) == 'azureusgovernment') ? 'azurecr.us' : 'azurecr.io')
@@ -502,6 +540,7 @@ var acrPrivateDnsZoneGroupName = '${acrPrivateEndpointGroupName}PrivateDnsZoneGr
 var acrPrivateDnsZoneGroupId = resourceId('Microsoft.Network/privateEndpoints/privateDnsZoneGroups', acrPrivateEndpointName, '${acrPrivateEndpointGroupName}PrivateDnsZoneGroup')
 var acrPrivateEndpointId = acrPrivateEndpoint.id
 var acrId = acr.id
+var acrReplicaId = acrName_acrGeoReplicationLocation.id
 var aksClusterId = aksCluster.id
 var keyVaultPublicDNSZoneForwarder = ((toLower(environment().name) == 'azureusgovernment') ? '.vaultcore.usgovcloudapi.net' : '.vaultcore.azure.net')
 var keyVaultPrivateDnsZoneName = 'privatelink${keyVaultPublicDNSZoneForwarder}'
@@ -527,12 +566,6 @@ var applicationGatewayBackendAddressPoolId = resourceId('Microsoft.Network/appli
 var applicationGatewayBackendHttpSettingsName = 'applicationGatewayBackendHttpSettings'
 var applicationGatewayBackendHttpSettingsId = resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', applicationGatewayName, applicationGatewayBackendHttpSettingsName)
 var applicationGatewayRequestRoutingRuleName = 'default'
-var aadProfileConfiguration = {
-  managed: aadProfileManaged
-  enableAzureRBAC: aadProfileEnableAzureRBAC
-  adminGroupObjectIDs: aadProfileAdminGroupObjectIDs
-  tenantID: aadProfileTenantId
-}
 
 resource bastionPublicIpAddress 'Microsoft.Network/publicIPAddresses@2020-05-01' = {
   name: bastionPublicIpAddressName
@@ -701,6 +734,7 @@ resource bastionSubnetNsgName_Microsoft_Insights_default 'Microsoft.Network/netw
   location: location
   properties: {
     workspaceId: workspaceId
+    metrics: []
     logs: [
       {
         category: 'NetworkSecurityGroupEvent'
@@ -755,6 +789,7 @@ resource bastionHostName_Microsoft_Insights_default 'Microsoft.Network/bastionHo
   location: location
   properties: {
     workspaceId: workspaceId
+    metrics: []
     logs: [
       {
         category: 'BastionAuditLogs'
@@ -923,6 +958,7 @@ resource vmSubnetNsgName_Microsoft_Insights_default 'Microsoft.Network/networkSe
   location: location
   properties: {
     workspaceId: workspaceId
+    metrics: []
     logs: [
       {
         category: 'NetworkSecurityGroupEvent'
@@ -956,6 +992,9 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-05-01' = {
       addressPrefixes: [
         virtualNetworkAddressPrefixes
       ]
+    }
+    dhcpOptions: {
+      dnsServers: []
     }
     subnets: [
       {
@@ -995,6 +1034,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-05-01' = {
         }
       }
     ]
+    virtualNetworkPeerings: []
     enableDdosProtection: false
     enableVmProtection: false
   }
@@ -1050,6 +1090,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
           certificates: [
             'get'
           ]
+          keys: []
         }
       }
       {
@@ -1063,6 +1104,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
           certificates: [
             'get'
           ]
+          keys: []
         }
       }
     ]
@@ -1074,6 +1116,8 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: keyVaultNetworkRuleSetDefaultAction
+      ipRules: []
+      virtualNetworkRules: []
     }
     enabledForDeployment: false
     enabledForDiskEncryption: false
@@ -1137,6 +1181,8 @@ resource acr 'Microsoft.ContainerRegistry/registries@2019-12-01-preview' = {
     adminUserEnabled: acrAdminUserEnabled
     networkRuleSet: {
       defaultAction: acrNetworkRuleSetDefaultAction
+      virtualNetworkRules: []
+      ipRules: []
     }
     policies: {
       quarantinePolicy: {
@@ -1176,6 +1222,15 @@ resource acrName_acrPullRoleAssignment 'Microsoft.ContainerRegistry/registries/p
   ]
 }
 
+resource acrName_acrGeoReplicationLocation 'Microsoft.ContainerRegistry/registries/replications@2019-05-01' = if (acrSku == 'Premium') {
+  parent: acr
+  name: '${acrGeoReplicationLocation}'
+  location: acrGeoReplicationLocation
+  dependsOn: [
+    acrId
+  ]
+}
+
 resource acrName_Microsoft_Insights_default 'Microsoft.ContainerRegistry/registries/providers/diagnosticSettings@2017-05-01-preview' = {
   name: '${acrName}/Microsoft.Insights/default'
   properties: {
@@ -1208,6 +1263,8 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2020-12-01' = {
   name: aksClusterName
   location: location
   identity: {
+    principalId: null
+    tenantId: null
     type: 'UserAssigned'
     userAssignedIdentities: {
       '${aksClusterUserDefinedManagedIdentityId}': {
@@ -1321,7 +1378,15 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2020-12-01' = {
       loadBalancerSku: aksClusterLoadBalancerSku
       loadBalancerProfile: json('null')
     }
-    aadProfile: (aadEnabled ? aadProfileConfiguration : json('null'))
+    aadProfile: {
+      clientAppID: null
+      serverAppID: null
+      serverAppSecret: null
+      managed: aadProfileManaged
+      enableAzureRBAC: aadProfileEnableAzureRBAC
+      adminGroupObjectIDs: aadProfileAdminGroupObjectIDs
+      tenantID: aadProfileTenantId
+    }
     autoScalerProfile: {
       'scan-interval': autoScalerProfileScanInterval
       'scale-down-delay-after-add': autoScalerProfileScaleDownDelayAfterAdd
@@ -1415,6 +1480,7 @@ resource containerInsightsSolution 'Microsoft.OperationsManagement/solutions@201
   }
   properties: {
     workspaceResourceId: logAnalyticsWorkspace.id
+    containedResources: []
   }
 }
 
@@ -1610,6 +1676,7 @@ resource acrPrivateEndpoint 'Microsoft.Network/privateEndpoints@2020-07-01' = if
   dependsOn: [
     virtualNetworkId
     acrId
+    acrReplicaId
   ]
 }
 
@@ -1653,6 +1720,9 @@ resource AllAzureAdvisorAlert 'microsoft.insights/activityLogAlerts@2017-04-01' 
         }
       ]
     }
+    actions: {
+      actionGroups: []
+    }
     enabled: true
     description: 'All azure advisor alerts'
   }
@@ -1691,6 +1761,7 @@ resource wafPolicy 'Microsoft.Network/ApplicationGatewayWebApplicationFirewallPo
             matchValues: [
               'blockme'
             ]
+            transforms: []
           }
         ]
       }
@@ -1753,6 +1824,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2020-05-01' =
       name: 'WAF_v2'
       tier: 'WAF_v2'
     }
+    trustedRootCertificates: []
     gatewayIPConfigurations: [
       {
         name: applicationGatewayIPConfigurationName
@@ -1786,6 +1858,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2020-05-01' =
       maxCapacity: 10
     }
     enableHttp2: false
+    sslCertificates: []
     probes: [
       {
         name: 'defaultHttpProbe'
@@ -1797,6 +1870,8 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2020-05-01' =
           unhealthyThreshold: 3
           pickHostNameFromBackendHttpSettings: true
           minServers: 0
+          match: {
+          }
         }
       }
       {
@@ -1809,12 +1884,17 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2020-05-01' =
           unhealthyThreshold: 3
           pickHostNameFromBackendHttpSettings: true
           minServers: 0
+          match: {
+          }
         }
       }
     ]
     backendAddressPools: [
       {
         name: applicationGatewayBackendAddressPoolName
+        properties: {
+          backendAddresses: []
+        }
       }
     ]
     backendHttpSettingsCollection: [
