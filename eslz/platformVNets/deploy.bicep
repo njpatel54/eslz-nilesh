@@ -137,7 +137,7 @@ param firewallRoleAssignments array = []
 param bastionHostPublicIPName string = 'pip-${projowner}-${opscope}-${region}-bhip'
 
 @description('Required. Bastion Host name.')
-param bastionHostName string = 'bas-${projowner}-${opscope}-${region}-0001'
+param bastionHostName string = 'bas-${projowner}-${opscope}-${region}-pol0001'
 
 @description('Required. Bastion Host sku type.')
 param bastionHostSkuType string
