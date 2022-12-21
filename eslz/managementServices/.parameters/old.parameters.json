@@ -900,16 +900,6 @@
           "state": "Enabled"
         }
       ]
-    },    
-    "dataConnectorsTenant": {
-      "value": [
-        "Office365"
-      ]
-    },
-    "dataConnectorsSubs": {
-      "value": [
-        "AzureSecurityCenter"
-      ]
     },
     "softwareUpdateConfigurations": {
       "value": [
@@ -1099,25 +1089,6 @@
     },
     "diagSettingName": {
       "value": "logging-diagSetting-centralized"
-    },
-    "defenderSecurityContactProperties": {
-      "value": {
-        "alertNotifications": {
-          "minimalSeverity": "High",
-          "state": "On"
-        },
-        "emails": "foo@contoso.com",
-        "notificationsByRole": {
-          "roles": [
-            "AccountAdmin",
-            "Contributor",
-            "Owner",
-            "ServiceAdmin"
-          ],
-          "state": "On"
-        },
-        "phone": "+12345678"
-      }
     },
     "actionGroups": {
       "value": [

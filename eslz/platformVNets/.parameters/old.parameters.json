@@ -685,6 +685,35 @@
         },
         "region": {
             "value": "usva"
+        },    
+        "dataConnectorsTenant": {
+          "value": [
+            "Office365"
+          ]
+        },
+        "dataConnectorsSubs": {
+          "value": [
+            "AzureSecurityCenter"
+          ]
+        },
+        "defenderSecurityContactProperties": {
+          "value": {
+            "alertNotifications": {
+              "minimalSeverity": "High",
+              "state": "On"
+            },
+            "emails": "foo@contoso.com",
+            "notificationsByRole": {
+              "roles": [
+                "AccountAdmin",
+                "Contributor",
+                "Owner",
+                "ServiceAdmin"
+              ],
+              "state": "On"
+            },
+            "phone": "+12345678"
+          }
         }
     }
 }
