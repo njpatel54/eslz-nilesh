@@ -41,7 +41,6 @@ jobs:
             --parameters ./eslz/platformVNets/.parameters/parameters.json \
             --parameters ./eslz/platformVNets/.parameters/privateDNSZones.json \
             --parameters ./eslz/platformVNets/.parameters/fwpolicyRuleCollectionGroups.json \
-            --parameters ./eslz/managementGroups/.parameters/parameters.json \
             --parameters location=${{ secrets.AZURE_LOCATION }} \
                          hubVnetSubscriptionId=${{ secrets.AZURE_CONNSUBSCRIPTIONID }} \
                          mgmtsubid=${{ secrets.AZURE_MGMTSUBSCRIPTIONID }} \
