@@ -752,13 +752,6 @@ module afwprcg '../modules/network/firewallPolicies/ruleCollectionGroups/deploy.
   scope: resourceGroup(hubVnetSubscriptionId, vnetRgName)
   dependsOn: [
     afwp
-    bas
-    saMgmtPe
-    saSsvcPe
-    aaLogaPe
-    aaLogaSentinelPe
-    rsvPeMgmt
-    rsvPeSsvc
   ]
   params: {
     firewallPolicyName: '${firewallPolicyNamePrefix}1'
@@ -864,7 +857,6 @@ module saMgmtPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
   dependsOn: [
     saMgmt
     priDNSZones
-    afwp
   ]
   params: {
     name: '${stgAcctName}-${stgGroupId}-pe'
@@ -896,7 +888,6 @@ module saSsvcPe '../modules/network/privateEndpoints/deploy.bicep' = [for (stgGr
   dependsOn: [
     priDNSZones
     saMgmtPe
-    afwp
   ]
   params: {
     name: '${stgAcctSsvcName}-${stgGroupId}-pe'
@@ -928,7 +919,6 @@ module aaLogaPe '../modules/network/privateEndpoints/deploy.bicep' = [for aaGrou
   dependsOn: [
     aaLoga
     priDNSZones
-    afwp
   ]
   params: {
     name: '${logAutomationAcctName}-${aaGroupId}-pe'
@@ -960,7 +950,6 @@ module aaLogaSentinelPe '../modules/network/privateEndpoints/deploy.bicep' = [fo
   dependsOn: [
     aaLogaSentinel
     priDNSZones
-    afwp
   ]
   params: {
     name: '${sentinelAutomationAcctName}-${aaGroupId}-pe'
@@ -1050,7 +1039,6 @@ module rsvPeMgmt '../modules/network/privateEndpoints/deploy.bicep' = {
     hubVnet
     spokeVnet
     priDNSZones
-    afwp
   ]
   params: {
     name: '${mgmtVaultName}-AzureBackup-pe'
@@ -1142,7 +1130,6 @@ module rsvPeSsvc '../modules/network/privateEndpoints/deploy.bicep' = {
     hubVnet
     spokeVnet
     priDNSZones
-    afwp
   ]
   params: {
     name: '${mgmtVaultName}-AzureBackup-pe'
