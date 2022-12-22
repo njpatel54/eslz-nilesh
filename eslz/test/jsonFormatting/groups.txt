@@ -1,0 +1,2 @@
+"Management Group Reader"
+"Management Group Contributor"
